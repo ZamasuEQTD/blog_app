@@ -16,10 +16,10 @@ class LoginView extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {},
-          icon: Icon(CupertinoIcons.chevron_back)
+          icon: const Icon(CupertinoIcons.chevron_back)
         ),
       ),
-      body: LoginBody()
+      body: const LoginBody()
     );
   }
 }
@@ -30,12 +30,12 @@ class LoginBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AuthLabel(text: "¡Bienvenido!"),
-        Column(
+        const AuthLabel(text: "¡Bienvenido!"),
+        const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -43,7 +43,7 @@ class LoginBody extends StatelessWidget {
             child: Text("Informacion de la cuenta",textAlign: TextAlign.start,style: TextStyle(fontSize: 15),)),
           InputFlatField(hintText: "Usuario"),
           SizedBox(height: 5),
-          PasswordFlatInput(),
+          ObscuredFlatInput(),
           SizedBox(height: 40),
           ],
         ),
@@ -51,10 +51,10 @@ class LoginBody extends StatelessWidget {
           height: 45,
           child: FlatBtn.text(
             txt: "Iniciar sesión",
-            backgroundColor: Color(0xff5856D6),
-            textStyle: TextStyle(
+            backgroundColor: const Color(0xff5856D6),
+            textStyle: const TextStyle(
               fontSize: 16,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w700,
               color: Colors.white
             ),
             borderRadius: 5,

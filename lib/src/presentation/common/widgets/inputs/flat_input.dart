@@ -6,13 +6,16 @@ class InputFlatField extends StatelessWidget {
   final InputDecorationTheme? decoration;
   final bool obscureText;
   final BorderRadius? borderRadius;
+  final int? maxLines;
+  final TextEditingController? controller;
   const InputFlatField({
     super.key, 
     this.suffix, 
     this.decoration,
     this.obscureText = false, 
     this.borderRadius, 
-    this.hintText, 
+    this.hintText, this.maxLines, 
+    this.controller, 
   });
 
   @override
@@ -20,9 +23,11 @@ class InputFlatField extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius?? BorderRadius.circular(5),
       child: TextField(
+        controller: controller,
+        maxLines: maxLines,
         decoration: InputDecoration(
           hintText: hintText,
-          suffix: suffix,
+          suffixIcon: suffix,
         ).applyDefaults(decoration?.merge(defaultTheme)?? defaultTheme),
         obscureText: obscureText,
       )
