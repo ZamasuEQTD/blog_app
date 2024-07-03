@@ -5,7 +5,6 @@ import 'package:blog_app/src/presentation/features/auth/common/widgets/auth_labe
 import 'package:blog_app/src/presentation/features/auth/common/widgets/password_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class RegistroView extends StatelessWidget {
   const RegistroView({super.key});
