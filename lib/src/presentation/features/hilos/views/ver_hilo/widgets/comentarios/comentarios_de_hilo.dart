@@ -4,10 +4,7 @@ import 'dart:math';
 
 import 'package:blog_app/src/domain/features/comentarios/models/comentario.dart';
 import 'package:blog_app/src/domain/features/comentarios/models/types/comentario_id.dart';
-import 'package:blog_app/src/domain/features/hilos/models/types/hilo_id.dart';
-import 'package:blog_app/src/domain/features/media/models/fuente_de_archivo.dart';
-import 'package:blog_app/src/domain/features/media/models/media.dart';
-import 'package:blog_app/src/presentation/features/comentarios/common/logic/bloc/lista/lista_de_comentarios_bloc.dart';
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,21 +25,15 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
   late final ComentariosDeHiloBloc bloc;
   @override
   void initState() {
-    this.bloc = context.read();
-    ListaDeComentariosBloc bloc = context.read();
+    bloc = context.read();
 
-    IComentariosDeHiloHub hub = ComentariosDeHiloHub(comentarios: bloc.state);
-
-    hub.onEliminarComentario((id) {
-      bloc.add(EliminarComentario(id: id));
-      keys.remove(id);
+    bloc.stream.listen((state) { 
+      for (var c in state.comentarios) { 
+        if(!keys.containsKey(c.id)){
+          keys[c.id] = GlobalKey();
+        }
+      }
     });
-
-    hub.onHiloComentado((comentario) {
-      bloc.add(AgregarComentarioAlInicio(comentario: comentario));
-      keys[comentario.id] = GlobalKey();
-    });
-
 
     scrollController = context.read();
 
@@ -53,36 +44,25 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
   Widget build(BuildContext context) {
     return NotificationListener(
       onNotification: (notification) => onNotification(notification),
-      child: BlocListener<ComentariosDeHiloBloc, ComentariosDeHiloState>(
-        listenWhen: (previous, current) => current.status == ComentariosDeHiloStatus.cargados,
-        listener: (context, state) {
-          for (var c in state.comentarios) {
-            keys[c.id] = GlobalKey();
-          }
+      child: BlocBuilder<ComentariosDeHiloBloc, ComentariosDeHiloState>(
+        bloc: bloc,
+        builder: (context, state) {
+          final bool cargando = state.status == ComentariosDeHiloStatus.cargando;          
+          return ListView.builder(
+                key: _key,
+                controller: scrollController,
+                itemCount: state.comentarios.length + (cargando ? 5 : 0),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  if(state.comentarios.length < index){
+                    return Container();
+                  }
+                  return ComentarioWidget(
+                    comentario: state.comentarios[index], key: keys[state.comentarios[index].id]
+                  );
+                },
+              );
         },
-        child: BlocBuilder<ComentariosDeHiloBloc, ComentariosDeHiloState>(
-          builder: (context, state) {
-            final bool cargando = state.status == ComentariosDeHiloStatus.cargando;          
-            return BlocBuilder<ListaDeComentariosBloc, List<Comentario>>(
-              builder: (context, state) {
-                return ListView.builder(
-                  key: _key,
-                  physics: context.read(),
-                  itemCount: state.length + (cargando ? 5 : 0),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    if(state.length < index){
-                      return Container();
-                    }
-                    return ComentarioWidget(
-                      comentario: state[index], key: keys[state[index].id]
-                    );
-                  },
-                );
-              },
-            );
-          },
-        ),
       ),
     );
   }

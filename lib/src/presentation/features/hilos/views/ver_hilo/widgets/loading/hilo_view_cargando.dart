@@ -3,8 +3,6 @@ import 'package:flutter/widgets.dart';
 
 import '../../../../../../common/widgets/skeleton/skeleton.dart';
 
-
-
 class HiloViewCargando extends StatelessWidget {
   const HiloViewCargando({super.key});
 
