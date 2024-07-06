@@ -20,7 +20,7 @@ class VerHiloBloc extends Bloc<VerHiloEvent, VerHiloState> {
   Future _onCargarHilo(CargarHilo event, Emitter<VerHiloState> emit) async {
     emit(CargandoHilo());
 
-    final result = await  handler.handle(GetHiloQuery(""));
+    final result = await  handler.handle(GetHiloQuery("1"));
   
     result.fold(
       (l) => emit(HiloFailure(failure: l)),

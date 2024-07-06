@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../logic/class/grupo_seleccionable.dart';
@@ -24,34 +25,50 @@ class GrupoSeleccionableList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        shrinkWrap: true,
-        controller: controller,
-        itemCount: seleccionables.length,
-        itemBuilder: (context, index) =>
-        _seleccionableSheet(seleccionables[index])
-      );
+
+    return IconTheme(data: const IconThemeData(
+      color: CupertinoColors.label
+    ), child: Padding(
+      padding: const EdgeInsets.all(12),
+      child: ListView.builder(
+          shrinkWrap: true,
+          controller: controller,
+          itemCount: seleccionables.length,
+          itemBuilder: (context, index) =>
+          Container(
+            margin: const EdgeInsets.symmetric(vertical: 5),
+            child: _seleccionableSheet(seleccionables[index]))
+        ),
+      )
+    );
+   
   }
 
   Widget _seleccionableSheet(GrupoSeleccionable seleccionables) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        seleccionables.nombre != null
-            ? Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  seleccionables.nombre!
-                ),
-              )
-            : const SizedBox(),
-        ListView.builder(
-          controller: controller,
-          shrinkWrap: true,
-          itemCount: seleccionables.seleccionables.length,
-          itemBuilder: (context, index) => _seleccionableTile(seleccionables.seleccionables[index])
-        )
-      ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            seleccionables.nombre != null
+                ? Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      seleccionables.nombre!,
+                    ),
+                  )
+                : const SizedBox(),
+            ListView.builder(
+              controller: controller,
+              shrinkWrap: true,
+              itemCount: seleccionables.seleccionables.length,
+              itemBuilder: (context, index) => _seleccionableTile(seleccionables.seleccionables[index])
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -60,7 +77,10 @@ class GrupoSeleccionableList extends StatelessWidget {
       leading: seleccionable.leading,
       trailing: seleccionable.trailing,
       title: Text(
-        seleccionable.nombre
+        seleccionable.nombre,
+        style:const TextStyle(
+          fontWeight: FontWeight.w600,
+        ).merge(seleccionable.style),
       ),
     );
   }

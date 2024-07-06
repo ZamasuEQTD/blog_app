@@ -14,8 +14,7 @@ List<Hilo> hilos = [
     DateTime(1999), 
     const BanderasDeHilo(false, false, false),
     EstadoDeHilo.activo, 
-    Spoileable(false, Video(NetworkMedia("")))
-  ),
+    Spoileable(false, Imagen(NetworkMedia("https://preview.redd.it/evie-templeton-is-portraying-laura-in-sh2-remake-and-the-v0-mc2fhcpkwq3d1.jpg?width=1080&crop=smart&auto=webp&s=a19290370f885c41d28cd175d03da150db609696")))),
   Hilo(
     "2",
     "holaaa", 
@@ -23,13 +22,15 @@ List<Hilo> hilos = [
     DateTime(1999), 
     const BanderasDeHilo(false, false, false),
     EstadoDeHilo.activo, 
-    Spoileable(false, Video(NetworkMedia("")))
+    Spoileable(false, Imagen(NetworkMedia("https://preview.redd.it/evie-templeton-is-portraying-laura-in-sh2-remake-and-the-v0-mc2fhcpkwq3d1.jpg?width=1080&crop=smart&auto=webp&s=a19290370f885c41d28cd175d03da150db609696")))
   )
 ];
 
 class HilosLocalDatasource extends IHilosDatasource {
   @override
   Future<Either<Failure, Hilo>> getHilo({required String id}) async {
+
+    await Future.delayed(const Duration(seconds: 3));
     try {
       Hilo hilo =  hilos.firstWhere((element) => element.id == id);
       return Right(hilo);

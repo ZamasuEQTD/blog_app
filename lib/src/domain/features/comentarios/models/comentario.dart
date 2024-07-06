@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import '../../media/models/media.dart';
 import 'types/comentario_id.dart';
 
-class Comentario extends Equatable{
+class Comentario  {
   final ComentarioId id;
   final String texto;
   final DatosDeComentario datos;
@@ -20,9 +20,6 @@ class Comentario extends Equatable{
     required this.datos, 
     required this.media, 
   });
-
-  @override
-  List<Object?> get props => throw UnimplementedError();
 }
 
 class DatosDeComentario {

@@ -7,6 +7,7 @@ import 'package:blog_app/src/domain/features/comentarios/models/types/comentario
 import 'package:blog_app/src/domain/features/hilos/models/types/hilo_id.dart';
 import 'package:blog_app/src/domain/features/media/models/fuente_de_archivo.dart';
 import 'package:blog_app/src/domain/features/media/models/media.dart';
+import 'package:blog_app/src/presentation/features/comentarios/common/bottom_sheet/opciones_de_comentario/opciones_de_comentarios_bottom_sheet.dart';
 import 'package:blog_app/src/presentation/features/comentarios/common/logic/bloc/lista/lista_de_comentarios_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,21 +27,22 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
   final HashMap<String, GlobalKey> keys = HashMap();
   late final ScrollController scrollController;
   late final ComentariosDeHiloBloc bloc;
+  late final ListaDeComentariosBloc comentarios = context.read();
+
   @override
   void initState() {
-    this.bloc = context.read();
-    ListaDeComentariosBloc bloc = context.read();
+    bloc = context.read();
 
-    IComentariosDeHiloHub hub = ComentariosDeHiloHub(comentarios: bloc.state);
+    IComentariosDeHiloHub hub = ComentariosDeHiloHub(comentarios: comentarios.state);
 
     hub.onEliminarComentario((id) {
-      bloc.add(EliminarComentario(id: id));
+      comentarios.add(EliminarComentario(id: id));
       keys.remove(id);
     });
 
     hub.onHiloComentado((comentario) {
-      bloc.add(AgregarComentarioAlInicio(comentario: comentario));
-      keys[comentario.id] = GlobalKey();
+      // comentarios.add(AgregarComentarioAlInicio(comentario: comentario));
+      // keys[comentario.id] = GlobalKey();
     });
 
 
@@ -52,13 +54,13 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
   @override
   Widget build(BuildContext context) {
     return NotificationListener(
-      onNotification: (notification) => onNotification(notification),
+      onNotification: onNotification,
       child: BlocListener<ComentariosDeHiloBloc, ComentariosDeHiloState>(
-        listenWhen: (previous, current) => current.status == ComentariosDeHiloStatus.cargados,
         listener: (context, state) {
           for (var c in state.comentarios) {
             keys[c.id] = GlobalKey();
           }
+          comentarios.add(AgregarComentarios(comentarios: state.comentarios));
         },
         child: BlocBuilder<ComentariosDeHiloBloc, ComentariosDeHiloState>(
           builder: (context, state) {
@@ -67,15 +69,19 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
               builder: (context, state) {
                 return ListView.builder(
                   key: _key,
-                  physics: context.read(),
-                  itemCount: state.length + (cargando ? 5 : 0),
+                  controller: context.read(),
+                  itemCount: state.length ,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    if(state.length < index){
-                      return Container();
-                    }
-                    return ComentarioWidget(
-                      comentario: state[index], key: keys[state[index].id]
+                    return GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      key: keys[state[index].id],
+                      onTap: () {
+                        OpcionesDeComentariosBottomSheet.show(context: context,comentario: state[index]);
+                      },
+                      child: ComentarioWidget(
+                        comentario: state[index],
+                      ),
                     );
                   },
                 );
@@ -106,15 +112,25 @@ class ComentariosDeHiloHub extends IComentariosDeHiloHub {
   ComentariosDeHiloHub({required this.comentarios});
   @override
   void onEliminarComentario(void Function(ComentarioId id) on) {
-    Timer.periodic(Duration(seconds: 3), (timer) {
-      on(
-        comentarios[Random().nextInt(comentarios.length)].id
-      );
-    });
+    // Timer.periodic(Duration(seconds: 3), (timer) {
+    //   on(
+    //     comentarios[Random().nextInt(comentarios.length)].id
+    //   );
+    // });
   }
 
   @override
   void onHiloComentado(void Function(Comentario comentario) on) {
-    // TODO: implement onHiloComentado
+    Timer.periodic(const Duration(seconds: 6), (timer) {
+      on(
+        Comentario(
+            id: Random().nextInt(50000).toString(),
+            texto: "texto",
+            createdAt: DateTime.now(),
+            datos: const DatosDeComentario(
+                tag: "FSAFAS", tagUnico: "RDS", dados: "4"),
+            media: Video(NetworkMedia("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"))),
+      );
+    });
   }
 }

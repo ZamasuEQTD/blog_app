@@ -22,14 +22,7 @@ class ComentarioWidget extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         margin: const EdgeInsets.symmetric(horizontal: 8,vertical:5),
-        child:  Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ComentarioDataFeatures(comentario: comentario),
-            ComentarioMedia(media: comentario.media != null? Spoileable(false, comentario.media!): null),
-            TextoDeComentario(texto: comentario.texto)
-          ],
-        ),
+        child:  ComentarioContainer(comentario: comentario),
       ),
     );
   }
@@ -39,4 +32,24 @@ class ComentarioWidget extends StatelessWidget {
   }
 }
 
+class ComentarioContainer extends StatelessWidget {
+  const ComentarioContainer({
+    super.key,
+    required this.comentario,
+  });
+
+  final Comentario comentario;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ComentarioDataFeatures(comentario: comentario),
+        ComentarioMedia(media: comentario.media != null? Spoileable(false, comentario.media!): null),
+        TextoDeComentario(texto: comentario.texto)
+      ],
+    );
+  }
+}
 

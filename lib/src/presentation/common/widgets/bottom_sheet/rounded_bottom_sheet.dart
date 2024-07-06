@@ -13,7 +13,7 @@ class RoundedBottomSheetManager extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Container(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(10)
         ),
         child: ConstrainedBox(
@@ -33,8 +33,10 @@ class RoundedBottomSheetManager extends StatelessWidget {
       Widget Function(Widget child, BuildContext context)? builder
   }) {
     showModalBottomSheet(
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
+      
       builder: (context) => RoundedBottomSheetManager(
         builder: builder,
         child: child
