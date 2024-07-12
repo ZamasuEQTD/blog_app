@@ -14,7 +14,7 @@ class ComentarHiloBottomSheet extends StatelessWidget {
       GrupoSeleccionable(
         nombre: "Agregar media",
         seleccionables: [
-        ItemSeleccionable(nombre: "Escoger desde galeria", onTap: (context) {
+        ItemSeleccionable(nombre: "Escoger desde galeria", onTap: ( ) {
           
         },),
         const ItemSeleccionable(nombre: "Agregar Enlace"),

@@ -1,3 +1,8 @@
+import 'dart:developer';
+
+import 'package:blog_app/src/presentation/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
+import 'package:blog_app/src/presentation/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
+import 'package:blog_app/src/presentation/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:blog_app/src/presentation/features/hilos/views/crear_hilo/logic/bloc/bloc/crear_hilo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,37 +42,30 @@ class ConfiguracionDeBanderas extends StatelessWidget {
   }
 
   Widget _builder(BuildContext context, CrearHiloState state) {
-    final CrearHiloBloc bloc = context.read();
-    return Column(
-      children: [
-          _getTile(
-            "Dados", 
-            state.banderas.dados,
-            (value) {
-              bloc.add(CambiarBanderas(
-                dados: value
-              ));
-            }
-          ),
-          _getTile(
-            "Tag unico",
-            state.banderas.tagUnico,
-            (value) {
-              bloc.add(CambiarBanderas(tagUnico: value));
-            },
+    return SeleccionableSheet(
+      grupo: GrupoSeleccionable(seleccionables: [
+        ItemSeleccionable(
+          nombre: "Dados",
+          onTap: ()=> _changeDados(context),
+          trailing: Checkbox(value: state.banderas.dados, onChanged: (value)=> _changeDados(context)) 
+        ),
+        ItemSeleccionable(
+          onTap: () => _changeIdUnico(context),
+          nombre: "Tag unico",
+          trailing: Checkbox(
+            value: state.banderas.tagUnico, 
+            onChanged:(value) =>  _changeIdUnico(context))
           )
-        ],
+      ])
     );
   }
 
-
-  ListTile _getTile(String title, bool value, void Function(bool? value) onChanged){
-    return ListTile(
-      title: Text(title),
-      trailing: Checkbox(
-          value: value,
-          onChanged: onChanged
-      )
-    );
+  void _changeDados(BuildContext context){
+    CrearHiloBloc bloc = context.read();
+    bloc.add(CambiarBanderas(dados: !bloc.state.banderas.dados));
+  }
+  void _changeIdUnico(BuildContext context) {
+    CrearHiloBloc bloc = context.read();
+    bloc.add(CambiarBanderas(tagUnico: !bloc.state.banderas.tagUnico));
   }
 }

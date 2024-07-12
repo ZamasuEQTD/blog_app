@@ -18,6 +18,7 @@ class _ObscuredFlatInputState extends State<ObscuredFlatInput> {
   @override
   Widget build(BuildContext context) {
     return InputFlatField(
+      maxLines: 1,
       hintText: widget.hintText,
       obscureText: mostrarPassword,
       suffix: IconButton(

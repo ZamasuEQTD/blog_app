@@ -1,6 +1,9 @@
 import 'package:blog_app/src/application/configuration/dependency_injection/dependency_injection.dart';
 import 'package:blog_app/src/infraestructure/configuration/dependency_injection.dart';
+import 'package:blog_app/src/presentation/features/auth/views/login/login_view.dart';
+import 'package:blog_app/src/presentation/features/auth/views/registro/registro_view.dart';
 import 'package:blog_app/src/presentation/features/hilos/views/crear_hilo/crear_hilo_view.dart';
+import 'package:blog_app/src/presentation/features/media/views/agregar_media_desde_link/agregar_media_desde_link_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,14 +32,16 @@ class MyApp extends StatelessWidget {
           border: InputBorder.none
         ),
         appBarTheme: const AppBarTheme(
+          elevation: 0,
           backgroundColor: Color(0xffF2F2F7)
         ),
         colorScheme: const ColorScheme.light(
           surface: Color(0xffF2F2F7),
         ),
+        scaffoldBackgroundColor: const Color(0xffF2F2F7),
         useMaterial3: false,
       ),
-      home: VerHiloView(hiloId: "1"),
+      home: const CrearHiloView(),
     );
 
   }

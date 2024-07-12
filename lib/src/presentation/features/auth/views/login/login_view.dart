@@ -9,14 +9,16 @@ import '../../common/widgets/password_input.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {},
-          icon: const Icon(CupertinoIcons.chevron_back)
+          icon: const Icon(
+            CupertinoIcons.chevron_back,
+            color: Colors.black
+          )
         ),
       ),
       body: const LoginBody()
@@ -29,13 +31,13 @@ class LoginBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const AuthLabel(text: "¡Bienvenido!"),
-        const Column(
+        AuthLabel(text: "¡Bienvenido!"),
+        Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -43,26 +45,50 @@ class LoginBody extends StatelessWidget {
             child: Text("Informacion de la cuenta",textAlign: TextAlign.start,style: TextStyle(fontSize: 15),)),
           InputFlatField(hintText: "Usuario"),
           SizedBox(height: 5),
-          ObscuredFlatInput(),
+          ObscuredFlatInput(
+            hintText: "Contraseña",
+          ),
           SizedBox(height: 40),
           ],
         ),
-        SizedBox(
-          height: 45,
-          child: FlatBtn.text(
-            txt: "Iniciar sesión",
-            backgroundColor: const Color(0xff5856D6),
-            textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.white
-            ),
-            borderRadius: 5,
-          ),
-        )
+        IniciarSessionButton()
       ],
-          ),
+      ),
     );
   }
 }
 
+class IniciarSessionButton extends StatelessWidget {
+  const IniciarSessionButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: SizedBox(
+        height: 45,
+        width: double.infinity,
+        child: ElevatedButton(
+          style: const NormalButtonStyle(),           
+          onPressed: () {
+        }, 
+        child: const Text("Inciar sesión")
+        ),
+      ),
+    );
+  }
+}
+
+class NormalButtonStyle extends ButtonStyle {
+   const NormalButtonStyle() : super(
+    elevation: const WidgetStatePropertyAll(0),
+    backgroundColor:  const WidgetStatePropertyAll(Color(0xff5856D6)),
+    textStyle: const WidgetStatePropertyAll(
+      TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 16
+      )
+    )
+  );
+}

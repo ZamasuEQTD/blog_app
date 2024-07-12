@@ -18,7 +18,6 @@ class BlurearWidget extends StatelessWidget {
   }
 }
 
-
 class SobreBlur extends StatelessWidget {
   final Widget child;
   const SobreBlur({super.key, required this.child});
@@ -31,9 +30,21 @@ class SobreBlur extends StatelessWidget {
         child
       ],
     );
+  }
+}
 
 
+class Blurear extends StatelessWidget {
+  final Widget child;
+  final bool blurear;
+  const Blurear({
+    super.key, 
+    required this.blurear,
+    required this.child
+  });
 
-    
+  @override
+  Widget build(BuildContext context) {
+    return blurear? BlurearWidget(child: child) : child;
   }
 }

@@ -7,6 +7,8 @@ class InputFlatField extends StatelessWidget {
   final bool obscureText;
   final BorderRadius? borderRadius;
   final int? maxLines;
+  final int? minLines;
+
   final TextEditingController? controller;
   const InputFlatField({
     super.key, 
@@ -16,6 +18,7 @@ class InputFlatField extends StatelessWidget {
     this.borderRadius, 
     this.hintText, this.maxLines, 
     this.controller, 
+    this.minLines, 
   });
 
   @override
@@ -25,6 +28,7 @@ class InputFlatField extends StatelessWidget {
       child: TextField(
         controller: controller,
         maxLines: maxLines,
+        minLines: minLines ,
         decoration: InputDecoration(
           hintText: hintText,
           suffixIcon: suffix,
