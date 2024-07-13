@@ -13,37 +13,38 @@ part 'portadas_home_state.dart';
 
 class PortadasHomeBloc extends Bloc<PortadasHomeEvent, PortadasHomeState> {
   final GetHomePortadasQueryHandler _handler;
-  
+
   PortadasHomeBloc(this._handler) : super(const PortadasHomeState()) {
     on<CargarPortadasHome>(_onCargarPortadasHome);
     on<CambiarFiltrosDePortadas>(_onCambiarFiltros);
   }
 
-  Future _onCargarPortadasHome(CargarPortadasHome event, Emitter<PortadasHomeState> emit) async {
-    if(state.status == PortadasHomeStatus.cargando) return;
-    
+  Future _onCargarPortadasHome(
+      CargarPortadasHome event, Emitter<PortadasHomeState> emit) async {
+    if (state.status == PortadasHomeStatus.cargando) return;
+
     emit(state.copyWith(status: PortadasHomeStatus.cargando));
+
+    await Future.delayed(Duration(seconds: 10));
 
     var result = await _handler.handle(GetHomePortadasQuery());
 
     result.fold(
-      (l) => emit(state.copyWith(status: PortadasHomeStatus.failure,failure: l)),
-      (r) => emit(state.copyWith(
-        status: PortadasHomeStatus.initial,portadas: [...state.portadas, ...r],
-        filtros: state.filtros.copyWith(
-          ultimoBump: r.last.ultimoBump
-        )  
-      ))
-    );
+        (l) => emit(
+            state.copyWith(status: PortadasHomeStatus.failure, failure: l)),
+        (r) => emit(state.copyWith(
+            status: PortadasHomeStatus.initial,
+            portadas: [...state.portadas, ...r],
+            filtros: state.filtros.copyWith(ultimoBump: r.last.ultimoBump))));
   }
 
-  void _onCambiarFiltros(CambiarFiltrosDePortadas event, Emitter<PortadasHomeState> emit) {
+  void _onCambiarFiltros(
+      CambiarFiltrosDePortadas event, Emitter<PortadasHomeState> emit) {
     emit(state.copyWith(
-      filtros: state.filtros.copyWith(
-        subcategoria: event.subcategoria,
-        titulo: event.titulo,
-      )
-    ));
+        filtros: state.filtros.copyWith(
+      subcategoria: event.subcategoria,
+      titulo: event.titulo,
+    )));
     add(CargarPortadasHome());
   }
 }

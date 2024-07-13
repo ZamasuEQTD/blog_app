@@ -14,7 +14,8 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => PortadasHomeBloc(GetIt.I.get()))
+        BlocProvider(
+            create: (context) => PortadasHomeBloc(GetIt.I.get())..add(CargarPortadasHome()))
       ],
       child: Scaffold(
         body: HomeViewBody(),
@@ -31,17 +32,17 @@ class HomeViewBody extends StatefulWidget {
 }
 
 class _HomeViewBodyState extends State<HomeViewBody> {
-  final ScrollController controller = ScrollController();  
+  final ScrollController controller = ScrollController();
   @override
   void initState() {
     controller.addListener(() {
-      if(_isBottom){
+      if (_isBottom) {
         context.read<PortadasHomeBloc>().add(CargarPortadasHome());
       }
     });
     super.initState();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -63,31 +64,37 @@ class _HomeViewBodyState extends State<HomeViewBody> {
 
     final maxScroll = controller.position.maxScrollExtent;
     final currentScroll = controller.offset;
-    
+
     return currentScroll >= (maxScroll * 0.9);
   }
 }
 
 class PortadasHomeGridList extends StatelessWidget {
   final ScrollController controller;
-  const PortadasHomeGridList({
-    super.key, 
-    required this.controller
-  });
+  const PortadasHomeGridList({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-     
     return BlocBuilder<PortadasHomeBloc, PortadasHomeState>(
-      buildWhen: (previous, current) => previous.portadas.length != current.portadas.length,
+      buildWhen: (previous, current) =>
+          previous.status != current.status ||
+          previous.portadas.length != current.portadas.length,
       builder: (context, state) {
-       List<Portada> portadas = [
+        List<Portada> portadas = [
           ...state.portadas,
-          ...(state.status == PortadasHomeStatus.cargando ? _getCargandoPortadas() : [])
+          ...(state.status == PortadasHomeStatus.cargando
+              ? _getCargandoPortadas()
+              : [])
         ];
         return GridView.builder(
             controller: controller,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            shrinkWrap: true,
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                mainAxisExtent: 200,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                crossAxisCount: 2),
             itemCount: portadas.length,
             itemBuilder: (context, index) {
               Portada portada = portadas[index];
@@ -99,12 +106,8 @@ class PortadasHomeGridList extends StatelessWidget {
       },
     );
   }
-  
+
   List<Portada> _getCargandoPortadas() {
     return [for (var i = 0; i < 10; i += 1) const CargandoPortadaHome()];
   }
 }
-
-
-
- 
