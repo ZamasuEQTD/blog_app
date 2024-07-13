@@ -5,6 +5,7 @@ class Subcategoria {
   final SubcategoriaId id;
   final String nombre;
   final Imagen imagen;
-
-  const Subcategoria(this.id, this.nombre, this.imagen);
+  const Subcategoria(
+    this.id, this.nombre, this.imagen
+  );
 }

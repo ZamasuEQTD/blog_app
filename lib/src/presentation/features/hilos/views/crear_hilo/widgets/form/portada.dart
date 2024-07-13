@@ -48,7 +48,7 @@ class PortadaContainer extends StatelessWidget {
       height: 45,
       width: double.infinity,
       child: ElevatedButton(
-        style: const NormalButtonStyle(),
+        style:   NormalButtonStyle(),
         onPressed:() {
           AgregarPortadaOpcionesBottomSheet.show(context);
         }, 

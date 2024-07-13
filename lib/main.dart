@@ -1,14 +1,10 @@
 import 'package:blog_app/src/application/configuration/dependency_injection/dependency_injection.dart';
 import 'package:blog_app/src/infraestructure/configuration/dependency_injection.dart';
-import 'package:blog_app/src/presentation/features/auth/views/login/login_view.dart';
-import 'package:blog_app/src/presentation/features/auth/views/registro/registro_view.dart';
 import 'package:blog_app/src/presentation/features/hilos/views/crear_hilo/crear_hilo_view.dart';
-import 'package:blog_app/src/presentation/features/media/views/agregar_media_desde_link/agregar_media_desde_link_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'src/presentation/features/hilos/views/ver_hilo/ver_hilo_view.dart';
 
 void main() {
   GetIt.I
