@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ItemSeleccionable {
@@ -20,7 +21,8 @@ class DestructibleItem extends ItemSeleccionable{
   DestructibleItem({
     required Color destructiveColor,
     required super.nombre,
-    required IconData icon
+    required IconData icon,
+    super.onTap
   }):super(
     style: TextStyle(
       color: destructiveColor
@@ -37,5 +39,19 @@ class DestructibleItem extends ItemSeleccionable{
       nombre: nombre,
       icon: icon
     );
+  }
+}
+
+class EliminarItem extends DestructibleItem {
+  EliminarItem({
+    required super.destructiveColor, 
+    super.nombre = "Eliminar",
+    super.onTap
+  }):super(
+    icon: CupertinoIcons.trash
+  );
+
+  factory EliminarItem.fromContext(BuildContext context){
+    return EliminarItem(destructiveColor: Theme.of(context).colorScheme.error);
   }
 }

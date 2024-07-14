@@ -229,7 +229,8 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GrupoSeleccionableList(
-        seleccionables: [GrupoSeleccionable(seleccionables: [
+        seleccionables: [
+          GrupoSeleccionable(seleccionables: [
           SubcategoriaSeleccionableTile(subcategoria: Subcategoria("id", "nombre", Imagen(NetworkMedia("")))),
           SubcategoriaSeleccionableTile(subcategoria: Subcategoria("id", "nombre", Imagen(NetworkMedia("")))),
           SubcategoriaSeleccionableTile(subcategoria: Subcategoria("id", "nombre", Imagen(NetworkMedia("")))),

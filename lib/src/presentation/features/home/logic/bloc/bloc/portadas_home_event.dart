@@ -4,7 +4,7 @@ sealed class PortadasHomeEvent extends Equatable {
   const PortadasHomeEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class CargarPortadasHome extends PortadasHomeEvent {}
@@ -14,6 +14,12 @@ class CambiarFiltrosDePortadas extends PortadasHomeEvent{
   final String? titulo;
 
   const CambiarFiltrosDePortadas({
-    required this.subcategoria, required this.titulo
+    this.subcategoria,this.titulo
   });
+
+  @override
+  List<Object?> get props => [
+    subcategoria,
+    titulo
+  ];
 }

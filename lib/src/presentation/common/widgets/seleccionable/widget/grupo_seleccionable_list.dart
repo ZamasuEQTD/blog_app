@@ -27,21 +27,18 @@ class GrupoSeleccionableList extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconTheme(data: const IconThemeData(
       color: CupertinoColors.label
-    ), child: Padding(
-      padding: const EdgeInsets.all(12),
-      child: ListView.builder(
-          shrinkWrap: true,
-          controller: controller,
-          itemCount: seleccionables.length,
-          itemBuilder: (context, index) =>
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            child: SeleccionableSheet(
-              grupo: seleccionables[index],
-              controller: controller
-            )
+    ), child: ListView.builder(
+        shrinkWrap: true,
+        controller: controller,
+        itemCount: seleccionables.length,
+        itemBuilder: (context, index) =>
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 5),
+          child: SeleccionableSheet(
+            grupo: seleccionables[index],
+            controller: controller
           )
-        ),
+        )
       )
     );
   }

@@ -10,8 +10,7 @@ class BlurEffect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
-      blendMode: BlendMode.srcIn,
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY:5 ),
+      filter: ImageFilter.blur(sigmaX: 25, sigmaY:25 ),
       child: const SizedBox(),
     );
   }
