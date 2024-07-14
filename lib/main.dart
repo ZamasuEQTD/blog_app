@@ -1,6 +1,7 @@
 import 'package:blog_app/src/application/configuration/dependency_injection/dependency_injection.dart';
 import 'package:blog_app/src/infraestructure/configuration/dependency_injection.dart';
 import 'package:blog_app/src/presentation/features/hilos/views/crear_hilo/crear_hilo_view.dart';
+import 'package:blog_app/src/presentation/features/hilos/views/ver_hilo/ver_hilo_view.dart';
 import 'package:blog_app/src/presentation/features/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -16,8 +17,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,7 +37,27 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xffF2F2F7),
         useMaterial3: false,
       ),
-      home: const HomeView(),
+      home:   const VerHiloView(hiloId: "",),
+      builder: (context, child) {
+        return PopScope(
+          canPop: true,
+          child: Stack(
+            children: [
+              child!,
+              // Positioned.fill(
+              //   child: Container(
+              //     color: Colors.black.withOpacity(0.6),
+              //     child: const Center(
+              //       child: CircularProgressIndicator(
+              //         color: Colors.white,
+              //       ),
+              //     ),
+              //   )
+              // )
+            ],
+          )
+        );
+      },
     );
 
   }

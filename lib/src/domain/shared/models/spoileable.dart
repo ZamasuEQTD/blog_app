@@ -1,10 +1,19 @@
+
+
 class Spoileable<T> {
-  bool spoiler;
+  final bool spoiler;
   final T spoileable;
   bool get esSpoiler => spoiler;
-  Spoileable(this.spoiler, this.spoileable);
 
-  void switchSpoiler() {
-    spoiler != spoiler;
+  const Spoileable(this.spoiler, this.spoileable);
+
+  Spoileable<T> copyWith({
+    bool? spoiler,
+    T?spoileable,
+  }) {
+    return Spoileable(
+      spoiler?? this.spoiler,
+      spoileable?? this.spoileable
+    );
   }
 }

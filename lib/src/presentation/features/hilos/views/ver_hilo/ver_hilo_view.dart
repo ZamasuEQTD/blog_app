@@ -30,13 +30,9 @@ class VerHiloBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ScrollController(),
-        builder: (context, child) => SingleChildScrollView(
-            controller: context.read(),
-            child: BlocBuilder<VerHiloBloc, VerHiloState>(
-              builder: _builder,
-            )));
+    return BlocBuilder<VerHiloBloc, VerHiloState>(
+      builder: _builder,
+    );
   }
 
   Widget _builder(BuildContext context, VerHiloState state) {
@@ -46,7 +42,17 @@ class VerHiloBody extends StatelessWidget {
     if (state is! HiloCargado) {
       return Container();
     }
-    return Column(
+    
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: HiloBody(hilo: state.hilo),
+        )
+
+      ],
+    );
+    
+    Column(
       children: [
         HiloBody(hilo: state.hilo),
         MultiBlocProvider(

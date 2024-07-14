@@ -38,7 +38,7 @@ class PortadaDeHiloHome extends StatelessWidget {
     );
   }
 
-  Widget _getChild() => false? SobreBlur(child: PortadaDeHiloHomeBody(portada: portada)) : PortadaDeHiloHomeBody(portada: portada);
+  Widget _getChild() => portada.imagen.esSpoiler? SobreBlur(child: PortadaDeHiloHomeBody(portada: portada)) : PortadaDeHiloHomeBody(portada: portada);
 }
 
 

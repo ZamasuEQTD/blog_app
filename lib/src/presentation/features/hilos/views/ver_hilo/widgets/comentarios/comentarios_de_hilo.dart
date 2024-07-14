@@ -92,6 +92,8 @@ class _ComentariosDeHiloState extends State<ComentariosDeHilo> {
       ),
     );
   }
+
+  
   bool onNotification(Object? notification) {
     if (notification is ScrollEndNotification) {
       bloc.add(const CargarComentarios());
