@@ -65,6 +65,15 @@ class FlatInputDecoration extends InputDecoration {
     );
 }
 
+
+class RounededFlatInputDecoration extends FlatInputDecoration {
+  RounededFlatInputDecoration({
+    required super.hintText
+  }):super(borderRadius: 15);
+}
+
+
+
 class BusquedaInputDecoration extends FlatInputDecoration {
     BusquedaInputDecoration({
     required void Function() onTap,

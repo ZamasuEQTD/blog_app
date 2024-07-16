@@ -34,6 +34,7 @@ class RoundedBottomSheetManager extends StatelessWidget {
   }) {
     showModalBottomSheet(
       isScrollControlled: true,
+      
       backgroundColor: Colors.transparent,
       context: context,
       

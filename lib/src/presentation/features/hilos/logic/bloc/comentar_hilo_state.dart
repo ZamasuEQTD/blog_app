@@ -10,8 +10,24 @@ class ComentarHiloState extends Equatable {
     this.media 
   });
   
+  ComentarHiloState copyWith({
+    String? texto,
+    Spoileable<Media>? media,
+    ComentarHiloStatus? status,
+
+  }) => ComentarHiloState(
+    texto: texto?? this.texto,
+    media: media?? this.media,
+    status: status?? this.status
+  );
+
+
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [
+    texto,
+    media,
+    status
+  ];
 }
 
 enum ComentarHiloStatus {

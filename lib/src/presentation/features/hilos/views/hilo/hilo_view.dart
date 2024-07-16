@@ -1,10 +1,11 @@
 import 'dart:collection';
-import 'package:blog_app/src/presentation/features/hilos/logic/bloc/comentarios_bloc.dart';
+import 'package:blog_app/src/presentation/features/hilos/logic/comentarios/comentarios_bloc.dart';
 import 'package:blog_app/src/presentation/features/hilos/logic/hilo/hilo_bloc.dart';
 import 'package:blog_app/src/presentation/features/hilos/widgets/comentar_hilo/comentar_hilo.dart';
 import 'package:blog_app/src/presentation/features/hilos/widgets/hilo/cargando/hilo_view_cargando.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/comentarios/comentario/cargando/comentario_cargando.dart';
@@ -16,12 +17,15 @@ class HiloView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-    create: (context) => HiloBloc(),
-    child: const Scaffold(
-      body: HiloViewBody(),
-      bottomSheet: ComentarHilo()
-    ),
+    return ChangeNotifierProvider(
+      create: (context) => TextEditingController(),
+      child: BlocProvider(
+      create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
+      child: const Scaffold(
+        body: HiloViewBody(),
+        bottomSheet: ComentarHilo()
+      ),
+      ),
     );
   }
 }
@@ -35,7 +39,7 @@ class HiloViewBody extends StatelessWidget {
     return BlocBuilder<HiloBloc, HiloState>(
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
-          if (state.status == HiloStatus.cargando) return const HiloViewCargando();
+          if (state.status != HiloStatus.cargado) return const HiloViewCargando();
 
           return CustomScrollView(
             slivers: [

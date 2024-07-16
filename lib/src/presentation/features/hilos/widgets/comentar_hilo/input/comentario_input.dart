@@ -16,28 +16,23 @@ class _ComentarioInputState extends State<ComentarioInput> {
 
   @override
   void initState() {
-    controller.addListener(()=> context.read<HiloBloc>().add(CambiarComentario(comentario: controller.text)));
+    // controller.addListener(()=> context.read<HiloBloc>().add(CambiarComentario(comentario: controller.text)));
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 500),
-      child: Flexible(
-        child: KeyboardVisibilityBuilder(
-          builder: (context, isKeyboardVisible) {
-            return TextField(
-              controller: controller,
-              minLines: 1,
-              maxLines: !isKeyboardVisible? 1 : 4,
-              decoration: FlatInputDecoration(
-                hintText: "Escribe tu comentario..."
-              ),
-          );
-        })
-      )
+    return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
+    return Expanded(
+      child: TextField(
+        controller: controller,
+        keyboardType: TextInputType.multiline,
+        minLines: 1,
+        maxLines: !isKeyboardVisible ? 1 : 4,
+        decoration: RounededFlatInputDecoration(hintText: "Escribe tu comentario..."),
+      ),
     );
+        });
   }
 }

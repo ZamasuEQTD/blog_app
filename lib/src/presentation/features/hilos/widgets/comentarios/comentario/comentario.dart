@@ -1,5 +1,5 @@
 import 'package:blog_app/src/presentation/common/widgets/tags/tag.dart';
-import 'package:blog_app/src/presentation/features/hilos/logic/bloc/comentarios_bloc.dart';
+import 'package:blog_app/src/presentation/features/hilos/logic/comentarios/comentarios_bloc.dart';
 import 'package:blog_app/src/presentation/features/hilos/logic/hilo/hilo_bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -112,11 +112,11 @@ class ColorDeAutorComentario extends StatelessWidget {
         width: 50,
         color: Colors.red,
         padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: FittedBox(
+        child: const FittedBox(
           child: Text(
             "nombre",
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.white, fontWeight: FontWeight.w900),
           ),
         ),
@@ -130,11 +130,11 @@ class TagDeComentario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Tag(
+     return const Tag(
         height: 25,
         txt: "SFASFAF",
         color: Colors.white,
-        textStyle: const TextStyle(color: Colors.black),
+        textStyle: TextStyle(color: Colors.black),
       );  
     }
 }

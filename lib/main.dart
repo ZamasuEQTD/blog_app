@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: const Color(0xff787880).withOpacity(0.2),
-          border: InputBorder.none
+          border: InputBorder.none,
         ),
         appBarTheme: const AppBarTheme(
           elevation: 0,
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xffF2F2F7),
         useMaterial3: false,
       ),
-      home: HiloView(),
+      home: const HiloView(),
       builder: (context, child) {
         return PopScope(
           canPop: true,

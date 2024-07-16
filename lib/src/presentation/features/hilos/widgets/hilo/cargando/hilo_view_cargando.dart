@@ -7,10 +7,16 @@ class HiloViewCargando extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverList.list(children: [
-      HiloBodyCargando(),
-      ComentarioCargando()
-    ]);
+    return CustomScrollView(
+      slivers: [
+        SliverList.list(
+          children: const [
+            HiloBodyCargando(),
+            ComentarioCargando()
+          ]
+        )
+      ],
+    );
   }
 }
 
