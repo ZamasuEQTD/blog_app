@@ -81,7 +81,8 @@ class YaTienesCuentaIniciarSesionButton extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.zero))
             ),
           ),  
-          onPressed: () {}, 
+          onPressed: () {}
+          , 
           child: const FittedBox(child: Text("Ya tienes cuenta? Inicia sesion",style: TextStyle(color: CupertinoColors.activeBlue))),
         ),
       ),

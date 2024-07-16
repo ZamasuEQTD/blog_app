@@ -7,21 +7,11 @@ import '../logic/class/item_seleccionable.dart';
 
 class GrupoSeleccionableList extends StatelessWidget {
   final List<GrupoSeleccionable> seleccionables;
-  final ScrollController controller;
 
-  const GrupoSeleccionableList._({super.key, required this.seleccionables, required this.controller});
+  const GrupoSeleccionableList({
+    super.key, required this.seleccionables,
+  });
 
-  factory GrupoSeleccionableList({
-    required List<GrupoSeleccionable> seleccionables,
-    ScrollController? controller,
-    Key? key
-  }){
-    return GrupoSeleccionableList._(
-      key: key,
-      seleccionables: seleccionables,
-      controller: controller?? ScrollController()
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,14 +19,12 @@ class GrupoSeleccionableList extends StatelessWidget {
       color: CupertinoColors.label
     ), child: ListView.builder(
         shrinkWrap: true,
-        controller: controller,
         itemCount: seleccionables.length,
         itemBuilder: (context, index) =>
         Container(
           margin: const EdgeInsets.symmetric(vertical: 5),
           child: SeleccionableSheet(
             grupo: seleccionables[index],
-            controller: controller
           )
         )
       )
@@ -47,12 +35,10 @@ class GrupoSeleccionableList extends StatelessWidget {
 
 class SeleccionableSheet extends StatelessWidget {
   final GrupoSeleccionable grupo;
-  final ScrollController? controller;
   
   const SeleccionableSheet({
     super.key, 
     required this.grupo, 
-    this.controller
   });
 
   @override
@@ -75,7 +61,6 @@ class SeleccionableSheet extends StatelessWidget {
                   )
                 : const SizedBox(),
             ListView.builder(
-                controller: controller,
                 shrinkWrap: true,
                 itemCount: grupo.seleccionables.length,
                 itemBuilder: (context, index) => _seleccionableTile(grupo.seleccionables[index])

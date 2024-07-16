@@ -154,12 +154,10 @@ class OpcionesDePortadaHomeBottomSheet extends StatelessWidget {
 }
 
 class GruposSeleccionableBottomSheet extends StatelessWidget {
-  final ScrollController? scrollController;
   final List<GrupoSeleccionable> grupos;
   final Widget Function(Widget child)? builder;
   const GruposSeleccionableBottomSheet({
     super.key, 
-    this.scrollController, 
     required this.grupos, 
     this.builder
   });
@@ -178,7 +176,6 @@ class GruposSeleccionableBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
       child: GrupoSeleccionableList(
         seleccionables: grupos,
-        controller: scrollController
       ),
     );
   }
@@ -192,7 +189,6 @@ class GruposSeleccionableBottomSheet extends StatelessWidget {
     RoundedBottomSheetManager.show(
       context: context, 
       child: GruposSeleccionableBottomSheet(
-        scrollController: scrollController,
         grupos: grupos,
         builder: builder
       ) 

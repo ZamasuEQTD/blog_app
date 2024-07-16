@@ -14,7 +14,6 @@ class OpcionesDeComentariosBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GrupoSeleccionableList(
-        controller: context.read(),
         seleccionables:   [
             GrupoSeleccionable(seleccionables: [
             const ItemSeleccionable(nombre: "Ver usuario",

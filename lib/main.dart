@@ -1,8 +1,6 @@
 import 'package:blog_app/src/application/configuration/dependency_injection/dependency_injection.dart';
 import 'package:blog_app/src/infraestructure/configuration/dependency_injection.dart';
-import 'package:blog_app/src/presentation/features/hilos/views/crear_hilo/crear_hilo_view.dart';
-import 'package:blog_app/src/presentation/features/hilos/views/ver_hilo/ver_hilo_view.dart';
-import 'package:blog_app/src/presentation/features/home/views/home_view.dart';
+import 'package:blog_app/src/presentation/features/hilos/views/hilo/hilo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +35,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xffF2F2F7),
         useMaterial3: false,
       ),
-      home:   const VerHiloView(hiloId: "",),
+      home: HiloView(),
       builder: (context, child) {
         return PopScope(
           canPop: true,

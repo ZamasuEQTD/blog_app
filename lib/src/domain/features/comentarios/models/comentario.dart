@@ -12,7 +12,6 @@ class Comentario  {
   final DateTime createdAt;
   final Media? media;
 
-
   const Comentario({
     required this.id, 
     required this.texto, 

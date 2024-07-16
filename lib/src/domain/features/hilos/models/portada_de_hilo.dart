@@ -16,9 +16,17 @@ class PortadaDeHilo {
 
 class BanderasDePortada {
   final bool esNuevo;
+
+  
   final bool tieneEncuesta;
+
+  
   final bool dadosActivados;
+
+  
   final bool idUnicoActivado;
+
+  
 
   const BanderasDePortada({
     required this.esNuevo,
