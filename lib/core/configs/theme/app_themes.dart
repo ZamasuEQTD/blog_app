@@ -5,8 +5,8 @@ class AppThemes {
   const AppThemes();
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
-    scaffoldBackgroundColor: AppColors.background,
-    colorScheme: ColorScheme(
+    scaffoldBackgroundColor: AppColors.surface,
+    colorScheme: const ColorScheme(
       brightness: Brightness.light, 
       primary: AppColors.primary, 
       onPrimary: AppColors.secondary, 
@@ -14,8 +14,8 @@ class AppThemes {
       onSecondary: AppColors.onSecondary, 
       error: AppColors.error, 
       onError: AppColors.onError, 
-      surface: AppColors.background, 
-      onSurface: AppColors.secondary
+      surface: AppColors.surface, 
+      onSurface: AppColors.onSurface
     ),
     primaryColor: AppColors.primary,
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -30,6 +30,9 @@ class AppThemes {
         ) 
       )
     ),    
+    inputDecorationTheme: const InputDecorationTheme(
+      fillColor: AppColors.onSurface
+    ),
     useMaterial3: false,
   );
 }

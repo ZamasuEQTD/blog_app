@@ -72,9 +72,15 @@ class CheckboxSeleccionableList extends ItemSeleccionable {
     required super.nombre,
     super.style
   }):super(
-    trailing: Switch(     
-      value: value,
-      onChanged: onChange,
-    )
+    trailing:SizedBox(
+      height: 20,
+      child: SwitchTheme(
+        data: const SwitchThemeData(
+        ),
+         child: CupertinoSwitch(
+          value: value,
+          onChanged: onChange,
+      )),
+    ) 
   );
 }

@@ -1,4 +1,7 @@
+import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:flutter/material.dart';
+
+import '../seleccionable/logic/class/grupo_seleccionable.dart';
 
 class BottomSheet extends StatelessWidget {
   final Widget child;
@@ -19,7 +22,10 @@ class BottomSheet extends StatelessWidget {
   static void show(BuildContext context, {
     required Widget child,
     Widget Function(BuildContext context, Widget child)? builder
-  }) => showModalBottomSheet(context: context, builder:(context) 
+  }) => showModalBottomSheet(
+    isScrollControlled: true,
+    backgroundColor: Theme.of(context).colorScheme.onSecondary,
+    context: context, builder:(context) 
   => BottomSheet(
     builder: builder,
     child: child,
@@ -34,6 +40,7 @@ class DraggableScrollableBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      expand: false,
       builder: builder 
     );
   }
@@ -42,6 +49,31 @@ class DraggableScrollableBottomSheet extends StatelessWidget {
     required Widget Function(BuildContext context, ScrollController controller) builder
   }) => BottomSheet.show(
     context, 
-    child: DraggableScrollableBottomSheet(builder: builder)
+    child: DraggableScrollableBottomSheet(
+      builder: builder
+    )
   );
+}
+
+class DraggableSeleccionableBottomSheet extends StatelessWidget {
+  final ScrollController controller;
+  final List<GrupoSeleccionable> grupos;
+  const DraggableSeleccionableBottomSheet({
+    super.key, 
+    required this.grupos, required this.controller
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      controller: controller,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: GrupoSeleccionableList(seleccionables: grupos))
+    );
+  }
+
+  static void show(BuildContext context,{
+    required List<GrupoSeleccionable> grupos
+  }) => DraggableScrollableBottomSheet.show(context, builder: (context, controller) => DraggableSeleccionableBottomSheet(grupos: grupos,controller: controller,));
 }

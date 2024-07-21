@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   const AppColors._();
-  static final Color primary = Color(0xff4c75e7);
-  static final Color onPrimary = secondary;
-  static final Color secondary = Color(0xffffffff);
-  static final Color onSecondary = Color(0xFF8292aa);
-  static final Color background = Color(0xffc8ced9);
-  static final Color error = CupertinoColors.destructiveRed;
-  static final Color onError = Colors.white;
+  static const Color primary = Color(0xff4c75e7);
+  static const Color onPrimary = secondary;
+  static const Color secondary = Color(0xffffffff);
+  static const Color onSecondary = Color(0xFF8292aa);
+  static const Color surface = Color(0xffF9FAFB);
+  static const Color onSurface = Color(0xffE4E7EC);
+  static const Color error = CupertinoColors.destructiveRed;
+  static const Color onError = Colors.white;
 }

@@ -17,10 +17,12 @@ class GrupoSeleccionableList extends StatelessWidget {
     return IconTheme(data: const IconThemeData(
       color: CupertinoColors.label
     ), child: ListView.builder(
+        shrinkWrap: true,
         itemCount: seleccionables.length,
+        physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) =>
         Container(
-          margin: const EdgeInsets.symmetric(vertical: 5),
+          margin: const EdgeInsets.symmetric(vertical: 10),
           child: SeleccionableSheet(
             grupo: seleccionables[index],
           )
@@ -41,10 +43,12 @@ class SeleccionableSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(15),
       child: ColoredBox(
         color: Colors.white,
         child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: grupo.seleccionables.length,
           itemBuilder: _itemBuilder
         )
@@ -70,7 +74,7 @@ class ListTileSeleccionable extends ListTile {
     title: Text(
       seleccionable.nombre,
       style: const TextStyle(
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.bold,
       ).merge(seleccionable.style),
     ),
   );

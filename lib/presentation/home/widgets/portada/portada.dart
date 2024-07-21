@@ -1,5 +1,10 @@
+import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/common/widgets/media/widgets/image/image_overlapped.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/domain/features/home/entities/home_portada_de_hilo.dart';
+import 'package:blog_app/presentation/media/logic/extensions/media_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,7 +24,22 @@ class HomePortada extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go("hilo/${portada.id}");
+        DraggableSeleccionableBottomSheet.show(context, 
+        grupos: [
+          GrupoSeleccionable(seleccionables: [
+            CheckboxSeleccionableList(nombre: "Eliminar",onChange: (value) {}, value: false),
+            ItemSeleccionableTileList( 
+              icon: CupertinoIcons.add,
+              nombre: "Agregar"
+            ),
+          ]),
+          GrupoSeleccionable(seleccionables: [
+            EliminarItem.fromContext(context),
+            EliminarItem.fromContext(context),
+            EliminarItem.fromContext(context),
+            EliminarItem.fromContext(context)
+          ])
+        ]);
       },
       child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -27,7 +47,7 @@ class HomePortada extends StatelessWidget {
             height: 200,
             width: 200,
             child: ImageOverlapped.provider(
-                provider: NetworkImage("url"),
+                provider: portada.portada.spoileable.toProvider(),
                 boxFit: BoxFit.cover,
                 child: _getChild()
               )
@@ -86,7 +106,7 @@ class PortadaDeHiloHomeInformacion extends StatelessWidget {
           PortadaDeHiloHomeFeatures(
             portada: portada,
           ),
-          Text(portada.titulo)
+          Text(portada.titulo,style: const TextStyle(color: Colors.white),)
         ],
       ),
     );

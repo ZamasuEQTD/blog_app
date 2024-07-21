@@ -15,17 +15,17 @@ class PortadasHomeBloc extends Bloc<PortadasHomeEvent, PortadasHomeState> {
   final GetHomePortadasUseCase _useCase;
 
   PortadasHomeBloc(this._useCase) : super(const PortadasHomeState()) {
-    on<CargarPortadasHome>(_onCargarPortadasHome,transformer: restartable());
+    on<CargarPortadasHome>(_onCargarPortadasHome );
     on<CambiarFiltrosDePortadas>(_onCambiarFiltros);
   }
 
   Future _onCargarPortadasHome(
-      CargarPortadasHome event, Emitter<PortadasHomeState> emit) async {
+    CargarPortadasHome event, Emitter<PortadasHomeState> emit
+  ) async {
+
     if (state.status == PortadasHomeStatus.cargando) return;
 
     emit(state.copyWith(status: PortadasHomeStatus.cargando));
-
-    await Future.delayed(const Duration(seconds: 3));
 
     var result = await _useCase.handle(GetHomePortadasRequest(
       titulo: state.filtros.titulo
@@ -37,7 +37,9 @@ class PortadasHomeBloc extends Bloc<PortadasHomeEvent, PortadasHomeState> {
         (r) => emit(state.copyWith(
             status: PortadasHomeStatus.initial,
             portadas: [...state.portadas, ...r],
-            filtros: state.filtros.copyWith(ultimoBump: r.last.ultimoBump)))
+            filtros: r.isNotEmpty? state.filtros.copyWith(ultimoBump: r.last.ultimoBump) : state.filtros
+          ) 
+          )
         );
 
     if (emit.isDone) return;

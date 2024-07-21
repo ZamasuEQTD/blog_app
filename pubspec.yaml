@@ -49,7 +49,7 @@ dependencies:
   bloc_concurrency: ^0.2.5
   dio: ^5.5.0+1
   flutter_keyboard_visibility: ^6.0.0
-  get: ^4.6.6 
+  get: ^4.6.6
 dev_dependencies:
   flutter_test:
     sdk: flutter

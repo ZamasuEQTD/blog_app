@@ -11,7 +11,9 @@ import '../widgets/filtros/filtros_de_portadas.dart';
 import '../widgets/portada/portada.dart';
 
 class HomeView extends StatelessWidget {
+
   const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -51,10 +53,13 @@ class _HomeViewBodyState extends State<HomeViewBody> {
       physics:const BouncingScrollPhysics(),
       controller: controller,
       slivers: const [
-        SliverToBoxAdapter(
-          child: FiltrosPortadasHome()
-        ),
-        PortadasHomeGridList()
+        SliverPadding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          sliver: SliverMainAxisGroup(slivers: [
+            SliverToBoxAdapter(child: FiltrosPortadasHome()),
+            PortadasHomeGridList()
+          ])
+        )
       ],
     );
   }

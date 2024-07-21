@@ -1,4 +1,5 @@
 
+import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +16,13 @@ class FiltrosPortadasHome extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Flexible(child: BusquedaDePortadasPorTitulo()),
-          IconButton(
+          const Flexible(
+            child: BusquedaDePortadasPorTitulo()
+          ),
+          const SizedBox(width: 10),
+          ColoredIconButton(
             onPressed: () {},
             icon: const Icon(Icons.abc),
-            style: const ButtonStyle(
-                fixedSize: WidgetStatePropertyAll(Size(30, 30)),
-                shape: WidgetStatePropertyAll(OvalBorder())),
           )
         ],
       ),
@@ -40,11 +41,12 @@ class BusquedaDePortadasPorTitulo extends StatelessWidget {
         controller: controller,
         maxLines: 1,
         minLines: 1,
-        decoration: BusquedaInputDecoration(
+        decoration: BusquedaInputDecoration(borderRadius: 10,
           hintText: "Titulo de hilo",
           onTap: () => context
               .read<PortadasHomeBloc>()
-              .add(CambiarFiltrosDePortadas(titulo: controller.text)),
+              .add(CambiarFiltrosDePortadas(titulo: controller.text)
+          ),
         ),
       ),
     );

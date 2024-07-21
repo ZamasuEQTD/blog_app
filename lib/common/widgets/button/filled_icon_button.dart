@@ -13,7 +13,7 @@ class ColoredIconButton extends IconButton {
     return Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.secondary,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         child: super.build(context)
       );
