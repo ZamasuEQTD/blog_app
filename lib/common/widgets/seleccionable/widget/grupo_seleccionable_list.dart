@@ -61,6 +61,43 @@ class SeleccionableSheet extends StatelessWidget {
   );
 }
 
+class GrupoSeleccionableSliverList extends StatelessWidget {
+  final List<GrupoSeleccionable> grupos;
+  const GrupoSeleccionableSliverList({
+    super.key, 
+    required this.grupos
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList.builder(
+      itemCount: grupos.length,
+      itemBuilder: (context, index) => SeleccionableSheetSliver(grupo: grupos[index])
+    );
+  }
+}
+
+
+class SeleccionableSheetSliver extends StatelessWidget {
+  final GrupoSeleccionable grupo;
+  const SeleccionableSheetSliver({super.key, required this.grupo});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: ColoredBox(
+        color: Colors.white,
+        child: SliverList.builder(
+          itemCount: grupo.seleccionables.length,
+          itemBuilder: (context, index) => ListTileSeleccionable(seleccionable: grupo.seleccionables[index])
+        )
+      ),
+    );
+  }
+}
+
+
 class ListTileSeleccionable extends ListTile {
   final ItemSeleccionable seleccionable;
 

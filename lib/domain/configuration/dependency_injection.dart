@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 
 extension DependencyInjection on GetIt {
   GetIt addDomain(){
-    registerSingleton(const GetHomePortadasUseCase());
+    registerSingleton(GetHomePortadasUseCase(get()));
     registerSingleton(const GetHiloUseCase());
 
     return this;

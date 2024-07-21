@@ -1,5 +1,6 @@
 
 import 'package:blog_app/domain/features/comentarios/entities/comentario.dart';
+import 'package:blog_app/presentation/home/widgets/portada/features/tags.dart';
 import 'package:flutter/material.dart';
 
 class ComentarioDeHiloWidget extends StatelessWidget {
@@ -90,15 +91,18 @@ class InformacionDeAutor extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
-        // const TagDeComentario(),
-        const SizedBox(width: 5,),
-        // const TagDeComentario()
+        Tag.formText(
+          label: comentario.datos.tag,
+          decoration:TagDeComentarioDecoration()
+        ),
+        SizedBox(width: 10),
+        comentario.datos.tagUnico != null? Tag.formText(label: comentario.datos.tagUnico!) : SizedBox()
       ]),
     );
   }
 }
 
- 
+
 class ColorDeAutorComentario extends StatelessWidget {
   const ColorDeAutorComentario({super.key});
 

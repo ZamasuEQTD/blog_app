@@ -4,5 +4,5 @@ import 'package:blog_app/domain/features/home/entities/home_portada_de_hilo.dart
 import 'package:dartz/dartz.dart';
 
 abstract class IHomeDatasource {
-  Future<Either<Failure,List<HomePortadaDeHilo>>> getPortadasRequest(GetHomePortadasRequest request);
+  Future<Either<Failure,List<HomePortadaDeHilo>>> getPortadas(GetHomePortadasRequest request);
 }

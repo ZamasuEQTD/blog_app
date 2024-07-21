@@ -106,12 +106,27 @@ class PortadaDeHiloHomeInformacion extends StatelessWidget {
           PortadaDeHiloHomeFeatures(
             portada: portada,
           ),
-          Text(portada.titulo,style: const TextStyle(color: Colors.white),)
+          Text(
+            portada.titulo,
+            maxLines: 2,
+            style:const TituloDePortadaTextStyle()
+          )
         ],
       ),
     );
   }
 }
+
+
+class TituloDePortadaTextStyle extends TextStyle {
+  const TituloDePortadaTextStyle(): super(
+    fontWeight: FontWeight.w600,
+    fontSize: 18,
+    overflow: TextOverflow.ellipsis,
+    color: Colors.white
+  );
+}
+
 
 class PortadaDeHiloHomeFeatures extends StatelessWidget {
   final HomePortadaDeHilo portada;
