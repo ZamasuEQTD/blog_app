@@ -1,3 +1,8 @@
+import 'package:blog_app/data/features/hilo/hub/hilo_hub.dart';
+import 'package:blog_app/domain/features/hilo/abstractions/hilo_hub.dart';
+import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
+import 'package:blog_app/presentation/hilos/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/logic/bloc/comentarios/comentarios_bloc.dart';
 import 'package:blog_app/presentation/hilos/logic/bloc/hilo/hilo_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,14 +43,44 @@ class HiloViewBody extends StatelessWidget {
         builder: (context, state) {
           if (state.status != HiloStatus.cargado) return const HiloViewCargando();
 
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: HiloBody(hilo: state.hilo!),
-              ),
-              const ListaDeComentarios(),
-            ],
+          return HiloViewCargado(
+            hilo: state.hilo!
           );
-        });
+    });
+  }
+}
+
+class HiloViewCargado extends StatefulWidget {
+  final Hilo hilo;
+  const HiloViewCargado({
+    super.key, required this.hilo,
+  });
+
+  @override
+  State<HiloViewCargado> createState() => _HiloViewCargadoState();
+}
+
+class _HiloViewCargadoState extends State<HiloViewCargado> {
+  late final IHiloHub hub;
+  @override
+  void initState() {
+    hub = HiloHub(hiloId: widget.hilo.id);
+
+    hub.onEliminado(() => context.read<HiloBloc>().add(EliminarHilo()));
+
+    hub.onComentado((comentario) => context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
+
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          child: HiloBody(hilo:  widget.hilo),
+        ),
+        const ListaDeComentarios(),
+      ],
+    );
   }
 }

@@ -15,6 +15,7 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
   HiloBloc(this.handler) : super(const HiloState()) {
     on<RecargarHilo>(_onRecargarHilo);
     on<CargarHilo>(_onCargarHilo);
+    on<EliminarHilo>(_onEliminarHilo);
   }
 
   void _onRecargarHilo(RecargarHilo event, Emitter<HiloState> emit) {
@@ -35,5 +36,11 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
       (l) => emit(state.copyWith(status: HiloStatus.initial)), 
       (r) => emit(state.copyWith(hilo: r,status: HiloStatus.cargado),)
     );
+  }
+
+  void _onEliminarHilo(EliminarHilo event, Emitter<HiloState> emit) {
+    emit(state.copyWith(
+      hilo: state.hilo!.copyWith(estado: EstadoDeHilo.eliminado)
+    ));
   }
 }

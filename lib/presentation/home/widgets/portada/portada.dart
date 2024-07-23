@@ -6,7 +6,6 @@ import 'package:blog_app/domain/features/home/entities/home_portada_de_hilo.dart
 import 'package:blog_app/presentation/media/logic/extensions/media_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../common/widgets/effects/blur/blurear_widget.dart';
 import '../../../../common/widgets/effects/gradient/gradient_effect.dart';

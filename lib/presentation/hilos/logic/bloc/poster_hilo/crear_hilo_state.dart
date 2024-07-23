@@ -3,28 +3,41 @@ part of 'crear_hilo_bloc.dart';
 class CrearHiloState extends Equatable {
   final String titulo;
   final String descripcion; 
+  final List<String> encuesta;
+  final HiloId? hiloId;
+  final PostearHiloStatus status;
   final BanderasDeHilo banderas;
-
+  final Spoileable<Media>? portada;
   const CrearHiloState({
     this.titulo = "", 
-    this.descripcion = "", 
+    this.descripcion = "",
+    this.encuesta = const [],
+    this.status = PostearHiloStatus.initial,
+    this.hiloId,
     this.banderas = const BanderasDeHilo(
       dados: false,
       tagUnico: false
-    )
+    ),
+    this.portada 
   });
   
   CrearHiloState copyWith({
     String? titulo,
     String? descripcion,
-    BanderasDeHilo? banderas
-  }) {
-    return CrearHiloState(
-      titulo:titulo?? this.titulo,
+    List<String>? encuesta,
+    HiloId? hiloId,
+    PostearHiloStatus? status,
+    BanderasDeHilo ?banderas,
+    Spoileable<Media>? portada
+    }) => CrearHiloState(
+      titulo: titulo?? this.titulo,
       descripcion: descripcion?? this.descripcion,
-      banderas: banderas?? this.banderas
-    );
-  }
+      encuesta: encuesta?? this.encuesta,
+      banderas: banderas?? this.banderas,
+      hiloId: hiloId?? this.hiloId,
+      portada: portada?? this.portada,
+      status: status?? this.status
+    ); 
 
   @override
   List<Object> get props => [
@@ -58,4 +71,11 @@ class BanderasDeHilo extends Equatable{
       tagUnico: tagUnico?? this.tagUnico
     );
   }
+}
+
+enum PostearHiloStatus {
+  initial,
+  posteando,
+  posteado,
+  failure
 }

@@ -34,4 +34,3 @@ enum ComentariosStatus {
   cargados,
   failure,
 }
-typedef ComentarioId = String;

@@ -29,3 +29,15 @@ class CambiarBanderas extends CrearHiloEvent {
     this.tagUnico
   });
 }
+
+class AgregarMedia extends CrearHiloEvent {
+  final Media media;
+
+  const AgregarMedia({required this.media});
+}
+
+class SwitchSpoiler extends CrearHiloEvent {}
+
+class EliminarMedia extends CrearHiloEvent {}
+
+class PostearHilo extends CrearHiloEvent {}

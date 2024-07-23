@@ -19,7 +19,8 @@ class GradientEffectWidget extends StatelessWidget {
             colors: colors,
             stops: stops,
             begin: Alignment.topCenter,
-            end: Alignment.bottomCenter),
+            end: Alignment.bottomCenter
+          ),
       ),
     ));
   }

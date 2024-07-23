@@ -2,8 +2,9 @@ import 'package:blog_app/presentation/hilos/widgets/postear_hilo_form/portada.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
-import '../logic/bloc/crear_hilo/crear_hilo_bloc.dart';
+import '../logic/bloc/poster_hilo/crear_hilo_bloc.dart';
 
 
 class PostearHiloView extends StatelessWidget {
@@ -11,7 +12,7 @@ class PostearHiloView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CrearHiloBloc(),
+      create: (context) => CrearHiloBloc(GetIt.I.get()),
       child: Scaffold(
             appBar: AppBar(
               centerTitle: true,

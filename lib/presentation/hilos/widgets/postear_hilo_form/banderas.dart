@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import '../../../../common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import '../../../../common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
-import '../../logic/bloc/crear_hilo/crear_hilo_bloc.dart';
+import '../../logic/bloc/poster_hilo/crear_hilo_bloc.dart';
 class ConfiguracionDeBanderas extends StatelessWidget {
   const ConfiguracionDeBanderas({
     super.key,

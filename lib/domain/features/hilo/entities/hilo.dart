@@ -1,8 +1,9 @@
 
 import 'package:blog_app/domain/features/common/entities/spoileable.dart';
 import 'package:blog_app/domain/features/media/entities/media.dart';
+import 'package:equatable/equatable.dart';
 
-class Hilo {
+class Hilo extends Equatable {
   final HiloId id;
   final String titulo;
   final String descripcion;
@@ -20,6 +21,35 @@ class Hilo {
     required this.archivo,
     required this.estado
   });
+  
+  Hilo copyWith({
+    HiloId? id,
+    String? titulo,
+    String? descripcion,
+    DateTime? createdAt,
+    BanderasDeHilo? banderas,
+    Spoileable<Media>? archivo,
+    EstadoDeHilo? estado
+  }) => Hilo(
+    id : id?? this.id,
+    titulo : titulo?? this.titulo,
+    descripcion : descripcion?? this.descripcion,
+    createdAt : createdAt?? this.createdAt,
+    banderas : banderas?? this.banderas,
+    archivo : archivo?? this.archivo,
+    estado : estado?? this.estado,
+  );
+
+  @override
+  List<Object?> get props => [
+    id,
+    titulo,
+    descripcion,
+    createdAt,
+    banderas,
+    archivo,
+    estado
+  ];
 
 }
 
