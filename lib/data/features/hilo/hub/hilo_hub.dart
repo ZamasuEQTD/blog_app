@@ -8,16 +8,25 @@ class HiloHub extends IHiloHub {
   HiloHub({required this.hiloId});
   @override
   void onComentado(void Function(Comentario comentario) onComentado) {
-    Timer.periodic(Duration(seconds: 1), (timer) => onComentado(Comentario(id: "id", texto: "texto", color: ColoresDeComentario.multi, createdAt: DateTime.now(), datos: DatosDeComentario(tag: "FSAFAS", tagUnico:null, dados: null), autor:Autor(nombre: "Gatubi", rango: "Moderador", rangoCorto: "MOD"))));
+    Timer.periodic(
+        const Duration(seconds: 10),
+        (timer) => onComentado(Comentario(
+            id: "id",
+            texto: "texto",
+            color: ColoresDeComentario.multi,
+            createdAt: DateTime.now(),
+            datos: const DatosDeComentario(
+                tag: "FSAFAS", tagUnico: "fas", dados: "5"),
+            autor: const Autor(
+                nombre: "Gatubi", rango: "Moderador", rangoCorto: "MOD"))));
   }
 
   @override
   void onEliminado(void Function() onEliminado) {
     onEliminado();
   }
-  
+
   @override
-  void onComentarioEliminado(void Function(ComentarioId id) onComentarioEliminado) {
-  }
-  
+  void onComentarioEliminado(
+      void Function(ComentarioId id) onComentarioEliminado) {}
 }

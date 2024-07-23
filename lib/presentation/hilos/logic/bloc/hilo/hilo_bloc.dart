@@ -23,24 +23,20 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
     add(CargarHilo());
   }
 
+  Future _onCargarHilo(CargarHilo event, Emitter<HiloState> emit) async {
+    emit(state.copyWith(status: HiloStatus.cargando));
 
-
-  Future _onCargarHilo(CargarHilo event, Emitter<HiloState> emit)async {
-    emit(state.copyWith(
-      status: HiloStatus.cargando
-    ));
-
-    var result = await handler.handle(GetHiloRequest(id: ""));
+    var result = await handler.handle(const GetHiloRequest(id: ""));
 
     result.fold(
-      (l) => emit(state.copyWith(status: HiloStatus.initial)), 
-      (r) => emit(state.copyWith(hilo: r,status: HiloStatus.cargado),)
-    );
+        (l) => emit(state.copyWith(status: HiloStatus.initial)),
+        (r) => emit(
+              state.copyWith(hilo: r, status: HiloStatus.cargado),
+            ));
   }
 
   void _onEliminarHilo(EliminarHilo event, Emitter<HiloState> emit) {
     emit(state.copyWith(
-      hilo: state.hilo!.copyWith(estado: EstadoDeHilo.eliminado)
-    ));
+        hilo: state.hilo!.copyWith(estado: EstadoDeHilo.eliminado)));
   }
 }

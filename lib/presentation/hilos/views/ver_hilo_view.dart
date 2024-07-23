@@ -13,7 +13,6 @@ import '../widgets/cargando/hilo_view/ver_hilo_view_cargando.dart';
 import '../widgets/comentarios/comentarios.dart';
 import '../widgets/hilo_body/hilo_body.dart';
 
-
 class VerHiloView extends StatelessWidget {
   const VerHiloView({super.key});
 
@@ -21,17 +20,23 @@ class VerHiloView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => TextEditingController(),
-      child: BlocProvider(
-      create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
-      child: const Scaffold(
-        body: HiloViewBody(),
-        // bottomSheet: ComentarHilo()
-      ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
+          ),
+          BlocProvider(
+            create: (context) => ComentariosBloc(GetIt.I.get()),
+          ),
+        ],
+        child: const Scaffold(
+          body: HiloViewBody(),
+          // bottomSheet: ComentarHilo()
+        ),
       ),
     );
   }
 }
-
 
 class HiloViewBody extends StatelessWidget {
   const HiloViewBody({super.key});
@@ -41,19 +46,20 @@ class HiloViewBody extends StatelessWidget {
     return BlocBuilder<HiloBloc, HiloState>(
         buildWhen: (previous, current) => previous.status != current.status,
         builder: (context, state) {
-          if (state.status != HiloStatus.cargado) return const HiloViewCargando();
+          if (state.status != HiloStatus.cargado) {
+            return const HiloViewCargando();
+          }
 
-          return HiloViewCargado(
-            hilo: state.hilo!
-          );
-    });
+          return HiloViewCargado(hilo: state.hilo!);
+        });
   }
 }
 
 class HiloViewCargado extends StatefulWidget {
   final Hilo hilo;
   const HiloViewCargado({
-    super.key, required this.hilo,
+    super.key,
+    required this.hilo,
   });
 
   @override
@@ -68,16 +74,18 @@ class _HiloViewCargadoState extends State<HiloViewCargado> {
 
     hub.onEliminado(() => context.read<HiloBloc>().add(EliminarHilo()));
 
-    hub.onComentado((comentario) => context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
+    hub.onComentado((comentario) =>
+        context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverFillRemaining(
-          child: HiloBody(hilo:  widget.hilo),
+        SliverToBoxAdapter(
+          child: HiloBody(hilo: widget.hilo),
         ),
         const ListaDeComentarios(),
       ],
