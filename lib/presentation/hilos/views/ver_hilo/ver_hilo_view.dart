@@ -1,17 +1,18 @@
 import 'package:blog_app/data/features/hilo/hub/hilo_hub.dart';
 import 'package:blog_app/domain/features/hilo/abstractions/hilo_hub.dart';
 import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
-import 'package:blog_app/presentation/hilos/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
-import 'package:blog_app/presentation/hilos/logic/bloc/comentarios/comentarios_bloc.dart';
-import 'package:blog_app/presentation/hilos/logic/bloc/hilo/hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentarios/comentarios_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/hilo/hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/widgets/comentar_hilo/comentar_hilo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/cargando/hilo_view/ver_hilo_view_cargando.dart';
-import '../widgets/comentarios/comentarios.dart';
-import '../widgets/hilo_body/hilo_body.dart';
+import 'widgets/cargando/ver_hilo_view_cargando.dart';
+import 'widgets/comentarios/comentarios.dart';
+import 'widgets/hilo_body/hilo_body.dart';
 
 class VerHiloView extends StatelessWidget {
   const VerHiloView({super.key});
@@ -31,7 +32,7 @@ class VerHiloView extends StatelessWidget {
         ],
         child: const Scaffold(
           body: HiloViewBody(),
-          // bottomSheet: ComentarHilo()
+          bottomSheet: _ComentarHiloBottomSheet()
         ),
       ),
     );
@@ -92,3 +93,21 @@ class _HiloViewCargadoState extends State<HiloViewCargado> {
     );
   }
 }
+
+class _ComentarHiloBottomSheet extends StatelessWidget {
+  const _ComentarHiloBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HiloBloc, HiloState>(
+      builder: (context, state) {
+        if(state.status == HiloStatus.cargado && state.hilo!.estado == EstadoDeHilo.activo){
+           return const ComentarHiloBottomSheet().animate().moveY();
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+}
+

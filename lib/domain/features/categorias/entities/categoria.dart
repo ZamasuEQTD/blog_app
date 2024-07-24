@@ -1,7 +1,9 @@
 
+import 'package:equatable/equatable.dart';
+
 import 'subcategoria.dart';
 
-class Categoria {
+class Categoria extends Equatable{
   final String nombre;
   final List<Subcategoria> subcategorias;
 
@@ -9,4 +11,10 @@ class Categoria {
     this.nombre, 
     this.subcategorias
   );
+  
+  @override
+  List<Object?> get props => [
+    nombre,
+    subcategorias
+  ];
 }

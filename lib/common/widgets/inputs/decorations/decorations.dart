@@ -1,4 +1,5 @@
 
+import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:flutter/material.dart';
 
 class FlatInputDecoration extends InputDecoration {
@@ -19,6 +20,22 @@ class FlatInputDecoration extends InputDecoration {
       ))
     );
 }
+
+class FlatPasswordDecoration extends FlatInputDecoration {
+  final bool isObscure;
+  FlatPasswordDecoration({
+    required this.isObscure,
+    required void Function() onTap,
+    required super.hintText,
+    super.borderRadius
+  }): super(
+    suffixIcon: ColoredIconButton(
+      onPressed: onTap, 
+      icon: const Icon(Icons.abc)
+    )
+  );
+}
+
 
 class BusquedaInputDecoration extends FlatInputDecoration {
     BusquedaInputDecoration({

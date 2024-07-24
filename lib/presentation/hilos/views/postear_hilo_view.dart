@@ -6,7 +6,6 @@ import 'package:get_it/get_it.dart';
 
 import '../logic/bloc/poster_hilo/crear_hilo_bloc.dart';
 
-
 class PostearHiloView extends StatelessWidget {
   const PostearHiloView({super.key});
   @override

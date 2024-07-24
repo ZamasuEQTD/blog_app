@@ -5,7 +5,7 @@ import 'package:blog_app/core/classes/failure.dart';
 import 'package:blog_app/data/features/auth/models/registro_request.dart';
 import 'package:blog_app/domain/features/auth/entities/usuario.dart';
 import 'package:blog_app/domain/features/auth/usecases/registro_usecase.dart';
-import 'package:blog_app/presentation/auth/logic/bloc/login/login_bloc.dart';
+import 'package:blog_app/presentation/auth/views/login/logic/bloc/login/login_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'registro_event.dart';

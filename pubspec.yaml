@@ -52,6 +52,7 @@ dependencies:
   flutter_keyboard_visibility: ^6.0.0
   get: ^4.6.6
   sliver_tools: ^0.2.12
+  flutter_animate: ^4.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -5,7 +5,7 @@ import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
 import 'package:blog_app/domain/features/hilo/usecases/get_hilo_usecase.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../../data/features/hilo/models/get_hilo_request.dart';
+import '../../../../../../../data/features/hilo/models/get_hilo_request.dart';
 
 part 'hilo_event.dart';
 part 'hilo_state.dart';

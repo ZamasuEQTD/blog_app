@@ -1,7 +1,7 @@
 import 'package:blog_app/core/configs/theme/app_themes.dart';
 import 'package:blog_app/data/configuration/dependency_injection.dart';
 import 'package:blog_app/domain/configuration/dependency_injection.dart';
-import 'package:blog_app/presentation/hilos/views/ver_hilo_view.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/ver_hilo_view.dart';
 import 'package:blog_app/presentation/home/views/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
