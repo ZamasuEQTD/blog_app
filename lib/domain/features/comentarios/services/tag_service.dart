@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 class TagService {
   const TagService._();
-  
-  List<String> getTags(String texto) => [];
+
+  static List<String> getTags(String texto) => [];
+  static HashSet<String> getTagsUnicos(String texto) => HashSet();
 }

@@ -4,9 +4,11 @@ import 'dart:developer';
 
 import 'package:blog_app/common/widgets/effects/gradient/animated_gradient.dart';
 import 'package:blog_app/domain/features/comentarios/entities/comentario.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
 import 'package:blog_app/presentation/home/widgets/portada/features/tag.dart';
 import 'package:blog_app/presentation/home/widgets/portada/features/tags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ComentarioDeHiloWidget extends StatelessWidget {
   final Comentario comentario;
@@ -19,20 +21,19 @@ class ComentarioDeHiloWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        InformacionDeAutor(comentario: comentario),
-        Text(comentario.texto)
-      ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InformacionDeAutor(comentario: comentario),
+          Text(comentario.texto)
+        ],
       ),
     );
   }
 
   static BoxDecoration _getDecoration() {
     return BoxDecoration(
-      color: const Color.fromRGBO(233, 233, 233, 1),
-      borderRadius: BorderRadius.circular(15)
-    );
+        color: const Color.fromRGBO(233, 233, 233, 1),
+        borderRadius: BorderRadius.circular(15));
   }
 }
 
@@ -61,10 +62,9 @@ class InformacionDeAutor extends StatelessWidget {
     );
   }
 
-  Widget _getTagUnico() => 
-    comentario.datos.tagUnico != null
-    ? TagUnicoDeComentario(comentario.datos.tagUnico!)
-    : const SizedBox();
+  Widget _getTagUnico() => comentario.datos.tagUnico != null
+      ? TagUnicoDeComentario(comentario.datos.tagUnico!)
+      : const SizedBox();
 }
 
 class TagDeComentario extends StatelessWidget {
@@ -78,9 +78,7 @@ class TagDeComentario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        log(comentario.datos.tag);
-      },
+      onTap: () => context.read<ComentarHiloBloc>(),
       child: TextTag(
         comentario.datos.tag,
         decoration: TagDeComentarioDecoration(Colors.white),
@@ -90,23 +88,22 @@ class TagDeComentario extends StatelessWidget {
 }
 
 class TagDeComentarioDecoration extends TextTagDecoration {
-  TagDeComentarioDecoration(Color background):super(decoration: TagDecoration(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-      borderRadius: BorderRadius.circular(15),
-      backgroundColor: background
-    )
-  );
+  TagDeComentarioDecoration(Color background)
+      : super(
+            decoration: TagDecoration(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+                borderRadius: BorderRadius.circular(15),
+                backgroundColor: background));
 }
-
 
 class TagUnicoDeComentario extends TextTag {
   static final List<Color> colors = [Colors.red, Colors.white, Colors.green];
 
-  TagUnicoDeComentario(super.tag, {super.key}) :super(
-    decoration: TagDeComentarioDecoration(
-      ColorPicker.pickColor(tag, colors)
-    )
-  );
+  TagUnicoDeComentario(super.tag, {super.key})
+      : super(
+            decoration:
+                TagDeComentarioDecoration(ColorPicker.pickColor(tag, colors)));
 }
 
 class ColorDeAutorComentario extends StatelessWidget {

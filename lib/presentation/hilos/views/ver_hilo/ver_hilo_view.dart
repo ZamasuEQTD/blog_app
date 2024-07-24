@@ -31,9 +31,7 @@ class VerHiloView extends StatelessWidget {
           ),
         ],
         child: const Scaffold(
-          body: HiloViewBody(),
-          bottomSheet: _ComentarHiloBottomSheet()
-        ),
+            body: HiloViewBody(), bottomSheet: _ComentarHiloBottomSheet()),
       ),
     );
   }
@@ -101,8 +99,8 @@ class _ComentarHiloBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HiloBloc, HiloState>(
       builder: (context, state) {
-        if(state.status == HiloStatus.cargado && state.hilo!.estado == EstadoDeHilo.activo){
-           return const ComentarHiloBottomSheet().animate().moveY();
+        if (state.status == HiloStatus.cargado) {
+          return const ComentarHiloBottomSheet();
         }
 
         return const SizedBox();
@@ -110,4 +108,3 @@ class _ComentarHiloBottomSheet extends StatelessWidget {
     );
   }
 }
-

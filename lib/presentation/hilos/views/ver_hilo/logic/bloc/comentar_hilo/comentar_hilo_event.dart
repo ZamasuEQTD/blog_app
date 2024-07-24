@@ -11,6 +11,12 @@ class EnviarComentario extends ComentarHiloEvent {}
 
 class SwitchDeMediaSpoiler extends ComentarHiloEvent {}
 
+class AggregarTaggueo extends ComentarHiloEvent {
+  final String tag;
+
+  const AggregarTaggueo({required this.tag});
+}
+
 class AgregarMedia extends ComentarHiloEvent {
   final Media media;
 
