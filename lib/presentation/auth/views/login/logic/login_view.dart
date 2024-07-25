@@ -1,5 +1,7 @@
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});
@@ -24,9 +26,7 @@ class LoginView extends StatelessWidget {
               TextField(
                 decoration: FlatInputDecoration(hintText: "Usuario"),
               ),
-              PasswordField(
-                hintText: "Contraseña",
-              ),
+              const PasswordField(),
               AuthBtn(
                 child: ElevatedButton(
                     onPressed: _onIniciarSesion,
@@ -41,6 +41,23 @@ class LoginView extends StatelessWidget {
   }
 
   void _onIniciarSesion() {}
+}
+
+class PasswordField extends StatelessWidget {
+  const PasswordField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ObscureInputBuilder(builder: (context, controller) => TextField(
+      decoration: FlatPasswordDecoration(
+        hintText: "Contraseña",
+        isObscure: controller.obscure,onTap: 
+        controller.switchObscure
+      )
+    ));
+  }
 }
 
 class AuthBtn extends StatelessWidget {
@@ -63,40 +80,31 @@ class AuthBtn extends StatelessWidget {
 }
 
 
-class PasswordField extends StatefulWidget {
-  final String hintText;
-  const PasswordField({
-    super.key, 
-    required this.hintText,
-  });
+class ObscureInputController extends ChangeNotifier {
+  bool _obscure = false;
 
-  @override
-  State<PasswordField> createState() => _PasswordFieldState();
+  bool get obscure => _obscure;
+
+  void switchObscure() {
+    _obscure = !_obscure;
+    notifyListeners();
+  }
 }
 
-class _PasswordFieldState extends State<PasswordField> {
-  final TextEditingController controller = TextEditingController();
-  bool isObscure = true;
+class ObscureInputBuilder extends StatelessWidget {
+  final Widget Function(BuildContext context, ObscureInputController controller) builder;
+  const ObscureInputBuilder({super.key, required this.builder});
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      obscureText: isObscure,
-      decoration: FlatPasswordDecoration(
-        isObscure: isObscure, 
-        onTap: _onTap,
-        hintText: widget.hintText
-      ),
+    return Provider(
+      create: (context) => ObscureInputController(),
+      builder: (context, child) => builder(context,context.watch<ObscureInputController>())
     );
-  }
-
-  void _onTap() {
-    setState(() {
-      isObscure != isObscure;
-    });
   }
 }
 
+ 
 class AuthLabelTextStyle extends TextStyle  {
   const AuthLabelTextStyle(): super(
     fontSize: 30,

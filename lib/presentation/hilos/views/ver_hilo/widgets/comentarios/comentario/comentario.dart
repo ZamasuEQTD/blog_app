@@ -78,7 +78,7 @@ class TagDeComentario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<ComentarHiloBloc>(),
+      onTap: () => context.read<ComentarHiloBloc>().add(AggregarTaggueo(tag: comentario.datos.tag)),
       child: TextTag(
         comentario.datos.tag,
         decoration: TagDeComentarioDecoration(Colors.white),

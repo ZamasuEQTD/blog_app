@@ -7,6 +7,14 @@ sealed class ComentarHiloEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class CambiarComentario extends ComentarHiloEvent{
+  final String comentario;
+
+  const CambiarComentario({
+    required this.comentario
+  });
+}
+
 class EnviarComentario extends ComentarHiloEvent {}
 
 class SwitchDeMediaSpoiler extends ComentarHiloEvent {}

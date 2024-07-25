@@ -47,7 +47,9 @@ class ComentarHiloBloc extends Bloc<ComentarHiloEvent, ComentarHiloState> {
   void _onAgregarTaggueo(
       AggregarTaggueo event, Emitter<ComentarHiloState> emit) {
     if (!TagService.getTagsUnicos(state.texto).contains(event.tag)) {
-      emit(state.copyWith(texto: "${state.texto}>>${event.tag}"));
+      emit(state.copyWith(
+        ultimoTaggueo: event.tag
+      ));
     }
   }
 }

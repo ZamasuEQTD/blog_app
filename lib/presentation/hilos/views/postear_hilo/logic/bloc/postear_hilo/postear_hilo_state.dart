@@ -1,6 +1,6 @@
-part of 'crear_hilo_bloc.dart';
+part of 'postear_hilo_bloc.dart';
 
-class CrearHiloState extends Equatable {
+class PostearHiloState extends Equatable {
   final String titulo;
   final String descripcion; 
   final List<String> encuesta;
@@ -8,7 +8,7 @@ class CrearHiloState extends Equatable {
   final PostearHiloStatus status;
   final BanderasDeHilo banderas;
   final Spoileable<Media>? portada;
-  const CrearHiloState({
+  const PostearHiloState({
     this.titulo = "", 
     this.descripcion = "",
     this.encuesta = const [],
@@ -21,7 +21,7 @@ class CrearHiloState extends Equatable {
     this.portada 
   });
   
-  CrearHiloState copyWith({
+  PostearHiloState copyWith({
     String? titulo,
     String? descripcion,
     List<String>? encuesta,
@@ -29,7 +29,7 @@ class CrearHiloState extends Equatable {
     PostearHiloStatus? status,
     BanderasDeHilo ?banderas,
     Spoileable<Media>? portada
-    }) => CrearHiloState(
+    }) => PostearHiloState(
       titulo: titulo?? this.titulo,
       descripcion: descripcion?? this.descripcion,
       encuesta: encuesta?? this.encuesta,

@@ -43,29 +43,41 @@ class ComentarioInput extends StatefulWidget {
 }
 
 class _ComentarioInputState extends State<ComentarioInput> {
-  late final TextEditingController controller = context.read();
+  final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
-    // controller.addListener(()=> context.read<HiloBloc>().add(CambiarComentario(comentario: controller.text)));
+    controller.addListener(
+      ()=> context.read<ComentarHiloBloc>().add(CambiarComentario(comentario: controller.text))
+    );
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
-      return Expanded(
-        child: TextField(
-          controller: controller,
-          keyboardType: TextInputType.multiline,
-          minLines: 1,
-          maxLines: !isKeyboardVisible ? 1 : 4,
-          decoration: FlatInputDecoration(
-              borderRadius: 15, hintText: "Escribe tu comentario..."),
-        ),
-      );
-    });
+    return BlocListener<ComentarHiloBloc, ComentarHiloState>(
+      listenWhen: (previous, current) => previous.ultimoTaggueo != current.ultimoTaggueo,
+      listener: (context, state) {
+        controller.value = TextEditingValue(
+          text: "${state.texto}>>${state.ultimoTaggueo}"
+        );
+      },
+      child: KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
+        return Expanded(
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.multiline,
+            minLines: 1,
+            maxLines: !isKeyboardVisible ? 1 : 4,
+            decoration: FlatInputDecoration(
+              borderRadius: 15,
+              hintText: "Escribe tu comentario..."
+            ),
+          ),
+        );
+      })
+    );
   }
 }
 

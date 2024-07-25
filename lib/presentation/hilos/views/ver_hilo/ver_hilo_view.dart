@@ -5,7 +5,6 @@ import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentario
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/hilo/hilo_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/widgets/comentar_hilo/comentar_hilo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +30,7 @@ class VerHiloView extends StatelessWidget {
           ),
         ],
         child: const Scaffold(
-            body: HiloViewBody(), bottomSheet: _ComentarHiloBottomSheet()),
+            body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
       ),
     );
   }
@@ -48,9 +47,9 @@ class HiloViewBody extends StatelessWidget {
           if (state.status != HiloStatus.cargado) {
             return const HiloViewCargando();
           }
-
           return HiloViewCargado(hilo: state.hilo!);
-        });
+        }
+      );
   }
 }
 
@@ -73,8 +72,7 @@ class _HiloViewCargadoState extends State<HiloViewCargado> {
 
     hub.onEliminado(() => context.read<HiloBloc>().add(EliminarHilo()));
 
-    hub.onComentado((comentario) =>
-        context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
+    hub.onComentado((comentario) => context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
 
     super.initState();
   }
@@ -92,16 +90,14 @@ class _HiloViewCargadoState extends State<HiloViewCargado> {
   }
 }
 
-class _ComentarHiloBottomSheet extends StatelessWidget {
-  const _ComentarHiloBottomSheet({super.key});
+class BlocBottomSheetBuilder extends StatelessWidget {
+  const BlocBottomSheetBuilder({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HiloBloc, HiloState>(
       builder: (context, state) {
-        if (state.status == HiloStatus.cargado) {
-          return const ComentarHiloBottomSheet();
-        }
+        if (state.status == HiloStatus.cargado) return const ComentarHiloBottomSheet();
 
         return const SizedBox();
       },

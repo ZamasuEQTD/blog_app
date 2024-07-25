@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:blog_app/domain/features/common/entities/spoileable.dart';
 import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
@@ -7,12 +5,13 @@ import 'package:blog_app/domain/features/hilo/usecases/postear_hilo_usecase.dart
 import 'package:blog_app/domain/features/media/entities/media.dart';
 import 'package:equatable/equatable.dart';
 
-part 'crear_hilo_event.dart';
-part 'crear_hilo_state.dart';
+part 'postear_hilo_event.dart';
+part 'postear_hilo_state.dart';
 
-class CrearHiloBloc extends Bloc<CrearHiloEvent, CrearHiloState> {
+class PostearHiloBloc extends Bloc<PostearHiloEvent, PostearHiloState> {
   final PostearHiloUsecase _postearHiloUsecase;
-  CrearHiloBloc(this._postearHiloUsecase) : super(const CrearHiloState()) {
+
+  PostearHiloBloc(this._postearHiloUsecase) : super(const PostearHiloState()) {
     on<CambiarBanderas>(_onCambiarBanderas);
     on<CambiarTitulo>(_onCambiarTitulo);
     on<AgregarMedia>(_onAgregarMedia);
@@ -21,7 +20,7 @@ class CrearHiloBloc extends Bloc<CrearHiloEvent, CrearHiloState> {
     on<SwitchSpoiler>(_onSwitchSpoiler);
   }
 
-  void _onCambiarBanderas(CambiarBanderas event, Emitter<CrearHiloState> emit) {
+   void _onCambiarBanderas(CambiarBanderas event, Emitter<PostearHiloState> emit) {
     emit(
       state.copyWith(banderas:state.banderas.copyWith(
         dados: event.dados,
@@ -30,25 +29,25 @@ class CrearHiloBloc extends Bloc<CrearHiloEvent, CrearHiloState> {
     );
   }
 
-  void _onCambiarTitulo(CambiarTitulo event, Emitter<CrearHiloState> emit) {
+  void _onCambiarTitulo(CambiarTitulo event, Emitter<PostearHiloState> emit) {
     emit(state.copyWith(
       titulo: event.titulo
     ));
   }
 
-  void _onAgregarMedia(AgregarMedia event, Emitter<CrearHiloState> emit) {
+  void _onAgregarMedia(AgregarMedia event, Emitter<PostearHiloState> emit) {
     state.copyWith(
       portada: Spoileable(false, event.media)
     );
   }
 
-  void _onEliminarMedia(EliminarMedia event, Emitter<CrearHiloState> emit) {
+  void _onEliminarMedia(EliminarMedia event, Emitter<PostearHiloState> emit) {
     emit(state.copyWith(
       portada: null
     ));
   }
 
-  Future _onPostearHilo(PostearHilo event, Emitter<CrearHiloState> emit) async {
+  Future _onPostearHilo(PostearHilo event, Emitter<PostearHiloState> emit) async {
     emit(state.copyWith(
       status: PostearHiloStatus.posteando
     ));
@@ -68,7 +67,7 @@ class CrearHiloBloc extends Bloc<CrearHiloEvent, CrearHiloState> {
     );
   }
 
-  void _onSwitchSpoiler(SwitchSpoiler event, Emitter<CrearHiloState> emit) {
+  void _onSwitchSpoiler(SwitchSpoiler event, Emitter<PostearHiloState> emit) {
     emit(state.copyWith(
       portada: state.portada!.copyWith(
         spoiler: !state.portada!.esSpoiler

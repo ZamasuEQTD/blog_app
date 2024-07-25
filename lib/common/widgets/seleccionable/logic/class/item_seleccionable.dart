@@ -72,6 +72,7 @@ class CheckboxSeleccionableList extends ItemSeleccionable {
     required super.nombre,
     super.style
   }):super(
+    onTap: () => onChange(!value),
     trailing:SizedBox(
       height: 20,
       child: SwitchTheme(
