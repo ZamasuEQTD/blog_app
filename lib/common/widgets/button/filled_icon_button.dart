@@ -1,21 +1,26 @@
-
 import 'package:flutter/material.dart';
 
 class ColoredIconButton extends IconButton {
-  const ColoredIconButton({
-    super.key, 
-    required super.onPressed, 
-    required super.icon
-  });
+  final BorderRadius? border;
+
+  const ColoredIconButton(
+      {super.key, this.border, required super.onPressed, required super.icon});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.onSurface,
-        ),
-        child: super.build(context)
+    if (border == null) {
+      return ClipOval(
+        child: ColoredBox(
+            color: Theme.of(context).colorScheme.onSurface,
+            child: super.build(context)),
       );
+    }
+
+    return ClipRRect(
+      borderRadius: border!,
+      child: ColoredBox(
+          color: Theme.of(context).colorScheme.onSurface,
+          child: super.build(context)),
+    );
   }
 }

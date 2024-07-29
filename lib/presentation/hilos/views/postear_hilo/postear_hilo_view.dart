@@ -1,12 +1,13 @@
+import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:blog_app/presentation/hilos/views/postear_hilo/logic/bloc/postear_hilo/postear_hilo_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/postear_hilo/widgets/banderas.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'widgets/portada.dart';
-
 
 class PostearHiloView extends StatelessWidget {
   const PostearHiloView({super.key});
@@ -15,27 +16,25 @@ class PostearHiloView extends StatelessWidget {
     return BlocProvider(
       create: (context) => PostearHiloBloc(GetIt.I.get()),
       child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: const Text(
-                "Crear hilo",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-              leading: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(CupertinoIcons.arrow_left)),
-              actions: [
-                TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Crear",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ))
-              ],
+          appBar: AppBar(
+            centerTitle: true,
+            title: const Text(
+              "Crear hilo",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             ),
-            body: const PostearHiloViewBody()),
+            leading: IconButton(
+                onPressed: () {}, icon: const Icon(CupertinoIcons.arrow_left)),
+            actions: [
+              TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Crear",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ))
+            ],
+          ),
+          body: const PostearHiloViewBody()),
     );
   }
 }
@@ -47,17 +46,27 @@ class PostearHiloViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: context.read(),
-      child: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           children: [
-            SizedBox(height: 5),
-            Portada(),
-            SizedBox(height: 5),
-            SeleccionarSubcategoria(),
-            SizedBox(height: 5),
-            ConfiguracionDeBanderas(),
-            SizedBox(height: 5),
+            TextField(
+              decoration:
+                  FlatInputDecoration(borderRadius: 10, hintText: "Titulo"),
+            ),
+            const SizedBox(height: 5),
+            TextField(
+              maxLines: 5,
+              decoration: FlatInputDecoration(
+                  borderRadius: 10, hintText: "Descripción"),
+            ),
+            const SizedBox(height: 5),
+            const YoutubeVideo(),
+            const SizedBox(height: 5),
+            const SeleccionarSubcategoria(),
+            const SizedBox(height: 5),
+            const ConfiguracionDeBanderas(),
+            const SizedBox(height: 5),
           ],
         ),
       ),
@@ -88,5 +97,46 @@ class SeleccionarSubcategoria extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class YoutubeVideo extends StatefulWidget {
+  const YoutubeVideo({super.key});
+
+  @override
+  State<YoutubeVideo> createState() => _YoutubeVideoState();
+}
+
+class _YoutubeVideoState extends State<YoutubeVideo> {
+  late final YoutubePlayerController controller;
+  @override
+  void initState() {
+    controller = YoutubePlayerController(
+        initialVideoId: 'A6Vj6yeItHQ',
+        flags: const YoutubePlayerFlags(
+          autoPlay: false,
+          controlsVisibleAtStart: false,
+          hideThumbnail: true,
+          showLiveFullscreenButton: false,
+          hideControls: true,
+        ));
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: YoutubePlayerBuilder(
+          player: YoutubePlayer(
+            controller: controller,
+            bottomActions: const [],
+            topActions: const [SizedBox()],
+          ),
+          builder: (context, child) {
+            return child;
+          },
+        ));
   }
 }

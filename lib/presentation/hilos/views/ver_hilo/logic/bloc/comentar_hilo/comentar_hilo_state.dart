@@ -11,43 +11,29 @@ class ComentarHiloState extends Equatable {
     this.ultimoTaggueo,
     this.status = ComentarHiloStatus.initial,
   });
-  
-  ComentarHiloState copyWith({
-    String? texto,
-    Spoileable<Media>? media,
-    String? ultimoTaggueo,
-    ComentarHiloStatus? status
-  }) => ComentarHiloState(
-    texto: texto?? this.texto,
-    media: media?? this.media,
-    ultimoTaggueo: ultimoTaggueo?? this.ultimoTaggueo,
-    status: status??this.status
-  );
+
+  ComentarHiloState copyWith(
+          {String? texto,
+          Spoileable<Media>? media,
+          String? ultimoTaggueo,
+          ComentarHiloStatus? status}) =>
+      ComentarHiloState(
+          texto: texto ?? this.texto,
+          media: media ?? this.media,
+          ultimoTaggueo: ultimoTaggueo ?? this.ultimoTaggueo,
+          status: status ?? this.status);
 
   @override
-  List<Object?> get props => [
-    texto,
-    media,
-    status
-  ];
+  List<Object?> get props => [texto, media, ultimoTaggueo, status];
 }
 
-class TagState  extends Equatable{
+class TagState extends Equatable {
   final String? ultimoTaggueo;
-  
-  const TagState({
-    this.ultimoTaggueo
-  });
-  
+
+  const TagState({this.ultimoTaggueo});
+
   @override
-  List<Object?> get props => [
-    ultimoTaggueo
-  ];
+  List<Object?> get props => [ultimoTaggueo];
 }
 
-enum ComentarHiloStatus {
-  initial,
-  enviando,
-  enviado,
-  failure
-}
+enum ComentarHiloStatus { initial, enviando, enviado, failure }

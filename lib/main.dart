@@ -1,6 +1,7 @@
 import 'package:blog_app/core/configs/theme/app_themes.dart';
 import 'package:blog_app/data/configuration/dependency_injection.dart';
 import 'package:blog_app/domain/configuration/dependency_injection.dart';
+import 'package:blog_app/presentation/hilos/views/postear_hilo/postear_hilo_view.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/ver_hilo_view.dart';
 import 'package:blog_app/presentation/home/views/home_view.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.poppinsTextTheme()
       ),
-      home: const VerHiloView(),
+      home: const PostearHiloView(),
       builder: (context, child) {
         return PopScope(
           canPop: true,
