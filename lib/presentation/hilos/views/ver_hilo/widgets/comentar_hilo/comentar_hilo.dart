@@ -1,6 +1,7 @@
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/controllers/taggueos_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,7 @@ class ComentarHiloBottomSheet extends StatelessWidget {
 }
 
 class ComentarioInput extends StatefulWidget {
+
   const ComentarioInput({super.key});
 
   @override
@@ -51,37 +53,36 @@ class _ComentarioInputState extends State<ComentarioInput> {
       ()=> context.read<ComentarHiloBloc>().add(CambiarComentario(comentario: controller.text))
     );
 
+    context.read<TaggueosController>().addListener(() {
+      String? tag = context.read<TaggueosController>().tag;
+      if(tag != null){
+        controller.text = controller.text + tag;
+      }
+    });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ComentarHiloBloc, ComentarHiloState>(
-      listenWhen: (previous, current) => previous.ultimoTaggueo != current.ultimoTaggueo,
-      listener: (context, state) {
-        controller.value = TextEditingValue(
-          text: "${state.texto}>>${state.ultimoTaggueo}"
-        );
-      },
-      child: KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) {
-        return Expanded(
-          child: TextField(
-            controller: controller,
-            keyboardType: TextInputType.multiline,
-            minLines: 1,
-            maxLines: !isKeyboardVisible ? 1 : 4,
-            decoration: FlatInputDecoration(
-              borderRadius: 15,
-              hintText: "Escribe tu comentario..."
-            ),
+    return KeyboardVisibilityBuilder(builder: (context, isKeyboardVisible) => Expanded(
+        child: TextField(
+          controller: controller,
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: !isKeyboardVisible ? 1 : 4,
+          decoration: FlatInputDecoration(
+            borderRadius: 15,
+            hintText: "Escribe tu comentario..."
           ),
-        );
-      })
+        ),
+      )
     );
   }
 }
 
 class EnviarComentarioButton extends StatelessWidget {
+
   const EnviarComentarioButton({super.key});
 
   @override
@@ -89,9 +90,9 @@ class EnviarComentarioButton extends StatelessWidget {
     return BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
       builder: (context, state) {
         return ColoredIconButton(
-            onPressed: () =>
-                context.read<ComentarHiloBloc>().add(EnviarComentario()),
-            icon: _getIcon(state));
+            onPressed: () => context.read<ComentarHiloBloc>().add(EnviarComentario()),
+            icon: _getIcon(state)
+          );
       },
     );
   }

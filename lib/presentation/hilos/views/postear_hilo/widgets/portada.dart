@@ -35,8 +35,8 @@ class Portada extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     
-                  }, 
-                  child: Text("Agregar desde enlace")
+                  },
+                  child: const Text("Agregar desde enlace")
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -52,7 +52,7 @@ class Portada extends StatelessWidget {
                       },
                     );
                   }, 
-                  child: Text("Agregar desde galeria")
+                  child: const Text("Agregar desde galeria")
                 )
               ],
             );
@@ -114,7 +114,9 @@ class SnackbarManager extends FlashBar {
 
   static void show(BuildContext context){
     showFlash(context: context, builder: (context, controller) {
-      return SnackbarManager(controller: controller, title: "prueba", background: Colors.white); 
+      return SnackbarManager(
+        controller: controller, title: "prueba", background: Colors.white
+      ); 
     });
   }
 }

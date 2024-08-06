@@ -18,20 +18,17 @@ class VerHiloView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TextEditingController(),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
-          ),
-          BlocProvider(
-            create: (context) => ComentariosBloc(GetIt.I.get()),
-          ),
-        ],
-        child: const Scaffold(
-            body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
+        ),
+        BlocProvider(
+          create: (context) => ComentariosBloc(GetIt.I.get()),
+        ),
+      ],
+      child: const Scaffold(
+          body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
     );
   }
 }

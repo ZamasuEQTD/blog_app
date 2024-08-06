@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:blog_app/common/widgets/effects/gradient/animated_gradient.dart';
 import 'package:blog_app/domain/features/comentarios/entities/comentario.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/controllers/taggueos_controller.dart';
 import 'package:blog_app/presentation/home/widgets/portada/features/tag.dart';
 import 'package:blog_app/presentation/home/widgets/portada/features/tags.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,10 @@ class TagDeComentario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.read<ComentarHiloBloc>().add(AggregarTaggueo(tag: comentario.datos.tag)),
+      onTap: () => context.read<TaggueosController>().tagguear(
+        texto: context.read<ComentarHiloBloc>().state.texto,
+        tag: comentario.datos.tag
+      ),
       child: TextTag(
         comentario.datos.tag,
         decoration: TagDeComentarioDecoration(Colors.white),

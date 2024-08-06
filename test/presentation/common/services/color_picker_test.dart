@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'dart:developer';
 
+import 'package:blog_app/domain/features/comentarios/services/tag_service.dart';
 import 'package:blog_app/presentation/home/widgets/portada/features/tags.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -68,4 +68,23 @@ void main() {
       log(patterns.toString());
     });
   },);
+
+  group("s",() {
+    test("description", () {
+      List<String> tags = TagService.getTags(">>2FSAFAXA>>2GGGGGGG");
+
+      expect(tags,[
+        "2FSAFAXA",
+        "2GGGGGGG"
+      ]);
+    });
+    test("description", () {
+      HashSet<String> tags = TagService.getTagsUnicos(">>2FSAFAXA>>2GGGGGGG>>2FSAFAXA>>2GGGGGGG>>2FSAFAXA>>2GGGGGGG");
+
+      expect(tags, HashSet.from([
+        "2FSAFAXA",
+        "2GGGGGGG"
+      ]));
+    });
+  });
 }

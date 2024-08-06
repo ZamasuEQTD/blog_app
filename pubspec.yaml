@@ -54,6 +54,7 @@ dependencies:
   sliver_tools: ^0.2.12
   flutter_animate: ^4.5.0
   flash: ^3.1.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
