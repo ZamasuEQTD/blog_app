@@ -16,7 +16,7 @@ class HiloHub extends IHiloHub {
             color: ColoresDeComentario.multi,
             createdAt: DateTime.now(),
             datos: const DatosDeComentario(
-                tag: "FSAFAS", tagUnico: "fas", dados: "5"),
+                tag: "FSAFAS2", tagUnico: "fas", dados: "5"),
             autor: const Autor(
                 nombre: "Gatubi", rango: "Moderador", rangoCorto: "MOD"))));
   }

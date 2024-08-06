@@ -15,20 +15,45 @@ class ComentarHiloBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      child: Row(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ColoredIconButton(
-            onPressed: () =>
-                context.read<ComentarHiloBloc>().add(EnviarComentario()),
-            icon: const Icon(Icons.attach_email),
+          const ListaDeArchivos(),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ColoredIconButton(
+                onPressed: () =>
+                    context.read<ComentarHiloBloc>().add(EnviarComentario()),
+                icon: const Icon(Icons.attach_email),
+              ),
+              const SizedBox(width: 6),
+              const ComentarioInput(),
+              const SizedBox(width: 6),
+              const EnviarComentarioButton()
+            ],
           ),
-          const SizedBox(width: 6),
-          const ComentarioInput(),
-          const SizedBox(width: 6),
-          const EnviarComentarioButton()
         ],
       ),
+    );
+  }
+}
+
+class ListaDeArchivos extends StatelessWidget {
+  const ListaDeArchivos({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Container(height: 80,width: 80,color: Colors.red,)
+        )
+      ],
     );
   }
 }
@@ -53,7 +78,7 @@ class _ComentarioInputState extends State<ComentarioInput> {
     context.read<TaggueosController>().addListener(() {
       String? tag = context.read<TaggueosController>().tag;
       if(tag != null){
-        controller.text = controller.text + tag;
+        controller.text = '${controller.text}>>$tag';
       }
     });
 

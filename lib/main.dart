@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.poppinsTextTheme()
       ),
-      home: const PostearHiloView(),
+      home: const VerHiloView(),
       builder: (context, child) {
         return PopScope(
           canPop: true,

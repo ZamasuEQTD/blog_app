@@ -9,7 +9,7 @@ class TaggueosController extends ChangeNotifier {
   void tagguear({
     required String texto,
     required String tag
-  }) {
+  }) {  
     
     List<String> tags = TagService.getTags(texto);
 

@@ -4,6 +4,7 @@ import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentarios/comentarios_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/hilo/hilo_bloc.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/controllers/taggueos_controller.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/widgets/comentar_hilo/comentar_hilo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class VerHiloView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => TextEditingController(),
+      create: (context) => TaggueosController(),
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -29,6 +30,7 @@ class VerHiloView extends StatelessWidget {
           BlocProvider(
             create: (context) => ComentariosBloc(GetIt.I.get()),
           ),
+          BlocProvider(create: (context) => ComentarHiloBloc(GetIt.I.get()),)
         ],
         child: const Scaffold(
             body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
@@ -98,8 +100,9 @@ class BlocBottomSheetBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HiloBloc, HiloState>(
       builder: (context, state) {
-        if (state.status == HiloStatus.cargado)
+        if (state.status == HiloStatus.cargado) {
           return const ComentarHiloBottomSheet();
+        }
 
         return const SizedBox();
       },

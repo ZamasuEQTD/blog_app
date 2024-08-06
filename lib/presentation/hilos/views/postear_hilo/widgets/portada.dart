@@ -34,12 +34,11 @@ class Portada extends StatelessWidget {
                     )),
               );
             }
-            return const Row(
+            return  Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    
                   },
                   child: const Text("Agregar desde enlace")
                 ),

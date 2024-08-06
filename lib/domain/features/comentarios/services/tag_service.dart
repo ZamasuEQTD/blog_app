@@ -3,7 +3,7 @@ import 'dart:developer';
 
 class TagService {
 
-  static final RegExp _tag = RegExp(">>[A-Z0-9]{8}");
+  static final RegExp _tag = RegExp(">>[A-Z0-9]{7}");
 
   const TagService._();
 
