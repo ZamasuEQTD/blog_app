@@ -1,6 +1,7 @@
 import 'package:blog_app/data/features/hilo/hub/hilo_hub.dart';
 import 'package:blog_app/domain/features/hilo/abstractions/hilo_hub.dart';
 import 'package:blog_app/domain/features/hilo/entities/hilo.dart';
+import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentar_hilo/comentar_hilo_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/comentarios/comentarios_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/logic/bloc/hilo/hilo_bloc.dart';
 import 'package:blog_app/presentation/hilos/views/ver_hilo/widgets/comentar_hilo/comentar_hilo.dart';
@@ -18,17 +19,20 @@ class VerHiloView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
-        ),
-        BlocProvider(
-          create: (context) => ComentariosBloc(GetIt.I.get()),
-        ),
-      ],
-      child: const Scaffold(
-          body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
+    return ChangeNotifierProvider(
+      create: (context) => TextEditingController(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => HiloBloc(GetIt.I.get())..add(CargarHilo()),
+          ),
+          BlocProvider(
+            create: (context) => ComentariosBloc(GetIt.I.get()),
+          ),
+        ],
+        child: const Scaffold(
+            body: HiloViewBody(), bottomSheet: BlocBottomSheetBuilder()),
+      ),
     );
   }
 }
@@ -45,8 +49,7 @@ class HiloViewBody extends StatelessWidget {
             return const HiloViewCargando();
           }
           return HiloViewCargado(hilo: state.hilo!);
-        }
-      );
+        });
   }
 }
 
@@ -69,7 +72,8 @@ class _HiloViewCargadoState extends State<HiloViewCargado> {
 
     hub.onEliminado(() => context.read<HiloBloc>().add(EliminarHilo()));
 
-    hub.onComentado((comentario) => context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
+    hub.onComentado((comentario) =>
+        context.read<ComentariosBloc>().add(AgregarComentario(comentario)));
 
     super.initState();
   }
@@ -94,7 +98,8 @@ class BlocBottomSheetBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HiloBloc, HiloState>(
       builder: (context, state) {
-        if (state.status == HiloStatus.cargado) return const ComentarHiloBottomSheet();
+        if (state.status == HiloStatus.cargado)
+          return const ComentarHiloBottomSheet();
 
         return const SizedBox();
       },

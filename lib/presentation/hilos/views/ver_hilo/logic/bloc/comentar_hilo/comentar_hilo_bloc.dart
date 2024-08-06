@@ -14,6 +14,7 @@ class ComentarHiloBloc extends Bloc<ComentarHiloEvent, ComentarHiloState> {
   final ComentarHiloUsecase _usecase;
   ComentarHiloBloc(this._usecase) : super(const ComentarHiloState()) {
     on<EnviarComentario>(_onEnviarComentario);
+    on<CambiarComentario>(_onCambiarComentario);
     on<SwitchDeMediaSpoiler>(_onSwitchMediaSpoiler);
     on<AgregarMedia>(_onAgregarMedia);
     on<AggregarTaggueo>(_onAgregarTaggueo);
@@ -47,9 +48,12 @@ class ComentarHiloBloc extends Bloc<ComentarHiloEvent, ComentarHiloState> {
   void _onAgregarTaggueo(
       AggregarTaggueo event, Emitter<ComentarHiloState> emit) {
     if (!TagService.getTagsUnicos(state.texto).contains(event.tag)) {
-      emit(state.copyWith(
-        ultimoTaggueo: event.tag
-      ));
+      emit(state.copyWith(ultimoTaggueo: event.tag));
     }
+  }
+
+  void _onCambiarComentario(
+      CambiarComentario event, Emitter<ComentarHiloState> emit) {
+    emit(state.copyWith(texto: event.comentario));
   }
 }

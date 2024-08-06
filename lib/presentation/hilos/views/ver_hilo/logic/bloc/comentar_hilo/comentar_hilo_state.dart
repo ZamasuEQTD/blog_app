@@ -34,7 +34,7 @@ class ComentarHiloState extends Equatable {
   ];
 }
 
-class TagState  extends Equatable{
+class TagState extends Equatable {
   final String? ultimoTaggueo;
   final TagStatus? status;
 

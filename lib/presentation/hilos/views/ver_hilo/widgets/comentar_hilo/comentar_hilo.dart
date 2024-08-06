@@ -13,24 +13,21 @@ class ComentarHiloBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ComentarHiloBloc(GetIt.I.get()),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ColoredIconButton(
-              onPressed: () =>
-                  context.read<ComentarHiloBloc>().add(EnviarComentario()),
-              icon: const Icon(Icons.attach_email),
-            ),
-            const SizedBox(width: 6),
-            const ComentarioInput(),
-            const SizedBox(width: 6),
-            const EnviarComentarioButton()
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ColoredIconButton(
+            onPressed: () =>
+                context.read<ComentarHiloBloc>().add(EnviarComentario()),
+            icon: const Icon(Icons.attach_email),
+          ),
+          const SizedBox(width: 6),
+          const ComentarioInput(),
+          const SizedBox(width: 6),
+          const EnviarComentarioButton()
+        ],
       ),
     );
   }
@@ -49,9 +46,9 @@ class _ComentarioInputState extends State<ComentarioInput> {
 
   @override
   void initState() {
-    controller.addListener(
-      ()=> context.read<ComentarHiloBloc>().add(CambiarComentario(comentario: controller.text))
-    );
+    controller.addListener(() => context
+        .read<ComentarHiloBloc>()
+        .add(CambiarComentario(comentario: controller.text)));
 
     context.read<TaggueosController>().addListener(() {
       String? tag = context.read<TaggueosController>().tag;
