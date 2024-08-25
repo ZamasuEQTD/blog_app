@@ -1,8 +1,6 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 
 class LinearGradientAnimation extends StatefulWidget {
   final List<Color> colors;

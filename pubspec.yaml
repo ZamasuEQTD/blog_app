@@ -54,9 +54,10 @@ dependencies:
   sliver_tools: ^0.2.12
   flutter_animate: ^4.5.0
   flash: ^3.1.1
-  
+  path: ^1.9.0
   mime: ^1.0.5
   youtube_player_flutter: ^9.0.1
+  video_thumbnail: ^0.5.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

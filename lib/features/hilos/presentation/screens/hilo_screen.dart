@@ -1,0 +1,610 @@
+// ignore_for_file: unused_element
+
+import 'dart:collection';
+import 'dart:io';
+
+import 'package:blog_app/common/domain/services/horarios_service.dart';
+import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
+import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
+import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
+import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
+import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+
+import '../../../../common/widgets/effects/gradient/animated_gradient.dart';
+import '../../../../common/widgets/inputs/decorations/decorations.dart';
+import '../../../encuestas/domain/models/encuesta.dart';
+import '../../../media/domain/models/media.dart';
+import '../../domain/models/comentario.dart';
+import '../../domain/models/hilo.dart';
+import '../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
+import '../logic/bloc/hilo/hilo_bloc.dart';
+import 'package:path/path.dart' as p;
+
+import '../logic/controllers/taggueos_controller.dart';
+
+class HiloScreen extends StatefulWidget {
+  const HiloScreen({super.key});
+
+  @override
+  State<HiloScreen> createState() => _HiloScreenState();
+}
+
+class _HiloScreenState extends State<HiloScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: BlocProvider(
+      create: (context) => HiloBloc(""),
+      child: BlocBuilder<HiloBloc, HiloState>(
+        builder: (context, state) {
+          switch (state.status) {
+            case HiloStatus.cargado:
+              return _HiloScreenBody(hilo: state.hilo!);
+            default:
+          }
+
+          return Container();
+        },
+      ),
+    ));
+  }
+}
+
+class _HiloScreenBody extends StatelessWidget {
+  const _HiloScreenBody({
+    super.key,
+    required this.hilo,
+  });
+
+  final Hilo hilo;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [_HiloInformacion(hilo: hilo), const _Comentarios()],
+    );
+  }
+}
+
+class _HiloInformacion extends StatelessWidget {
+  static final HashMap<BanderasDeHilo, Widget> _banderas = HashMap.from({
+    BanderasDeHilo.dados: const Icon(Icons.casino),
+    BanderasDeHilo.encuesta: const Icon(Icons.bar_chart),
+    BanderasDeHilo.sticky: const Icon(CupertinoIcons.pin),
+    BanderasDeHilo.idUnico: const Icon(Icons.person)
+  });
+
+  const _HiloInformacion({
+    super.key,
+    required this.hilo,
+  });
+
+  final Hilo hilo;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(7),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
+          color: Color.fromRGBO(225, 225, 225, 1),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //banderas
+                _Banderas(hilo: hilo, banderas: _banderas),
+                //subcategoria
+                _Subcategoria(hilo: hilo),
+                //acciones
+                _AccionesEjecutables(hilo: hilo),
+                //encuesta
+
+                //portada
+                //titulo
+                Text(
+                  hilo.titulo,
+                  style: const TituloStyle(),
+                ),
+                //descripcion
+                Text(
+                  hilo.descripcion,
+                  style: const TextStyle(fontSize: 18),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AccionesEjecutables extends StatelessWidget {
+  const _AccionesEjecutables({
+    super.key,
+    required this.hilo,
+  });
+
+  final Hilo hilo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            IconButton(onPressed: () {}, icon: const Icon(Icons.flag_outlined)),
+            IconButton(
+                onPressed: () {}, icon: const Icon(Icons.visibility_outlined)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.star_outline)),
+          ],
+        ),
+        Row(
+          children: [
+            const Text(
+              "Gatubi",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 5),
+            Text(HorariosService.diferencia(
+                    utcNow: DateTime.now().toUtc(), time: hilo.creadoEn)
+                .toString()),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class _Subcategoria extends StatelessWidget {
+  const _Subcategoria({
+    super.key,
+    required this.hilo,
+  });
+
+  final Hilo hilo;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Row(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: Image(
+                      image: hilo.categoria.imagen.toProvider(),
+                      fit: BoxFit.cover)),
+              const SizedBox(width: 10),
+              Text(hilo.categoria.nombre),
+            ],
+          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_right))
+        ],
+      ),
+    );
+  }
+}
+
+class _Banderas extends StatelessWidget {
+  const _Banderas({
+    super.key,
+    required this.hilo,
+    required HashMap<BanderasDeHilo, Widget> banderas,
+  }) : _banderas = banderas;
+
+  final Hilo hilo;
+  final HashMap<BanderasDeHilo, Widget> _banderas;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 45,
+      decoration: BoxDecoration(
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      margin: const EdgeInsets.only(bottom: 5),
+      child: Row(
+        children: [
+          const BackButton(),
+          ...hilo.banderas
+              .map((bandera) => OutlinedIcon(child: _banderas[bandera]!))
+        ],
+      ),
+    );
+  }
+}
+
+class _Comentarios extends StatefulWidget {
+  const _Comentarios();
+
+  @override
+  State<_Comentarios> createState() => _ComentariosState();
+}
+
+class _ComentariosState extends State<_Comentarios> {
+  final HashMap<ComentarioId, GlobalKey> _keys = HashMap();
+
+  static const Widget _cargando = _ComentarioCargando();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<HiloBloc, HiloState>(
+      listenWhen: (previous, current) =>
+          previous.comentarios.length != current.comentarios.length,
+      listener: (context, state) {
+        for (var c in state.comentarios) {
+          if (c is! ComentarioListEntry) return;
+
+          if (_keys[c.id] == null) {
+            _keys[c.id] = GlobalKey();
+          }
+        }
+      },
+      child: BlocBuilder<HiloBloc, HiloState>(
+        buildWhen: (previous, current) =>
+            previous.comentarios.length != current.comentarios.length,
+        builder: (context, state) {
+          final List<ComentarioEntry> comentarios = state.comentarios;
+          return SliverList.builder(itemBuilder: (context, index) {
+            ComentarioEntry comentario = comentarios[index];
+
+            switch (comentario) {
+              case ComentarioListEntry c:
+                return _Comentario(key: _keys[c.id], comentario: comentario);
+              case ComentarioListCargandoEntry _:
+                return _cargando;
+              default:
+                throw Exception("");
+            }
+          });
+        },
+      ),
+    );
+  }
+}
+
+class _Comentario extends StatelessWidget {
+  static final BoxDecoration _decoration = BoxDecoration(
+      color: const Color.fromRGBO(233, 233, 233, 1),
+      borderRadius: BorderRadius.circular(15));
+
+  final ComentarioListEntry comentario;
+
+  const _Comentario({super.key, required this.comentario});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: _decoration,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 50,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _Tags(comentario: comentario),
+                Text(HorariosService.diferencia(
+                        utcNow: DateTime.now().toUtc(),
+                        time: comentario.creado_en)
+                    .toString())
+              ],
+            ),
+          ),
+          Text(comentario.texto)
+        ],
+      ),
+    );
+  }
+}
+
+class _Tags extends StatelessWidget {
+  const _Tags({
+    super.key,
+    required this.comentario,
+  });
+
+  final ComentarioListEntry comentario;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _Tag(
+          tag: comentario.datos.tag,
+        ),
+        comentario.datos.tagUnico != null
+            ? Row(
+                children: [
+                  const SizedBox(width: 15),
+                  _TagUnico(tag: comentario.datos.tagUnico!)
+                ],
+              )
+            : const SizedBox()
+      ],
+    );
+  }
+}
+
+class _ComentarioCargando extends StatelessWidget {
+  const _ComentarioCargando({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _Tag extends StatelessWidget {
+  final String tag;
+  const _Tag({
+    required this.tag,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.read<TaggueosController>().tagguear(
+          tag: tag, texto: context.read<ComentarHiloBloc>().state.texto),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+          child: FittedBox(
+            child: Text(
+              tag,
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TagUnico extends StatelessWidget {
+  static final List<Color> _colors = [
+    const Color(0xffFFBAAE),
+    const Color(0xff778ddc),
+    const Color(0xff6CFFD5),
+    const Color(0xffF78E69),
+    const Color(0xffFAE5C4)
+  ];
+
+  final String tag;
+
+  const _TagUnico({super.key, required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        color: ColorPicker.pickColor(tag, _colors),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+        child: FittedBox(
+          child: Text(
+            tag,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Color extends StatelessWidget {
+  static final HashMap<ColoresDeComentario, Widget> _colores = HashMap.from({
+    ColoresDeComentario.amarillo: const ColoredBox(color: Colors.yellow),
+    ColoresDeComentario.multi: const MultiColor(),
+    ColoresDeComentario.rojo: const ColoredBox(color: Colors.red)
+  });
+
+  final ComentarioListEntry comentario;
+
+  const _Color({super.key, required this.comentario});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        height: 50,
+        width: 50,
+        child: Stack(
+          children: [
+            _colores[comentario.color]!,
+            Positioned.fill(
+              child: Center(
+                child: Text(
+                  comentario.datos.dados ?? comentario.autor.rangoCorto,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MultiColor extends LinearGradientAnimation {
+  static const List<Color> _colors = [
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+    Colors.blue
+  ];
+
+  const MultiColor({super.key}) : super(colors: _colors);
+}
+
+class Invertido extends LinearGradientAnimation {
+  static const List<Color> _colors = [
+    Colors.red,
+    Colors.green,
+    Colors.yellow,
+    Colors.blue
+  ];
+
+  const Invertido({super.key}) : super(colors: _colors, reverse: true);
+}
+
+class OutlinedIcon extends StatelessWidget {
+  final Widget child;
+  const OutlinedIcon({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          border: Border.all(
+              color: const Color.fromRGBO(199, 199, 199, 1), width: 1.25)),
+      child: child,
+    );
+  }
+}
+
+class TituloStyle extends TextStyle {
+  const TituloStyle() : super(fontSize: 29, fontWeight: FontWeight.w900);
+}
+
+class ComentarEnHilo extends StatelessWidget {
+  const ComentarEnHilo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
+            buildWhen: (previous, current) => previous.media != current.media,
+            builder: (context, state) {
+              return Miniatura(
+                media: state.media!.spoileable,
+              );
+            },
+          ),
+          Row(
+            children: [
+              ColoredIconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.three_k_rounded),
+              ),
+              const _ComentarInput(),
+              ColoredIconButton(
+                  onPressed: () =>
+                      context.read<ComentarHiloBloc>().add(EnviarComentario()),
+                  icon: const Icon(Icons.send)),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _ComentarInput extends StatefulWidget {
+  const _ComentarInput({super.key});
+
+  @override
+  State<_ComentarInput> createState() => __ComentarInputState();
+}
+
+class __ComentarInputState extends State<_ComentarInput> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.addListener(() => context
+        .read<ComentarHiloBloc>()
+        .add(CambiarComentario(comentario: _controller.text)));
+
+    context.read<TaggueosController>().addListener(() {
+      String? tag = context.read<TaggueosController>().tag;
+      _controller.text = '${_controller.text}>>$tag';
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyboardVisibilityBuilder(
+      builder: (context, isKeyboardVisible) => Expanded(
+          child: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.multiline,
+        minLines: 1,
+        maxLines: !isKeyboardVisible ? 1 : 4,
+        decoration: FlatInputDecoration(
+            borderRadius: 15, hintText: "Escribe tu comentario..."),
+      )),
+    );
+  }
+}
+
+class EncuestaDeHilo extends StatelessWidget {
+  final Encuesta encuesta;
+  const EncuestaDeHilo({super.key, required this.encuesta});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+      child: EncuestaWidget(encuesta: encuesta),
+    );
+  }
+}
+
+class ColorPicker {
+  const ColorPicker._();
+
+  static Color pickColor(String text, List<Color> colors) {
+    if (text.isEmpty) throw ArgumentError("[text] no puede estar vacia");
+
+    if (colors.isEmpty) throw ArgumentError("[colors] no puede estar vacia");
+
+    int n = 0;
+
+    for (var i = 0; i < text.length; i++) {
+      n += text.codeUnitAt(i);
+    }
+
+    int index = (n % colors.length);
+
+    return colors[index];
+  }
+}
