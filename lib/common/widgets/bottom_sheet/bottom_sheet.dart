@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../seleccionable/logic/class/grupo_seleccionable.dart';
 
-class BottomSheet extends StatelessWidget {
+class BottomSheetManager extends StatelessWidget {
   final Widget child;
   final Widget Function(BuildContext context, Widget child)? builder;
-  const BottomSheet({super.key, required this.child, this.builder});
+  const BottomSheetManager({super.key, required this.child, this.builder});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class BottomSheet extends StatelessWidget {
           isScrollControlled: true,
           backgroundColor: Theme.of(context).colorScheme.onSecondary,
           context: context,
-          builder: (context) => BottomSheet(
+          builder: (context) => BottomSheetManager(
                 builder: builder,
                 child: child,
               ));

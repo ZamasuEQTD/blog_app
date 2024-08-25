@@ -1,3 +1,4 @@
+import 'package:blog_app/core/configs/theme/app_themes.dart';
 import 'package:blog_app/core/dependency_injection/data_dependencies.dart';
 import 'package:blog_app/features/hilos/presentation/screens/postear_hilo_screen.dart';
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(),
+      theme: AppThemes.light,
       home: const HomeScreen(),
     );
   }

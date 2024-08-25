@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
 
 class Skeleton extends StatelessWidget {
-  final double? height;
   final double? width;
-  final Color color;
+  final double? height;
   final BorderRadiusGeometry? borderRadius;
-  const Skeleton({
-    super.key,
-    this.height,
-    this.width,
-    this.color = const Color.fromRGBO(199, 199, 199, 1),
-    this.borderRadius
-  });
 
-  const Skeleton.white({super.key,
-      this.height,
-      this.width,
-      this.color = Colors.white,
-      this.borderRadius
-  });
+  const Skeleton({super.key, this.width, this.height, this.borderRadius});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: borderRadius ?? BorderRadius.circular(8),
-        color: color,
+        borderRadius: borderRadius,
+        color: Colors.red,
       ),
       height: height,
       width: width,
@@ -33,18 +20,12 @@ class Skeleton extends StatelessWidget {
   }
 }
 
-class CircleLoadingWidget extends StatelessWidget {
-  final double size;
-  const CircleLoadingWidget({super.key, required this.size});
+class CircleSkeleton extends Skeleton {
+  const CircleSkeleton({super.key, required double size})
+      : super(height: size, width: size);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: size,
-      width: size,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle, color: Color.fromRGBO(199, 199, 199, 1)
-      ),
-    );
+    return ClipOval(child: super.build(context));
   }
 }

@@ -36,3 +36,5 @@ enum HomePortadaBanderas {
   dados,
   idUnico,
 }
+
+enum HomeRequest { owner }

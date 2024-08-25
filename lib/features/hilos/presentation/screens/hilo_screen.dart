@@ -23,7 +23,6 @@ import '../../domain/models/comentario.dart';
 import '../../domain/models/hilo.dart';
 import '../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
 import '../logic/bloc/hilo/hilo_bloc.dart';
-import 'package:path/path.dart' as p;
 
 import '../logic/controllers/taggueos_controller.dart';
 
@@ -485,7 +484,6 @@ class OutlinedIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(5),
           border: Border.all(
               color: const Color.fromRGBO(199, 199, 199, 1), width: 1.25)),
