@@ -12,8 +12,7 @@ class GetHomePortadasUseCase
 
   @override
   Future<Either<Failure, List<HomePortadaListEntry>>> handle(
-      GetHomePortadasRequest request) {
-    // TODO: implement handle
-    throw UnimplementedError();
+      GetHomePortadasRequest request) async {
+    return _repository.getPortadas(request);
   }
 }

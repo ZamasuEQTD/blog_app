@@ -1,8 +1,10 @@
 import 'dart:collection';
 
+import 'package:blog_app/common/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/common/widgets/effects/blur/blurear_widget.dart';
 import 'package:blog_app/common/widgets/effects/gradient/gradient_effect.dart';
 import 'package:blog_app/common/widgets/media/widgets/image/image_overlapped.dart';
+import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -37,10 +39,11 @@ class HomePortada extends StatelessWidget {
             height: 200,
             width: 200,
             child: ImageOverlapped.provider(
-                provider: NetworkImage(portada.titulo),
+                provider: portada.imagen.spoileable.toProvider(),
                 boxFit: BoxFit.cover,
                 child: Stack(
                   children: [
+                    const BlurEffect(),
                     GradientEffectWidget(
                       colors: _gradient,
                       stops: _stops,
@@ -88,14 +91,17 @@ class _CategoriaTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 25,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.green),
+          borderRadius: BorderRadius.circular(5), color: Colors.green),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
-        child: Text(
-          portada.categoria,
-          style:
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        child: FittedBox(
+          child: Text(
+            portada.categoria,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
@@ -106,7 +112,7 @@ class TituloDePortadaTextStyle extends TextStyle {
   const TituloDePortadaTextStyle()
       : super(
             fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 20,
             overflow: TextOverflow.ellipsis,
             color: Colors.white);
 }

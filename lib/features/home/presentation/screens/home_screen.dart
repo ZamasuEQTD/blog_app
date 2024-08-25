@@ -81,20 +81,23 @@ class _HomePortadasGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomePortadasBloc, HomePortadasState>(
       builder: (context, state) {
-        return SliverGrid.builder(
-          itemCount: state.portadas.length,
-          gridDelegate: HomeScreen._delegate,
-          itemBuilder: (context, index) {
-            HomePortadaEntry entry = state.portadas[index];
-            switch (entry) {
-              case HomePortadaListEntry portada:
-                return HomePortada(portada: portada);
-              case CargandoHomePortadaListEntry _:
-                return _cargando;
-              default:
-                throw ArgumentError("Tipo de portada no contemplado");
-            }
-          },
+        return SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          sliver: SliverGrid.builder(
+            itemCount: state.portadas.length,
+            gridDelegate: HomeScreen._delegate,
+            itemBuilder: (context, index) {
+              HomePortadaEntry entry = state.portadas[index];
+              switch (entry) {
+                case HomePortadaListEntry portada:
+                  return HomePortada(portada: portada);
+                case CargandoHomePortadaListEntry _:
+                  return _cargando;
+                default:
+                  throw ArgumentError("Tipo de portada no contemplado");
+              }
+            },
+          ),
         );
       },
     );

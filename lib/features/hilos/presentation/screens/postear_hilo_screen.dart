@@ -3,6 +3,7 @@ import 'package:blog_app/features/categorias/domain/models/subcategoria.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../../common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import '../../../../common/widgets/seleccionable/logic/class/item_seleccionable.dart';
@@ -15,44 +16,54 @@ class PostearHiloScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Postear hilo",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                //titulo
-                TextField(
-                  onChanged: (value) => context
-                      .read<PostearHiloBloc>()
-                      .add(CambiarTitulo(titulo: value)),
-                  maxLines: 1,
-                  decoration: FlatInputDecoration(hintText: "titulo"),
-                ),
-                const SizedBox(height: 10),
-                //descripcion
-                TextField(
-                  onChanged: (value) => context
-                      .read<PostearHiloBloc>()
-                      .add(CambiarDescripcion(descripcion: value)),
-                  maxLines: 5,
-                  decoration: FlatInputDecoration(hintText: "descripcion"),
-                ),
-                //portada
-                //subcategoria
-                const _Subcategoria(),
-                //banderas
-                const _Banderas()
-              ],
+    return BlocProvider(
+      create: (context) => PostearHiloBloc(),
+      child: Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Postear hilo",
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
             ),
           ),
-        ));
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  //titulo
+                  TextField(
+                    onChanged: (value) => context
+                        .read<PostearHiloBloc>()
+                        .add(CambiarTitulo(titulo: value)),
+                    maxLines: 1,
+                    decoration: FlatInputDecoration(hintText: "titulo"),
+                  ),
+                  const SizedBox(height: 10),
+                  //descripcion
+                  TextField(
+                    onChanged: (value) => context
+                        .read<PostearHiloBloc>()
+                        .add(CambiarDescripcion(descripcion: value)),
+                    maxLines: 5,
+                    decoration: FlatInputDecoration(hintText: "descripcion"),
+                  ),
+                  //portada
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //subcategoria
+                  const _Subcategoria(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  //banderas
+                  const _Banderas()
+                ],
+              ),
+            ),
+          )),
+    );
   }
 }
 

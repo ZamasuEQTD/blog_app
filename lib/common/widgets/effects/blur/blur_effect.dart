@@ -10,7 +10,8 @@ class BlurEffect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 25, sigmaY:25 ),
+      filter:
+          ImageFilter.blur(sigmaX: 15, sigmaY: 12, tileMode: TileMode.decal),
       child: const SizedBox(),
     );
   }
@@ -24,11 +25,9 @@ class BlurOpacityEffect extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-      const BlurEffect(), 
-      Positioned.fill(
-        child: SizedBox(child: ColoredBox(color: color))
-      )],
+        const BlurEffect(),
+        Positioned.fill(child: SizedBox(child: ColoredBox(color: color)))
+      ],
     );
   }
 }
-
