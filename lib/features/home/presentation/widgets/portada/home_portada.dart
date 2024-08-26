@@ -79,7 +79,7 @@ class _Banderas extends StatelessWidget {
     HomePortadaBanderas.idUnico:
         const FaIcon(FontAwesomeIcons.person, color: Colors.white),
     HomePortadaBanderas.dados:
-        const FaIcon(FontAwesomeIcons.dice, color: Colors.white)
+        const FaIcon(FontAwesomeIcons.diceThree, color: Colors.white)
   });
 
   final HomePortadaListEntry portada;
@@ -107,16 +107,11 @@ class _Features extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         )),
-    HomePortadaFeatures.youtube:
-        const FaIcon(FontAwesomeIcons.youtube, color: Colors.white),
-    HomePortadaFeatures.sticky: Container(
-      color: const Color(0xffFFC300),
-      padding: const EdgeInsets.all(5),
-      child: const FaIcon(
-        FontAwesomeIcons.marker,
-        color: Colors.white,
-      ),
-    )
+    HomePortadaFeatures.youtube: const Padding(
+      padding: EdgeInsets.all(5),
+      child: FaIcon(FontAwesomeIcons.youtube, color: Colors.white),
+    ),
+    HomePortadaFeatures.sticky: const _StickyPortadaIcon()
   });
 
   const _Features({
@@ -128,18 +123,50 @@ class _Features extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      _HomePortadaTag(
-        color: const Color(0xff008000),
-        child: FittedBox(
-          child: Text(portada.categoria),
+    return SizedBox(
+      height: 25,
+      child: Row(children: [
+        _HomePortadaTag(
+          color: const Color.fromRGBO(18, 146, 75, 1),
+          child: FittedBox(
+            child: Text(
+              portada.categoria,
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        ...portada.features.map((e) => _features[e]!).map((w) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 1.5),
+              child: w,
+            ))
+      ]),
+    );
+  }
+}
+
+class _StickyPortadaIcon extends StatelessWidget {
+  const _StickyPortadaIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return FittedBox(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: const ColoredBox(
+          color: Color(0xffFFC300),
+          child: Padding(
+            padding: EdgeInsets.all(5),
+            child: FaIcon(
+              FontAwesomeIcons.marker,
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
-      ...portada.features.map((e) => _features[e]!).map((w) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1.5),
-            child: w,
-          ))
-    ]);
+    );
   }
 }
 
@@ -178,8 +205,8 @@ class _HomePortadaTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tag(
       color: color,
-      borderRadius: BorderRadius.circular(20),
-      child: SizedBox(height: 25, child: child),
+      borderRadius: BorderRadius.circular(3),
+      child: child,
     );
   }
 }

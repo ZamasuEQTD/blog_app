@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:blog_app/common/domain/services/horarios_service.dart';
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
+import 'package:blog_app/features/home/presentation/widgets/portada/home_portada.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
 import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
@@ -38,7 +39,7 @@ class _HiloScreenState extends State<HiloScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocProvider(
-      create: (context) => HiloBloc(""),
+      create: (context) => HiloBloc("")..add(CargarHilo()),
       child: BlocBuilder<HiloBloc, HiloState>(
         builder: (context, state) {
           switch (state.status) {
@@ -72,10 +73,10 @@ class _HiloScreenBody extends StatelessWidget {
 
 class _HiloInformacion extends StatelessWidget {
   static final HashMap<BanderasDeHilo, Widget> _banderas = HashMap.from({
-    BanderasDeHilo.dados: const Icon(Icons.casino),
-    BanderasDeHilo.encuesta: const Icon(Icons.bar_chart),
+    BanderasDeHilo.dados: const Icon(Icons.casino_outlined),
+    BanderasDeHilo.encuesta: const Icon(Icons.bar_chart_outlined),
     BanderasDeHilo.sticky: const Icon(CupertinoIcons.pin),
-    BanderasDeHilo.idUnico: const Icon(Icons.person)
+    BanderasDeHilo.idUnico: const Icon(Icons.person_outline)
   });
 
   const _HiloInformacion({
@@ -106,11 +107,23 @@ class _HiloInformacion extends StatelessWidget {
                 _Banderas(hilo: hilo, banderas: _banderas),
                 //subcategoria
                 _Subcategoria(hilo: hilo),
+                const SizedBox(
+                  height: 5,
+                ),
                 //acciones
                 _AccionesEjecutables(hilo: hilo),
                 //encuesta
 
                 //portada
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: MediaBox(
+                        media: hilo.portada.spoileable,
+                        options: const MediaBoxOptions()),
+                  ),
+                ),
                 //titulo
                 Text(
                   hilo.titulo,
@@ -140,30 +153,73 @@ class _AccionesEjecutables extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.flag_outlined)),
-            IconButton(
-                onPressed: () {}, icon: const Icon(Icons.visibility_outlined)),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.star_outline)),
-          ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 35,
+                      child: IconButton(
+                          padding: const EdgeInsets.all(0),
+                          onPressed: () {},
+                          icon: const Icon(Icons.flag_outlined)),
+                    ),
+                    SizedBox(
+                      width: 35,
+                      child: IconButton(
+                          padding: const EdgeInsets.all(0),
+                          onPressed: () {},
+                          icon: const Icon(Icons.flag_outlined)),
+                    ),
+                    SizedBox(
+                      width: 35,
+                      child: IconButton(
+                          padding: const EdgeInsets.all(0),
+                          onPressed: () {},
+                          icon: const Icon(Icons.flag_outlined)),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  const Text(
+                    "Gatubi",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 5),
+                  Tag(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(5),
+                      child: const SizedBox(
+                        height: 17,
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: FittedBox(
+                              child: Text("MOD",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold)),
+                            )),
+                      )),
+                  const SizedBox(width: 5),
+                  Text(HorariosService.diferencia(
+                          utcNow: DateTime.now().toUtc(), time: hilo.creadoEn)
+                      .toString()),
+                ],
+              )
+            ],
+          ),
         ),
-        Row(
-          children: [
-            const Text(
-              "Gatubi",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(width: 5),
-            Text(HorariosService.diferencia(
-                    utcNow: DateTime.now().toUtc(), time: hilo.creadoEn)
-                .toString()),
-          ],
-        )
-      ],
+      ),
     );
   }
 }
@@ -178,24 +234,36 @@ class _Subcategoria extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Row(
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: Image(
-                      image: hilo.categoria.imagen.toProvider(),
-                      fit: BoxFit.cover)),
-              const SizedBox(width: 10),
-              Text(hilo.categoria.nombre),
-            ],
-          ),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_right))
-        ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: SizedBox(
+                      height: 35,
+                      width: 35,
+                      child: Image(
+                          image: hilo.categoria.imagen.toProvider(),
+                          fit: BoxFit.cover)),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  hilo.categoria.nombre,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ],
+            ),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_right))
+          ],
+        ),
       ),
     );
   }
@@ -222,8 +290,13 @@ class _Banderas extends StatelessWidget {
       child: Row(
         children: [
           const BackButton(),
-          ...hilo.banderas
-              .map((bandera) => OutlinedIcon(child: _banderas[bandera]!))
+          ...hilo.banderas.map((bandera) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: OutlinedIcon(
+                    child: Padding(
+                        padding: const EdgeInsets.all(2),
+                        child: _banderas[bandera]!)),
+              ))
         ],
       ),
     );
@@ -241,6 +314,13 @@ class _ComentariosState extends State<_Comentarios> {
   final HashMap<ComentarioId, GlobalKey> _keys = HashMap();
 
   static const Widget _cargando = _ComentarioCargando();
+
+  @override
+  void initState() {
+    context.read<HiloBloc>().add(CargarComentarios());
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -261,18 +341,20 @@ class _ComentariosState extends State<_Comentarios> {
             previous.comentarios.length != current.comentarios.length,
         builder: (context, state) {
           final List<ComentarioEntry> comentarios = state.comentarios;
-          return SliverList.builder(itemBuilder: (context, index) {
-            ComentarioEntry comentario = comentarios[index];
-
-            switch (comentario) {
-              case ComentarioListEntry c:
-                return _Comentario(key: _keys[c.id], comentario: comentario);
-              case ComentarioListCargandoEntry _:
-                return _cargando;
-              default:
-                throw Exception("");
-            }
-          });
+          return SliverList.builder(
+              itemCount: comentarios.length,
+              itemBuilder: (context, index) {
+                ComentarioEntry comentario = comentarios[index];
+                switch (comentario) {
+                  case ComentarioListEntry c:
+                    return _Comentario(
+                        key: _keys[c.id], comentario: comentario);
+                  case ComentarioListCargandoEntry _:
+                    return _cargando;
+                  default:
+                    throw Exception("");
+                }
+              });
         },
       ),
     );
@@ -295,19 +377,34 @@ class _Comentario extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: 50,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _Tags(comentario: comentario),
+                Row(
+                  children: [
+                    _Color(comentario: comentario),
+                    const SizedBox(width: 5),
+                    Text(
+                      comentario.autor.nombre,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(width: 5),
+                    _Tags(comentario: comentario),
+                  ],
+                ),
                 Text(HorariosService.diferencia(
                         utcNow: DateTime.now().toUtc(),
                         time: comentario.creado_en)
                     .toString())
               ],
             ),
+          ),
+          const SizedBox(
+            height: 5,
           ),
           Text(comentario.texto)
         ],
@@ -331,12 +428,10 @@ class _Tags extends StatelessWidget {
         _Tag(
           tag: comentario.datos.tag,
         ),
+        const SizedBox(width: 5),
         comentario.datos.tagUnico != null
             ? Row(
-                children: [
-                  const SizedBox(width: 15),
-                  _TagUnico(tag: comentario.datos.tagUnico!)
-                ],
+                children: [_TagUnico(tag: comentario.datos.tagUnico!)],
               )
             : const SizedBox()
       ],
@@ -361,6 +456,18 @@ class _Tag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Tag(
+      borderRadius: BorderRadius.circular(5),
+      color: Colors.white,
+      child: FittedBox(
+        child: Text(
+          tag,
+          style:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+
     return GestureDetector(
       onTap: () => context.read<TaggueosController>().tagguear(
           tag: tag, texto: context.read<ComentarHiloBloc>().state.texto),
@@ -384,11 +491,16 @@ class _Tag extends StatelessWidget {
 
 class _TagUnico extends StatelessWidget {
   static final List<Color> _colors = [
-    const Color(0xffFFBAAE),
-    const Color(0xff778ddc),
-    const Color(0xff6CFFD5),
-    const Color(0xffF78E69),
-    const Color(0xffFAE5C4)
+    const Color(0xFFdacecd), // dacecd
+    const Color(0xFFfddad9), // fddad9
+    const Color(0xFFf1d2d5), // f1d2d5
+    const Color(0xFFfeebdc), // feebdc
+    const Color(0xFFf4f7ef), // f4f7ef
+    const Color(0xFFffdcd1), // ffdcd1
+    const Color(0xFFbbe7ff), // bbe7ff
+    const Color(0xFFccebd9), // ccebd9
+    const Color(0xFFf7e8d9), // f7e8d9
+    const Color(0xFFffffe5), // ffffe5
   ];
 
   final String tag;
@@ -398,7 +510,7 @@ class _TagUnico extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
+      borderRadius: BorderRadius.circular(5),
       child: Container(
         color: ColorPicker.pickColor(tag, _colors),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),

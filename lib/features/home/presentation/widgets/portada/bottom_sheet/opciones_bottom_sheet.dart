@@ -10,38 +10,41 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GrupoSeleccionableList(seleccionables: [
-      GrupoSeleccionable(seleccionables: [
-        ItemSeleccionableTileList(
-            nombre: "Ocultar", icon: FontAwesomeIcons.flag),
-        ItemSeleccionableTileList(
-            nombre: "Agregar a favoritos", icon: FontAwesomeIcons.flag),
-        ItemSeleccionableTileList(
-            nombre: "Seguir", icon: FontAwesomeIcons.flag),
-        DestructibleItem(
-            onTap: () => SeleccionarRazonDeDenuncia.show(
-                  context,
-                  onSeleccionada: (razon) {},
-                ),
-            destructiveColor: Colors.red,
-            nombre: "Denunciar",
-            icon: FontAwesomeIcons.flag),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: GrupoSeleccionableList(seleccionables: [
+        GrupoSeleccionable(seleccionables: [
+          ItemSeleccionableTileList(
+              nombre: "Ocultar", icon: FontAwesomeIcons.flag),
+          ItemSeleccionableTileList(
+              nombre: "Agregar a favoritos", icon: FontAwesomeIcons.flag),
+          ItemSeleccionableTileList(
+              nombre: "Seguir", icon: FontAwesomeIcons.flag),
+          DestructibleItem(
+              onTap: () => SeleccionarRazonDeDenuncia.show(
+                    context,
+                    onSeleccionada: (razon) {},
+                  ),
+              destructiveColor: Colors.red,
+              nombre: "Denunciar",
+              icon: FontAwesomeIcons.flag),
+        ]),
+        GrupoSeleccionable(seleccionables: [
+          ItemSeleccionableTileList(
+              nombre: "Destacar", icon: FontAwesomeIcons.person),
+          ItemSeleccionableTileList(
+              nombre: "Ver usuario", icon: FontAwesomeIcons.person),
+          DestructibleItem(
+              destructiveColor: Colors.red,
+              nombre: "Eliminar hilo",
+              icon: FontAwesomeIcons.trash)
+        ])
       ]),
-      GrupoSeleccionable(seleccionables: [
-        ItemSeleccionableTileList(
-            nombre: "Destacar", icon: FontAwesomeIcons.person),
-        ItemSeleccionableTileList(
-            nombre: "Ver usuario", icon: FontAwesomeIcons.person),
-        DestructibleItem(
-            destructiveColor: Colors.red,
-            nombre: "Eliminar hilo",
-            icon: FontAwesomeIcons.trash)
-      ])
-    ]);
+    );
   }
 
   static void show(BuildContext context) {
-    BottomSheetManager.show(context,
+    RoundedBottomSheetManager.show(context,
         child: const OpcionesDePortadaBottomSheet());
   }
 }
@@ -52,20 +55,23 @@ class SeleccionarRazonDeDenuncia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GrupoSeleccionableList(seleccionables: [
-      GrupoSeleccionable(
-          seleccionables: OpcioneDeDenuncia.values
-              .map<ItemSeleccionable>((e) => ItemSeleccionable(
-                    nombre: e.name,
-                    onTap: () => onSeleccionada(e),
-                  ))
-              .toList())
-    ]);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: GrupoSeleccionableList(seleccionables: [
+        GrupoSeleccionable(
+            seleccionables: OpcioneDeDenuncia.values
+                .map<ItemSeleccionable>((e) => ItemSeleccionable(
+                      nombre: e.name,
+                      onTap: () => onSeleccionada(e),
+                    ))
+                .toList())
+      ]),
+    );
   }
 
   static void show(BuildContext context,
       {required void Function(OpcioneDeDenuncia razon) onSeleccionada}) {
-    BottomSheetManager.show(context,
+    RoundedBottomSheetManager.show(context,
         child: SeleccionarRazonDeDenuncia(onSeleccionada: onSeleccionada));
   }
 }

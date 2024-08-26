@@ -8,7 +8,17 @@ class GetComentariosDeHiloUsecase
   @override
   Future<Either<Failure, List<ComentarioListEntry>>> handle(
       GetComentariosDeHiloRequest request) async {
-    return const Right([]);
+    return Right([
+      ComentarioListEntry(
+          autor: const Autor(
+              nombre: "Gatubi", rango: "Moderador", rangoCorto: "mod"),
+          color: ColoresDeComentario.multi,
+          creado_en: DateTime.now(),
+          datos: const DatosDeComentario(
+              tag: "FASFASF", tagUnico: "GGS", dados: "2"),
+          id: "F",
+          texto: "FSFASF")
+    ]);
   }
 }
 

@@ -1,3 +1,5 @@
+import 'package:blog_app/features/hilos/domain/usecase/get_comentarios_de_hilo_usecase.dart';
+import 'package:blog_app/features/hilos/domain/usecase/get_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/domain/usecase/postear_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/presentation/logic/bloc/postear_hilo/postear_hilo_bloc.dart';
 import 'package:blog_app/features/home/data/abstractions/ihome_datasource.dart';
@@ -13,6 +15,7 @@ extension DataDependencies on GetIt {
   GetIt addData() {
     _addHome();
     _addPostearHilo();
+    _addHilo();
     return this;
   }
 
@@ -27,6 +30,13 @@ extension DataDependencies on GetIt {
     registerFactory<IHomeRepository>(() => HomeRepository(get()));
     registerFactory<GetHomePortadasUseCase>(
         () => GetHomePortadasUseCase(get()));
+    return this;
+  }
+
+  GetIt _addHilo() {
+    registerFactory(() => const GetHiloUseCase());
+    registerFactory(() => GetComentariosDeHiloUsecase());
+
     return this;
   }
 }

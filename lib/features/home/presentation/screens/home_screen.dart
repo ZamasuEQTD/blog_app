@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
           crossAxisCount: 2);
-
   const HomeScreen({super.key});
 
   @override
@@ -44,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Devox",
+            style: TextStyle(
+                color: Color(0xff5465FF),
+                fontWeight: FontWeight.w900,
+                fontSize: 25),
+          ),
+        ),
         body: CustomScrollView(
           controller: controller,
           physics: const BouncingScrollPhysics(),
@@ -116,6 +124,9 @@ class _HomePortadasFiltros extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const _FiltrarPortadasPorTitulo(),
+                const SizedBox(
+                  width: 10,
+                ),
                 ColoredIconButton(
                   onPressed: () {},
                   icon: const Icon(Icons.abc),

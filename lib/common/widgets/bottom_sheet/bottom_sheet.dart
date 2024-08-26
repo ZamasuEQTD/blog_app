@@ -27,3 +27,33 @@ class BottomSheetManager extends StatelessWidget {
                 child: child,
               ));
 }
+
+class RoundedBottomSheetManager extends StatelessWidget {
+  final Widget child;
+  const RoundedBottomSheetManager({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: ColoredBox(
+          color: const Color(0xffE9ECEF),
+          child: child,
+        ),
+      ),
+    );
+  }
+
+  static void show(BuildContext context,
+          {required Widget child,
+          Widget Function(BuildContext context, Widget child)? builder}) =>
+      showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          context: context,
+          builder: (context) => RoundedBottomSheetManager(
+                child: child,
+              ));
+}
