@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:blog_app/common/domain/services/horarios_service.dart';
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
+import 'package:blog_app/common/widgets/media/widgets/spoiler_media.dart';
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/home_portada.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
@@ -19,7 +20,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../../../../common/widgets/effects/gradient/animated_gradient.dart';
 import '../../../../common/widgets/inputs/decorations/decorations.dart';
 import '../../../encuestas/domain/models/encuesta.dart';
-import '../../../media/domain/models/media.dart';
 import '../../domain/models/comentario.dart';
 import '../../domain/models/hilo.dart';
 import '../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
@@ -38,20 +38,22 @@ class _HiloScreenState extends State<HiloScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocProvider(
-      create: (context) => HiloBloc("")..add(CargarHilo()),
-      child: BlocBuilder<HiloBloc, HiloState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case HiloStatus.cargado:
-              return _HiloScreenBody(hilo: state.hilo!);
-            default:
-          }
+      body: BlocProvider(
+        create: (context) => HiloBloc("")..add(CargarHilo()),
+        child: BlocBuilder<HiloBloc, HiloState>(
+          builder: (context, state) {
+            switch (state.status) {
+              case HiloStatus.cargado:
+                return _HiloScreenBody(hilo: state.hilo!);
+              default:
+            }
 
-          return Container();
-        },
+            return Container();
+          },
+        ),
       ),
-    ));
+      bottomSheet: const ComentarEnHilo(),
+    );
   }
 }
 
@@ -113,18 +115,23 @@ class _HiloInformacion extends StatelessWidget {
                 //acciones
                 _AccionesEjecutables(hilo: hilo),
                 //encuesta
-
                 //portada
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: MediaBox(
-                        media: hilo.portada.spoileable,
-                        options: const MediaBoxOptions()),
-                  ),
+                MultiMediaDisplay(
+                  media: hilo.portada.spoileable,
+                  dimensionableBuilder: (child) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: MediaSpoileable(
+                            child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                    maxHeight: 400, maxWidth: double.infinity),
+                                child: child)),
+                      ),
+                    );
+                  },
                 ),
-                //titulo
                 Text(
                   hilo.titulo,
                   style: const TituloStyle(),
@@ -456,32 +463,19 @@ class _Tag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tag(
-      borderRadius: BorderRadius.circular(5),
-      color: Colors.white,
-      child: FittedBox(
-        child: Text(
-          tag,
-          style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-
     return GestureDetector(
       onTap: () => context.read<TaggueosController>().tagguear(
-          tag: tag, texto: context.read<ComentarHiloBloc>().state.texto),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: Container(
-          color: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
-          child: FittedBox(
-            child: Text(
-              tag,
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
-            ),
+            tag: tag,
+            texto: context.read<ComentarHiloBloc>().state.texto,
+          ),
+      child: Tag(
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+        child: FittedBox(
+          child: Text(
+            tag,
+            style: const TextStyle(
+                color: Colors.black, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -509,20 +503,16 @@ class _TagUnico extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: Container(
+    return Tag(
         color: ColorPicker.pickColor(tag, _colors),
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+        borderRadius: BorderRadius.circular(5),
         child: FittedBox(
           child: Text(
             tag,
             style: const TextStyle(
                 color: Colors.black, fontWeight: FontWeight.bold),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 

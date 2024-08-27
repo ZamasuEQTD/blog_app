@@ -3,6 +3,43 @@ import 'package:flutter/material.dart';
 import '../../logic/extensions/media_extensions.dart';
 import '../reproductor_de_video/reproductor_de_video.dart';
 
+class DimensionableMedia extends StatelessWidget {
+  final Media media;
+  final BoxConstraints? constraints;
+  const DimensionableMedia({super.key, required this.media, this.constraints})
+      : assert(media is Video || media is Imagen);
+
+  @override
+  Widget build(BuildContext context) {
+    switch (media) {
+      case Imagen media:
+        return Image(image: media.toProvider());
+      case Video media:
+        return ReproductorDeVideoWidget.fromProvider(
+            provider: media.toProvider());
+      default:
+        throw Exception("Tipo de media no soportado!!!");
+    }
+  }
+}
+
+class MultiMediaDisplay extends StatelessWidget {
+  final Media media;
+  final Widget Function(DimensionableMedia child)? dimensionableBuilder;
+  const MultiMediaDisplay(
+      {super.key, required this.media, this.dimensionableBuilder});
+
+  @override
+  Widget build(BuildContext context) {
+    if (media is Video || media is Imagen) {
+      return dimensionableBuilder != null
+          ? dimensionableBuilder!(DimensionableMedia(media: media))
+          : DimensionableMedia(media: media);
+    }
+    throw Exception("Tipo de media no soportado!!!");
+  }
+}
+
 class MediaBox extends StatelessWidget {
   final Media media;
   final MediaBoxOptions options;
@@ -14,11 +51,8 @@ class MediaBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(options.borderRadius),
-      child: Container(
-          constraints: options.constraints, child: _getMedia(context)),
-    );
+    return Container(
+        constraints: options.constraints, child: _getMedia(context));
   }
 
   Widget _getMedia(BuildContext context) {
@@ -35,12 +69,10 @@ class MediaBox extends StatelessWidget {
 }
 
 class MediaBoxOptions {
-  final double borderRadius;
   final BoxConstraints? constraints;
   final Widget Function(BuildContext context, Widget child)? builder;
 
-  const MediaBoxOptions(
-      {this.borderRadius = 0, this.constraints, this.builder});
+  const MediaBoxOptions({this.constraints, this.builder});
 }
 
 class MediaManager extends StatelessWidget {
