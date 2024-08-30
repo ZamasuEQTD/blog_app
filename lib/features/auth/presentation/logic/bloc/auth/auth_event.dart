@@ -7,10 +7,20 @@ sealed class AuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class IniciarSesion extends AuthEvent {
-  final Usuario usuario;
+class RecuperarUltimaSesion extends AuthEvent {}
 
-  const IniciarSesion({required this.usuario});
+class IniciarSesion extends AuthEvent {
+  final String usuario;
+  final String password;
+
+  const IniciarSesion({required this.usuario, required this.password});
+}
+
+class Registrarse extends AuthEvent {
+  final String usuario;
+  final String password;
+
+  const Registrarse({required this.usuario, required this.password});
 }
 
 class CerrarSesion extends AuthEvent {}

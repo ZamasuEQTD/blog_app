@@ -3,13 +3,14 @@ import 'package:blog_app/features/categorias/domain/models/subcategoria.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../../common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import '../../../../common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import '../../../../common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import '../../../categorias/presentation/widgets/subcategoria_background.dart';
 import '../logic/bloc/postear_hilo/postear_hilo_bloc.dart';
+
+const EdgeInsets _sectionPadding = EdgeInsets.all(10);
 
 class PostearHiloScreen extends StatelessWidget {
   const PostearHiloScreen({super.key});
@@ -164,6 +165,15 @@ class _Banderas extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _PostearHiloPortada extends StatelessWidget {
+  const _PostearHiloPortada({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 

@@ -6,3 +6,9 @@ sealed class RegistroEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CambiarUsername extends RegistroEvent {
+  final String username;
+
+  const CambiarUsername({required this.username});
+}
