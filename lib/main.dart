@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'features/home/presentation/widgets/portada/bottom_sheet/opciones_bottom_sheet.dart';
+
 void main() {
   GetIt.I.addData();
   runApp(const MyApp());
@@ -20,9 +22,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme:
-          AppThemes.light.copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
-      home: const HiloScreen(),
+      theme: AppThemes.light.copyWith(textTheme: GoogleFonts.interTextTheme()),
+      home: const VerUsuarioModeradorPanel(),
     );
   }
 }

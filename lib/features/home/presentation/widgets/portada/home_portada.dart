@@ -158,9 +158,9 @@ class _StickyPortadaIcon extends StatelessWidget {
         child: const ColoredBox(
           color: Color(0xffFFC300),
           child: Padding(
-            padding: EdgeInsets.all(5),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             child: FaIcon(
-              FontAwesomeIcons.marker,
+              FontAwesomeIcons.thumbtack,
               color: Colors.white,
             ),
           ),

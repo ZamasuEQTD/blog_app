@@ -95,9 +95,7 @@ class ListTileSeleccionable extends ListTile {
           trailing: seleccionable.trailing,
           title: Text(
             seleccionable.nombre,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ).merge(seleccionable.style),
+            style: const TextStyle().merge(seleccionable.style),
           ),
         );
 }

@@ -5,13 +5,15 @@ import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../../../../moderacion/presentation/ver_usuario_panel.dart';
+
 class OpcionesDePortadaBottomSheet extends StatelessWidget {
   const OpcionesDePortadaBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       child: GrupoSeleccionableList(seleccionables: [
         GrupoSeleccionable(seleccionables: [
           ItemSeleccionableTileList(
@@ -27,7 +29,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
                   ),
               destructiveColor: Colors.red,
               nombre: "Denunciar",
-              icon: FontAwesomeIcons.flag),
+              icon: Icons.flag),
         ]),
         GrupoSeleccionable(seleccionables: [
           ItemSeleccionableTileList(
@@ -44,7 +46,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
   }
 
   static void show(BuildContext context) {
-    RoundedBottomSheetManager.show(context,
+    BottomSheetManager.show(context,
         child: const OpcionesDePortadaBottomSheet());
   }
 }
@@ -77,3 +79,31 @@ class SeleccionarRazonDeDenuncia extends StatelessWidget {
 }
 
 enum OpcioneDeDenuncia { ilegal, otro }
+
+class VerUsuarioModeradorPanel extends StatelessWidget {
+  const VerUsuarioModeradorPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: VerUsuarioPanel());
+  }
+}
+
+class _UserInformacion extends StatelessWidget {
+  const _UserInformacion({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: const SizedBox(
+        height: 100,
+        width: double.infinity,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: ColoredBox(color: Colors.red),
+        ),
+      ),
+    );
+  }
+}

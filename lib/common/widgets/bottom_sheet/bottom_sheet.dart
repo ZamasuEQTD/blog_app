@@ -1,5 +1,6 @@
 import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../seleccionable/logic/class/grupo_seleccionable.dart';
 
@@ -10,6 +11,7 @@ class BottomSheetManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HapticFeedback.mediumImpact();
     if (builder != null) return builder!(context, child);
 
     return child;
@@ -20,7 +22,10 @@ class BottomSheetManager extends StatelessWidget {
           Widget Function(BuildContext context, Widget child)? builder}) =>
       showModalBottomSheet(
           isScrollControlled: true,
-          backgroundColor: Theme.of(context).colorScheme.onSecondary,
+          backgroundColor: const Color(0xffE9ECEF),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+          ),
           context: context,
           builder: (context) => BottomSheetManager(
                 builder: builder,

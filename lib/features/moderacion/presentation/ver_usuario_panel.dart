@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class VerUsuarioPanel extends StatelessWidget {
@@ -7,19 +9,21 @@ class VerUsuarioPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ScrollController(),
-      builder: (context, child) => CustomScrollView(
-        controller: context.read(),
-        slivers: const [
-          SliverToBoxAdapter(
-            child: _InformacionDeUsuario(),
-          ),
-          SliverToBoxAdapter(
-            child: _SeleccionarHistorial(),
-          ),
-          _HistorialDeHilos()
-        ],
+    return SafeArea(
+      child: ChangeNotifierProvider(
+        create: (context) => ScrollController(),
+        builder: (context, child) => CustomScrollView(
+          controller: context.read(),
+          slivers: const [
+            SliverToBoxAdapter(
+              child: _InformacionDeUsuario(),
+            ),
+            SliverToBoxAdapter(
+              child: _SeleccionarHistorial(),
+            ),
+            _HistorialDeHilos(),
+          ],
+        ),
       ),
     );
   }
@@ -30,10 +34,69 @@ class _SeleccionarHistorial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ColoredBox(
-      color: Colors.white,
-      child: Row(
-        children: [],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: ColoredBox(
+          color: Colors.red,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            child: SizedBox(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.post_add, size: 20, color: Colors.black),
+                            SizedBox(width: 8),
+                            Text(
+                              "Posts",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.post_add, size: 20, color: Colors.black),
+                            SizedBox(width: 8),
+                            Text(
+                              "Posts",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -44,14 +107,12 @@ class _HistorialDeHilos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: context.read(),
-      slivers: [
-        SliverList.builder(
-          itemBuilder: (context, index) =>
-              const _PostDeUsuarioCreadoHistorial(),
-        )
-      ],
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      sliver: SliverList.builder(
+        itemCount: 100,
+        itemBuilder: (context, index) => const _PostDeUsuarioCreadoHistorial(),
+      ),
     );
   }
 }
@@ -61,22 +122,38 @@ class _InformacionDeUsuario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        SizedBox(
-          height: 100,
-          width: 100,
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: const Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipOval(
+              child: ColoredBox(
+                color: Colors.white,
+                child: SizedBox(
+                  height: 70,
+                  width: 70,
+                  child: Center(child: FaIcon(FontAwesomeIcons.user, size: 35)),
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Column(children: [
+              Row(
+                children: [
+                  Text(
+                    "ANONIMO",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
+                  Text("#bb2638dd-268a"),
+                ],
+              ),
+              Text("Unido desde 15/25/2000")
+            ]),
+          ],
         ),
-        Column(children: [
-          Row(
-            children: [
-              Text("ANONIMO"),
-              Text("#bb2638dd-268a"),
-            ],
-          ),
-          Text("Unido desde 15/25/2000")
-        ]),
-      ],
+      ),
     );
   }
 }
@@ -86,25 +163,52 @@ class _PostDeUsuarioCreadoHistorial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _HistorialEntry(
-      child: Row(
-        children: [
-          _HistoriaHiloImagen(),
-          Column(children: [
-            Row(
-              children: [
-                Text(
-                  "Titulo",
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 24),
-                ),
-                Text("06/34/2000")
-              ],
-            ),
-            SizedBox(height: 10),
-            Text("Descripcion....")
-          ]),
-          Icon(Icons.chevron_right)
-        ],
+    return SizedBox(
+      height: 130,
+      child: _HistorialEntry(
+        child: Row(
+          children: [
+            const _HistoriaHiloImagen(),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RichText(
+                            maxLines: 1,
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: const <TextSpan>[
+                                TextSpan(
+                                    text: 'Entras',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 20,
+                                        overflow: TextOverflow.ellipsis)),
+                                TextSpan(
+                                  text: ' 06/34/2000',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xff4B5563)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Text("Descripcion....")
+                        ]),
+                  ),
+                  const Icon(Icons.chevron_right)
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -117,12 +221,17 @@ class _HistoriaHiloImagen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-        height: 120,
-        width: 90,
-        child: Image(
-          image: NetworkImage("url"),
-        ));
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: const SizedBox(
+          height: 120,
+          width: 110,
+          child: Image(
+            fit: BoxFit.cover,
+            image: NetworkImage(
+                "https://static.wikia.nocookie.net/silenthill/images/c/cf/Laura_teddies.jpg/revision/latest?cb=20110918063710&path-prefix=es"),
+          )),
+    );
   }
 }
 
@@ -166,5 +275,53 @@ class _ComentarioDeUsuarioHistorial extends StatelessWidget {
         )
       ],
     );
+  }
+}
+
+class AdvetirDeBaneo extends StatelessWidget {
+  const AdvetirDeBaneo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Has sido baneado",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const _InformacionDeBaneo(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                      minHeight: 100, minWidth: double.infinity),
+                  child: const ColoredBox(
+                      color: Colors.white,
+                      child: Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                          child: Text(
+                            "No lo vuelvas a hacer\nokk?",
+                            style: TextStyle(fontSize: 17),
+                          )))),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InformacionDeBaneo extends StatelessWidget {
+  const _InformacionDeBaneo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

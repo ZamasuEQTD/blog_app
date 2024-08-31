@@ -38,8 +38,12 @@ class _HiloScreenState extends State<HiloScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-        create: (context) => HiloBloc("")..add(CargarHilo()),
+      body: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => HiloBloc("")..add(CargarHilo()),
+          ),
+        ],
         child: BlocBuilder<HiloBloc, HiloState>(
           builder: (context, state) {
             switch (state.status) {
@@ -52,7 +56,7 @@ class _HiloScreenState extends State<HiloScreen> {
           },
         ),
       ),
-      bottomSheet: const ComentarEnHilo(),
+      // bottomSheet: const ComentarEnHilo(),
     );
   }
 }
@@ -116,21 +120,21 @@ class _HiloInformacion extends StatelessWidget {
                 _AccionesEjecutables(hilo: hilo),
                 //encuesta
                 //portada
-                MultiMediaDisplay(
-                  media: hilo.portada.spoileable,
-                  dimensionableBuilder: (child) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: ClipRRect(
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5),
+                  child: MultiMediaDisplay(
+                    media: hilo.portada.spoileable,
+                    dimensionableBuilder: (child) {
+                      return ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: MediaSpoileable(
                             child: ConstrainedBox(
                                 constraints: const BoxConstraints(
                                     maxHeight: 400, maxWidth: double.infinity),
                                 child: child)),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
                 Text(
                   hilo.titulo,
@@ -331,39 +335,52 @@ class _ComentariosState extends State<_Comentarios> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HiloBloc, HiloState>(
-      listenWhen: (previous, current) =>
-          previous.comentarios.length != current.comentarios.length,
-      listener: (context, state) {
-        for (var c in state.comentarios) {
-          if (c is! ComentarioListEntry) return;
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            child: const Text(
+              "Comentarios (20)",
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+        BlocListener<HiloBloc, HiloState>(
+          listenWhen: (previous, current) =>
+              previous.comentarios.length != current.comentarios.length,
+          listener: (context, state) {
+            for (var c in state.comentarios) {
+              if (c is! ComentarioListEntry) return;
 
-          if (_keys[c.id] == null) {
-            _keys[c.id] = GlobalKey();
-          }
-        }
-      },
-      child: BlocBuilder<HiloBloc, HiloState>(
-        buildWhen: (previous, current) =>
-            previous.comentarios.length != current.comentarios.length,
-        builder: (context, state) {
-          final List<ComentarioEntry> comentarios = state.comentarios;
-          return SliverList.builder(
-              itemCount: comentarios.length,
-              itemBuilder: (context, index) {
-                ComentarioEntry comentario = comentarios[index];
-                switch (comentario) {
-                  case ComentarioListEntry c:
-                    return _Comentario(
-                        key: _keys[c.id], comentario: comentario);
-                  case ComentarioListCargandoEntry _:
-                    return _cargando;
-                  default:
-                    throw Exception("");
-                }
-              });
-        },
-      ),
+              if (_keys[c.id] == null) {
+                _keys[c.id] = GlobalKey();
+              }
+            }
+          },
+          child: BlocBuilder<HiloBloc, HiloState>(
+            buildWhen: (previous, current) =>
+                previous.comentarios.length != current.comentarios.length,
+            builder: (context, state) {
+              final List<ComentarioEntry> comentarios = state.comentarios;
+              return SliverList.builder(
+                  itemCount: comentarios.length,
+                  itemBuilder: (context, index) {
+                    ComentarioEntry comentario = comentarios[index];
+                    switch (comentario) {
+                      case ComentarioListEntry c:
+                        return _Comentario(
+                            key: _keys[c.id], comentario: comentario);
+                      case ComentarioListCargandoEntry _:
+                        return _cargando;
+                      default:
+                        throw Exception("");
+                    }
+                  });
+            },
+          ),
+        ),
+      ],
     );
   }
 }

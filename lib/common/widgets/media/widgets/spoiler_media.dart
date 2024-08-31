@@ -15,9 +15,11 @@ class MediaSpoileable extends StatelessWidget {
             children: [
               child,
               controller.blurear
-                  ? const Positioned.fill(
+                  ? Positioned.fill(
                       child: Center(
-                      child: _VerContenidoButton(),
+                      child: _VerContenidoButton(
+                        controller: controller,
+                      ),
                     ))
                   : const SizedBox()
             ],
@@ -28,20 +30,24 @@ class MediaSpoileable extends StatelessWidget {
 }
 
 class _VerContenidoButton extends StatelessWidget {
+  final BlurController controller;
   const _VerContenidoButton({
     super.key,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-        onPressed: () => context.read<BlurController>().switchBlur(),
-        style: const ButtonStyle(
-            side: WidgetStatePropertyAll(
-                BorderSide(width: 0.5, color: Colors.white)),
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
+        onPressed: () => controller.switchBlur(),
+        style: ButtonStyle(
+            backgroundColor:
+                WidgetStatePropertyAll(Colors.white.withOpacity(0.15)),
+            side: const WidgetStatePropertyAll(
+                BorderSide(width: 0.5, color: Colors.transparent)),
+            shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(30)))),
-            padding: WidgetStatePropertyAll(
+            padding: const WidgetStatePropertyAll(
                 EdgeInsets.symmetric(vertical: 20, horizontal: 30))),
         child: const Text(
           "Ver contenido",
