@@ -40,61 +40,72 @@ class _SeleccionarHistorial extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: ColoredBox(
-          color: Colors.red,
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: SizedBox(
               child: Row(
                 children: [
-                  Expanded(
-                    child: GestureDetector(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.post_add, size: 20, color: Colors.black),
-                            SizedBox(width: 8),
-                            Text(
-                              "Posts",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  SeleccionarHistorialBtn(
+                    onTap: () {},
+                    icon: const FaIcon(FontAwesomeIcons.noteSticky,
+                        size: 20, color: Colors.black),
+                    label: "Posts",
+                    seleccionado: true,
                   ),
-                  Expanded(
-                    child: GestureDetector(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 12, horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.post_add, size: 20, color: Colors.black),
-                            SizedBox(width: 8),
-                            Text(
-                              "Posts",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  SeleccionarHistorialBtn(
+                    onTap: () {},
+                    icon: const FaIcon(FontAwesomeIcons.message,
+                        size: 20, color: Colors.black),
+                    label: "Comentarios",
+                    seleccionado: false,
                   )
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SeleccionarHistorialBtn extends StatelessWidget {
+  final String label;
+  final Widget icon;
+  final bool seleccionado;
+  final void Function() onTap;
+  const SeleccionarHistorialBtn({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.seleccionado,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          decoration: BoxDecoration(
+            color: !seleccionado
+                ? Theme.of(context).scaffoldBackgroundColor
+                : null,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              icon,
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
         ),
       ),
@@ -185,18 +196,12 @@ class _PostDeUsuarioCreadoHistorial extends StatelessWidget {
                               style: DefaultTextStyle.of(context).style,
                               children: const <TextSpan>[
                                 TextSpan(
-                                    text: 'Entras',
+                                    text:
+                                        'Entrassssssssssssssssssssssssssssssssssssssssssssssss',
                                     style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 20,
                                         overflow: TextOverflow.ellipsis)),
-                                TextSpan(
-                                  text: ' 06/34/2000',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xff4B5563)),
-                                ),
                               ],
                             ),
                           ),
