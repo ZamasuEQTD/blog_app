@@ -143,22 +143,23 @@ class _Banderas extends StatelessWidget {
               buildWhen: (previous, current) =>
                   previous.banderas != current.banderas,
               builder: (context, state) {
-                return SeleccionableSheet(
-                    grupo: GrupoSeleccionable(seleccionables: [
-                  CheckboxSeleccionableList(
-                      value: state.banderas.dados,
-                      nombre: "Dados",
-                      onChange: (value) => context
-                          .read<PostearHiloBloc>()
-                          .add(CambiarBanderas(dados: value))),
-                  CheckboxSeleccionableList(
-                    value: state.banderas.tagUnico,
-                    nombre: "Tag único activado",
-                    onChange: (value) => context
-                        .read<PostearHiloBloc>()
-                        .add(CambiarBanderas(tagUnico: value)),
-                  )
-                ]));
+                return Container();
+                // return SeleccionableSheet(
+                //     grupo: GrupoSeleccionable(seleccionables: [
+                //   CheckboxSeleccionableList(
+                //       value: state.banderas.dados,
+                //       nombre: "Dados",
+                //       onChange: (value) => context
+                //           .read<PostearHiloBloc>()
+                //           .add(CambiarBanderas(dados: value))),
+                //   CheckboxSeleccionableList(
+                //     value: state.banderas.tagUnico,
+                //     nombre: "Tag único activado",
+                //     onChange: (value) => context
+                //         .read<PostearHiloBloc>()
+                //         .add(CambiarBanderas(tagUnico: value)),
+                //   )
+                // ]));
               },
             )
           ],

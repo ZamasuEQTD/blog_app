@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: AppThemes.light.copyWith(textTheme: GoogleFonts.interTextTheme()),
-      home: const VerUsuarioModeradorPanel(),
-    );
+        title: 'Flutter Demo',
+        theme:
+            AppThemes.light.copyWith(textTheme: GoogleFonts.interTextTheme()),
+        home: const HomeScreen());
   }
 }

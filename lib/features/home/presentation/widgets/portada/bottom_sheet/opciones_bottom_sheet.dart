@@ -12,42 +12,47 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: GrupoSeleccionableList(seleccionables: [
-        GrupoSeleccionable(seleccionables: [
-          ItemSeleccionableTileList(
-              nombre: "Ocultar", icon: FontAwesomeIcons.flag),
-          ItemSeleccionableTileList(
-              nombre: "Agregar a favoritos", icon: FontAwesomeIcons.flag),
-          ItemSeleccionableTileList(
-              nombre: "Seguir", icon: FontAwesomeIcons.flag),
-          DestructibleItem(
-              onTap: () => SeleccionarRazonDeDenuncia.show(
-                    context,
-                    onSeleccionada: (razon) {},
-                  ),
-              destructiveColor: Colors.red,
-              nombre: "Denunciar",
-              icon: Icons.flag),
-        ]),
-        GrupoSeleccionable(seleccionables: [
-          ItemSeleccionableTileList(
-              nombre: "Destacar", icon: FontAwesomeIcons.person),
-          ItemSeleccionableTileList(
-              nombre: "Ver usuario", icon: FontAwesomeIcons.person),
-          DestructibleItem(
-              destructiveColor: Colors.red,
-              nombre: "Eliminar hilo",
-              icon: FontAwesomeIcons.trash)
+    return SliverMainAxisGroup(
+      slivers: [
+        ...ItemGrupoSliverList.GenerarSlivers([
+          GrupoSeleccionable(seleccionables: [
+            ItemSeleccionableTileList(
+                nombre: "Ocultar", icon: FontAwesomeIcons.flag),
+            ItemSeleccionableTileList(
+                nombre: "Agregar a favoritos", icon: FontAwesomeIcons.flag),
+            ItemSeleccionableTileList(
+                nombre: "Seguir", icon: FontAwesomeIcons.flag),
+            DestructibleItem(
+                onTap: () => SeleccionarRazonDeDenuncia.show(
+                      context,
+                      onSeleccionada: (razon) {},
+                    ),
+                destructiveColor: Colors.red,
+                nombre: "Denunciar",
+                icon: Icons.flag),
+          ]),
+          GrupoSeleccionable(seleccionables: [
+            ItemSeleccionableTileList(
+                nombre: "Destacar", icon: FontAwesomeIcons.person),
+            ItemSeleccionableTileList(
+                onTap: () => VerUsuarioPanel.show(context, usuario: ""),
+                nombre: "Ver usuario",
+                icon: FontAwesomeIcons.person),
+            DestructibleItem(
+                destructiveColor: Colors.red,
+                nombre: "Eliminar hilo",
+                icon: FontAwesomeIcons.trash)
+          ])
         ])
-      ]),
+      ],
     );
   }
 
   static void show(BuildContext context) {
-    BottomSheetManager.show(context,
-        child: const OpcionesDePortadaBottomSheet());
+    SliverBottomSheet.show(
+      context,
+      child: const OpcionesDePortadaBottomSheet(),
+    );
   }
 }
 
@@ -58,52 +63,12 @@ class SeleccionarRazonDeDenuncia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: GrupoSeleccionableList(seleccionables: [
-        GrupoSeleccionable(
-            seleccionables: OpcioneDeDenuncia.values
-                .map<ItemSeleccionable>((e) => ItemSeleccionable(
-                      nombre: e.name,
-                      onTap: () => onSeleccionada(e),
-                    ))
-                .toList())
-      ]),
-    );
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Container());
   }
 
   static void show(BuildContext context,
-      {required void Function(OpcioneDeDenuncia razon) onSeleccionada}) {
-    RoundedBottomSheetManager.show(context,
-        child: SeleccionarRazonDeDenuncia(onSeleccionada: onSeleccionada));
-  }
+      {required void Function(OpcioneDeDenuncia razon) onSeleccionada}) {}
 }
 
 enum OpcioneDeDenuncia { ilegal, otro }
-
-class VerUsuarioModeradorPanel extends StatelessWidget {
-  const VerUsuarioModeradorPanel({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: VerUsuarioPanel());
-  }
-}
-
-class _UserInformacion extends StatelessWidget {
-  const _UserInformacion({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: const SizedBox(
-        height: 100,
-        width: double.infinity,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: ColoredBox(color: Colors.red),
-        ),
-      ),
-    );
-  }
-}

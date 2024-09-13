@@ -1,8 +1,6 @@
-import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../seleccionable/logic/class/grupo_seleccionable.dart';
 
 class BottomSheetManager extends StatelessWidget {
   final Widget child;
@@ -22,10 +20,6 @@ class BottomSheetManager extends StatelessWidget {
           Widget Function(BuildContext context, Widget child)? builder}) =>
       showModalBottomSheet(
           isScrollControlled: true,
-          backgroundColor: const Color(0xffE9ECEF),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-          ),
           context: context,
           builder: (context) => BottomSheetManager(
                 builder: builder,
@@ -33,32 +27,38 @@ class BottomSheetManager extends StatelessWidget {
               ));
 }
 
-class RoundedBottomSheetManager extends StatelessWidget {
-  final Widget child;
-  const RoundedBottomSheetManager({super.key, required this.child});
+class SliverBottomSheet extends StatelessWidget {
+  const SliverBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: ColoredBox(
-          color: const Color(0xffE9ECEF),
-          child: child,
+    return Container();
+  }
+
+  static void show(BuildContext context, {required Widget child}) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => DraggableScrollableSheet(
+        maxChildSize: 0.7,
+        minChildSize: 0.5,
+        initialChildSize: 0.5,
+        builder: (context, controller) => ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 20,
+                  width: double.infinity,
+                ),
+              ),
+              child
+            ],
+          ),
         ),
       ),
     );
   }
-
-  static void show(BuildContext context,
-          {required Widget child,
-          Widget Function(BuildContext context, Widget child)? builder}) =>
-      showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (context) => RoundedBottomSheetManager(
-                child: child,
-              ));
 }
