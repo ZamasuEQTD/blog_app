@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Flutter Demo',
         theme:
-            AppThemes.light.copyWith(textTheme: GoogleFonts.interTextTheme()),
+            AppThemes.light.copyWith(textTheme: GoogleFonts.poppinsTextTheme()),
         home: const HomeScreen());
   }
 }

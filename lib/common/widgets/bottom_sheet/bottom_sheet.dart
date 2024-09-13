@@ -39,23 +39,29 @@ class SliverBottomSheet extends StatelessWidget {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
+        expand: false,
         maxChildSize: 0.7,
-        minChildSize: 0.5,
         initialChildSize: 0.5,
+        snap: true,
+        snapSizes: const [0.5, 0.7],
         builder: (context, controller) => ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
-          child: CustomScrollView(
-            controller: controller,
-            slivers: [
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 20,
-                  width: double.infinity,
+          child: ColoredBox(
+            color: Colors.white,
+            child: CustomScrollView(
+              controller: controller,
+              slivers: [
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 20,
+                    width: double.infinity,
+                  ),
                 ),
-              ),
-              child
-            ],
+                child
+              ],
+            ),
           ),
         ),
       ),

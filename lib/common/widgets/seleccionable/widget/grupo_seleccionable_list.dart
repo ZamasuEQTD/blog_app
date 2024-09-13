@@ -11,16 +11,14 @@ class ItemGrupoSliverList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 15),
-      sliver: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: ColoredBox(
-          color: Colors.white,
-          child: SliverList.builder(
-            itemCount: grupo.seleccionables.length,
-            itemBuilder: (context, index) => ListTileSeleccionable(
-              seleccionable: grupo.seleccionables[index],
-            ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      sliver: DecoratedSliver(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10), color: Colors.red),
+        sliver: SliverList.builder(
+          itemCount: grupo.seleccionables.length,
+          itemBuilder: (context, index) => ListTileSeleccionable(
+            seleccionable: grupo.seleccionables[index],
           ),
         ),
       ),

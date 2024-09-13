@@ -47,9 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text(
             "Devox",
             style: TextStyle(
-                color: Color(0xff5465FF),
-                fontWeight: FontWeight.w900,
-                fontSize: 25),
+              color: Color(0xff5465FF),
+              fontWeight: FontWeight.w900,
+              fontSize: 25,
+            ),
           ),
         ),
         body: CustomScrollView(

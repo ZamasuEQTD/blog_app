@@ -10,16 +10,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class VerUsuarioPanel extends StatelessWidget {
   final String usuario;
-  final ScrollController controller;
-  const VerUsuarioPanel(
-      {super.key, required this.controller, required this.usuario});
+  const VerUsuarioPanel({super.key, required this.usuario});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => VerUsuarioBloc(usuario)..add(CargarUsuario()),
-      child: CustomScrollView(
-        controller: controller,
+      child: SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(
               child: ClipRRect(
@@ -31,7 +28,11 @@ class VerUsuarioPanel extends StatelessWidget {
             child: BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
               builder: (context, state) {
                 return _InformacionDeUsuario(
-                  usuario: state.usuario!,
+                  usuario: state.usuario ??
+                      VistaDeUsuario(
+                          id: "id",
+                          nombre: "nombre",
+                          fechaDeRegistro: DateTime.now()),
                 );
               },
             ),
@@ -52,22 +53,14 @@ class VerUsuarioPanel extends StatelessWidget {
               throw Exception("");
             },
           ),
-          const _HistorialDeHilos(),
         ],
       ),
     );
   }
 
   static void show(BuildContext context, {required String usuario}) =>
-      BottomSheetManager.show(
-        context,
-        child: DraggableScrollableSheet(
-          builder: (context, scrollController) => VerUsuarioPanel(
-            controller: scrollController,
-            usuario: usuario,
-          ),
-        ),
-      );
+      BottomSheetManager.show(context,
+          child: VerUsuarioPanel(usuario: usuario));
 }
 
 class _SeleccionarHistorial extends StatelessWidget {
