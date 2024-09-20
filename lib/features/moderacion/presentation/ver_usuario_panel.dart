@@ -27,13 +27,7 @@ class VerUsuarioPanel extends StatelessWidget {
           SliverToBoxAdapter(
             child: BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
               builder: (context, state) {
-                return _InformacionDeUsuario(
-                  usuario: state.usuario ??
-                      VistaDeUsuario(
-                          id: "id",
-                          nombre: "nombre",
-                          fechaDeRegistro: DateTime.now()),
-                );
+                return _InformacionDeUsuario(usuario: state.usuario!);
               },
             ),
           ),
@@ -49,7 +43,6 @@ class VerUsuarioPanel extends StatelessWidget {
                   return const _HistorialDeHilos();
                 default:
               }
-
               throw Exception("");
             },
           ),
@@ -61,6 +54,15 @@ class VerUsuarioPanel extends StatelessWidget {
   static void show(BuildContext context, {required String usuario}) =>
       BottomSheetManager.show(context,
           child: VerUsuarioPanel(usuario: usuario));
+}
+
+class _VerUsuarioPanelCargando extends StatelessWidget {
+  const _VerUsuarioPanelCargando({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SliverMainAxisGroup(slivers: []);
+  }
 }
 
 class _SeleccionarHistorial extends StatelessWidget {

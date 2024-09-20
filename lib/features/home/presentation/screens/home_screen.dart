@@ -1,6 +1,8 @@
 import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
+import 'package:blog_app/features/hilos/presentation/logic/bloc/hilo/hilo_bloc.dart';
+import 'package:blog_app/features/home/domain/abstractions/ihome_hub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -79,12 +81,34 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _HomePortadasGrid extends StatelessWidget {
+class _HomePortadasGrid extends StatefulWidget {
   static const Widget _cargando = HomePortadaCargando();
 
   const _HomePortadasGrid({
     super.key,
   });
+
+  @override
+  State<_HomePortadasGrid> createState() => _HomePortadasGridState();
+}
+
+class _HomePortadasGridState extends State<_HomePortadasGrid> {
+  final IHomeHub _hub = GetIt.I.get();
+
+  @override
+  void initState() {
+    _hub.onHiloEliminado(
+      (id) => context.read<HomePortadasBloc>().add(EliminarPortada(id: id)),
+    );
+
+    _hub.onHiloPosteado(
+      (portada) => context
+          .read<HomePortadasBloc>()
+          .add(AgregarPortada(portada: portada)),
+    );
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,15 +120,9 @@ class _HomePortadasGrid extends StatelessWidget {
             itemCount: state.portadas.length,
             gridDelegate: HomeScreen._delegate,
             itemBuilder: (context, index) {
-              HomePortadaEntry entry = state.portadas[index];
-              switch (entry) {
-                case HomePortadaListEntry portada:
-                  return HomePortada(portada: portada);
-                case CargandoHomePortadaListEntry _:
-                  return _cargando;
-                default:
-                  throw ArgumentError("Tipo de portada no contemplado");
-              }
+              HomePortadaEntity entry = state.portadas[index];
+
+              return HomePortada(portada: entry);
             },
           ),
         );

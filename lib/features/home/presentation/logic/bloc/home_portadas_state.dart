@@ -3,7 +3,7 @@ part of 'home_portadas_bloc.dart';
 class HomePortadasState extends Equatable {
   final PortadasHomeFiltrosState filtros;
   final PortadasHomeStatus status;
-  final List<HomePortadaEntry> portadas;
+  final List<HomePortadaEntity> portadas;
   final Failure? failure;
   const HomePortadasState(
       {this.portadas = const [],
@@ -14,7 +14,7 @@ class HomePortadasState extends Equatable {
   HomePortadasState copyWith(
           {PortadasHomeFiltrosState? filtros,
           PortadasHomeStatus? status,
-          List<HomePortadaEntry>? portadas,
+          List<HomePortadaEntity>? portadas,
           Failure? failure}) =>
       HomePortadasState(
           filtros: filtros ?? this.filtros,

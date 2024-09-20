@@ -9,11 +9,11 @@ import '../abstractions/ihome_datasource.dart';
 
 class LocalHomeDatasource extends IHomeDatasource {
   @override
-  Future<Either<Failure, List<HomePortadaListEntry>>> getPortadas(
+  Future<Either<Failure, List<HomePortadaEntity>>> getPortadas(
       GetHomePortadasRequest request) async {
     await Future.delayed(const Duration(seconds: 3));
     return Right([
-      HomePortadaListEntry(
+      HomePortadaEntity(
           imagen: Spoileable(
               true,
               Imagen(

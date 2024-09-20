@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:blog_app/features/hilos/domain/models/hilo.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../../categorias/domain/models/subcategoria.dart';
@@ -12,25 +13,21 @@ part 'home_portadas_event.dart';
 part 'home_portadas_state.dart';
 
 class HomePortadasBloc extends Bloc<HomePortadasEvent, HomePortadasState> {
-  static final cargando =
-      List.generate(5, (index) => CargandoHomePortadaListEntry());
-
   final GetHomePortadasUseCase _getHomePortadasUseCase;
 
   HomePortadasBloc(this._getHomePortadasUseCase)
       : super(const HomePortadasState()) {
     on<CargarPortadasHome>(_onCargarPortadasHome);
     on<RecargarHomePortadas>(_onRecargarPortadas);
+    on<AgregarPortada>(_onAgregarPortada);
+    on<EliminarPortada>(_onEliminarPortada);
   }
 
   Future<void> _onCargarPortadasHome(
       CargarPortadasHome event, Emitter<HomePortadasState> emit) async {
     if (state.status == PortadasHomeStatus.cargando) return;
 
-    List<HomePortadaEntry> entries = state.portadas;
-    emit(state.copyWith(
-        status: PortadasHomeStatus.cargando,
-        portadas: [...entries, ...cargando]));
+    List<HomePortadaEntity> entries = state.portadas;
 
     var result = await _getHomePortadasUseCase
         .handle(GetHomePortadasRequest(titulo: state.filtros.titulo));
@@ -47,5 +44,21 @@ class HomePortadasBloc extends Bloc<HomePortadasEvent, HomePortadasState> {
       RecargarHomePortadas event, Emitter<HomePortadasState> emit) {
     emit(const HomePortadasState());
     add(CargarPortadasHome());
+  }
+
+  FutureOr<void> _onAgregarPortada(
+      AgregarPortada event, Emitter<HomePortadasState> emit) {
+    emit(
+      state.copyWith(portadas: [...state.portadas, event.portada]),
+    );
+  }
+
+  FutureOr<void> _onEliminarPortada(
+      EliminarPortada event, Emitter<HomePortadasState> emit) {
+    emit(
+      state.copyWith(
+        portadas: state.portadas.where((element) => true).toList(),
+      ),
+    );
   }
 }

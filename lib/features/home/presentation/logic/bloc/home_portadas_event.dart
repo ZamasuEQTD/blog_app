@@ -17,3 +17,15 @@ class CambiarFiltrosDePortadas extends HomePortadasEvent {
 }
 
 class RecargarHomePortadas extends HomePortadasEvent {}
+
+class AgregarPortada extends HomePortadasEvent {
+  final HomePortadaEntity portada;
+
+  const AgregarPortada({required this.portada});
+}
+
+class EliminarPortada extends HomePortadasEvent {
+  final HiloId id;
+
+  const EliminarPortada({required this.id});
+}

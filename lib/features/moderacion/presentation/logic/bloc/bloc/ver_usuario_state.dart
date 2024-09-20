@@ -16,7 +16,8 @@ class VerUsuarioState extends Equatable {
       this.usuarioState = UsuarioState.cargando});
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props =>
+      [hilos, usuario, tipoDeHistorial, historialState, usuarioState];
 
   VerUsuarioState copyWith({
     List<HiloCreadoHistorialEntry>? hilos,

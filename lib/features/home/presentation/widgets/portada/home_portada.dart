@@ -25,7 +25,7 @@ class HomePortada extends StatelessWidget {
 
   static const _stops = [0.0, 0.3, 0.6, 1.0];
 
-  final HomePortadaListEntry portada;
+  final HomePortadaEntity portada;
 
   const HomePortada({super.key, required this.portada});
 
@@ -82,7 +82,7 @@ class _Banderas extends StatelessWidget {
         const FaIcon(FontAwesomeIcons.diceThree, color: Colors.white)
   });
 
-  final HomePortadaListEntry portada;
+  final HomePortadaEntity portada;
 
   const _Banderas({
     super.key,
@@ -119,7 +119,7 @@ class _Features extends StatelessWidget {
     required this.portada,
   });
 
-  final HomePortadaListEntry portada;
+  final HomePortadaEntity portada;
 
   @override
   Widget build(BuildContext context) {

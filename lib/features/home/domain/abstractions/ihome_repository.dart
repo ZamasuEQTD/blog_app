@@ -5,7 +5,7 @@ import '../../../../core/classes/failure.dart';
 import '../models/home_portada_entry.dart';
 
 abstract class IHomeRepository {
-  Future<Either<Failure, List<HomePortadaListEntry>>> getPortadas(
+  Future<Either<Failure, List<HomePortadaEntity>>> getPortadas(
       GetHomePortadasRequest request);
 }
 

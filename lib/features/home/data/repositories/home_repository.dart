@@ -10,7 +10,7 @@ class HomeRepository extends IHomeRepository {
 
   HomeRepository(this._datasource);
   @override
-  Future<Either<Failure, List<HomePortadaListEntry>>> getPortadas(
+  Future<Either<Failure, List<HomePortadaEntity>>> getPortadas(
       GetHomePortadasRequest request) async {
     return _datasource.getPortadas(request);
   }

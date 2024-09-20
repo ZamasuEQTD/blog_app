@@ -4,10 +4,16 @@ class Skeleton extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final Widget? child;
   final BorderRadiusGeometry? borderRadius;
 
   const Skeleton(
-      {super.key, this.width, this.height, this.borderRadius, this.color});
+      {super.key,
+      this.width,
+      this.height,
+      this.borderRadius,
+      this.color,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,7 @@ class Skeleton extends StatelessWidget {
       ),
       height: height,
       width: width,
+      child: child,
     );
   }
 }

@@ -3,11 +3,7 @@ import 'package:blog_app/common/logic/classes/spoileable.dart';
 
 import '../../../media/domain/models/media.dart';
 
-abstract class HomePortadaEntry {
-  const HomePortadaEntry();
-}
-
-class HomePortadaListEntry extends HomePortadaEntry {
+class HomePortadaEntity {
   final HomePortadaId id;
   final String titulo;
   final String categoria;
@@ -16,7 +12,7 @@ class HomePortadaListEntry extends HomePortadaEntry {
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
 
-  const HomePortadaListEntry(
+  const HomePortadaEntity(
       {required this.id,
       required this.titulo,
       required this.categoria,
@@ -25,8 +21,6 @@ class HomePortadaListEntry extends HomePortadaEntry {
       required this.ultimoBump,
       required this.imagen});
 }
-
-class CargandoHomePortadaListEntry extends HomePortadaEntry {}
 
 typedef HomePortadaId = String;
 
