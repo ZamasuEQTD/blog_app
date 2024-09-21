@@ -10,26 +10,27 @@ class ItemGrupoSliverList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      sliver: DecoratedSliver(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10), color: Colors.red),
-        sliver: SliverMainAxisGroup(
-          slivers: [
-            grupo.titulo != null
-                ? SliverToBoxAdapter(
-                    child: Text(grupo.titulo!),
-                  )
-                : const SizedBox(),
-            SliverList.builder(
-              itemCount: grupo.seleccionables.length,
-              itemBuilder: (context, index) => ListTileSeleccionable(
-                seleccionable: grupo.seleccionables[index],
-              ),
+    return DecoratedSliver(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: Colors.white),
+      sliver: SliverMainAxisGroup(
+        slivers: [
+          grupo.titulo != null
+              ? SliverToBoxAdapter(
+                  child: Text(
+                    grupo.titulo!,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w900),
+                  ),
+                )
+              : const SliverToBoxAdapter(),
+          SliverList.builder(
+            itemCount: grupo.seleccionables.length,
+            itemBuilder: (context, index) => ListTileSeleccionable(
+              seleccionable: grupo.seleccionables[index],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -38,7 +39,12 @@ class ItemGrupoSliverList extends StatelessWidget {
     List<Widget> slivers = [];
 
     for (var grupo in grupos) {
-      slivers.add(ItemGrupoSliverList(grupo: grupo));
+      Widget child = ItemGrupoSliverList(grupo: grupo);
+      if (slivers.isNotEmpty) {
+        child = SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 10), sliver: child);
+      }
+      slivers.add(child);
     }
 
     return slivers;

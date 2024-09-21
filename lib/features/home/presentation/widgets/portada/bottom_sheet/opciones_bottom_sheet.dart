@@ -63,7 +63,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
               );
             },
             icon: FontAwesomeIcons.plus),
-        DestructibleItem(
+        ItemSeleccionableTileList(
             onTap: () => SeleccionarRazonDeDenuncia.show(
                   context,
                   onSeleccionada: (razon) {
@@ -76,7 +76,6 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
                             ));
                   },
                 ),
-            destructiveColor: Colors.red,
             nombre: "Denunciar",
             icon: Icons.flag),
       ])
@@ -149,14 +148,14 @@ class SeleccionarRazonDeDenuncia extends StatelessWidget {
     return SliverList.builder(
       itemCount: OpcionDeDenunciaHilo.values.length,
       itemBuilder: (context, index) => ListTile(
-        title: Text(OpcionDeDenunciaHilo.values[index].toString()),
+        title: Text(OpcionDeDenunciaHilo.values[index].name),
       ),
     );
   }
 
   static void show(BuildContext context,
       {required void Function(OpcionDeDenunciaHilo razon) onSeleccionada}) {
-    BottomSheetManager.show(
+    SliverBottomSheet.show(
       context,
       child: SeleccionarRazonDeDenuncia(onSeleccionada: onSeleccionada),
     );

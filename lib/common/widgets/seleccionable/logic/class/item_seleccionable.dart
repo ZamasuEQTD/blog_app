@@ -18,7 +18,11 @@ class ItemSeleccionable {
 class ItemSeleccionableTileList extends ItemSeleccionable {
   ItemSeleccionableTileList(
       {required super.nombre, required IconData icon, super.onTap})
-      : super(leading: Icon(icon));
+      : super(
+            leading: Icon(
+          icon,
+          color: const Color(0xff50535a),
+        ));
 }
 
 class DestructibleItem extends ItemSeleccionable {

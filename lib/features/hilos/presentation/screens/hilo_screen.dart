@@ -23,6 +23,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/effects/gradient/animated_gradient.dart';
 import '../../../../common/widgets/inputs/decorations/decorations.dart';
@@ -45,26 +46,32 @@ class HiloScreen extends StatefulWidget {
 class _HiloScreenState extends State<HiloScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => HiloBloc("")..add(CargarHilo()),
-          ),
-        ],
-        child: BlocBuilder<HiloBloc, HiloState>(
-          builder: (context, state) {
-            switch (state.status) {
-              case HiloStatus.cargado:
-                return _HiloScreenBody(hilo: state.hilo!);
-              default:
-            }
+    return ChangeNotifierProvider(
+      create: (context) => TaggueosController(),
+      child: BlocProvider(
+        create: (context) => ComentarHiloBloc(),
+        child: Scaffold(
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => HiloBloc("")..add(CargarHilo()),
+              ),
+            ],
+            child: BlocBuilder<HiloBloc, HiloState>(
+              builder: (context, state) {
+                switch (state.status) {
+                  case HiloStatus.cargado:
+                    return _HiloScreenBody(hilo: state.hilo!);
+                  default:
+                }
 
-            return Container();
-          },
+                return Container();
+              },
+            ),
+          ),
+          bottomSheet: const ComentarEnHilo(),
         ),
       ),
-      bottomSheet: const ComentarEnHilo(),
     );
   }
 }
@@ -108,7 +115,7 @@ class _HiloInformacion extends StatelessWidget {
         padding: const EdgeInsets.all(7),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-          color: Color.fromRGBO(225, 225, 225, 1),
+          color: Color(0xffd8d9dd),
         ),
         child: SafeArea(
           child: Padding(
@@ -395,8 +402,7 @@ class _ComentariosState extends State<_Comentarios> {
 
 class _Comentario extends StatelessWidget {
   static final BoxDecoration _decoration = BoxDecoration(
-      color: const Color.fromRGBO(233, 233, 233, 1),
-      borderRadius: BorderRadius.circular(15));
+      color: Colors.white, borderRadius: BorderRadius.circular(15));
 
   final ComentarioListEntry comentario;
 
@@ -628,33 +634,40 @@ class ComentarEnHilo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
-            buildWhen: (previous, current) => previous.media != current.media,
-            builder: (context, state) {
-              return Miniatura(
-                media: state.media!.spoileable,
-              );
-            },
-          ),
-          Row(
-            children: [
-              ColoredIconButton(
-                onPressed: () => ComentarHiloOpciones.show(context),
-                icon: const Icon(Icons.three_k_rounded),
-              ),
-              const _ComentarInput(),
-              ColoredIconButton(
-                  onPressed: () =>
-                      context.read<ComentarHiloBloc>().add(EnviarComentario()),
-                  icon: const Icon(Icons.send)),
-            ],
-          )
-        ],
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
+              buildWhen: (previous, current) => previous.media != current.media,
+              builder: (context, state) {
+                if (state.media != null) {
+                  return Miniatura(
+                    media: state.media!.spoileable,
+                  );
+                }
+                return Container();
+              },
+            ),
+            Row(
+              children: [
+                ColoredIconButton(
+                  onPressed: () => ComentarHiloOpciones.show(context),
+                  icon: const Icon(Icons.three_k_rounded),
+                ),
+                const _ComentarInput(),
+                ColoredIconButton(
+                    onPressed: () => context
+                        .read<ComentarHiloBloc>()
+                        .add(EnviarComentario()),
+                    icon: const Icon(Icons.send)),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -688,13 +701,16 @@ class __ComentarInputState extends State<_ComentarInput> {
   Widget build(BuildContext context) {
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) => Expanded(
-          child: TextField(
-        controller: _controller,
-        keyboardType: TextInputType.multiline,
-        minLines: 1,
-        maxLines: !isKeyboardVisible ? 1 : 4,
-        decoration: FlatInputDecoration(
-            borderRadius: 15, hintText: "Escribe tu comentario..."),
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: TextField(
+          controller: _controller,
+          keyboardType: TextInputType.multiline,
+          minLines: 1,
+          maxLines: !isKeyboardVisible ? 1 : 4,
+          decoration: FlatInputDecoration(
+              borderRadius: 15, hintText: "Escribe tu comentario..."),
+        ),
       )),
     );
   }
@@ -742,7 +758,7 @@ class ComentarHiloOpciones extends StatelessWidget {
     return SliverMainAxisGroup(
       slivers: [
         ...ItemGrupoSliverList.GenerarSlivers([
-          GrupoSeleccionable(titulo: "Seleccionar archivo", seleccionables: [
+          GrupoSeleccionable(seleccionables: [
             ItemSeleccionableTileList(
               nombre: "Galeria",
               icon: FontAwesomeIcons.image,

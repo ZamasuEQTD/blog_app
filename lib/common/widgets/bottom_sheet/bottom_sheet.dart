@@ -36,20 +36,36 @@ class SliverBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HapticFeedback.heavyImpact();
+
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: ColoredBox(
-        color: Colors.white,
+        color: const Color(0xfff2f3f5),
         child: CustomScrollView(
           controller: controller,
           slivers: [
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: SizedBox(
-                height: 20,
+                height: 35,
                 width: double.infinity,
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: const ColoredBox(
+                      color: Colors.white,
+                      child: SizedBox(
+                        height: 7,
+                        width: 80,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-            child
+            SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                sliver: child)
           ],
         ),
       ),
