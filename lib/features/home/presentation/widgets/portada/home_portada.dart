@@ -32,7 +32,7 @@ class HomePortada extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go("location"),
+      onTap: () => context.go("/hilo/${portada.id}"),
       onLongPress: () => OpcionesDePortadaBottomSheet.show(context),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(10),

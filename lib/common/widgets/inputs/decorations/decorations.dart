@@ -34,9 +34,13 @@ class FlatPasswordDecoration extends FlatInputDecoration {
 }
 
 class BusquedaInputDecoration extends FlatInputDecoration {
-  BusquedaInputDecoration(
-      {required void Function() onTap, super.borderRadius, super.hintText})
-      : super(
+  final bool tieneTexto;
+  BusquedaInputDecoration({
+    required void Function() onTap,
+    super.borderRadius,
+    super.hintText,
+    this.tieneTexto = false,
+  }) : super(
             suffixIcon: IconButton(
                 onPressed: onTap, icon: const Icon(Icons.search_outlined)));
 }

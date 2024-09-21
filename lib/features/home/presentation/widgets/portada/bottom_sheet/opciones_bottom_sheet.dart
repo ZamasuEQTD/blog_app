@@ -8,7 +8,9 @@ import 'package:blog_app/features/hilos/domain/usecase/destacar_hilo_usecase.dar
 import 'package:blog_app/features/hilos/domain/usecase/eliminar_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/domain/usecase/ocultar_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/domain/usecase/seguir_hilo_usecase.dart';
+import 'package:blog_app/features/home/presentation/logic/bloc/home_portadas_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 
@@ -19,107 +21,114 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<GrupoSeleccionable> opciones = [
+      GrupoSeleccionable(seleccionables: [
+        ItemSeleccionableTileList(
+            onTap: () {
+              OcultarHiloUsecase usecase = GetIt.I.get();
+
+              usecase.handle(OcultarHiloParams()).then(
+                (value) {
+                  value.fold(
+                      (l) => null,
+                      (r) => context
+                          .read<HomePortadasBloc>()
+                          .add(const EliminarPortada(id: "")));
+                },
+              );
+            },
+            nombre: "Ocultar",
+            icon: FontAwesomeIcons.eye),
+        ItemSeleccionableTileList(
+            nombre: "Agregar a favoritos",
+            onTap: () {
+              AgregarAFavoritosUsecase usecase = GetIt.I.get();
+
+              usecase.handle(AgregarAFavoritosParams()).then(
+                (value) {
+                  value.fold((l) => null, (r) => null);
+                },
+              );
+            },
+            icon: FontAwesomeIcons.star),
+        ItemSeleccionableTileList(
+            nombre: "Seguir",
+            onTap: () {
+              SeguirHiloUsecase usecase = GetIt.I.get();
+
+              usecase.handle(SeguirHiloParams()).then(
+                (value) {
+                  value.fold((l) => null, (r) => null);
+                },
+              );
+            },
+            icon: FontAwesomeIcons.plus),
+        DestructibleItem(
+            onTap: () => SeleccionarRazonDeDenuncia.show(
+                  context,
+                  onSeleccionada: (razon) {
+                    DenunciarHiloUsecase usecase = GetIt.I.get();
+                    usecase
+                        .handle(DenunciarHiloParms())
+                        .then((value) => value.fold(
+                              (l) => null,
+                              (r) => null,
+                            ));
+                  },
+                ),
+            destructiveColor: Colors.red,
+            nombre: "Denunciar",
+            icon: Icons.flag),
+      ])
+    ];
+
+    if (true) {
+      opciones.add(GrupoSeleccionable(seleccionables: [
+        ItemSeleccionableTileList(
+            nombre: "Destacar",
+            onTap: () {
+              DestructibleSeleccionableSheet.show(
+                context,
+                titulo: "Destacar hilo",
+                onAccept: () {
+                  DestacarHiloUsecase usecase = GetIt.I.get();
+
+                  usecase
+                      .handle(DestacarHiloParams())
+                      .then((value) => value.fold(
+                            (l) => null,
+                            (r) => null,
+                          ));
+                },
+              );
+            },
+            icon: FontAwesomeIcons.thumbtack),
+        ItemSeleccionableTileList(
+            onTap: () => VerUsuarioPanel.show(context, usuario: ""),
+            nombre: "Ver usuario",
+            icon: FontAwesomeIcons.person),
+        DestructibleItem(
+            onTap: () => DestructibleSeleccionableSheet.show(
+                  context,
+                  titulo: "Eliminar hilo",
+                  onAccept: () {
+                    EliminarHiloUsecase usecase = GetIt.I.get();
+                    usecase
+                        .handle(EliminarHiloParams())
+                        .then((value) => value.fold(
+                              (l) => null,
+                              (r) => null,
+                            ));
+                  },
+                ),
+            destructiveColor: Colors.red,
+            nombre: "Eliminar hilo",
+            icon: FontAwesomeIcons.trash)
+      ]));
+    }
+
     return SliverMainAxisGroup(
-      slivers: [
-        ...ItemGrupoSliverList.GenerarSlivers([
-          GrupoSeleccionable(seleccionables: [
-            ItemSeleccionableTileList(
-                onTap: () {
-                  OcultarHiloUsecase usecase = GetIt.I.get();
-
-                  usecase.handle(OcultarHiloParams()).then(
-                    (value) {
-                      value.fold((l) => null, (r) => null);
-                    },
-                  );
-                },
-                nombre: "Ocultar",
-                icon: FontAwesomeIcons.flag),
-            ItemSeleccionableTileList(
-                nombre: "Agregar a favoritos",
-                onTap: () {
-                  AgregarAFavoritosUsecase usecase = GetIt.I.get();
-
-                  usecase.handle(AgregarAFavoritosParams()).then(
-                    (value) {
-                      value.fold((l) => null, (r) => null);
-                    },
-                  );
-                },
-                icon: FontAwesomeIcons.flag),
-            ItemSeleccionableTileList(
-                nombre: "Seguir",
-                onTap: () {
-                  SeguirHiloUsecase usecase = GetIt.I.get();
-
-                  usecase.handle(SeguirHiloParams()).then(
-                    (value) {
-                      value.fold((l) => null, (r) => null);
-                    },
-                  );
-                },
-                icon: FontAwesomeIcons.flag),
-            DestructibleItem(
-                onTap: () => SeleccionarRazonDeDenuncia.show(
-                      context,
-                      onSeleccionada: (razon) {
-                        DenunciarHiloUsecase usecase = GetIt.I.get();
-                        usecase
-                            .handle(DenunciarHiloParms())
-                            .then((value) => value.fold(
-                                  (l) => null,
-                                  (r) => null,
-                                ));
-                      },
-                    ),
-                destructiveColor: Colors.red,
-                nombre: "Denunciar",
-                icon: Icons.flag),
-          ]),
-          GrupoSeleccionable(seleccionables: [
-            ItemSeleccionableTileList(
-                nombre: "Destacar",
-                onTap: () {
-                  DestructibleSeleccionableSheet.show(
-                    context,
-                    titulo: "Destacar hilo",
-                    onAccept: () {
-                      DestacarHiloUsecase usecase = GetIt.I.get();
-
-                      usecase
-                          .handle(DestacarHiloParams())
-                          .then((value) => value.fold(
-                                (l) => null,
-                                (r) => null,
-                              ));
-                    },
-                  );
-                },
-                icon: FontAwesomeIcons.person),
-            ItemSeleccionableTileList(
-                onTap: () => VerUsuarioPanel.show(context, usuario: ""),
-                nombre: "Ver usuario",
-                icon: FontAwesomeIcons.person),
-            DestructibleItem(
-                onTap: () => DestructibleSeleccionableSheet.show(
-                      context,
-                      titulo: "Eliminar hilo",
-                      onAccept: () {
-                        EliminarHiloUsecase usecase = GetIt.I.get();
-                        usecase
-                            .handle(EliminarHiloParams())
-                            .then((value) => value.fold(
-                                  (l) => null,
-                                  (r) => null,
-                                ));
-                      },
-                    ),
-                destructiveColor: Colors.red,
-                nombre: "Eliminar hilo",
-                icon: FontAwesomeIcons.trash)
-          ])
-        ])
-      ],
+      slivers: ItemGrupoSliverList.GenerarSlivers(opciones),
     );
   }
 

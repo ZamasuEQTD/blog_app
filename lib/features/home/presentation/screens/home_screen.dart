@@ -1,11 +1,13 @@
 import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
-import 'package:blog_app/features/hilos/presentation/logic/bloc/hilo/hilo_bloc.dart';
 import 'package:blog_app/features/home/domain/abstractions/ihome_hub.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../../domain/models/home_portada_entry.dart';
 import '../logic/bloc/home_portadas_bloc.dart';
@@ -19,6 +21,7 @@ class HomeScreen extends StatefulWidget {
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
           crossAxisCount: 2);
+
   const HomeScreen({super.key});
 
   @override
@@ -54,6 +57,21 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 25,
             ),
           ),
+          actions: [
+            IconButton(
+              onPressed: () => context.go("mis-notificaciones"),
+              icon: badges.Badge(
+                position: badges.BadgePosition.bottomEnd(bottom: -10, end: -12),
+                badgeContent: const Text("5"),
+                child: const FaIcon(FontAwesomeIcons.bell),
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const FaIcon(FontAwesomeIcons.bars),
+            )
+          ],
+          elevation: 0,
         ),
         body: CustomScrollView(
           controller: controller,
@@ -82,8 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _HomePortadasGrid extends StatefulWidget {
-  static const Widget _cargando = HomePortadaCargando();
-
   const _HomePortadasGrid({
     super.key,
   });
@@ -93,6 +109,8 @@ class _HomePortadasGrid extends StatefulWidget {
 }
 
 class _HomePortadasGridState extends State<_HomePortadasGrid> {
+  static const Widget _cargando = HomePortadaCargando();
+
   final IHomeHub _hub = GetIt.I.get();
 
   @override
@@ -114,12 +132,19 @@ class _HomePortadasGridState extends State<_HomePortadasGrid> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomePortadasBloc, HomePortadasState>(
       builder: (context, state) {
+        final int count = state.portadas.length +
+            (state.status == PortadasHomeStatus.cargando ? 5 : 0);
+
         return SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           sliver: SliverGrid.builder(
-            itemCount: state.portadas.length,
+            itemCount: count,
             gridDelegate: HomeScreen._delegate,
             itemBuilder: (context, index) {
+              if (index > state.portadas.length) {
+                return _cargando;
+              }
+
               HomePortadaEntity entry = state.portadas[index];
 
               return HomePortada(portada: entry);
@@ -148,7 +173,7 @@ class _HomePortadasFiltros extends StatelessWidget {
                 ),
                 ColoredIconButton(
                   onPressed: () {},
-                  icon: const Icon(Icons.abc),
+                  icon: const FaIcon(FontAwesomeIcons.diceD6),
                 )
               ],
             )));

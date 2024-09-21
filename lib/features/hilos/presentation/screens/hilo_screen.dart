@@ -4,10 +4,15 @@ import 'dart:collection';
 import 'dart:io';
 
 import 'package:blog_app/common/domain/services/horarios_service.dart';
+import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
 import 'package:blog_app/common/widgets/media/widgets/spoiler_media.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
+import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/home_portada.dart';
+import 'package:blog_app/features/media/domain/usecases/get_gallery_file_usecase.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
 import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
@@ -16,6 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../../common/widgets/effects/gradient/animated_gradient.dart';
 import '../../../../common/widgets/inputs/decorations/decorations.dart';
@@ -28,7 +35,8 @@ import '../logic/bloc/hilo/hilo_bloc.dart';
 import '../logic/controllers/taggueos_controller.dart';
 
 class HiloScreen extends StatefulWidget {
-  const HiloScreen({super.key});
+  final HiloId id;
+  const HiloScreen({super.key, required this.id});
 
   @override
   State<HiloScreen> createState() => _HiloScreenState();
@@ -56,7 +64,7 @@ class _HiloScreenState extends State<HiloScreen> {
           },
         ),
       ),
-      // bottomSheet: const ComentarEnHilo(),
+      bottomSheet: const ComentarEnHilo(),
     );
   }
 }
@@ -636,7 +644,7 @@ class ComentarEnHilo extends StatelessWidget {
           Row(
             children: [
               ColoredIconButton(
-                onPressed: () {},
+                onPressed: () => ComentarHiloOpciones.show(context),
                 icon: const Icon(Icons.three_k_rounded),
               ),
               const _ComentarInput(),
@@ -724,4 +732,48 @@ class ColorPicker {
 
     return colors[index];
   }
+}
+
+class ComentarHiloOpciones extends StatelessWidget {
+  const ComentarHiloOpciones({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverMainAxisGroup(
+      slivers: [
+        ...ItemGrupoSliverList.GenerarSlivers([
+          GrupoSeleccionable(titulo: "Seleccionar archivo", seleccionables: [
+            ItemSeleccionableTileList(
+              nombre: "Galeria",
+              icon: FontAwesomeIcons.image,
+              onTap: () {
+                GetGalleryFileUsecase usecase = GetIt.I.get();
+
+                usecase
+                    .handle(const GetGalleryFileRequest(extensions: []))
+                    .then(
+                  (value) {
+                    value.fold((l) => null, (r) {
+                      if (r != null) {
+                        context
+                            .read<ComentarHiloBloc>()
+                            .add(AgregarMedia(media: r));
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+            ItemSeleccionableTileList(
+              nombre: "Enlace",
+              icon: FontAwesomeIcons.link,
+            )
+          ])
+        ])
+      ],
+    );
+  }
+
+  static void show(BuildContext context) =>
+      SliverBottomSheet.show(context, child: const ComentarHiloOpciones());
 }
