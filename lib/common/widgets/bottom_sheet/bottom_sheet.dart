@@ -40,26 +40,36 @@ class SliverBottomSheet extends StatelessWidget {
     HapticFeedback.heavyImpact();
 
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
       child: ColoredBox(
         color: const Color(0xfff2f3f5),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const _BottomSheetSeparator(),
-            CustomScrollView(
-              controller: controller,
-              slivers: [
-                titulo != null
-                    ? const SliverToBoxAdapter(
-                        child: Text(""),
-                      )
-                    : const SliverToBoxAdapter(),
-                SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    sliver: child)
-              ],
-            ),
+        child: CustomScrollView(
+          controller: controller,
+          slivers: [
+            const SliverToBoxAdapter(child: _BottomSheetSeparator()),
+            titulo != null
+                ? SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            titulo!,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          const Divider()
+                        ],
+                      ),
+                    ),
+                  )
+                : const SliverToBoxAdapter(),
+            SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                sliver: child)
           ],
         ),
       ),

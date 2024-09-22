@@ -11,7 +11,10 @@ class AuthBtn extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: SizedBox(
         height: 45,
-        child: ElevatedButton(onPressed: onPressed, child: Text(texto)),
+        child: ElevatedButton(
+            style: const ButtonStyle(elevation: WidgetStatePropertyAll(0)),
+            onPressed: onPressed,
+            child: Text(texto)),
       ),
     );
   }
