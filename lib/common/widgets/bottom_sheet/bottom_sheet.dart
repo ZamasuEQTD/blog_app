@@ -31,8 +31,9 @@ class BottomSheetManager extends StatelessWidget {
 class SliverBottomSheet extends StatelessWidget {
   final ScrollController controller;
   final Widget child;
+  final String? titulo;
   const SliverBottomSheet(
-      {super.key, required this.controller, required this.child});
+      {super.key, required this.controller, required this.child, this.titulo});
 
   @override
   Widget build(BuildContext context) {
@@ -42,37 +43,31 @@ class SliverBottomSheet extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: ColoredBox(
         color: const Color(0xfff2f3f5),
-        child: CustomScrollView(
-          controller: controller,
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 35,
-                width: double.infinity,
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: const ColoredBox(
-                      color: Colors.white,
-                      child: SizedBox(
-                        height: 7,
-                        width: 80,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _BottomSheetSeparator(),
+            CustomScrollView(
+              controller: controller,
+              slivers: [
+                titulo != null
+                    ? const SliverToBoxAdapter(
+                        child: Text(""),
+                      )
+                    : const SliverToBoxAdapter(),
+                SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    sliver: child)
+              ],
             ),
-            SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                sliver: child)
           ],
         ),
       ),
     );
   }
 
-  static void show(BuildContext context, {required Widget child}) {
+  static void show(BuildContext context,
+      {required Widget child, String? titulo}) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -83,8 +78,37 @@ class SliverBottomSheet extends StatelessWidget {
         initialChildSize: 0.5,
         snap: true,
         snapSizes: const [0.5, 0.7],
-        builder: (context, controller) =>
-            SliverBottomSheet(controller: controller, child: child),
+        builder: (context, controller) => SliverBottomSheet(
+          controller: controller,
+          titulo: titulo,
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomSheetSeparator extends StatelessWidget {
+  const _BottomSheetSeparator({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 35,
+      width: double.infinity,
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: const ColoredBox(
+            color: Colors.white,
+            child: SizedBox(
+              height: 7,
+              width: 80,
+            ),
+          ),
+        ),
       ),
     );
   }
