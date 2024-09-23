@@ -18,9 +18,15 @@ class LoginScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(children: [
             const Text(
-              "¡Bienvenido!",
+              "¡Bienvenido de nuevo!",
               textAlign: TextAlign.center,
               style: AuthLabelTextStyle(),
+            ),
+            RichText(
+              text: const TextSpan(
+                text: "Inicia sesión o",
+                children: [TextSpan(text: "Registrate")],
+              ),
             ),
             const Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),

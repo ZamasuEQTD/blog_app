@@ -791,5 +791,6 @@ class ComentarHiloOpciones extends StatelessWidget {
   }
 
   static void show(BuildContext context) =>
-      SliverBottomSheet.show(context, child: const ComentarHiloOpciones());
+      SliverDraggableBottomSheet.show(context,
+          child: const ComentarHiloOpciones());
 }

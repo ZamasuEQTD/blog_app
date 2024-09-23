@@ -14,7 +14,7 @@ class RegistroScreen extends StatelessWidget {
     return Scaffold(
         body: Column(children: [
       const Text(
-        "¡Bienvenido de nuevo!",
+        "¡Bienvenido!",
         textAlign: TextAlign.center,
         style: AuthLabelTextStyle(),
       ),

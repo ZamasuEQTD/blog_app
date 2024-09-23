@@ -52,8 +52,10 @@ class VerUsuarioPanel extends StatelessWidget {
   }
 
   static void show(BuildContext context, {required String usuario}) =>
-      BottomSheetManager.show(context,
-          child: VerUsuarioPanel(usuario: usuario));
+      SliverDraggableBottomSheet.show(
+        context,
+        child: VerUsuarioPanel(usuario: usuario),
+      );
 }
 
 class _VerUsuarioPanelCargando extends StatelessWidget {

@@ -9,27 +9,25 @@ class SesionRequeridaBottomsheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Center(
-              child: Text(
-            "Debes iniciar sesión ",
-            style: TextStyle(fontSize: 18),
-          )),
-        ),
-        SliverToBoxAdapter(child: IrLoginBtn()),
+    return const Column(
+      children: [
+        Center(
+            child: Text(
+          "Debes iniciar sesión ",
+          style: TextStyle(fontSize: 18),
+        )),
+        IrLoginBtn(),
         SliverToBoxAdapter(
           child: SizedBox(
             height: 10,
           ),
         ),
-        SliverToBoxAdapter(child: IrRegistroBtn())
+        IrRegistroBtn()
       ],
     );
   }
 
-  static void show(BuildContext context) => SliverBottomSheet.show(
+  static void show(BuildContext context) => NormalBottomSheet.show(
         context,
         child: const SesionRequeridaBottomsheet(),
         titulo: "Sesion Requerida",

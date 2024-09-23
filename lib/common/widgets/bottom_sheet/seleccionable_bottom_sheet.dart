@@ -11,15 +11,12 @@ class OpcionesDeComentarios extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<GrupoSeleccionable> grupos = [];
 
-    return DraggableScrollableSheet(
-      builder: (context, controller) => CustomScrollView(
-        controller: controller,
-        slivers: [...ItemGrupoSliverList.GenerarSlivers(grupos)],
-      ),
+    return SliverMainAxisGroup(
+      slivers: [...ItemGrupoSliverList.GenerarSlivers(grupos)],
     );
   }
 
   static show(BuildContext context) {
-    BottomSheetManager.show(context, child: const OpcionesDeComentarios());
+    SliverBottomSheet.show(context, child: const OpcionesDeComentarios());
   }
 }
