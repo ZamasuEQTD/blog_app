@@ -24,26 +24,29 @@ class PostearHiloScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "Postear hilo",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+    return BlocProvider(
+      create: (context) => PostearHiloBloc(),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            "Postear hilo",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          ),
         ),
-      ),
-      body: const CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            sliver: SliverMainAxisGroup(slivers: [
-              _PostearHiloForm(),
-              _SeleccionarSubcategoria(),
-              _HiloPortada(),
-              _BanderasDeHilo()
-            ]),
-          )
-        ],
+        body: const CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              sliver: SliverMainAxisGroup(slivers: [
+                _PostearHiloForm(),
+                _SeleccionarSubcategoria(),
+                _HiloPortada(),
+                _BanderasDeHilo()
+              ]),
+            )
+          ],
+        ),
       ),
     );
   }

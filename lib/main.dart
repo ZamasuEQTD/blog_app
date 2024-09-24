@@ -2,6 +2,8 @@ import 'package:blog_app/core/configs/routing.dart';
 import 'package:blog_app/core/configs/theme/app_themes.dart';
 import 'package:blog_app/core/dependency_injection/data_dependencies.dart';
 import 'package:blog_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:blog_app/features/hilos/presentation/screens/postear_hilo_screen.dart';
+import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme:
           AppThemes.light.copyWith(textTheme: GoogleFonts.notoSansTextTheme()),
-      home: const LoginScreen(),
+      home: const PostearHiloScreen(),
     );
     return MaterialApp.router(
       title: 'Flutter Demo',

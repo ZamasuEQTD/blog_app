@@ -9,21 +9,18 @@ class SesionRequeridaBottomsheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Center(
-            child: Text(
-          "Debes iniciar sesión ",
-          style: TextStyle(fontSize: 18),
-        )),
-        IrLoginBtn(),
-        SliverToBoxAdapter(
-          child: SizedBox(
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IrLoginBtn(),
+          SizedBox(
             height: 10,
           ),
-        ),
-        IrRegistroBtn()
-      ],
+          IrRegistroBtn()
+        ],
+      ),
     );
   }
 
@@ -39,11 +36,14 @@ class IrLoginBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: const FlatBtnStyle().copyWith(
-            backgroundColor: const WidgetStatePropertyAll(Colors.black)),
-        onPressed: () => context.push("login"),
-        child: const Text("Iniciar sesion"));
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+          style: const FlatBtnStyle().copyWith(
+              backgroundColor: const WidgetStatePropertyAll(Colors.black)),
+          onPressed: () => context.push("/login"),
+          child: const Text("Iniciar sesion")),
+    );
   }
 }
 
@@ -52,14 +52,17 @@ class IrRegistroBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: const FlatBtnStyle().copyWith(
-            backgroundColor: const WidgetStatePropertyAll(Colors.white)),
-        onPressed: () => context.push("registro"),
-        child: const Text(
-          "Registrarse",
-          style: TextStyle(color: Colors.black),
-        ));
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+          style: const FlatBtnStyle().copyWith(
+              backgroundColor: const WidgetStatePropertyAll(Colors.white)),
+          onPressed: () => context.push("registro"),
+          child: const Text(
+            "Registrarse",
+            style: TextStyle(color: Colors.black),
+          )),
+    );
   }
 }
 

@@ -107,22 +107,21 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
             nombre: "Ver usuario",
             icon: FontAwesomeIcons.person),
         DestructibleItem(
-            onTap: () => DestructibleSeleccionableSheet.show(
-                  context,
-                  titulo: "Eliminar hilo",
-                  onAccept: () {
-                    EliminarHiloUsecase usecase = GetIt.I.get();
-                    usecase
-                        .handle(EliminarHiloParams())
-                        .then((value) => value.fold(
-                              (l) => null,
-                              (r) => null,
-                            ));
-                  },
-                ),
-            destructiveColor: Colors.red,
-            nombre: "Eliminar hilo",
-            icon: FontAwesomeIcons.trash)
+          onTap: () => DestructibleSeleccionableSheet.show(
+            context,
+            titulo: "Eliminar hilo",
+            onAccept: () {
+              EliminarHiloUsecase usecase = GetIt.I.get();
+              usecase.handle(EliminarHiloParams()).then((value) => value.fold(
+                    (l) => null,
+                    (r) => null,
+                  ));
+            },
+          ),
+          destructiveColor: Colors.red,
+          nombre: "Eliminar hilo",
+          icon: FontAwesomeIcons.trash,
+        )
       ]));
     }
 
@@ -132,7 +131,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
   }
 
   static void show(BuildContext context) {
-    SliverBottomSheet.show(
+    SliverDraggableBottomSheet.show(
       context,
       child: const OpcionesDePortadaBottomSheet(),
     );

@@ -19,15 +19,13 @@ class VerUsuarioPanel extends StatelessWidget {
       child: SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(
-              child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: const ColoredBox(
-                color: Colors.white, child: SizedBox(height: 15, width: 250)),
-          )),
-          SliverToBoxAdapter(
             child: BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
               builder: (context, state) {
-                return _InformacionDeUsuario(usuario: state.usuario!);
+                return _InformacionDeUsuario(
+                    usuario: VistaDeUsuario(
+                        id: "id",
+                        nombre: "nombre",
+                        fechaDeRegistro: DateTime.now()));
               },
             ),
           ),

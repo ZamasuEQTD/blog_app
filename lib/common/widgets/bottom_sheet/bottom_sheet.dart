@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get_state_manager/src/simple/get_widget_cache.dart';
 import 'package:go_router/go_router.dart';
+import 'package:path/path.dart';
 
 class _BottomSheetSeparator extends StatelessWidget {
   const _BottomSheetSeparator({
@@ -37,19 +38,28 @@ class DestructibleSeleccionableSheet extends NormalBottomSheet {
       : super(
             child: Column(
           children: [
-            ElevatedButton(
-                style: const FlatBtnStyle().copyWith(
-                    backgroundColor: const WidgetStatePropertyAll(
-                        CupertinoColors.destructiveRed)),
-                onPressed: () {},
-                child: const Text("Seguir")),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  style: const FlatBtnStyle().copyWith(
+                      backgroundColor: const WidgetStatePropertyAll(
+                          CupertinoColors.destructiveRed)),
+                  onPressed: () {},
+                  child: const Text("Seguir")),
+            ),
             const SizedBox(height: 15),
-            ElevatedButton(
-                style: const FlatBtnStyle().copyWith(
-                    backgroundColor:
-                        const WidgetStatePropertyAll(CupertinoColors.white)),
-                onPressed: () {},
-                child: const Text("Cancelar")),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  style: const FlatBtnStyle().copyWith(
+                      backgroundColor:
+                          const WidgetStatePropertyAll(CupertinoColors.white)),
+                  onPressed: () {},
+                  child: const Text(
+                    "Cancelar",
+                    style: TextStyle(color: Colors.black),
+                  )),
+            ),
           ],
         ));
 
@@ -57,7 +67,12 @@ class DestructibleSeleccionableSheet extends NormalBottomSheet {
     BuildContext context, {
     required void Function() onAccept,
     String? titulo,
-  }) {}
+  }) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) => DestructibleSeleccionableSheet(titulo: titulo));
+  }
 }
 
 abstract class BottomSheet extends StatelessWidget {
@@ -83,6 +98,7 @@ abstract class BottomSheet extends StatelessWidget {
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -104,6 +120,7 @@ class NormalBottomSheet extends BottomSheet {
   NormalBottomSheet({super.key, super.titulo, required Widget child})
       : super(
             child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const _BottomSheetSeparator(),
             BottomSheet.generarTitulo(titulo),
@@ -116,13 +133,18 @@ class NormalBottomSheet extends BottomSheet {
     String? titulo,
   }) =>
       showModalBottomSheet(
+        backgroundColor: Colors.transparent,
         context: context,
-        builder: (context) => NormalBottomSheet(child: child),
+        builder: (context) => NormalBottomSheet(
+          titulo: titulo,
+          child: child,
+        ),
       );
 }
 
 class SliverBottomSheet extends BottomSheet {
   final ScrollController? controller;
+
   SliverBottomSheet(
       {super.key, required Widget child, super.titulo, this.controller})
       : super(
@@ -144,6 +166,7 @@ class SliverBottomSheet extends BottomSheet {
     String? titulo,
   }) =>
       showModalBottomSheet(
+          backgroundColor: Colors.transparent,
           context: context,
           builder: (context) => SliverBottomSheet(
                 titulo: titulo,
