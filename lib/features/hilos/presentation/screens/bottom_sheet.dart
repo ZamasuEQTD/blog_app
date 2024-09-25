@@ -25,7 +25,7 @@ class BottomSheet extends StatelessWidget {
       isScrollControlled: options.isScrollControlled,
       isDismissible: options.isDimissible,
       constraints: options.constraints,
-      backgroundColor: options.color,
+      backgroundColor: Colors.red,
       context: context,
       builder: (context) => options.builder != null
           ? options.builder!(
@@ -100,7 +100,7 @@ class SliverBottomSheet extends StatelessWidget {
 
 class ShowBottomSheetOptionsBuilder {
   bool isScrollControlled = false;
-  bool isDimissible = false;
+  bool isDimissible = true;
   Color? color = Colors.transparent;
   BoxConstraints? constraints;
   Widget Function(BuildContext context, Widget child)? builder;

@@ -19,8 +19,6 @@ import '../../../categorias/presentation/widgets/subcategoria_background.dart';
 import '../logic/bloc/postear_hilo/postear_hilo_bloc.dart';
 import 'bottom_sheet.dart';
 
-const EdgeInsets _sectionPadding = EdgeInsets.all(10);
-
 class PostearHiloScreen extends StatelessWidget {
   const PostearHiloScreen({super.key});
 
@@ -240,8 +238,9 @@ class _HiloPortada extends StatelessWidget {
                                   child: GestureDetector(
                                     onTap: () =>
                                         SeleccionarArchivoBottomSheet.show(
-                                            context,
-                                            onGalleryResult: (p0) {}),
+                                      context,
+                                      onGalleryResult: (result) {},
+                                    ),
                                     child: const Center(
                                         child: Text(
                                       "Agregar portada",
@@ -291,17 +290,21 @@ class SeleccionarArchivoBottomSheet extends StatelessWidget {
       ...ItemGrupoSliverList.GenerarSlivers([
         GrupoSeleccionable(seleccionables: [
           SeleccionarMediaDeGaleria(onResult: onGalleryResult),
-          SeleccionarMediaDesdeUrl()
+          SeleccionarMediaDesdeUrl(onTap: () {
+            IngresarEnlaceBottomSheet.show(context);
+          })
         ])
       ])
     ]);
   }
 
   static void show(BuildContext context,
-          {required void Function(Either<Failure, Media?>) onGalleryResult}) =>
+          {required void Function(Either<Failure, Media?> file)
+              onGalleryResult}) =>
       SliverBottomSheet.show(
         context,
         options: ShowBottomSheetOptionsBuilder()
+            .setColor(Colors.red)
             .setConstraints(const BoxConstraints(maxHeight: 600)),
         child: SeleccionarArchivoBottomSheet(onGalleryResult: onGalleryResult),
       );
@@ -326,6 +329,38 @@ class SeleccionarMediaDeGaleria extends ItemSeleccionableTileList {
 }
 
 class SeleccionarMediaDesdeUrl extends ItemSeleccionableTileList {
-  SeleccionarMediaDesdeUrl()
-      : super(icon: FontAwesomeIcons.link, nombre: "Enlace");
+  SeleccionarMediaDesdeUrl({required super.onTap})
+      : super(
+          icon: FontAwesomeIcons.link,
+          nombre: "Enlace",
+        );
+}
+
+class IngresarEnlaceBottomSheet extends StatelessWidget {
+  const IngresarEnlaceBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          sliver: SliverToBoxAdapter(
+            child: TextField(
+              minLines: 4,
+              maxLines: 5,
+              decoration: FlatInputDecoration(
+                hintText:
+                    "Ingresa un enlace. De momento solo se aceptan enlaces de youtube",
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  static void show(BuildContext context) => SliverBottomSheet.show(context,
+      options: ShowBottomSheetOptionsBuilder(),
+      child: const IngresarEnlaceBottomSheet());
 }
