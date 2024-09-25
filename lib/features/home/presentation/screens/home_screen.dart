@@ -48,6 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
+        floatingActionButton: ColoredIconButton(
+            border: BorderRadius.circular(10),
+            onPressed: () => context.push("/postear-hilo"),
+            icon: const Icon(
+              Icons.abc,
+              size: 30,
+            )),
         appBar: AppBar(
           title: const Text(
             "Devox",

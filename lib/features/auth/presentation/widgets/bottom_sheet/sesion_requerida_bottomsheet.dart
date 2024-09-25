@@ -72,6 +72,6 @@ class FlatBtnStyle extends ButtonStyle {
             shape: const WidgetStatePropertyAll(RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10)))),
             padding: const WidgetStatePropertyAll(
-                EdgeInsets.symmetric(vertical: 15)),
+                EdgeInsets.symmetric(vertical: 15, horizontal: 10)),
             elevation: const WidgetStatePropertyAll(0));
 }
