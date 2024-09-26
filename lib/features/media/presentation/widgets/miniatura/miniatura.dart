@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:blog_app/features/media/presentation/logic/bloc/bloc/miniatura_generador_bloc.dart';
+import 'package:blog_app/features/media/presentation/logic/bloc/miniatura_generador/miniatura_generador_bloc.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

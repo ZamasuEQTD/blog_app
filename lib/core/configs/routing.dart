@@ -1,4 +1,3 @@
-import 'package:blog_app/features/auth/domain/models/usuario.dart';
 import 'package:blog_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:blog_app/features/auth/presentation/screens/registro_screen.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen.dart';

@@ -15,7 +15,6 @@ class Hilo {
   final Spoileable<Media> portada;
   final Encuesta? encuesta;
   final List<BanderasDeHilo> banderas;
-
   Hilo(
       {required this.id,
       required this.titulo,
