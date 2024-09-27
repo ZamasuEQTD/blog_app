@@ -5,6 +5,7 @@ import 'package:chewie/chewie.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import 'package:video_player/video_player.dart';
 
 part 'reproductor_de_video_event.dart';
 part 'reproductor_de_video_state.dart';
@@ -20,6 +21,7 @@ class ReproductorDeVideoBloc
     on<ReproducirVideo>(_onReproducirVideo);
     on<PausarVideo>(_onPausarVideo);
     on<InicializarReproductor>(_onInicializarReproductor);
+    add(AddListeners());
   }
 
   FutureOr<void> _onInicializarReproductor(
@@ -119,6 +121,16 @@ class ReproductorDeVideoBloc
         ),
       ),
     );
+  }
+}
+
+extension VideoPlayerControllerExtensions on VideoPlayerController {
+  void retroceder(Duration time) {
+    seekTo(value.position - time);
+  }
+
+  void adelantar(Duration time) {
+    seekTo(value.position + time);
   }
 }
 

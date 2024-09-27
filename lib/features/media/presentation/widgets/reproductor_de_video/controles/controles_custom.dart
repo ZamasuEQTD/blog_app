@@ -2,6 +2,7 @@ import 'package:blog_app/features/media/presentation/logic/bloc/reproductor/repr
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_player/video_player.dart';
 
 import 'widgets/control/reproductor_control_icon.dart';
 
@@ -32,9 +33,7 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
         color: Colors.transparent,
         child: GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () => context
-                .read<ReproductorDeVideoBloc>()
-                .add(const ToggleControls()),
+            onTap: () => {},
             child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
               builder: builder,
             )));
@@ -59,7 +58,7 @@ class _ControlesDeReproduccionState extends State<ControlesDeReproduccion> {
 
   @override
   Widget build(BuildContext context) {
-    final ChewieController controller = context.read();
+    final VideoPlayerController controller = context.read();
 
     return Positioned.fill(
         child: Stack(
@@ -101,7 +100,7 @@ class ControlesDeTiempo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ChewieController controller = context.read();
+    VideoPlayerController controller = context.read();
 
     void retroceder() {
       controller.retroceder(const Duration(seconds: 10));

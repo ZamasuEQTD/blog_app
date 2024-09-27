@@ -29,11 +29,13 @@ class GetHiloUseCase extends IUsecase<GetHiloRequest, Hilo> {
             Imagen(
                 provider: const NetworkProvider(
                     path: "https://i.redd.it/eopud74baswa1.png"))),
-        portada: Spoileable(
+        portada: const Spoileable(
             false,
-            Imagen(
-                provider: const NetworkProvider(
-                    path: "https://i.redd.it/eopud74baswa1.png")))));
+            Video(
+                previsualizacion: "https://i.redd.it/eopud74baswa1.png",
+                provider: NetworkProvider(
+                    path:
+                        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))));
   }
 }
 

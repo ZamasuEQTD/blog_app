@@ -2,6 +2,7 @@ import 'package:blog_app/core/configs/routing.dart';
 import 'package:blog_app/core/configs/theme/app_themes.dart';
 import 'package:blog_app/core/dependency_injection/data_dependencies.dart';
 import 'package:blog_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:blog_app/features/hilos/presentation/screens/hilo_screen.dart';
 import 'package:blog_app/features/hilos/presentation/screens/postear_hilo_screen.dart';
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme:
+          AppThemes.light.copyWith(textTheme: GoogleFonts.notoSansTextTheme()),
+      home: const HiloScreen(id: "id"),
+    );
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme:

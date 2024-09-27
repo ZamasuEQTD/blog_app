@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:blog_app/features/media/presentation/widgets/reproductor_de_video/previsualizacion.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,10 @@ class ReproductorDeVideoWidget extends StatefulWidget {
             key: key, url: provider.url, previsualizacion: previsualizacion);
       case FileVideoProvider provider:
         return ReproductorDeVideoWidget.fromFile(
-            key: key, video: provider.file, previsualizacion: previsualizacion);
+          key: key,
+          video: provider.file,
+          previsualizacion: previsualizacion,
+        );
       default:
         throw Exception("Provider invalido");
     }
@@ -55,10 +59,6 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
   void initState() {
     controller = ChewieController(
       videoPlayerController: widget.controller,
-      customControls: ChangeNotifierProvider.value(
-        value: controller,
-        child: const ControlesDeReproductorDeVideo(),
-      ),
     );
 
     if (widget.previsualizacion == null) {
@@ -75,29 +75,13 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
   @override
   Widget build(BuildContext context) {
     Widget builder(BuildContext context, ReproductorDeVideoState state) {
-      if (state.reproductor != EstadoDeReproductor.iniciado) {
-        return Stack(
-          children: [
-            Image(image: widget.previsualizacion!),
-            ReproductorDeVideoControl(
-              size: 40,
-              onTap: () {
-                if (!widget.controller.value.isInitialized) {
-                  widget.controller.initialize().then((value) {
-                    setState(() {
-                      ratio = widget.controller.value.aspectRatio;
-                    });
-                  });
-                }
-              },
-              icon: const Padding(
-                padding: EdgeInsets.all(10),
-                child: Icon(
-                  Icons.play_arrow,
-                ),
-              ),
-            )
-          ],
+      if (widget.previsualizacion != null &&
+          state.reproductor != EstadoDeReproductor.iniciado) {
+        return PrevisualizacionDeVideo(
+          previsualizacion: widget.previsualizacion!,
+          init: () => context
+              .read<ReproductorDeVideoBloc>()
+              .add(const InicializarReproductor()),
         );
       }
       return AspectRatio(
@@ -106,8 +90,20 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
       );
     }
 
-    return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-      builder: builder,
+    return BlocProvider(
+      create: (context) => ReproductorDeVideoBloc(controller),
+      child: BlocListener<ReproductorDeVideoBloc, ReproductorDeVideoState>(
+        listener: (context, state) {
+          if (state.reproductor == EstadoDeReproductor.iniciado) {
+            setState(() {
+              ratio = widget.controller.value.aspectRatio;
+            });
+          }
+        },
+        child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
+          builder: builder,
+        ),
+      ),
     );
   }
 }

@@ -16,6 +16,9 @@ class DimensionableMedia extends StatelessWidget {
         return Image(image: media.toProvider());
       case Video media:
         return ReproductorDeVideoWidget.fromProvider(
+            previsualizacion: media.previsualizacion != null
+                ? const NetworkImage("https://i.redd.it/eopud74baswa1.png")
+                : null,
             provider: media.toProvider());
       default:
         throw Exception("Tipo de media no soportado!!!");
@@ -87,6 +90,9 @@ class MediaManager extends StatelessWidget {
         return Image(image: media.toProvider());
       case Video media:
         return ReproductorDeVideoWidget.fromProvider(
+            previsualizacion: media.previsualizacion != null
+                ? NetworkImage(media.previsualizacion!)
+                : null,
             provider: media.toProvider());
       default:
         throw Exception("Tipo de media no soportado!!!");

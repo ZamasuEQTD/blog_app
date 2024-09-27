@@ -20,7 +20,15 @@ class ReproductorDeVideoState extends Equatable {
   });
 
   @override
-  List<Object> get props => [reproductor, reproduccion, volumen];
+  List<Object> get props => [
+        reproductor,
+        reproduccion,
+        buffer,
+        pantalla,
+        controles,
+        position,
+        volumen,
+      ];
 
   ReproductorDeVideoState copyWith({
     EstadoDeReproductor? reproductor,
