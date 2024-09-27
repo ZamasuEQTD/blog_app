@@ -15,14 +15,16 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget builder(BuildContext context, ReproductorDeVideoState state) {
       return AnimatedOpacity(
-        opacity: state.controles == EstadoDeControles.mostrar ? 1 : 0,
+        opacity: state.controles ? 1 : 0,
         duration: const Duration(milliseconds: 500),
         child: IgnorePointer(
-          ignoring: state.controles == EstadoDeControles.ocultos,
+          ignoring: state.controles,
           child: Container(
             color: Colors.black.withOpacity(0.3),
             child: const Stack(
-              children: [ControlesDeReproduccion()],
+              children: [
+                ControlesDeReproduccion(),
+              ],
             ),
           ),
         ),
@@ -33,7 +35,9 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
         color: Colors.transparent,
         child: GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () => {},
+            onTap: () => context
+                .read<ReproductorDeVideoBloc>()
+                .add(const ToggleControls()),
             child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
               builder: builder,
             )));
@@ -67,6 +71,10 @@ class _ControlesDeReproduccionState extends State<ControlesDeReproduccion> {
             child: ReproductorDeVideoControl(
           icon: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
             builder: (context, state) {
+              if (state.buffer) {
+                return const CircularProgressIndicator();
+              }
+
               if (state.reproduccion == EstadoDeReproduccion.pausado) {
                 return const Icon(
                   Icons.play_arrow,

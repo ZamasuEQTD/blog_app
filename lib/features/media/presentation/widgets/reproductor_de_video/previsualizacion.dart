@@ -17,12 +17,13 @@ class PrevisualizacionDeVideo extends StatelessWidget {
       children: [
         Image(image: previsualizacion),
         Positioned.fill(
-            child: Align(
-                alignment: Alignment.center,
-                child: BlocBuilder<ReproductorDeVideoBloc,
-                    ReproductorDeVideoState>(
-                  builder: _builder,
-                )))
+          child: Align(
+            alignment: Alignment.center,
+            child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
+              builder: _builder,
+            ),
+          ),
+        )
       ],
     );
   }

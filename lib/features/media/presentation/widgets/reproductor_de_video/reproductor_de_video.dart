@@ -54,19 +54,19 @@ class ReproductorDeVideoWidget extends StatefulWidget {
 
 class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
   late final ChewieController controller;
+  late final ReproductorDeVideoBloc bloc;
   double ratio = 1;
   @override
   void initState() {
     controller = ChewieController(
       videoPlayerController: widget.controller,
+      customControls: const ControlesDeReproductorDeVideo(),
     );
 
+    bloc = ReproductorDeVideoBloc(controller);
+
     if (widget.previsualizacion == null) {
-      widget.controller.initialize().then((value) {
-        setState(() {
-          ratio = widget.controller.value.aspectRatio;
-        });
-      });
+      bloc.add(const InicializarReproductor());
     }
 
     super.initState();
@@ -79,9 +79,9 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
           state.reproductor != EstadoDeReproductor.iniciado) {
         return PrevisualizacionDeVideo(
           previsualizacion: widget.previsualizacion!,
-          init: () => context
-              .read<ReproductorDeVideoBloc>()
-              .add(const InicializarReproductor()),
+          init: () => context.read<ReproductorDeVideoBloc>().add(
+                const InicializarReproductor(),
+              ),
         );
       }
       return AspectRatio(
@@ -90,8 +90,8 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
       );
     }
 
-    return BlocProvider(
-      create: (context) => ReproductorDeVideoBloc(controller),
+    return BlocProvider.value(
+      value: bloc,
       child: BlocListener<ReproductorDeVideoBloc, ReproductorDeVideoState>(
         listener: (context, state) {
           if (state.reproductor == EstadoDeReproductor.iniciado) {

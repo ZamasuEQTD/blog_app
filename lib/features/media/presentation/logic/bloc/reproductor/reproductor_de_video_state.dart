@@ -4,17 +4,17 @@ part of 'reproductor_de_video_bloc.dart';
 class ReproductorDeVideoState extends Equatable {
   final EstadoDeReproductor reproductor;
   final EstadoDeReproduccion reproduccion;
-  final EstadoDeBuffer buffer;
+  final bool buffer;
   final EstadoDePantalla pantalla;
-  final EstadoDeControles controles;
+  final bool controles;
   final Duration position;
   final double volumen;
   const ReproductorDeVideoState({
     this.reproductor = EstadoDeReproductor.inicial,
     this.reproduccion = EstadoDeReproduccion.pausado,
-    this.buffer = EstadoDeBuffer.cargado,
+    this.buffer = false,
     this.pantalla = EstadoDePantalla.normal,
-    this.controles = EstadoDeControles.ocultos,
+    this.controles = false,
     this.position = Duration.zero,
     this.volumen = -1,
   });
@@ -33,9 +33,9 @@ class ReproductorDeVideoState extends Equatable {
   ReproductorDeVideoState copyWith({
     EstadoDeReproductor? reproductor,
     EstadoDeReproduccion? reproduccion,
-    EstadoDeBuffer? buffer,
+    bool? buffer,
     EstadoDePantalla? pantalla,
-    EstadoDeControles? controles,
+    bool? controles,
     Duration? position,
     double? volumen,
   }) {

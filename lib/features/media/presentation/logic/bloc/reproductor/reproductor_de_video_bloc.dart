@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chewie/chewie.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/physics.dart';
 import 'package:video_player/video_player.dart';
 
 part 'reproductor_de_video_event.dart';
@@ -17,9 +15,7 @@ class ReproductorDeVideoBloc
   ReproductorDeVideoBloc(this.controller)
       : super(const ReproductorDeVideoState()) {
     on<AddListeners>(_addListeners);
-    on<FinalizarVideo>(_onFinalizarVideo);
-    on<ReproducirVideo>(_onReproducirVideo);
-    on<PausarVideo>(_onPausarVideo);
+    on<ToggleControls>(_toggleControls);
     on<InicializarReproductor>(_onInicializarReproductor);
     add(AddListeners());
   }
@@ -35,26 +31,6 @@ class ReproductorDeVideoBloc
     } catch (e) {
       emit(state.copyWith(reproductor: EstadoDeReproductor.fallido));
     }
-  }
-
-  FutureOr<void> _onFinalizarVideo(
-    FinalizarVideo event,
-    Emitter<ReproductorDeVideoState> emit,
-  ) {
-    emit(state.copyWith(reproduccion: EstadoDeReproduccion.finalizado));
-  }
-
-  FutureOr<void> _onReproducirVideo(
-      ReproducirVideo event, Emitter<ReproductorDeVideoState> emit) {
-    if (state.reproduccion == EstadoDeReproduccion.finalizado) {
-    } else {
-      emit(state.copyWith(reproduccion: EstadoDeReproduccion.reproduciendo));
-    }
-  }
-
-  FutureOr<void> _onPausarVideo(
-      PausarVideo event, Emitter<ReproductorDeVideoState> emit) {
-    emit(state.copyWith(reproduccion: EstadoDeReproduccion.pausado));
   }
 
   void _addListeners(
@@ -99,10 +75,7 @@ class ReproductorDeVideoBloc
 
     controller.addListener(
       () => emit(
-        state.copyWith(
-            buffer: controller.estaBuffereando()
-                ? EstadoDeBuffer.cargando
-                : EstadoDeBuffer.cargado),
+        state.copyWith(buffer: controller.estaBuffereando()),
       ),
     );
 
@@ -121,6 +94,13 @@ class ReproductorDeVideoBloc
         ),
       ),
     );
+  }
+
+  void _toggleControls(
+    ToggleControls event,
+    Emitter<ReproductorDeVideoState> emit,
+  ) {
+    emit(state.copyWith(controles: !state.controles));
   }
 }
 
