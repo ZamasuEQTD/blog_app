@@ -13,7 +13,6 @@ import 'package:video_player/video_player.dart';
 import '../../logic/bloc/reproductor/reproductor_de_video_bloc.dart';
 import '../../logic/classes/video_providers.dart';
 import 'controles/controles_custom.dart';
-import 'controles/widgets/control/reproductor_control_icon.dart';
 
 class ReproductorDeVideoWidget extends StatefulWidget {
   late final VideoPlayerController controller;
@@ -56,7 +55,9 @@ class ReproductorDeVideoWidget extends StatefulWidget {
 class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
   late final ChewieController controller;
   late final ReproductorDeVideoBloc bloc;
+
   double ratio = 1;
+
   @override
   void initState() {
     controller = ChewieController(
@@ -79,7 +80,7 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
     bloc = ReproductorDeVideoBloc(controller);
 
     if (widget.previsualizacion == null) {
-      bloc.add(const InicializarReproductor());
+      initReproductor();
     }
 
     super.initState();
@@ -121,14 +122,10 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
           widget.previsualizacion != null &&
           state.reproductor != EstadoDeReproductor.iniciado;
 
-      void init() => context.read<ReproductorDeVideoBloc>().add(
-            const InicializarReproductor(),
-          );
-
       if (mostrarPrevisualizacion()) {
         return PrevisualizacionDeVideo(
           previsualizacion: widget.previsualizacion!,
-          init: init,
+          init: initReproductor,
         );
       }
       return AspectRatio(
@@ -147,4 +144,6 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
       ),
     );
   }
+
+  void initReproductor() => bloc.add(const InicializarReproductor());
 }

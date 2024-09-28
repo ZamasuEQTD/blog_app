@@ -22,9 +22,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme:
-          AppThemes.light.copyWith(textTheme: GoogleFonts.notoSansTextTheme()),
-      home: const HiloScreen(id: "id"),
+      theme: AppThemes.light.copyWith(
+        textTheme: GoogleFonts.notoSansTextTheme(),
+      ),
+      home: const HiloScreen(
+        id: "id",
+      ),
     );
     return MaterialApp.router(
       title: 'Flutter Demo',

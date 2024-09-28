@@ -10,10 +10,11 @@ class ComentarHiloState extends Equatable {
     this.status = ComentarHiloStatus.initial,
   });
 
-  ComentarHiloState copyWith(
-          {String? texto,
-          Nullable<Spoileable<Media>>? media,
-          ComentarHiloStatus? status}) =>
+  ComentarHiloState copyWith({
+    String? texto,
+    Nullable<Spoileable<Media>>? media,
+    ComentarHiloStatus? status,
+  }) =>
       ComentarHiloState(
           texto: texto ?? this.texto,
           media: media != null ? media.value : this.media,

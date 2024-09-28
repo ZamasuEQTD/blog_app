@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 
-import 'widgets/control/reproductor_control_icon.dart';
-
 class ControlesDeReproductorDeVideo extends StatelessWidget {
   const ControlesDeReproductorDeVideo({
     super.key,
@@ -30,62 +28,7 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
                     .read<ReproductorDeVideoBloc>()
                     .add(const ToggleControls()),
               )),
-              if (state.mostrar_controles)
-                Positioned.fill(
-                    child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Stack(
-                    children: [
-                      Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            color: Colors.black,
-                            width: 50,
-                            height: 50,
-                          )),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: ColoredIconButton(
-                                  background: Colors.black.withOpacity(0.5),
-                                  onPressed: () => context
-                                      .read<VideoPlayerController>()
-                                      .setVolume(state.volumen == 0 ? 1 : 0),
-                                  icon: Padding(
-                                    padding: const EdgeInsets.all(2),
-                                    child: FittedBox(
-                                      child: Icon(
-                                        state.volumen != -1
-                                            ? (state.volumen == 0
-                                                ? Icons.volume_mute
-                                                : Icons.volume_up)
-                                            : Icons.volume_off,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            const SizedBox(width: 5),
-                            ColoredIconButton(
-                                background: Colors.black.withOpacity(0.5),
-                                onPressed: () => context
-                                    .read<ChewieController>()
-                                    .enterFullScreen(),
-                                icon: const Icon(
-                                  Icons.fullscreen,
-                                  color: Colors.white,
-                                ))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+              if (state.mostrar_controles) const ControlesDeReproductor(),
             ],
           ),
         ),
@@ -105,73 +48,94 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
   }
 }
 
-class ControlesDeReproduccion extends StatefulWidget {
-  const ControlesDeReproduccion({
+class ControlesDeReproductor extends StatelessWidget {
+  const ControlesDeReproductor({
     super.key,
   });
 
   @override
-  State<ControlesDeReproduccion> createState() =>
-      _ControlesDeReproduccionState();
-}
-
-class _ControlesDeReproduccionState extends State<ControlesDeReproduccion> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final VideoPlayerController controller = context.read();
+    Widget builder(BuildContext context, ReproductorDeVideoState state) {
+      Widget playIcon() {
+        if (state.buffering) {
+          return const CircularProgressIndicator();
+        }
 
-    return Positioned.fill(
+        if (state.reproduciendo) {
+          return const Icon(
+            Icons.pause,
+            color: Colors.white,
+          );
+        }
+
+        return const Icon(
+          Icons.play_arrow,
+          color: Colors.white,
+        );
+      }
+
+      return Positioned.fill(
+          child: Padding(
+        padding: const EdgeInsets.all(15),
         child: Stack(
-      children: [
-        Center(
-            child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-          builder: (context, state) {
-            Widget icon() {
-              if (state.buffering) {
-                return const CircularProgressIndicator();
-              }
-
-              if (state.pausado) {
-                return const Icon(
-                  Icons.play_arrow,
-                  color: Colors.white,
-                  size: 40,
-                );
-              }
-
-              return const Icon(
-                Icons.pause,
-                color: Colors.white,
+          children: [
+            Align(
+              alignment: Alignment.center,
+              child: ReproductorIconButton(
                 size: 40,
-              );
-            }
-
-            void onTap() {
-              log("holaa");
-              if (state.pausado) {
-                controller.play();
-              } else {
-                controller.pause();
-              }
-            }
-
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: onTap,
-              child: const ColoredBox(
-                color: Colors.red,
-                child: SizedBox(height: 100, width: 100),
+                onTap: () {
+                  if (state.reproduciendo) {
+                    context.read<ChewieController>().pause();
+                  } else {
+                    context.read<ChewieController>().play();
+                  }
+                },
+                child: playIcon(),
               ),
-            );
-          },
-        ))
-      ],
-    ));
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ReproductorIconButton(
+                    onTap: () => context
+                        .read<VideoPlayerController>()
+                        .setVolume(state.volumen == 0 ? 1 : 0),
+                    size: 40,
+                    child: Icon(
+                      state.volumen != -1
+                          ? (state.volumen == 0
+                              ? Icons.volume_mute
+                              : Icons.volume_up)
+                          : Icons.volume_off,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  ReproductorIconButton(
+                    onTap: () => state.pantalla_completa
+                        ? context.read<ChewieController>().enterFullScreen()
+                        : context.read<ChewieController>().exitFullScreen(),
+                    size: 40,
+                    child: Icon(
+                      state.pantalla_completa
+                          ? Icons.fullscreen_exit
+                          : Icons.fullscreen,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ));
+    }
+
+    return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
+      builder: builder,
+    );
   }
 }
 
@@ -209,6 +173,34 @@ class ControlesDeTiempo extends StatelessWidget {
             onDoubleTap: adelantar,
           ))
         ],
+      ),
+    );
+  }
+}
+
+class ReproductorIconButton extends StatelessWidget {
+  final void Function() onTap;
+  final double size;
+  final Widget child;
+  const ReproductorIconButton(
+      {super.key,
+      required this.onTap,
+      required this.size,
+      required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: size,
+      width: size,
+      child: ColoredIconButton(
+        onPressed: onTap,
+        icon: Padding(
+          padding: const EdgeInsets.all(2),
+          child: FittedBox(
+            child: child,
+          ),
+        ),
       ),
     );
   }
