@@ -23,8 +23,12 @@ class LocalHomeDatasource extends IHomeDatasource {
           id: "id",
           titulo: "Entras y esta tu prima asi",
           categoria: "NSFW",
-          features: [HomePortadaFeatures.nuevo, HomePortadaFeatures.sticky],
-          banderas: [HomePortadaBanderas.dados, HomePortadaBanderas.idUnico],
+          features: [
+            HomePortadaFeatures.nuevo,
+            HomePortadaFeatures.sticky,
+            HomePortadaFeatures.dados,
+            HomePortadaFeatures.idUnico
+          ],
           ultimoBump: DateTime.now()),
     ]);
   }

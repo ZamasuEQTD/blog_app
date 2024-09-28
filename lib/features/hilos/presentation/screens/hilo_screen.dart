@@ -10,6 +10,7 @@ import 'package:blog_app/common/widgets/media/widgets/spoiler_media.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
+import 'package:blog_app/common/widgets/tag/tag.dart';
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/home_portada.dart';
 import 'package:blog_app/features/media/domain/usecases/get_gallery_file_usecase.dart';
@@ -468,8 +469,13 @@ class _Tags extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _Tag(
-          tag: comentario.datos.tag,
+        GestureDetector(
+          onTap: () => context
+              .read<ComentarHiloBloc>()
+              .add(AggregarTaggueo(tag: comentario.datos.tag)),
+          child: _Tag(
+            tag: comentario.datos.tag,
+          ),
         ),
         const SizedBox(width: 5),
         comentario.datos.tagUnico != null
@@ -690,33 +696,37 @@ class __ComentarInputState extends State<_ComentarInput> {
 
   @override
   void initState() {
-    _controller.addListener(() => context
-        .read<ComentarHiloBloc>()
-        .add(CambiarComentario(comentario: _controller.text)));
-
-    context.read<TaggueosController>().addListener(() {
-      String? tag = context.read<TaggueosController>().tag;
-      _controller.text = '${_controller.text}>>$tag';
-    });
-
+    _controller.addListener(
+      () => context.read<ComentarHiloBloc>().add(
+            CambiarComentario(comentario: _controller.text),
+          ),
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) => Expanded(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: TextField(
-          controller: _controller,
-          keyboardType: TextInputType.multiline,
-          minLines: 1,
-          maxLines: !isKeyboardVisible ? 1 : 4,
-          decoration: FlatInputDecoration(
-              borderRadius: 15, hintText: "Escribe tu comentario..."),
-        ),
-      )),
+    return BlocListener<ComentarHiloBloc, ComentarHiloState>(
+      listenWhen: (previous, current) => previous.taggueo != current.taggueo,
+      listener: (context, state) {
+        if (state.taggueo != null) {
+          _controller.text = '${_controller.text}>>${state.taggueo}';
+        }
+      },
+      child: KeyboardVisibilityBuilder(
+        builder: (context, isKeyboardVisible) => Expanded(
+            child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: TextField(
+            controller: _controller,
+            keyboardType: TextInputType.multiline,
+            minLines: 1,
+            maxLines: !isKeyboardVisible ? 1 : 4,
+            decoration: FlatInputDecoration(
+                borderRadius: 15, hintText: "Escribe tu comentario..."),
+          ),
+        )),
+      ),
     );
   }
 }

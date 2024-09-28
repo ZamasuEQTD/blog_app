@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../common/widgets/tag/tag.dart';
 import '../../../domain/models/home_portada_entry.dart';
 
 class HomePortada extends StatelessWidget {
@@ -84,14 +85,20 @@ class _PortadaFeatures extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         )),
-    HomePortadaFeatures.youtube: const Padding(
-      padding: EdgeInsets.all(5),
-      child: FaIcon(FontAwesomeIcons.youtube, color: Colors.white),
+    HomePortadaFeatures.youtube: PortadaTag(
+      color: Colors.transparent,
+      padding: padding,
+      child: const FaIcon(
+        FontAwesomeIcons.youtube,
+      ),
     ),
-    HomePortadaFeatures.sticky: const _StickyPortadaIcon()
+    HomePortadaFeatures.sticky: const _StickyPortadaIcon(),
+    HomePortadaFeatures.dados: const _StickyPortadaIcon(),
+    HomePortadaFeatures.idUnico: const _StickyPortadaIcon()
   });
 
   final HomePortadaEntity portada;
+
   const _PortadaFeatures({super.key, required this.portada});
 
   @override
@@ -104,7 +111,9 @@ class _PortadaFeatures extends StatelessWidget {
           child: Text(
             portada.categoria,
             style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
@@ -130,11 +139,6 @@ class _PortadaFeatures extends StatelessWidget {
 
     return widgets;
   }
-
-  List<Widget> childs() => List.generate(
-        10,
-        (index) => const Text("data"),
-      );
 }
 
 class _StickyPortadaIcon extends StatelessWidget {
@@ -147,23 +151,10 @@ class _StickyPortadaIcon extends StatelessWidget {
     return PortadaTag(
       padding: const EdgeInsets.all(2),
       color: const Color(0xffFFC300),
-      child: const FaIcon(
-        FontAwesomeIcons.thumbtack,
-        color: Colors.white,
-      ),
-    );
-    return FittedBox(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: const ColoredBox(
-          color: Color(0xffFFC300),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: FaIcon(
-              FontAwesomeIcons.thumbtack,
-              color: Colors.white,
-            ),
-          ),
+      child: const FittedBox(
+        child: FaIcon(
+          FontAwesomeIcons.thumbtack,
+          color: Colors.white,
         ),
       ),
     );
@@ -177,34 +168,6 @@ class TituloDePortadaTextStyle extends TextStyle {
             fontSize: 20,
             overflow: TextOverflow.ellipsis,
             color: Colors.white);
-}
-
-class Tag extends StatelessWidget {
-  final Widget child;
-  final Color color;
-  final BorderRadiusGeometry borderRadius;
-  final EdgeInsetsGeometry padding;
-
-  const Tag(
-      {super.key,
-      required this.child,
-      required this.color,
-      required this.borderRadius,
-      required this.padding});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: ColoredBox(
-        color: color,
-        child: Padding(
-          padding: padding,
-          child: child,
-        ),
-      ),
-    );
-  }
 }
 
 class PortadaTag extends Tag {
