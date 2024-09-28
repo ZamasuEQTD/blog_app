@@ -7,6 +7,7 @@ class ReproductorDeVideoState extends Equatable {
   final bool buffering;
   final bool pantalla_completa;
   final bool mostrar_controles;
+  final bool finalizado;
   final Duration position;
   final double volumen;
 
@@ -18,6 +19,7 @@ class ReproductorDeVideoState extends Equatable {
     this.buffering = false,
     this.pantalla_completa = false,
     this.mostrar_controles = false,
+    this.finalizado = false,
     this.position = Duration.zero,
     this.volumen = -1,
   });
@@ -30,6 +32,7 @@ class ReproductorDeVideoState extends Equatable {
         pantalla_completa,
         mostrar_controles,
         position,
+        finalizado,
         volumen,
       ];
 
@@ -39,6 +42,7 @@ class ReproductorDeVideoState extends Equatable {
     bool? buffering,
     bool? pantalla_completa,
     bool? mostrar_controles,
+    bool? finalizado,
     Duration? position,
     double? volumen,
   }) {
@@ -48,6 +52,7 @@ class ReproductorDeVideoState extends Equatable {
       buffering: buffering ?? this.buffering,
       pantalla_completa: pantalla_completa ?? this.pantalla_completa,
       mostrar_controles: mostrar_controles ?? this.mostrar_controles,
+      finalizado: finalizado ?? this.finalizado,
       position: position ?? this.position,
       volumen: volumen ?? this.volumen,
     );
@@ -63,6 +68,8 @@ class EstadoDeReproductor extends Equatable {
   static const EstadoDeReproductor iniciado = EstadoDeReproductor._("iniciado");
   static const EstadoDeReproductor iniciando =
       EstadoDeReproductor._("iniciando");
+  static const EstadoDeReproductor corriendo =
+      EstadoDeReproductor._("corriendo");
   static const EstadoDeReproductor fallido = EstadoDeReproductor._("fallido");
 
   @override

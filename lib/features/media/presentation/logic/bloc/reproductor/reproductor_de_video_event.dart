@@ -16,6 +16,7 @@ class CambiarParametros extends ReproductorDeVideoEvent {
   final bool? reproduciendo;
   final bool? buffering;
   final bool? pantalla_completa;
+  final bool? finalizado;
   final Duration? position;
   final double? volumen;
 
@@ -25,6 +26,7 @@ class CambiarParametros extends ReproductorDeVideoEvent {
     this.buffering,
     this.pantalla_completa,
     this.position,
+    this.finalizado,
     this.volumen,
   });
   @override

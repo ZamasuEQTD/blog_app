@@ -11,7 +11,7 @@ class BlurEffect extends StatelessWidget {
   Widget build(BuildContext context) {
     return BackdropFilter(
       filter:
-          ImageFilter.blur(sigmaX: 15, sigmaY: 12, tileMode: TileMode.decal),
+          ImageFilter.blur(sigmaX: 20, sigmaY: 15, tileMode: TileMode.decal),
       child: const SizedBox(),
     );
   }

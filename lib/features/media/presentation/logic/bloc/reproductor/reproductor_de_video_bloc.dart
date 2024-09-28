@@ -27,6 +27,7 @@ class ReproductorDeVideoBloc
     try {
       await controller.videoPlayerController.initialize();
       emit(state.copyWith(reproductor: EstadoDeReproductor.iniciado));
+      emit(state.copyWith(reproductor: EstadoDeReproductor.corriendo));
     } catch (e) {
       emit(state.copyWith(reproductor: EstadoDeReproductor.fallido));
     }

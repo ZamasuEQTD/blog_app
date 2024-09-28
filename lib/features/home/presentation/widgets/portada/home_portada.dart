@@ -35,6 +35,7 @@ class HomePortada extends StatelessWidget {
       onTap: () => context.push("/hilo/${portada.id}"),
       onLongPress: () => OpcionesDePortadaBottomSheet.show(context),
       child: ClipRRect(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           borderRadius: BorderRadius.circular(10),
           child: SizedBox(
               height: 200,
@@ -57,11 +58,8 @@ class HomePortada extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  _Features(portada: portada),
-                                  _Banderas(portada: portada)
-                                ],
+                              _PortadaFeatures(
+                                portada: portada,
                               ),
                               Text(portada.titulo,
                                   maxLines: 2,
@@ -74,34 +72,13 @@ class HomePortada extends StatelessWidget {
   }
 }
 
-class _Banderas extends StatelessWidget {
-  static final HashMap<HomePortadaBanderas, Widget> _banderas = HashMap.from({
-    HomePortadaBanderas.idUnico:
-        const FaIcon(FontAwesomeIcons.person, color: Colors.white),
-    HomePortadaBanderas.dados:
-        const FaIcon(FontAwesomeIcons.diceThree, color: Colors.white)
-  });
-
-  final HomePortadaEntity portada;
-
-  const _Banderas({
-    super.key,
-    required this.portada,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: portada.banderas.map((e) => _banderas[e]!).toList(),
-    );
-  }
-}
-
-class _Features extends StatelessWidget {
+class _PortadaFeatures extends StatelessWidget {
+  static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 10);
   static final HashMap<HomePortadaFeatures, Widget> _features = HashMap.from({
-    HomePortadaFeatures.nuevo: const _HomePortadaTag(
-        color: Color(0xFF0A78FF),
-        child: FittedBox(
+    HomePortadaFeatures.nuevo: PortadaTag(
+        padding: padding,
+        color: const Color(0xFF0A78FF),
+        child: const FittedBox(
           child: Text(
             "Nuevo",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -114,35 +91,50 @@ class _Features extends StatelessWidget {
     HomePortadaFeatures.sticky: const _StickyPortadaIcon()
   });
 
-  const _Features({
-    super.key,
-    required this.portada,
-  });
-
   final HomePortadaEntity portada;
+  const _PortadaFeatures({super.key, required this.portada});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 25,
-      child: Row(children: [
-        _HomePortadaTag(
-          color: const Color.fromRGBO(18, 146, 75, 1),
-          child: FittedBox(
-            child: Text(
-              portada.categoria,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.bold),
-            ),
+    return Wrap(children: [
+      PortadaTag(
+        padding: padding,
+        color: const Color.fromRGBO(18, 146, 75, 1),
+        child: FittedBox(
+          child: Text(
+            portada.categoria,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
           ),
         ),
-        ...portada.features.map((e) => _features[e]!).map((w) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 1.5),
-              child: w,
-            ))
-      ]),
-    );
+      ),
+      ...generar(portada.features)
+    ]);
   }
+
+  static List<Widget> generar(List<HomePortadaFeatures> features) {
+    List<Widget> widgets = [];
+    for (var i = 0; i < features.length; i++) {
+      Widget child = _features[features[i]]!;
+
+      if (i != features.length) {
+        child = Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 5,
+          ),
+          child: child,
+        );
+        widgets.add(child);
+      }
+    }
+
+    return widgets;
+  }
+
+  List<Widget> childs() => List.generate(
+        10,
+        (index) => const Text("data"),
+      );
 }
 
 class _StickyPortadaIcon extends StatelessWidget {
@@ -152,6 +144,14 @@ class _StickyPortadaIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return PortadaTag(
+      padding: const EdgeInsets.all(2),
+      color: const Color(0xffFFC300),
+      child: const FaIcon(
+        FontAwesomeIcons.thumbtack,
+        color: Colors.white,
+      ),
+    );
     return FittedBox(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
@@ -170,16 +170,27 @@ class _StickyPortadaIcon extends StatelessWidget {
   }
 }
 
+class TituloDePortadaTextStyle extends TextStyle {
+  const TituloDePortadaTextStyle()
+      : super(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            overflow: TextOverflow.ellipsis,
+            color: Colors.white);
+}
+
 class Tag extends StatelessWidget {
   final Widget child;
   final Color color;
   final BorderRadiusGeometry borderRadius;
+  final EdgeInsetsGeometry padding;
 
   const Tag(
       {super.key,
       required this.child,
       required this.color,
-      required this.borderRadius});
+      required this.borderRadius,
+      required this.padding});
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +199,7 @@ class Tag extends StatelessWidget {
       child: ColoredBox(
         color: color,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+          padding: padding,
           child: child,
         ),
       ),
@@ -196,26 +207,11 @@ class Tag extends StatelessWidget {
   }
 }
 
-class _HomePortadaTag extends StatelessWidget {
-  final Color color;
-  final Widget child;
-  const _HomePortadaTag({super.key, required this.color, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return Tag(
-      color: color,
-      borderRadius: BorderRadius.circular(3),
-      child: child,
-    );
-  }
-}
-
-class TituloDePortadaTextStyle extends TextStyle {
-  const TituloDePortadaTextStyle()
-      : super(
-            fontWeight: FontWeight.w600,
-            fontSize: 20,
-            overflow: TextOverflow.ellipsis,
-            color: Colors.white);
+class PortadaTag extends Tag {
+  PortadaTag({
+    super.key,
+    required super.child,
+    required super.color,
+    required super.padding,
+  }) : super(borderRadius: BorderRadius.circular(10));
 }

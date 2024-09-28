@@ -25,9 +25,7 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.notoSansTextTheme(),
       ),
-      home: const HiloScreen(
-        id: "id",
-      ),
+      home: const HomeScreen(),
     );
     return MaterialApp.router(
       title: 'Flutter Demo',

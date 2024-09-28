@@ -97,6 +97,7 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
         widget.controller.addListener(
           () {
             bloc.add(CambiarParametros(
+              finalizado: controller.videoPlayerController.value.isCompleted,
               volumen: widget.controller.value.volume,
               reproduciendo: controller.isPlaying,
               buffering: controller.estaBuffereando(),
@@ -113,14 +114,14 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
           );
         });
 
-        widget.controller.play();
+        controller.play();
       }
     }
 
     Widget builder(BuildContext context, ReproductorDeVideoState state) {
       bool mostrarPrevisualizacion() =>
           widget.previsualizacion != null &&
-          state.reproductor != EstadoDeReproductor.iniciado;
+          state.reproductor != EstadoDeReproductor.corriendo;
 
       if (mostrarPrevisualizacion()) {
         return PrevisualizacionDeVideo(
@@ -145,5 +146,7 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
     );
   }
 
-  void initReproductor() => bloc.add(const InicializarReproductor());
+  void initReproductor() {
+    bloc.add(const InicializarReproductor());
+  }
 }

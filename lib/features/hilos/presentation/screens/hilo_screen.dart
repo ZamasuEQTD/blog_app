@@ -763,7 +763,7 @@ class ComentarHiloOpciones extends StatelessWidget {
     return SliverMainAxisGroup(
       slivers: [
         ...ItemGrupoSliverList.GenerarSlivers([
-          GrupoSeleccionable(seleccionables: [
+          GrupoSeleccionable(titulo: "Agregar archivo", seleccionables: [
             ItemSeleccionableTileList(
               nombre: "Galeria",
               icon: FontAwesomeIcons.image,
@@ -795,7 +795,11 @@ class ComentarHiloOpciones extends StatelessWidget {
     );
   }
 
-  static void show(BuildContext context) =>
-      SliverDraggableBottomSheet.show(context,
-          child: const ComentarHiloOpciones());
+  static void show(BuildContext context) => SliverDraggableBottomSheet.show(
+        context,
+        child: BlocProvider.value(
+          value: context.read<ComentarHiloBloc>(),
+          child: const ComentarHiloOpciones(),
+        ),
+      );
 }

@@ -7,26 +7,26 @@ class HomePortadaEntity {
   final HomePortadaId id;
   final String titulo;
   final String categoria;
-  final List<HomePortadaBanderas> banderas;
   final List<HomePortadaFeatures> features;
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
 
-  const HomePortadaEntity(
-      {required this.id,
-      required this.titulo,
-      required this.categoria,
-      required this.banderas,
-      required this.features,
-      required this.ultimoBump,
-      required this.imagen});
+  const HomePortadaEntity({
+    required this.id,
+    required this.titulo,
+    required this.categoria,
+    required this.features,
+    required this.ultimoBump,
+    required this.imagen,
+  });
 }
 
 typedef HomePortadaId = String;
 
-enum HomePortadaFeatures { nuevo, youtube, sticky }
-
-enum HomePortadaBanderas {
+enum HomePortadaFeatures {
+  nuevo,
+  youtube,
+  sticky,
   dados,
   idUnico,
 }

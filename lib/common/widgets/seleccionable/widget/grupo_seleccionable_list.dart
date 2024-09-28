@@ -17,10 +17,14 @@ class ItemGrupoSliverList extends StatelessWidget {
         slivers: [
           grupo.titulo != null
               ? SliverToBoxAdapter(
-                  child: Text(
-                    grupo.titulo!,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.w900),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Text(
+                      grupo.titulo!,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.w900),
+                    ),
                   ),
                 )
               : const SliverToBoxAdapter(),
