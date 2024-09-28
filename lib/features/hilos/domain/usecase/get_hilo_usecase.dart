@@ -13,6 +13,8 @@ class GetHiloUseCase extends IUsecase<GetHiloRequest, Hilo> {
   Future<Either<Failure, Hilo>> handle(GetHiloRequest request) async {
     await Future.delayed(const Duration(seconds: 3));
     return Right(Hilo(
+        comentarios: 20,
+        esOp: false,
         id: "id",
         titulo: "titulo",
         descripcion: "descripcion",

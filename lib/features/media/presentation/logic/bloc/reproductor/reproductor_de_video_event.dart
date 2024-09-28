@@ -4,11 +4,38 @@ sealed class ReproductorDeVideoEvent extends Equatable {
   const ReproductorDeVideoEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 final class InicializarReproductor extends ReproductorDeVideoEvent {
   const InicializarReproductor();
+}
+
+class CambiarParametros extends ReproductorDeVideoEvent {
+  final EstadoDeReproductor? reproductor;
+  final bool? reproduciendo;
+  final bool? buffering;
+  final bool? pantalla_completa;
+  final Duration? position;
+  final double? volumen;
+
+  const CambiarParametros({
+    this.reproductor,
+    this.reproduciendo,
+    this.buffering,
+    this.pantalla_completa,
+    this.position,
+    this.volumen,
+  });
+  @override
+  List<Object?> get props => [
+        reproductor,
+        reproduciendo,
+        buffering,
+        pantalla_completa,
+        position,
+        volumen
+      ];
 }
 
 final class FinalizarVideo extends ReproductorDeVideoEvent {
@@ -38,5 +65,3 @@ final class SalirDePantallaCompleta extends ReproductorDeVideoEvent {
 final class ToggleControls extends ReproductorDeVideoEvent {
   const ToggleControls();
 }
-
-final class AddListeners extends ReproductorDeVideoEvent {}

@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/widgets.dart';
+
 import 'package:blog_app/common/logic/classes/spoileable.dart';
 import 'package:blog_app/features/categorias/domain/models/subcategoria.dart';
 
@@ -15,16 +17,22 @@ class Hilo {
   final Spoileable<Media> portada;
   final Encuesta? encuesta;
   final List<BanderasDeHilo> banderas;
-  Hilo(
-      {required this.id,
-      required this.titulo,
-      required this.descripcion,
-      required this.creadoEn,
-      required this.estado,
-      required this.categoria,
-      required this.portada,
-      this.encuesta,
-      required this.banderas});
+  final int comentarios;
+  final bool esOp;
+
+  const Hilo({
+    required this.id,
+    required this.titulo,
+    required this.descripcion,
+    required this.creadoEn,
+    required this.estado,
+    required this.categoria,
+    required this.portada,
+    this.encuesta,
+    required this.banderas,
+    required this.comentarios,
+    required this.esOp,
+  });
 
   Hilo copyWith({
     HiloId? id,
@@ -34,7 +42,10 @@ class Hilo {
     EstadoDeHilo? estado,
     Subcategoria? categoria,
     Spoileable<Media>? portada,
+    ValueGetter<Encuesta?>? encuesta,
     List<BanderasDeHilo>? banderas,
+    int? comentarios,
+    bool? esOp,
   }) {
     return Hilo(
       id: id ?? this.id,
@@ -44,7 +55,10 @@ class Hilo {
       estado: estado ?? this.estado,
       categoria: categoria ?? this.categoria,
       portada: portada ?? this.portada,
+      encuesta: encuesta != null ? encuesta() : this.encuesta,
       banderas: banderas ?? this.banderas,
+      comentarios: comentarios ?? this.comentarios,
+      esOp: esOp ?? this.esOp,
     );
   }
 }

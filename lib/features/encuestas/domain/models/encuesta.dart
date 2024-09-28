@@ -3,8 +3,9 @@ import 'package:equatable/equatable.dart';
 class Encuesta extends Equatable {
   final EncuestaId id;
   final List<OpcionDeEncuesta> opciones;
-
-  const Encuesta({required this.id, required this.opciones});
+  final bool haVotado;
+  const Encuesta(
+      {required this.id, required this.opciones, required this.haVotado});
 
   int votos() {
     int votos = 0;
@@ -21,10 +22,12 @@ class Encuesta extends Equatable {
   Encuesta copyWith({
     EncuestaId? id,
     List<OpcionDeEncuesta>? opciones,
+    bool? haVotado,
   }) {
     return Encuesta(
       id: id ?? this.id,
       opciones: opciones ?? this.opciones,
+      haVotado: haVotado ?? this.haVotado,
     );
   }
 }

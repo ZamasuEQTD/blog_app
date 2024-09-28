@@ -355,9 +355,14 @@ class _ComentariosState extends State<_Comentarios> {
         SliverToBoxAdapter(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            child: const Text(
-              "Comentarios (20)",
-              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            child: BlocBuilder<HiloBloc, HiloState>(
+              builder: (context, state) {
+                return Text(
+                  "Comentarios (${state.hilo!.comentarios})",
+                  style: const TextStyle(
+                      fontSize: 25, fontWeight: FontWeight.bold),
+                );
+              },
             ),
           ),
         ),

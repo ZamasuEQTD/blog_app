@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:blog_app/features/media/presentation/widgets/reproductor_de_video/previsualizacion.dart';
@@ -60,7 +61,19 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
   void initState() {
     controller = ChewieController(
       videoPlayerController: widget.controller,
-      customControls: const ControlesDeReproductorDeVideo(),
+      customControls: ChangeNotifierProvider.value(
+        value: widget.controller,
+        child: const ControlesDeReproductorDeVideo(),
+        builder: (context, child) {
+          return BlocProvider.value(
+            value: bloc,
+            child: ChangeNotifierProvider.value(
+              value: controller,
+              child: child,
+            ),
+          );
+        },
+      ),
     );
 
     bloc = ReproductorDeVideoBloc(controller);
@@ -74,14 +87,48 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
 
   @override
   Widget build(BuildContext context) {
+    void listener(BuildContext context, ReproductorDeVideoState state) {
+      if (state.reproductor == EstadoDeReproductor.iniciado) {
+        setState(() {
+          ratio = widget.controller.value.aspectRatio;
+        });
+
+        widget.controller.addListener(
+          () {
+            bloc.add(CambiarParametros(
+              volumen: widget.controller.value.volume,
+              reproduciendo: controller.isPlaying,
+              buffering: controller.estaBuffereando(),
+              position: controller.videoPlayerController.value.position,
+            ));
+          },
+        );
+
+        controller.addListener(() {
+          bloc.add(
+            CambiarParametros(
+              pantalla_completa: controller.isFullScreen,
+            ),
+          );
+        });
+
+        widget.controller.play();
+      }
+    }
+
     Widget builder(BuildContext context, ReproductorDeVideoState state) {
-      if (widget.previsualizacion != null &&
-          state.reproductor != EstadoDeReproductor.iniciado) {
+      bool mostrarPrevisualizacion() =>
+          widget.previsualizacion != null &&
+          state.reproductor != EstadoDeReproductor.iniciado;
+
+      void init() => context.read<ReproductorDeVideoBloc>().add(
+            const InicializarReproductor(),
+          );
+
+      if (mostrarPrevisualizacion()) {
         return PrevisualizacionDeVideo(
           previsualizacion: widget.previsualizacion!,
-          init: () => context.read<ReproductorDeVideoBloc>().add(
-                const InicializarReproductor(),
-              ),
+          init: init,
         );
       }
       return AspectRatio(
@@ -93,13 +140,7 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
     return BlocProvider.value(
       value: bloc,
       child: BlocListener<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-        listener: (context, state) {
-          if (state.reproductor == EstadoDeReproductor.iniciado) {
-            setState(() {
-              ratio = widget.controller.value.aspectRatio;
-            });
-          }
-        },
+        listener: listener,
         child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
           builder: builder,
         ),

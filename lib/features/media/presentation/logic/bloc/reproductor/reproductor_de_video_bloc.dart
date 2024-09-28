@@ -14,10 +14,9 @@ class ReproductorDeVideoBloc
 
   ReproductorDeVideoBloc(this.controller)
       : super(const ReproductorDeVideoState()) {
-    on<AddListeners>(_addListeners);
     on<ToggleControls>(_toggleControls);
+    on<CambiarParametros>(_cambiarParametros);
     on<InicializarReproductor>(_onInicializarReproductor);
-    add(AddListeners());
   }
 
   FutureOr<void> _onInicializarReproductor(
@@ -33,74 +32,27 @@ class ReproductorDeVideoBloc
     }
   }
 
-  void _addListeners(
-    AddListeners event,
-    Emitter<ReproductorDeVideoState> emit,
-  ) {
-    EstadoDeReproduccion reproduccion() {
-      if (controller.estaFinalizado()) {
-        return EstadoDeReproduccion.finalizado;
-      }
-      if (controller.isPlaying) {
-        return EstadoDeReproduccion.reproduciendo;
-      }
-      return EstadoDeReproduccion.pausado;
-    }
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(volumen: controller.videoPlayerController.value.volume),
-      ),
-    );
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(
-          reproductor: controller.videoPlayerController.value.isInitialized
-              ? EstadoDeReproductor.iniciado
-              : EstadoDeReproductor.iniciando,
-        ),
-      ),
-    );
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(
-          pantalla: controller.isFullScreen
-              ? EstadoDePantalla.completa
-              : EstadoDePantalla.normal,
-        ),
-      ),
-    );
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(buffer: controller.estaBuffereando()),
-      ),
-    );
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(
-          reproduccion: reproduccion(),
-        ),
-      ),
-    );
-
-    controller.addListener(
-      () => emit(
-        state.copyWith(
-          position: controller.videoPlayerController.value.position,
-        ),
-      ),
-    );
-  }
-
   void _toggleControls(
     ToggleControls event,
     Emitter<ReproductorDeVideoState> emit,
   ) {
-    emit(state.copyWith(controles: !state.controles));
+    emit(
+      state.copyWith(mostrar_controles: !state.mostrar_controles),
+    );
+  }
+
+  void _cambiarParametros(
+    CambiarParametros event,
+    Emitter<ReproductorDeVideoState> emit,
+  ) {
+    emit(state.copyWith(
+      buffering: event.buffering,
+      pantalla_completa: event.pantalla_completa,
+      position: event.position,
+      volumen: event.volumen,
+      reproductor: event.reproductor,
+      reproduciendo: event.reproduciendo,
+    ));
   }
 }
 

@@ -21,14 +21,15 @@ class ReproductorDeVideoControl extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: ColoredBox(
-        color: Colors.black.withOpacity(0.6),
-        child: SizedBox(
-          height: size,
-          width: size,
-          child: GestureDetector(
-            onTap: onTap,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: onTap,
+      child: ClipOval(
+        child: ColoredBox(
+          color: Colors.black.withOpacity(0.6),
+          child: SizedBox(
+            height: size,
+            width: size,
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: FittedBox(child: icon),
