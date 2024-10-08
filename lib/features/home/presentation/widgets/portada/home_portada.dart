@@ -1,11 +1,5 @@
 import 'dart:collection';
 
-import 'package:blog_app/common/widgets/effects/blur/blur_effect.dart';
-import 'package:blog_app/common/widgets/effects/blur/blurear_widget.dart';
-import 'package:blog_app/common/widgets/effects/gradient/gradient_effect.dart';
-import 'package:blog_app/common/widgets/media/widgets/image/image_overlapped.dart';
-import 'package:blog_app/features/home/presentation/widgets/portada/bottom_sheet/opciones_bottom_sheet.dart';
-import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -13,8 +7,21 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:blog_app/common/widgets/effects/blur/blur_effect.dart';
+import 'package:blog_app/common/widgets/effects/blur/blurear_widget.dart';
+import 'package:blog_app/common/widgets/effects/gradient/gradient_effect.dart';
+import 'package:blog_app/common/widgets/media/widgets/image/image_overlapped.dart';
+import 'package:blog_app/features/home/presentation/widgets/portada/bottom_sheet/opciones_bottom_sheet.dart';
+import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
+
 import '../../../../../common/widgets/tag/tag.dart';
 import '../../../domain/models/home_portada_entry.dart';
+
+const double PORTADA_HEIGHT_TAG = 22;
+const EdgeInsets PORTADA_TEXT_PADDING =
+    EdgeInsets.symmetric(horizontal: 5, vertical: 2);
+const TextStyle TEXT_TAG_STYLE =
+    TextStyle(color: Colors.white, fontWeight: FontWeight.w900);
 
 class HomePortada extends StatelessWidget {
   static const _gradient = [
@@ -76,13 +83,14 @@ class HomePortada extends StatelessWidget {
 class _PortadaFeatures extends StatelessWidget {
   static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 10);
   static final HashMap<HomePortadaFeatures, Widget> _features = HashMap.from({
-    HomePortadaFeatures.nuevo: PortadaTag(
-        padding: padding,
-        color: const Color(0xFF0A78FF),
-        child: const FittedBox(
+    HomePortadaFeatures.nuevo: const Taggueo(
+        background: Colors.blue,
+        height: PORTADA_HEIGHT_TAG,
+        padding: PORTADA_TEXT_PADDING,
+        child: FittedBox(
           child: Text(
             "Nuevo",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TEXT_TAG_STYLE,
           ),
         )),
     HomePortadaFeatures.youtube: PortadaTag(
@@ -92,9 +100,34 @@ class _PortadaFeatures extends StatelessWidget {
         FontAwesomeIcons.youtube,
       ),
     ),
-    HomePortadaFeatures.sticky: const _StickyPortadaIcon(),
-    HomePortadaFeatures.dados: const _StickyPortadaIcon(),
-    HomePortadaFeatures.idUnico: const _StickyPortadaIcon()
+    HomePortadaFeatures.sticky: const Taggueo(
+        height: PORTADA_HEIGHT_TAG,
+        background: Color(0xffffa900),
+        padding: EdgeInsets.all(2),
+        child: FittedBox(
+          child: Icon(
+            Icons.key_rounded,
+            color: Colors.white,
+          ),
+        )),
+    HomePortadaFeatures.dados: const Taggueo(
+        background: Color(0xffffa900),
+        padding: EdgeInsets.all(2),
+        child: FittedBox(
+          child: Icon(
+            Icons.bar_chart,
+            color: Colors.white,
+          ),
+        )),
+    HomePortadaFeatures.idUnico: const Taggueo(
+        background: Color(0xffffa900),
+        padding: EdgeInsets.all(2),
+        child: FittedBox(
+          child: Icon(
+            Icons.casino,
+            color: Colors.white,
+          ),
+        ))
   });
 
   final HomePortadaEntity portada;
@@ -103,58 +136,74 @@ class _PortadaFeatures extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(children: [
-      PortadaTag(
-        padding: padding,
-        color: const Color.fromRGBO(18, 146, 75, 1),
-        child: FittedBox(
-          child: Text(
-            portada.categoria,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      ...generar(portada.features)
-    ]);
+    return Wrap(
+        spacing: 2,
+        runSpacing: 2,
+        children: generar(portada)
+            .map((w) => SizedBox(
+                  height: 22,
+                  child: w,
+                ))
+            .toList());
   }
 
-  static List<Widget> generar(List<HomePortadaFeatures> features) {
-    List<Widget> widgets = [];
-    for (var i = 0; i < features.length; i++) {
-      Widget child = _features[features[i]]!;
+  static List<Widget> generar(HomePortadaEntity portada) {
+    List<Widget> tags = [
+      Taggueo(
+          height: PORTADA_HEIGHT_TAG,
+          background: Colors.green,
+          padding: PORTADA_TEXT_PADDING,
+          child: FittedBox(
+            child: Text(
+              portada.categoria,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          )),
+    ];
 
-      if (i != features.length) {
-        child = Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 5,
-          ),
-          child: child,
-        );
-        widgets.add(child);
-      }
+    for (var i = 0; i < portada.features.length; i++) {
+      Widget child = _features[portada.features[i]]!;
+
+      tags.add(child);
     }
 
-    return widgets;
+    return tags;
   }
 }
 
-class _StickyPortadaIcon extends StatelessWidget {
-  const _StickyPortadaIcon({
+class Taggueo extends StatelessWidget {
+  final Widget child;
+  final Color background;
+  final double? height;
+  final EdgeInsets? padding;
+  const Taggueo({
     super.key,
+    required this.child,
+    this.height,
+    required this.background,
+    this.padding,
   });
 
   @override
   Widget build(BuildContext context) {
-    return PortadaTag(
-      padding: const EdgeInsets.all(2),
-      color: const Color(0xffFFC300),
-      child: const FittedBox(
-        child: FaIcon(
-          FontAwesomeIcons.thumbtack,
-          color: Colors.white,
+    Widget child = this.child;
+
+    if (padding != null) {
+      child = Padding(
+        padding: padding!,
+        child: child,
+      );
+    }
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: ColoredBox(
+        color: background,
+        child: SizedBox(
+          height: height,
+          child: child,
         ),
       ),
     );
