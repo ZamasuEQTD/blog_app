@@ -7,6 +7,7 @@ import 'package:blog_app/features/notificaciones/presentation/screens/notificaci
 import 'package:go_router/go_router.dart';
 
 GoRouter routes = GoRouter(
+  initialLocation: "/",
   routes: [
     GoRoute(
       path: "/",

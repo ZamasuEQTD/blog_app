@@ -41,7 +41,7 @@ class DestructibleSeleccionableSheet extends NormalBottomSheet {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                  style: const FlatBtnStyle().copyWith(
+                  style: FlatBtnStyle().copyWith(
                       backgroundColor: const WidgetStatePropertyAll(
                           CupertinoColors.destructiveRed)),
                   onPressed: () {},
@@ -51,7 +51,7 @@ class DestructibleSeleccionableSheet extends NormalBottomSheet {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                  style: const FlatBtnStyle().copyWith(
+                  style: FlatBtnStyle().copyWith(
                       backgroundColor:
                           const WidgetStatePropertyAll(CupertinoColors.white)),
                   onPressed: () {},

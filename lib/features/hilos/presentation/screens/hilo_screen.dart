@@ -11,6 +11,7 @@ import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccio
 import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:blog_app/common/widgets/tag/tag.dart';
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/home_portada.dart';
 import 'package:blog_app/features/media/domain/usecases/get_gallery_file_usecase.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/widgets/effects/gradient/animated_gradient.dart';
 import '../../../../common/widgets/inputs/decorations/decorations.dart';
@@ -49,28 +51,33 @@ class _HiloScreenState extends State<HiloScreen> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => TaggueosController(),
-      child: BlocProvider(
-        create: (context) => ComentarHiloBloc(),
-        child: Scaffold(
-          body: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) => HiloBloc("")..add(CargarHilo()),
-              ),
-            ],
-            child: BlocBuilder<HiloBloc, HiloState>(
-              builder: (context, state) {
-                switch (state.status) {
-                  case HiloStatus.cargado:
-                    return _HiloScreenBody(hilo: state.hilo!);
-                  default:
-                }
-
-                return Container();
-              },
-            ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => ComentarHiloBloc()),
+          BlocProvider(
+            create: (context) => HiloBloc("")..add(CargarHilo()),
           ),
-          bottomSheet: const ComentarEnHilo(),
+        ],
+        child: Scaffold(
+          body: BlocBuilder<HiloBloc, HiloState>(
+            builder: (context, state) {
+              switch (state.status) {
+                case HiloStatus.cargado:
+                  return _HiloScreenBody(hilo: state.hilo!);
+                default:
+              }
+
+              return Container();
+            },
+          ),
+          bottomSheet: BlocBuilder<HiloBloc, HiloState>(
+            builder: (context, state) {
+              if (state.status == HiloStatus.cargado) {
+                return const ComentarEnHilo();
+              }
+              return Container();
+            },
+          ),
         ),
       ),
     );
@@ -361,7 +368,9 @@ class _ComentariosState extends State<_Comentarios> {
                 return Text(
                   "Comentarios (${state.hilo!.comentarios})",
                   style: const TextStyle(
-                      fontSize: 25, fontWeight: FontWeight.bold),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
                 );
               },
             ),
@@ -407,8 +416,8 @@ class _ComentariosState extends State<_Comentarios> {
 }
 
 class _Comentario extends StatelessWidget {
-  static final BoxDecoration _decoration = BoxDecoration(
-      color: Colors.white, borderRadius: BorderRadius.circular(15));
+  static final BoxDecoration _decoration =
+      BoxDecoration(borderRadius: BorderRadius.circular(15));
 
   final ComentarioListEntry comentario;
 
@@ -666,7 +675,7 @@ class ComentarEnHilo extends StatelessWidget {
             Row(
               children: [
                 ColoredIconButton(
-                  onPressed: () => ComentarHiloOpciones.show(context),
+                  onPressed: () => IrEnlaceExternoBottomSheet.show(context),
                   icon: const Icon(Icons.three_k_rounded),
                 ),
                 const _ComentarInput(),
@@ -812,4 +821,72 @@ class ComentarHiloOpciones extends StatelessWidget {
           child: const ComentarHiloOpciones(),
         ),
       );
+}
+
+class IrEnlaceExternoBottomSheet extends StatelessWidget {
+  const IrEnlaceExternoBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Column(
+        children: [
+          Text(
+            "Estás a punto de ser redirigido a . ¿Estás seguro de que deseas continuar?",
+            style: TextStyle(
+              fontSize: 15,
+              color: Colors.black.withOpacity(0.8),
+            ),
+          ),
+          const SizedBox(height: 15),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => _launchUrl(Uri.parse("https://google.com")),
+              style:
+                  FlatBtnStyle(boderRadius: BorderRadius.circular(3)).copyWith(
+                backgroundColor: const WidgetStatePropertyAll(Colors.black),
+              ),
+              child: const Text(
+                "Continuar",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: FlatBtnStyle(boderRadius: BorderRadius.circular(3))
+                  .copyWith(
+                      backgroundColor:
+                          const WidgetStatePropertyAll(Colors.white)),
+              child: const Text(
+                "Cancelar",
+                style: TextStyle(color: Colors.black),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  static void show(
+    BuildContext context,
+  ) {
+    NormalBottomSheet.show(
+      context,
+      titulo: "¿Deseas salir de la aplicación?",
+      child: const IrEnlaceExternoBottomSheet(),
+    );
+  }
 }
