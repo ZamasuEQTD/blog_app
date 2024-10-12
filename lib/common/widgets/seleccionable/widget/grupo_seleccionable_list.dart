@@ -12,7 +12,9 @@ class ItemGrupoSliverList extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedSliver(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Colors.white),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
       sliver: SliverMainAxisGroup(
         slivers: [
           grupo.titulo != null
@@ -23,7 +25,9 @@ class ItemGrupoSliverList extends StatelessWidget {
                     child: Text(
                       grupo.titulo!,
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w900),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                   ),
                 )
@@ -46,7 +50,9 @@ class ItemGrupoSliverList extends StatelessWidget {
       Widget child = ItemGrupoSliverList(grupo: grupo);
       if (slivers.isNotEmpty) {
         child = SliverPadding(
-            padding: const EdgeInsets.symmetric(vertical: 10), sliver: child);
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          sliver: child,
+        );
       }
       slivers.add(child);
     }

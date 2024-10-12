@@ -81,9 +81,8 @@ class HomePortada extends StatelessWidget {
 }
 
 class _PortadaFeatures extends StatelessWidget {
-  static const EdgeInsets padding = EdgeInsets.symmetric(horizontal: 10);
   static final HashMap<HomePortadaFeatures, Widget> _features = HashMap.from({
-    HomePortadaFeatures.nuevo: const Taggueo(
+    HomePortadaFeatures.nuevo: const Tag(
         background: Colors.blue,
         height: PORTADA_HEIGHT_TAG,
         padding: PORTADA_TEXT_PADDING,
@@ -93,14 +92,7 @@ class _PortadaFeatures extends StatelessWidget {
             style: TEXT_TAG_STYLE,
           ),
         )),
-    HomePortadaFeatures.youtube: PortadaTag(
-      color: Colors.transparent,
-      padding: padding,
-      child: const FaIcon(
-        FontAwesomeIcons.youtube,
-      ),
-    ),
-    HomePortadaFeatures.sticky: const Taggueo(
+    HomePortadaFeatures.sticky: const Tag(
         height: PORTADA_HEIGHT_TAG,
         background: Color(0xffffa900),
         padding: EdgeInsets.all(2),
@@ -110,7 +102,7 @@ class _PortadaFeatures extends StatelessWidget {
             color: Colors.white,
           ),
         )),
-    HomePortadaFeatures.dados: const Taggueo(
+    HomePortadaFeatures.dados: const Tag(
         background: Color(0xffffa900),
         padding: EdgeInsets.all(2),
         child: FittedBox(
@@ -119,7 +111,7 @@ class _PortadaFeatures extends StatelessWidget {
             color: Colors.white,
           ),
         )),
-    HomePortadaFeatures.idUnico: const Taggueo(
+    HomePortadaFeatures.idUnico: const Tag(
         background: Color(0xffffa900),
         padding: EdgeInsets.all(2),
         child: FittedBox(
@@ -149,7 +141,7 @@ class _PortadaFeatures extends StatelessWidget {
 
   static List<Widget> generar(HomePortadaEntity portada) {
     List<Widget> tags = [
-      Taggueo(
+      Tag(
           height: PORTADA_HEIGHT_TAG,
           background: Colors.green,
           padding: PORTADA_TEXT_PADDING,
@@ -174,42 +166,6 @@ class _PortadaFeatures extends StatelessWidget {
   }
 }
 
-class Taggueo extends StatelessWidget {
-  final Widget child;
-  final Color background;
-  final double? height;
-  final EdgeInsets? padding;
-  const Taggueo({
-    super.key,
-    required this.child,
-    this.height,
-    required this.background,
-    this.padding,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Widget child = this.child;
-
-    if (padding != null) {
-      child = Padding(
-        padding: padding!,
-        child: child,
-      );
-    }
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: ColoredBox(
-        color: background,
-        child: SizedBox(
-          height: height,
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
 class TituloDePortadaTextStyle extends TextStyle {
   const TituloDePortadaTextStyle()
       : super(
@@ -217,13 +173,4 @@ class TituloDePortadaTextStyle extends TextStyle {
             fontSize: 20,
             overflow: TextOverflow.ellipsis,
             color: Colors.white);
-}
-
-class PortadaTag extends Tag {
-  PortadaTag({
-    super.key,
-    required super.child,
-    required super.color,
-    required super.padding,
-  }) : super(borderRadius: BorderRadius.circular(10));
 }

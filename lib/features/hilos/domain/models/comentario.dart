@@ -7,7 +7,7 @@ abstract class ComentarioEntry {
   const ComentarioEntry();
 }
 
-class ComentarioListEntry extends ComentarioEntry {
+class ComentarioModel extends ComentarioEntry {
   final ComentarioId id;
   final String texto;
   final DateTime creado_en;
@@ -15,7 +15,7 @@ class ComentarioListEntry extends ComentarioEntry {
   final DatosDeComentario datos;
   final Autor autor;
   final Spoileable<Media>? media;
-  const ComentarioListEntry({
+  const ComentarioModel({
     required this.id,
     required this.texto,
     required this.creado_en,
@@ -30,20 +30,26 @@ class DatosDeComentario {
   final String tag;
   final String? tagUnico;
   final String? dados;
-  const DatosDeComentario(
-      {required this.tag, required this.tagUnico, required this.dados});
+  const DatosDeComentario({
+    required this.tag,
+    required this.tagUnico,
+    required this.dados,
+  });
 }
 
 class Autor {
   final String nombre;
   final String rango;
   final String rangoCorto;
-  const Autor(
-      {required this.nombre, required this.rango, required this.rangoCorto});
+  const Autor({
+    required this.nombre,
+    required this.rango,
+    required this.rangoCorto,
+  });
 }
 
 typedef ComentarioId = String;
 
-enum ColoresDeComentario { rojo, amarillo, multi }
+enum ColoresDeComentario { rojo, amarillo, multi, invertido }
 
 class ComentarioListCargandoEntry extends ComentarioEntry {}

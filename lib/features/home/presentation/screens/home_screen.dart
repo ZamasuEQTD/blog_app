@@ -17,10 +17,11 @@ import '../widgets/portada/home_portada_cargando.dart';
 class HomeScreen extends StatefulWidget {
   static const SliverGridDelegate _delegate =
       SliverGridDelegateWithFixedCrossAxisCount(
-          mainAxisExtent: 200,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-          crossAxisCount: 2);
+    mainAxisExtent: 200,
+    crossAxisSpacing: 5,
+    mainAxisSpacing: 5,
+    crossAxisCount: 2,
+  );
 
   const HomeScreen({super.key});
 
@@ -49,12 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
       value: bloc,
       child: Scaffold(
         floatingActionButton: ColoredIconButton(
-            border: BorderRadius.circular(10),
-            onPressed: () => context.push("/postear-hilo"),
-            icon: const Icon(
-              Icons.abc,
-              size: 30,
-            )),
+          border: BorderRadius.circular(10),
+          onPressed: () => context.push("/postear-hilo"),
+          icon: const Icon(
+            Icons.abc,
+            size: 30,
+          ),
+        ),
         appBar: AppBar(
           title: const Text(
             "Devox",
@@ -76,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
             IconButton(
               onPressed: () {},
               icon: const FaIcon(FontAwesomeIcons.bars),
-            )
+            ),
           ],
           elevation: 0,
         ),
@@ -86,12 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
           slivers: const [
             SliverPadding(
               padding: EdgeInsets.symmetric(vertical: 10),
-              sliver: SliverMainAxisGroup(slivers: [
-                _HomePortadasFiltros(),
-                //portadas grid
-                _HomePortadasGrid()
-              ]),
-            )
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  _HomePortadasFiltros(),
+                  //portadas grid
+                  _HomePortadasGrid(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -169,21 +173,23 @@ class _HomePortadasFiltros extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const _FiltrarPortadasPorTitulo(),
-                const SizedBox(
-                  width: 10,
-                ),
-                ColoredIconButton(
-                  onPressed: () {},
-                  icon: const FaIcon(FontAwesomeIcons.diceD6),
-                )
-              ],
-            )));
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const _FiltrarPortadasPorTitulo(),
+            const SizedBox(
+              width: 10,
+            ),
+            ColoredIconButton(
+              onPressed: () {},
+              icon: const FaIcon(FontAwesomeIcons.diceD6),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -207,11 +213,12 @@ class _FiltrarPortadasPorTituloState extends State<_FiltrarPortadasPorTitulo> {
         maxLines: 1,
         controller: controller,
         decoration: BusquedaInputDecoration(
-            borderRadius: 10,
-            hintText: "Titulo de hilo",
-            onTap: () => context
-                .read<HomePortadasBloc>()
-                .add(CambiarFiltrosDePortadas(titulo: controller.text))),
+          borderRadius: 10,
+          hintText: "Titulo de hilo",
+          onTap: () => context
+              .read<HomePortadasBloc>()
+              .add(CambiarFiltrosDePortadas(titulo: controller.text)),
+        ),
       ),
     );
   }

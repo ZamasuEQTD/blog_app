@@ -1,7 +1,6 @@
-import 'dart:collection';
 import 'dart:developer';
 
-import 'package:blog_app/features/hilos/presentation/screens/hilo_screen.dart';
+import 'package:blog_app/common/logic/services/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,13 +16,17 @@ void main() {
       });
 
       test("debe lanzar exception cuando los colores estan vacios", () {
-        expect(() => ColorPicker.pickColor("#", []),
-            throwsA(isA<ArgumentError>()));
+        expect(
+          () => ColorPicker.pickColor("#", []),
+          throwsA(isA<ArgumentError>()),
+        );
       });
 
       test("debe lanzar exception cuando el texto esta vacio", () {
-        expect(() => ColorPicker.pickColor("", [Colors.red]),
-            throwsA(isA<ArgumentError>()));
+        expect(
+          () => ColorPicker.pickColor("", [Colors.red]),
+          throwsA(isA<ArgumentError>()),
+        );
       });
 
       test("fsa", () {
@@ -62,7 +65,7 @@ void main() {
             ...patterns,
             [
               patterns[i].last,
-              ...patterns[i].sublist(0, patterns[i].length - 1)
+              ...patterns[i].sublist(0, patterns[i].length - 1),
             ]
           ];
         }

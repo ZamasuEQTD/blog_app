@@ -1,17 +1,35 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Tag extends StatelessWidget {
   final Widget child;
-  final Color color;
-  final BorderRadiusGeometry borderRadius;
-  final EdgeInsetsGeometry? padding;
+  final Color background;
+  final double? height;
+  final BorderRadiusGeometry? border;
+  final EdgeInsets? padding;
+
   const Tag({
     super.key,
     required this.child,
-    required this.color,
-    required this.borderRadius,
+    required this.background,
+    this.border,
+    this.height,
     this.padding,
   });
+
+  factory Tag.text({
+    required Widget child,
+    required Color background,
+    BorderRadiusGeometry? border,
+    EdgeInsets? padding,
+  }) {
+    return Tag(
+      background: background,
+      border: border,
+      padding: padding,
+      child: FittedBox(child: child),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +42,14 @@ class Tag extends StatelessWidget {
       );
     }
     return ClipRRect(
-      borderRadius: borderRadius,
-      child: ColoredBox(color: color, child: child),
+      borderRadius: border ?? BorderRadius.circular(5),
+      child: ColoredBox(
+        color: background,
+        child: SizedBox(
+          height: height,
+          child: child,
+        ),
+      ),
     );
   }
 }

@@ -42,37 +42,40 @@ class PostearHiloScreen extends StatelessWidget {
           ),
           actions: [
             TextButton(
-                onPressed: () =>
-                    context.read<PostearHiloBloc>().add(PostearHilo()),
-                child: const Text("Postear")),
+              onPressed: () =>
+                  context.read<PostearHiloBloc>().add(PostearHilo()),
+              child: const Text("Postear"),
+            ),
           ],
         ),
         body: const CustomScrollView(
           slivers: [
             SliverPadding(
               padding: EdgeInsets.symmetric(horizontal: 10),
-              sliver: SliverMainAxisGroup(slivers: [
-                _PostearHiloForm(),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 10,
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  _PostearHiloForm(),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
                   ),
-                ),
-                _SeleccionarSubcategoria(),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 10,
+                  _SeleccionarSubcategoria(),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
                   ),
-                ),
-                _HiloPortada(),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 10,
+                  _HiloPortada(),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 10,
+                    ),
                   ),
-                ),
-                _BanderasDeHilo()
-              ]),
-            )
+                  _BanderasDeHilo(),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -87,22 +90,25 @@ class _PostearHiloForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void onCambiarDescripcion(String value) => context
+        .read<PostearHiloBloc>()
+        .add(CambiarDescripcion(descripcion: value));
+
+    void onCambiarTitulo(String value) =>
+        context.read<PostearHiloBloc>().add(CambiarTitulo(titulo: value));
+
     return SliverToBoxAdapter(
       child: Column(
         children: [
           TextField(
-            onChanged: (value) => context
-                .read<PostearHiloBloc>()
-                .add(CambiarTitulo(titulo: value)),
+            onChanged: onCambiarTitulo,
             maxLines: 1,
             decoration: FlatInputDecoration(hintText: "titulo"),
           ),
           const SizedBox(height: 10),
           //descripcion
           TextField(
-            onChanged: (value) => context
-                .read<PostearHiloBloc>()
-                .add(CambiarDescripcion(descripcion: value)),
+            onChanged: onCambiarDescripcion,
             maxLines: 5,
             decoration: FlatInputDecoration(hintText: "descripcion"),
           ),
@@ -117,24 +123,30 @@ class _BanderasDeHilo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void cambiarDados(bool value) =>
+        context.read<PostearHiloBloc>().add(const CambiarBanderas());
+
+    void cambiarTagUnico(bool value) =>
+        context.read<PostearHiloBloc>().add(CambiarBanderas(tagUnico: value));
+
     return BlocBuilder<PostearHiloBloc, PostearHiloState>(
       builder: (context, state) {
         return ItemGrupoSliverList(
-            grupo: GrupoSeleccionable(seleccionables: [
-          CheckboxSeleccionableList(
-              value: state.banderas.dados,
-              nombre: "Dados",
-              onChange: (value) => context
-                  .read<PostearHiloBloc>()
-                  .add(CambiarBanderas(dados: value))),
-          CheckboxSeleccionableList(
-            value: state.banderas.tagUnico,
-            nombre: "Tag único activado",
-            onChange: (value) => context
-                .read<PostearHiloBloc>()
-                .add(CambiarBanderas(tagUnico: value)),
-          )
-        ]));
+          grupo: GrupoSeleccionable(
+            seleccionables: [
+              CheckboxSeleccionableList(
+                value: state.banderas.dados,
+                nombre: "Dados",
+                onChange: (value) => cambiarDados,
+              ),
+              CheckboxSeleccionableList(
+                value: state.banderas.tagUnico,
+                nombre: "Tag único activado",
+                onChange: cambiarTagUnico,
+              ),
+            ],
+          ),
+        );
       },
     );
   }
@@ -145,11 +157,13 @@ class _SeleccionarSubcategoria extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool buildWhen(PostearHiloState previous, PostearHiloState current) =>
+        previous.subcategoria != current.subcategoria;
+
     return SliverToBoxAdapter(
       child: SubcategoriaBackground(
         child: BlocBuilder<PostearHiloBloc, PostearHiloState>(
-          buildWhen: (previous, current) =>
-              previous.subcategoria != current.subcategoria,
+          buildWhen: buildWhen,
           builder: (context, state) {
             if (state.subcategoria != null) {
               Subcategoria subcategoria = state.subcategoria!;
@@ -159,11 +173,12 @@ class _SeleccionarSubcategoria extends StatelessWidget {
                   Row(
                     children: [
                       SubcategoriaImagen(
-                          provider: subcategoria.imagen.toProvider()),
-                      Text(subcategoria.nombre)
+                        provider: subcategoria.imagen.toProvider(),
+                      ),
+                      Text(subcategoria.nombre),
                     ],
                   ),
-                  const _CambiarSubcategoriaBtn()
+                  const _CambiarSubcategoriaBtn(),
                 ],
               );
             }
@@ -182,11 +197,14 @@ class _CambiarSubcategoriaBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: () => SeleccionarSubcategoriaBottomSheet.show(context,
-            onSeleccionada: (subcategoria) => context
-                .read<PostearHiloBloc>()
-                .add(CambiarSubcategoria(subcategoria: subcategoria))),
-        icon: const Icon(Icons.chevron_right));
+      onPressed: () => SeleccionarSubcategoriaBottomSheet.show(
+        context,
+        onSeleccionada: (subcategoria) => context
+            .read<PostearHiloBloc>()
+            .add(CambiarSubcategoria(subcategoria: subcategoria)),
+      ),
+      icon: const Icon(Icons.chevron_right),
+    );
   }
 }
 
@@ -208,62 +226,66 @@ class _HiloPortada extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: ColoredBox(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: BlocBuilder<PostearHiloBloc, PostearHiloState>(
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Portada",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
-                  ),
-                  state.portada == null
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: ColoredBox(
-                              color: Colors.black,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        SeleccionarArchivoBottomSheet.show(
-                                      context,
-                                      onGalleryResult: (result) {},
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: ColoredBox(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: BlocBuilder<PostearHiloBloc, PostearHiloState>(
+              builder: (context, state) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Portada",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+                    ),
+                    state.portada == null
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: ColoredBox(
+                                color: Colors.black,
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 10,
                                     ),
-                                    child: const Center(
-                                        child: Text(
-                                      "Agregar portada",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w800,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          SeleccionarArchivoBottomSheet.show(
+                                        context,
+                                        onGalleryResult: (result) {},
                                       ),
-                                    )),
+                                      child: const Center(
+                                        child: Text(
+                                          "Agregar portada",
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                      : Container()
-                ],
-              );
-            },
+                          )
+                        : Container(),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }
 
@@ -275,37 +297,48 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
     return Container();
   }
 
-  static show(BuildContext context,
-      {required void Function(Subcategoria subcategoria) onSeleccionada}) {}
+  static show(
+    BuildContext context, {
+    required void Function(Subcategoria subcategoria) onSeleccionada,
+  }) {}
 }
 
 class SeleccionarArchivoBottomSheet extends StatelessWidget {
   final void Function(Either<Failure, Media?>) onGalleryResult;
-  const SeleccionarArchivoBottomSheet(
-      {super.key, required this.onGalleryResult});
+  const SeleccionarArchivoBottomSheet({
+    super.key,
+    required this.onGalleryResult,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(slivers: [
-      ...ItemGrupoSliverList.GenerarSlivers([
-        GrupoSeleccionable(seleccionables: [
-          SeleccionarMediaDeGaleria(onResult: onGalleryResult),
-          SeleccionarMediaDesdeUrl(onTap: () {
-            IngresarEnlaceBottomSheet.show(context);
-          })
-        ])
-      ])
-    ]);
+    return SliverMainAxisGroup(
+      slivers: [
+        ...ItemGrupoSliverList.GenerarSlivers([
+          GrupoSeleccionable(
+            seleccionables: [
+              SeleccionarMediaDeGaleria(onResult: onGalleryResult),
+              SeleccionarMediaDesdeUrl(
+                onTap: () {
+                  IngresarEnlaceBottomSheet.show(context);
+                },
+              ),
+            ],
+          ),
+        ]),
+      ],
+    );
   }
 
-  static void show(BuildContext context,
-          {required void Function(Either<Failure, Media?> file)
-              onGalleryResult}) =>
+  static void show(
+    BuildContext context, {
+    required void Function(Either<Failure, Media?> file) onGalleryResult,
+  }) =>
       SliverBottomSheet.show(
         context,
-        options: ShowBottomSheetOptionsBuilder()
-            .setColor(Colors.red)
-            .setConstraints(const BoxConstraints(maxHeight: 600)),
+        options: const ShowBottomSheetOptions().copyWith(
+          constraints: const BoxConstraints(maxHeight: 600),
+        ),
         child: SeleccionarArchivoBottomSheet(onGalleryResult: onGalleryResult),
       );
 }
@@ -355,12 +388,14 @@ class IngresarEnlaceBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
-  static void show(BuildContext context) => SliverBottomSheet.show(context,
-      options: ShowBottomSheetOptionsBuilder(),
-      child: const IngresarEnlaceBottomSheet());
+  static void show(BuildContext context) => SliverBottomSheet.show(
+        context,
+        options: const ShowBottomSheetOptions(),
+        child: const IngresarEnlaceBottomSheet(),
+      );
 }

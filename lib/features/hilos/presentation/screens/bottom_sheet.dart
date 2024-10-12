@@ -1,12 +1,17 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
 
-class BottomSheet extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+class RoundedBottomSheet extends StatelessWidget {
   final Widget child;
   final BorderRadiusGeometry radius;
-  const BottomSheet(
-      {super.key,
-      required this.child,
-      this.radius = const BorderRadius.vertical(top: Radius.circular(10))});
+  const RoundedBottomSheet({
+    super.key,
+    required this.child,
+    this.radius = const BorderRadius.vertical(top: Radius.circular(10)),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,35 +24,37 @@ class BottomSheet extends StatelessWidget {
     );
   }
 
-  static void show(BuildContext context,
-      {required ShowBottomSheetOptionsBuilder options, required Widget child}) {
-    showModalBottomSheet(
-      isScrollControlled: options.isScrollControlled,
-      isDismissible: options.isDimissible,
-      constraints: options.constraints,
-      backgroundColor: Colors.red,
+  static void show(
+    BuildContext context, {
+    required ShowBottomSheetOptions options,
+    required Widget child,
+  }) {
+    showMaterialModalBottomSheet(
       context: context,
+      isDismissible: options.isDimissible,
+      backgroundColor: Colors.transparent,
       builder: (context) => options.builder != null
           ? options.builder!(
               context,
-              BottomSheet(
+              RoundedBottomSheet(
                 child: child,
-              ))
-          : BottomSheet(child: child),
+              ),
+            )
+          : RoundedBottomSheet(child: child),
     );
   }
 }
 
-class SliverDraggableBottomShow extends StatelessWidget {
+class SliverDraggableBottomSheet extends StatelessWidget {
   final Widget child;
-  const SliverDraggableBottomShow({super.key, required this.child});
+  const SliverDraggableBottomSheet({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
       expand: false,
       maxChildSize: 0.7,
-      initialChildSize: 0.5,
+      initialChildSize: 0.7,
       snap: true,
       snapSizes: const [0.5, 0.7],
       builder: (context, controller) => SliverBottomSheet(
@@ -59,14 +66,18 @@ class SliverDraggableBottomShow extends StatelessWidget {
 
   static void show(
     BuildContext context, {
-    required ShowBottomSheetOptionsBuilder options,
+    ShowBottomSheetOptions options = const ShowBottomSheetOptions(),
     required Widget child,
-  }) =>
-      BottomSheet.show(
-        context,
-        options: options.setScrollControlled(true),
-        child: SliverDraggableBottomShow(child: child),
-      );
+  }) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => RoundedBottomSheet(
+        child: SliverDraggableBottomSheet(child: child),
+      ),
+    );
+  }
 }
 
 class SliverBottomSheet extends StatelessWidget {
@@ -83,57 +94,63 @@ class SliverBottomSheet extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           sliver: child,
-        )
+        ),
       ],
     );
   }
 
   static void show(
     BuildContext context, {
-    required ShowBottomSheetOptionsBuilder options,
+    ShowBottomSheetOptions options = const ShowBottomSheetOptions(),
     required Widget child,
-  }) =>
-      BottomSheet.show(context,
-          options: options.setScrollControlled(true),
-          child: SliverBottomSheet(child: child));
+  }) {
+    RoundedBottomSheet.show(
+      context,
+      options: options.copyWith(
+        isScrollControlled: true,
+      ),
+      child: options.constraints != null
+          ? ConstrainedBox(
+              constraints: options.constraints!,
+              child: SliverBottomSheet(
+                child: child,
+              ),
+            )
+          : SliverBottomSheet(
+              controller: ModalScrollController.of(context),
+              child: child,
+            ),
+    );
+  }
 }
 
-class ShowBottomSheetOptionsBuilder {
-  bool isScrollControlled = false;
-  bool isDimissible = true;
-  Color? color = Colors.transparent;
-  BoxConstraints? constraints;
-  Widget Function(BuildContext context, Widget child)? builder;
+class ShowBottomSheetOptions {
+  final bool isScrollControlled;
+  final bool isDimissible;
+  final Color? color = Colors.transparent;
+  final BorderRadius? radius;
+  final BoxConstraints? constraints;
+  final Widget Function(BuildContext context, Widget child)? builder;
 
-  ShowBottomSheetOptionsBuilder setScrollControlled(bool value) {
-    isScrollControlled = value;
+  const ShowBottomSheetOptions({
+    this.isScrollControlled = false,
+    this.isDimissible = true,
+    this.constraints,
+    this.radius,
+    this.builder,
+  });
 
-    return this;
-  }
-
-  ShowBottomSheetOptionsBuilder setColor(Color? value) {
-    color = value;
-
-    return this;
-  }
-
-  ShowBottomSheetOptionsBuilder setIsDimissible(bool value) {
-    isDimissible = value;
-
-    return this;
-  }
-
-  ShowBottomSheetOptionsBuilder setConstraints(BoxConstraints value) {
-    constraints = value;
-
-    return this;
-  }
-
-  ShowBottomSheetOptionsBuilder setBuilder(
-    Widget Function(BuildContext context, Widget child)? value,
-  ) {
-    builder = value;
-
-    return this;
+  ShowBottomSheetOptions copyWith({
+    bool? isScrollControlled,
+    bool? isDimissible,
+    BoxConstraints? constraints,
+    Widget Function(BuildContext context, Widget child)? builder,
+  }) {
+    return ShowBottomSheetOptions(
+      isScrollControlled: isScrollControlled ?? this.isScrollControlled,
+      isDimissible: isDimissible ?? this.isDimissible,
+      constraints: constraints ?? this.constraints,
+      builder: builder ?? this.builder,
+    );
   }
 }

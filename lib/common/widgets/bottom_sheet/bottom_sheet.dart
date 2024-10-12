@@ -36,32 +36,38 @@ class _BottomSheetSeparator extends StatelessWidget {
 class DestructibleSeleccionableSheet extends NormalBottomSheet {
   DestructibleSeleccionableSheet({super.key, super.titulo})
       : super(
-            child: Column(
-          children: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                   style: FlatBtnStyle().copyWith(
-                      backgroundColor: const WidgetStatePropertyAll(
-                          CupertinoColors.destructiveRed)),
+                    backgroundColor: const WidgetStatePropertyAll(
+                      CupertinoColors.destructiveRed,
+                    ),
+                  ),
                   onPressed: () {},
-                  child: const Text("Seguir")),
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
+                  child: const Text("Seguir"),
+                ),
+              ),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
                   style: FlatBtnStyle().copyWith(
-                      backgroundColor:
-                          const WidgetStatePropertyAll(CupertinoColors.white)),
+                    backgroundColor:
+                        const WidgetStatePropertyAll(CupertinoColors.white),
+                  ),
                   onPressed: () {},
                   child: const Text(
                     "Cancelar",
                     style: TextStyle(color: Colors.black),
-                  )),
-            ),
-          ],
-        ));
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
 
   static show(
     BuildContext context, {
@@ -69,9 +75,10 @@ class DestructibleSeleccionableSheet extends NormalBottomSheet {
     String? titulo,
   }) {
     showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.transparent,
-        builder: (context) => DestructibleSeleccionableSheet(titulo: titulo));
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DestructibleSeleccionableSheet(titulo: titulo),
+    );
   }
 }
 
@@ -108,7 +115,7 @@ abstract class BottomSheet extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                const Divider()
+                const Divider(),
               ],
             ),
           )
@@ -119,14 +126,16 @@ abstract class BottomSheet extends StatelessWidget {
 class NormalBottomSheet extends BottomSheet {
   NormalBottomSheet({super.key, super.titulo, required Widget child})
       : super(
-            child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const _BottomSheetSeparator(),
-            BottomSheet.generarTitulo(titulo),
-            child,
-          ],
-        ));
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const _BottomSheetSeparator(),
+              BottomSheet.generarTitulo(titulo),
+              child,
+            ],
+          ),
+        );
+
   static show(
     BuildContext context, {
     required Widget child,
@@ -145,20 +154,24 @@ class NormalBottomSheet extends BottomSheet {
 class SliverBottomSheet extends BottomSheet {
   final ScrollController? controller;
 
-  SliverBottomSheet(
-      {super.key, required Widget child, super.titulo, this.controller})
-      : super(
-            child: CustomScrollView(
-          controller: controller,
-          slivers: [
-            const SliverToBoxAdapter(child: _BottomSheetSeparator()),
-            SliverToBoxAdapter(child: BottomSheet.generarTitulo(titulo)),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              sliver: child,
-            )
-          ],
-        ));
+  SliverBottomSheet({
+    super.key,
+    required Widget child,
+    super.titulo,
+    this.controller,
+  }) : super(
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              const SliverToBoxAdapter(child: _BottomSheetSeparator()),
+              SliverToBoxAdapter(child: BottomSheet.generarTitulo(titulo)),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                sliver: child,
+              ),
+            ],
+          ),
+        );
 
   static void show(
     BuildContext context, {
@@ -166,19 +179,23 @@ class SliverBottomSheet extends BottomSheet {
     String? titulo,
   }) =>
       showModalBottomSheet(
-          backgroundColor: Colors.transparent,
-          context: context,
-          builder: (context) => SliverBottomSheet(
-                titulo: titulo,
-                child: child,
-              ));
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => SliverBottomSheet(
+          titulo: titulo,
+          child: child,
+        ),
+      );
 }
 
 class SliverDraggableBottomSheet extends StatelessWidget {
   final String? titulo;
   final Widget child;
-  const SliverDraggableBottomSheet(
-      {super.key, required this.child, this.titulo});
+  const SliverDraggableBottomSheet({
+    super.key,
+    required this.child,
+    this.titulo,
+  });
 
   @override
   Widget build(BuildContext context) {

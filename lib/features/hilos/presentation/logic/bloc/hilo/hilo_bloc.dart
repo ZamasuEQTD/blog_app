@@ -68,7 +68,7 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
       EliminarComentario event, Emitter<HiloState> emit) {
     emit(state.copyWith(
         comentarios: state.comentarios
-            .where((c) => c is ComentarioListEntry ? c.id != event.id : true)
+            .where((c) => c is ComentarioModel ? c.id != event.id : true)
             .toList()));
   }
 

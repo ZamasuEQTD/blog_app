@@ -14,7 +14,7 @@ class RecargarHilo extends HiloEvent {}
 class EliminarHilo extends HiloEvent {}
 
 class AgregarComentario extends HiloEvent {
-  final ComentarioListEntry comentario;
+  final ComentarioModel comentario;
 
   const AgregarComentario(this.comentario);
 }

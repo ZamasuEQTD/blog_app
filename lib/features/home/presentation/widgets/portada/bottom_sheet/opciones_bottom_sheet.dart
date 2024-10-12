@@ -1,4 +1,3 @@
-import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
@@ -8,6 +7,7 @@ import 'package:blog_app/features/hilos/domain/usecase/destacar_hilo_usecase.dar
 import 'package:blog_app/features/hilos/domain/usecase/eliminar_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/domain/usecase/ocultar_hilo_usecase.dart';
 import 'package:blog_app/features/hilos/domain/usecase/seguir_hilo_usecase.dart';
+import 'package:blog_app/features/hilos/presentation/screens/bottom_sheet.dart';
 import 'package:blog_app/features/home/presentation/logic/bloc/home_portadas_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,24 +22,27 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<GrupoSeleccionable> opciones = [
-      GrupoSeleccionable(seleccionables: [
-        ItemSeleccionableTileList(
+      GrupoSeleccionable(
+        seleccionables: [
+          ItemSeleccionableTileList(
             onTap: () {
               OcultarHiloUsecase usecase = GetIt.I.get();
 
               usecase.handle(OcultarHiloParams()).then(
                 (value) {
                   value.fold(
-                      (l) => null,
-                      (r) => context
-                          .read<HomePortadasBloc>()
-                          .add(const EliminarPortada(id: "")));
+                    (l) => null,
+                    (r) => context
+                        .read<HomePortadasBloc>()
+                        .add(const EliminarPortada(id: "")),
+                  );
                 },
               );
             },
             nombre: "Ocultar",
-            icon: FontAwesomeIcons.eye),
-        ItemSeleccionableTileList(
+            icon: FontAwesomeIcons.eye,
+          ),
+          ItemSeleccionableTileList(
             nombre: "Agregar a favoritos",
             onTap: () {
               AgregarAFavoritosUsecase usecase = GetIt.I.get();
@@ -50,8 +53,9 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
                 },
               );
             },
-            icon: FontAwesomeIcons.star),
-        ItemSeleccionableTileList(
+            icon: FontAwesomeIcons.star,
+          ),
+          ItemSeleccionableTileList(
             nombre: "Seguir",
             onTap: () {
               SeguirHiloUsecase usecase = GetIt.I.get();
@@ -62,67 +66,78 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
                 },
               );
             },
-            icon: FontAwesomeIcons.plus),
-        ItemSeleccionableTileList(
+            icon: FontAwesomeIcons.plus,
+          ),
+          ItemSeleccionableTileList(
             onTap: () => SeleccionarRazonDeDenuncia.show(
-                  context,
-                  onSeleccionada: (razon) {
-                    DenunciarHiloUsecase usecase = GetIt.I.get();
-                    usecase
-                        .handle(DenunciarHiloParms())
-                        .then((value) => value.fold(
-                              (l) => null,
-                              (r) => null,
-                            ));
-                  },
-                ),
+              context,
+              onSeleccionada: (razon) {
+                DenunciarHiloUsecase usecase = GetIt.I.get();
+                usecase.handle(DenunciarHiloParms()).then(
+                      (value) => value.fold(
+                        (l) => null,
+                        (r) => null,
+                      ),
+                    );
+              },
+            ),
             nombre: "Denunciar",
-            icon: Icons.flag),
-      ])
+            icon: Icons.flag,
+          ),
+        ],
+      ),
     ];
 
     if (true) {
-      opciones.add(GrupoSeleccionable(seleccionables: [
-        ItemSeleccionableTileList(
-            nombre: "Destacar",
-            onTap: () {
-              DestructibleSeleccionableSheet.show(
-                context,
-                titulo: "Destacar hilo",
-                onAccept: () {
-                  DestacarHiloUsecase usecase = GetIt.I.get();
+      opciones.add(
+        GrupoSeleccionable(
+          seleccionables: [
+            ItemSeleccionableTileList(
+              nombre: "Destacar",
+              onTap: () {
+                // DestructibleSeleccionableSheet.show(
+                //   context,
+                //   titulo: "Destacar hilo",
+                //   onAccept: () {
+                //     DestacarHiloUsecase usecase = GetIt.I.get();
 
-                  usecase
-                      .handle(DestacarHiloParams())
-                      .then((value) => value.fold(
-                            (l) => null,
-                            (r) => null,
-                          ));
-                },
-              );
-            },
-            icon: FontAwesomeIcons.thumbtack),
-        ItemSeleccionableTileList(
-            onTap: () => VerUsuarioPanel.show(context, usuario: ""),
-            nombre: "Ver usuario",
-            icon: FontAwesomeIcons.person),
-        DestructibleItem(
-          onTap: () => DestructibleSeleccionableSheet.show(
-            context,
-            titulo: "Eliminar hilo",
-            onAccept: () {
-              EliminarHiloUsecase usecase = GetIt.I.get();
-              usecase.handle(EliminarHiloParams()).then((value) => value.fold(
-                    (l) => null,
-                    (r) => null,
-                  ));
-            },
-          ),
-          destructiveColor: Colors.red,
-          nombre: "Eliminar hilo",
-          icon: FontAwesomeIcons.trash,
-        )
-      ]));
+                //     usecase.handle(DestacarHiloParams()).then(
+                //           (value) => value.fold(
+                //             (l) => null,
+                //             (r) => null,
+                //           ),
+                //         );
+                //   },
+                // );
+              },
+              icon: FontAwesomeIcons.thumbtack,
+            ),
+            ItemSeleccionableTileList(
+              onTap: () => VerUsuarioPanel.show(context, usuario: ""),
+              nombre: "Ver usuario",
+              icon: FontAwesomeIcons.person,
+            ),
+            DestructibleItem(
+              // onTap: () => DestructibleSeleccionableSheet.show(
+              //   context,
+              //   titulo: "Eliminar hilo",
+              //   onAccept: () {
+              //     EliminarHiloUsecase usecase = GetIt.I.get();
+              //     usecase.handle(EliminarHiloParams()).then(
+              //           (value) => value.fold(
+              //             (l) => null,
+              //             (r) => null,
+              //           ),
+              //         );
+              //   },
+              // ),
+              destructiveColor: Colors.red,
+              nombre: "Eliminar hilo",
+              icon: FontAwesomeIcons.trash,
+            ),
+          ],
+        ),
+      );
     }
 
     return SliverMainAxisGroup(
@@ -152,10 +167,13 @@ class SeleccionarRazonDeDenuncia extends StatelessWidget {
     );
   }
 
-  static void show(BuildContext context,
-      {required void Function(OpcionDeDenunciaHilo razon) onSeleccionada}) {
+  static void show(
+    BuildContext context, {
+    required void Function(OpcionDeDenunciaHilo razon) onSeleccionada,
+  }) {
     SliverBottomSheet.show(
       context,
+      options: const ShowBottomSheetOptions(),
       child: SeleccionarRazonDeDenuncia(onSeleccionada: onSeleccionada),
     );
   }
@@ -166,8 +184,11 @@ enum OpcionDeDenunciaHilo { ilegal, otro }
 abstract class CustomSnackbar extends StatelessWidget {
   final Color background;
   final String titulo;
-  const CustomSnackbar(
-      {super.key, required this.background, required this.titulo});
+  const CustomSnackbar({
+    super.key,
+    required this.background,
+    required this.titulo,
+  });
 
   @override
   Widget build(BuildContext context) {
