@@ -4,17 +4,12 @@ class Encuesta extends Equatable {
   final EncuestaId id;
   final List<OpcionDeEncuesta> opciones;
   final bool haVotado;
-  const Encuesta(
-      {required this.id, required this.opciones, required this.haVotado});
-
-  int votos() {
-    int votos = 0;
-
-    for (var opcion in opciones) {
-      votos += opcion.votos;
-    }
-    return votos;
-  }
+  final int votos = 0;
+  const Encuesta({
+    required this.id,
+    required this.opciones,
+    required this.haVotado,
+  });
 
   @override
   List<Object?> get props => [id, opciones];
@@ -37,8 +32,11 @@ class OpcionDeEncuesta {
   final String opcion;
   final int votos;
 
-  const OpcionDeEncuesta(
-      {required this.id, required this.opcion, required this.votos});
+  const OpcionDeEncuesta({
+    required this.id,
+    required this.opcion,
+    required this.votos,
+  });
 
   double porcentaje(int total) {
     if (total == 0) {

@@ -1,4 +1,4 @@
-import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -18,14 +18,15 @@ class SesionRequeridaBottomsheet extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          IrRegistroBtn()
+          IrRegistroBtn(),
         ],
       ),
     );
   }
 
-  static void show(BuildContext context) => NormalBottomSheet.show(
+  static void show(BuildContext context) => RoundedBottomSheet.show(
         context,
+        options: const ShowBottomSheetOptions(),
         child: const SesionRequeridaBottomsheet(),
         titulo: "Sesion Requerida",
       );
@@ -39,10 +40,12 @@ class IrLoginBtn extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-          style: FlatBtnStyle().copyWith(
-              backgroundColor: const WidgetStatePropertyAll(Colors.black)),
-          onPressed: () => context.push("/login"),
-          child: const Text("Iniciar sesion")),
+        style: FlatBtnStyle().copyWith(
+          backgroundColor: const WidgetStatePropertyAll(Colors.black),
+        ),
+        onPressed: () => context.push("/login"),
+        child: const Text("Iniciar sesion"),
+      ),
     );
   }
 }
@@ -55,13 +58,15 @@ class IrRegistroBtn extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-          style: FlatBtnStyle().copyWith(
-              backgroundColor: const WidgetStatePropertyAll(Colors.white)),
-          onPressed: () => context.push("registro"),
-          child: const Text(
-            "Registrarse",
-            style: TextStyle(color: Colors.black),
-          )),
+        style: FlatBtnStyle().copyWith(
+          backgroundColor: const WidgetStatePropertyAll(Colors.white),
+        ),
+        onPressed: () => context.push("registro"),
+        child: const Text(
+          "Registrarse",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
     );
   }
 }
@@ -69,10 +74,15 @@ class IrRegistroBtn extends StatelessWidget {
 class FlatBtnStyle extends ButtonStyle {
   FlatBtnStyle({BorderRadiusGeometry? boderRadius})
       : super(
-            shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-                borderRadius: boderRadius ??
-                    const BorderRadius.all(Radius.circular(10)))),
-            padding: const WidgetStatePropertyAll(
-                EdgeInsets.symmetric(vertical: 15, horizontal: 10)),
-            elevation: const WidgetStatePropertyAll(0));
+          shape: WidgetStatePropertyAll(
+            RoundedRectangleBorder(
+              borderRadius:
+                  boderRadius ?? const BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          ),
+          elevation: const WidgetStatePropertyAll(0),
+        );
 }

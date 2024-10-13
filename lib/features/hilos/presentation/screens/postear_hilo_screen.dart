@@ -17,7 +17,7 @@ import '../../../../common/widgets/seleccionable/logic/class/item_seleccionable.
 import '../../../../common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import '../../../categorias/presentation/widgets/subcategoria_background.dart';
 import '../logic/bloc/postear_hilo/postear_hilo_bloc.dart';
-import 'bottom_sheet.dart';
+import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 
 class PostearHiloScreen extends StatelessWidget {
   const PostearHiloScreen({super.key});

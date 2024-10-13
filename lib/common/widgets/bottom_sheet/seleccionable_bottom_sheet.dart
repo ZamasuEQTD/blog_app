@@ -1,7 +1,8 @@
-import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/widget/grupo_seleccionable_list.dart';
 import 'package:flutter/material.dart';
+
+import '../../../features/auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 
 class OpcionesDeComentarios extends StatelessWidget {
   final bool op = false;

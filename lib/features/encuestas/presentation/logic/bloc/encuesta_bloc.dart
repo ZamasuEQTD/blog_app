@@ -17,16 +17,23 @@ class EncuestaBloc extends Bloc<EncuestaEvent, EncuestaState> {
   void _onAgregarVoto(AgregarVoto event, Emitter<EncuestaState> emit) {
     Encuesta encuesta = state.encuesta;
     List<OpcionDeEncuesta> opciones = encuesta.opciones;
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         encuesta: encuesta.copyWith(
-            opciones: opciones
-                .map((e) =>
-                    e.id == event.id ? e.copyWith(votos: e.votos + 1) : e)
-                .toList())));
+          opciones: opciones
+              .map(
+                (e) => e.id == event.id ? e.copyWith(votos: e.votos + 1) : e,
+              )
+              .toList(),
+        ),
+      ),
+    );
   }
 
   void _onSeleccionarOpcion(
-      SeleccionarOpcion event, Emitter<EncuestaState> emit) {
+    SeleccionarOpcion event,
+    Emitter<EncuestaState> emit,
+  ) {
     if (event.id == state.opcionSeleccionada) {
       emit(state.copyWith(opcionSeleccionada: const Nullable(null)));
     } else {

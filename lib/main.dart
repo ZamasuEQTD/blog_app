@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     //   theme: AppThemes.light.copyWith(
     //     textTheme: GoogleFonts.notoSansTextTheme(),
     //   ),
-    //   home: const HomeScreen(),
+    //   home: const Home.Screen(),
     // );
     return MaterialApp.router(
       title: 'Flutter Demo',

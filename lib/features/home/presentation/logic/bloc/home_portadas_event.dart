@@ -19,7 +19,7 @@ class CambiarFiltrosDePortadas extends HomePortadasEvent {
 class RecargarHomePortadas extends HomePortadasEvent {}
 
 class AgregarPortada extends HomePortadasEvent {
-  final HomePortadaEntity portada;
+  final PortadaEntity portada;
 
   const AgregarPortada({required this.portada});
 }

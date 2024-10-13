@@ -2,25 +2,26 @@
 part of 'ver_usuario_bloc.dart';
 
 class VerUsuarioState extends Equatable {
-  final List<HiloCreadoHistorialEntry> hilos;
+  final List<PortadaEntity> hilos;
   final VistaDeUsuario? usuario;
   final TipoDeHistorial tipoDeHistorial;
   final HistorialState historialState;
   final UsuarioState usuarioState;
 
-  const VerUsuarioState(
-      {this.hilos = const [],
-      this.usuario,
-      this.tipoDeHistorial = TipoDeHistorial.hilos,
-      this.historialState = HistorialState.cargando,
-      this.usuarioState = UsuarioState.cargando});
+  const VerUsuarioState({
+    this.hilos = const [],
+    this.usuario,
+    this.tipoDeHistorial = TipoDeHistorial.hilos,
+    this.historialState = HistorialState.cargando,
+    this.usuarioState = UsuarioState.cargando,
+  });
 
   @override
   List<Object?> get props =>
       [hilos, usuario, tipoDeHistorial, historialState, usuarioState];
 
   VerUsuarioState copyWith({
-    List<HiloCreadoHistorialEntry>? hilos,
+    List<PortadaEntity>? hilos,
     VistaDeUsuario? usuario,
     TipoDeHistorial? tipoDeHistorial,
     HistorialState? historialState,

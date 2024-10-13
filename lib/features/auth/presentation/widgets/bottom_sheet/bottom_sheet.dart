@@ -1,15 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class RoundedBottomSheet extends StatelessWidget {
+  final String? titulo;
   final Widget child;
   final BorderRadiusGeometry radius;
   const RoundedBottomSheet({
     super.key,
     required this.child,
+    this.titulo,
     this.radius = const BorderRadius.vertical(top: Radius.circular(10)),
   });
 
@@ -19,7 +25,13 @@ class RoundedBottomSheet extends StatelessWidget {
       borderRadius: radius,
       child: ColoredBox(
         color: Theme.of(context).colorScheme.surface,
-        child: child,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (titulo != null) Text(titulo!),
+            child,
+          ],
+        ),
       ),
     );
   }
@@ -28,6 +40,7 @@ class RoundedBottomSheet extends StatelessWidget {
     BuildContext context, {
     required ShowBottomSheetOptions options,
     required Widget child,
+    String? titulo,
   }) {
     showMaterialModalBottomSheet(
       context: context,
@@ -37,10 +50,14 @@ class RoundedBottomSheet extends StatelessWidget {
           ? options.builder!(
               context,
               RoundedBottomSheet(
+                titulo: titulo,
                 child: child,
               ),
             )
-          : RoundedBottomSheet(child: child),
+          : RoundedBottomSheet(
+              titulo: titulo,
+              child: child,
+            ),
     );
   }
 }
@@ -153,4 +170,59 @@ class ShowBottomSheetOptions {
       builder: builder ?? this.builder,
     );
   }
+}
+
+class DestructibleBottomSheet extends StatelessWidget {
+  final Widget child;
+  final void Function() onAccept;
+  const DestructibleBottomSheet({
+    super.key,
+    required this.child,
+    required this.onAccept,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        child,
+        ElevatedButton(
+          style: FlatBtnStyle().copyWith(
+            backgroundColor: const WidgetStatePropertyAll(
+              CupertinoColors.destructiveRed,
+            ),
+          ),
+          onPressed: onAccept,
+          child: const Text("Cancelar"),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ElevatedButton(
+          style: FlatBtnStyle().copyWith(
+            backgroundColor:
+                const WidgetStatePropertyAll(CupertinoColors.white),
+          ),
+          onPressed: () => context.pop(),
+          child: const Text("Cancelar"),
+        ),
+      ],
+    );
+  }
+
+  static void show(
+    BuildContext context, {
+    required Widget child,
+    required void Function() onAccept,
+    String? titulo,
+  }) =>
+      RoundedBottomSheet.show(
+        context,
+        titulo: titulo,
+        options: const ShowBottomSheetOptions(),
+        child: DestructibleBottomSheet(
+          onAccept: onAccept,
+          child: child,
+        ),
+      );
 }

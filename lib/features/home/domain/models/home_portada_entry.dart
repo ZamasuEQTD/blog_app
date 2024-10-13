@@ -3,7 +3,7 @@ import 'package:blog_app/common/logic/classes/spoileable.dart';
 
 import '../../../media/domain/models/media.dart';
 
-class HomePortadaEntity {
+class PortadaEntity {
   final HomePortadaId id;
   final String titulo;
   final String categoria;
@@ -11,7 +11,7 @@ class HomePortadaEntity {
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
 
-  const HomePortadaEntity({
+  const PortadaEntity({
     required this.id,
     required this.titulo,
     required this.categoria,

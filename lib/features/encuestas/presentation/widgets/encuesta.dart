@@ -1,13 +1,14 @@
 import 'dart:math';
 
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/features/encuestas/domain/models/encuesta.dart';
 import 'package:blog_app/features/encuestas/presentation/logic/bloc/encuesta_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EncuestaWidget extends StatelessWidget {
+class EncuestaCard extends StatelessWidget {
   final Encuesta encuesta;
-  const EncuestaWidget({super.key, required this.encuesta});
+  const EncuestaCard({super.key, required this.encuesta});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,12 @@ class EncuestaWidget extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: encuesta.opciones
-                .map((o) => _OpcionDeEncuesta(
-                    opcion: o, votosTotales: encuesta.votos()))
+                .map(
+                  (o) => RespuestaDeEncuesta(
+                    opcion: o,
+                    votosTotales: encuesta.votos,
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 10),
@@ -27,29 +32,34 @@ class EncuestaWidget extends StatelessWidget {
             children: [
               BlocBuilder<EncuestaBloc, EncuestaState>(
                 buildWhen: (previous, current) =>
-                    previous.encuesta.votos() != current.encuesta.votos(),
+                    previous.encuesta.votos != current.encuesta.votos,
                 builder: (context, state) {
-                  return Text('${encuesta.votos()}');
+                  return Text('${encuesta.votos}');
                 },
               ),
               ElevatedButton(
-                  onPressed: () =>
-                      context.read<EncuestaBloc>().add(const Votar()),
-                  child: const Text("Votar"))
+                style: FlatBtnStyle(),
+                onPressed: () =>
+                    context.read<EncuestaBloc>().add(const Votar()),
+                child: const Text("Votar"),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 }
 
-class _OpcionDeEncuesta extends StatelessWidget {
+class RespuestaDeEncuesta extends StatelessWidget {
   final int votosTotales;
   final OpcionDeEncuesta opcion;
 
-  const _OpcionDeEncuesta(
-      {super.key, required this.opcion, required this.votosTotales});
+  const RespuestaDeEncuesta({
+    super.key,
+    required this.opcion,
+    required this.votosTotales,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +77,7 @@ class _OpcionDeEncuesta extends StatelessWidget {
                 LayoutBuilder(
                   builder: (context, constraints) {
                     return ColoredBox(
-                      color: Colors.red,
+                      color: Colors.grey,
                       child: SizedBox(
                         width: constraints.maxWidth *
                             (opcion.porcentaje(votosTotales) / 100),
@@ -85,12 +95,12 @@ class _OpcionDeEncuesta extends StatelessWidget {
                       Row(
                         children: [
                           Text(opcion.porcentaje(votosTotales).toString()),
-                          Text(opcion.porcentaje(votosTotales).toString())
+                          Text(opcion.porcentaje(votosTotales).toString()),
                         ],
-                      )
+                      ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),

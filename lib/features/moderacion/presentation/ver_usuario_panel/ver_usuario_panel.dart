@@ -1,4 +1,5 @@
-import 'package:blog_app/common/widgets/bottom_sheet/bottom_sheet.dart';
+import 'package:blog_app/features/home/domain/models/home_portada_entry.dart';
+import 'package:blog_app/features/home/presentation/widgets/portada/portada_card.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:blog_app/features/moderacion/domain/models/historia_entry.dart';
@@ -7,6 +8,8 @@ import 'package:blog_app/features/moderacion/presentation/logic/bloc/bloc/ver_us
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 
 class VerUsuarioPanel extends StatelessWidget {
   final String usuario;
@@ -22,10 +25,12 @@ class VerUsuarioPanel extends StatelessWidget {
             child: BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
               builder: (context, state) {
                 return _InformacionDeUsuario(
-                    usuario: VistaDeUsuario(
-                        id: "id",
-                        nombre: "nombre",
-                        fechaDeRegistro: DateTime.now()));
+                  usuario: VistaDeUsuario(
+                    id: "id",
+                    nombre: "nombre",
+                    fechaDeRegistro: DateTime.now(),
+                  ),
+                );
               },
             ),
           ),
@@ -88,26 +93,36 @@ class _SeleccionarHistorial extends StatelessWidget {
                     children: [
                       SeleccionarHistorialBtn(
                         onTap: () => context.read<VerUsuarioBloc>()
-                          ..add(const CambiarTipoDeHistorial(
-                            tipo: TipoDeHistorial.hilos,
-                          )),
-                        icon: const FaIcon(FontAwesomeIcons.noteSticky,
-                            size: 20, color: Colors.black),
+                          ..add(
+                            const CambiarTipoDeHistorial(
+                              tipo: TipoDeHistorial.hilos,
+                            ),
+                          ),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.noteSticky,
+                          size: 20,
+                          color: Colors.black,
+                        ),
                         label: "Hilos",
                         seleccionado:
                             state.tipoDeHistorial == TipoDeHistorial.hilos,
                       ),
                       SeleccionarHistorialBtn(
                         onTap: () => context.read<VerUsuarioBloc>()
-                          ..add(const CambiarTipoDeHistorial(
-                            tipo: TipoDeHistorial.comentarios,
-                          )),
-                        icon: const FaIcon(FontAwesomeIcons.message,
-                            size: 20, color: Colors.black),
+                          ..add(
+                            const CambiarTipoDeHistorial(
+                              tipo: TipoDeHistorial.comentarios,
+                            ),
+                          ),
+                        icon: const FaIcon(
+                          FontAwesomeIcons.message,
+                          size: 20,
+                          color: Colors.black,
+                        ),
                         label: "Comentarios",
                         seleccionado: state.tipoDeHistorial ==
                             TipoDeHistorial.comentarios,
-                      )
+                      ),
                     ],
                   );
                 },
@@ -169,13 +184,16 @@ class _HistorialDeHilos extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-        builder: (context, state) => SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              sliver: SliverList.builder(
-                itemCount: 100,
-                itemBuilder: (context, index) => Container(),
-              ),
-            ));
+      builder: (context, state) => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        sliver: SliverList.builder(
+          itemCount: state.hilos.length,
+          itemBuilder: (context, index) => PortadaCard(
+            portada: state.hilos[index],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -203,19 +221,23 @@ class _InformacionDeUsuario extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Column(children: [
-              Row(
-                children: [
-                  Text(
-                    usuario.nombre,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 17),
-                  ),
-                  Text(usuario.id),
-                ],
-              ),
-              Text("Unido desde ${usuario.fechaDeRegistro}")
-            ]),
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      usuario.nombre,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
+                    Text(usuario.id),
+                  ],
+                ),
+                Text("Unido desde ${usuario.fechaDeRegistro}"),
+              ],
+            ),
           ],
         ),
       ),
@@ -244,30 +266,33 @@ class _PostDeUsuarioCreadoHistorial extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          RichText(
-                            maxLines: 1,
-                            text: TextSpan(
-                              style: DefaultTextStyle.of(context).style,
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: entry.titulo,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 20,
-                                        overflow: TextOverflow.ellipsis)),
-                              ],
-                            ),
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        RichText(
+                          maxLines: 1,
+                          text: TextSpan(
+                            style: DefaultTextStyle.of(context).style,
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: entry.titulo,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(entry.descripcion)
-                        ]),
+                        ),
+                        Text(entry.descripcion),
+                      ],
+                    ),
                   ),
-                  const Icon(Icons.chevron_right)
+                  const Icon(Icons.chevron_right),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -287,9 +312,10 @@ class _HistoriaHiloImagen extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: SizedBox(
-          height: 120,
-          width: 110,
-          child: Image(fit: BoxFit.cover, image: imagen.toProvider())),
+        height: 120,
+        width: 110,
+        child: Image(fit: BoxFit.cover, image: imagen.toProvider()),
+      ),
     );
   }
 }
@@ -305,8 +331,9 @@ class _HistorialEntry extends StatelessWidget {
       child: ColoredBox(
         color: Colors.white,
         child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: child),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: child,
+        ),
       ),
     );
   }
@@ -332,17 +359,21 @@ class AdvetirDeBaneo extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
               child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      minHeight: 100, minWidth: double.infinity),
-                  child: const ColoredBox(
-                      color: Colors.white,
-                      child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-                          child: Text(
-                            "No lo vuelvas a hacer\nokk?",
-                            style: TextStyle(fontSize: 17),
-                          )))),
+                constraints: const BoxConstraints(
+                  minHeight: 100,
+                  minWidth: double.infinity,
+                ),
+                child: const ColoredBox(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                    child: Text(
+                      "No lo vuelvas a hacer\nokk?",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

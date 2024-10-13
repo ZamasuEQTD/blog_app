@@ -11,7 +11,8 @@ import 'package:badges/badges.dart' as badges;
 
 import '../../domain/models/home_portada_entry.dart';
 import '../logic/bloc/home_portadas_bloc.dart';
-import '../widgets/portada/home_portada.dart';
+import '../widgets/portada/bottom_sheet/opciones_bottom_sheet.dart';
+import '../widgets/portada/portada_card.dart';
 import '../widgets/portada/home_portada_cargando.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -55,6 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: const Icon(
             Icons.abc,
             size: 30,
+            color: Colors.black,
           ),
         ),
         appBar: AppBar(
@@ -71,8 +73,14 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => context.go("mis-notificaciones"),
               icon: badges.Badge(
                 position: badges.BadgePosition.bottomEnd(bottom: -10, end: -12),
-                badgeContent: const Text("5"),
-                child: const FaIcon(FontAwesomeIcons.bell),
+                badgeContent: const Text(
+                  "5",
+                  style: TextStyle(color: Colors.black),
+                ),
+                child: const FaIcon(
+                  FontAwesomeIcons.bell,
+                  color: Colors.black,
+                ),
               ),
             ),
             IconButton(
@@ -156,9 +164,13 @@ class _HomePortadasGridState extends State<_HomePortadasGrid> {
                 return _cargando;
               }
 
-              HomePortadaEntity entry = state.portadas[index];
+              PortadaEntity entry = state.portadas[index];
 
-              return HomePortada(portada: entry);
+              return GestureDetector(
+                onTap: () => context.push("/hilo/${entry.id}"),
+                onLongPress: () => OpcionesDePortadaBottomSheet.show(context),
+                child: PortadaCard(portada: entry),
+              );
             },
           ),
         );

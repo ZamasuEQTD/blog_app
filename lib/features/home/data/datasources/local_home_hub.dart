@@ -9,7 +9,7 @@ class LocalHomeHub extends IHomeHub {
   }
 
   @override
-  void onHiloPosteado(void Function(HomePortadaEntity portada) onHiloPosteado) {
+  void onHiloPosteado(void Function(PortadaEntity portada) onHiloPosteado) {
     // TODO: implement onHiloPosteado
   }
 }

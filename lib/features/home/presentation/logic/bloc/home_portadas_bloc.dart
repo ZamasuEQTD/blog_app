@@ -24,10 +24,12 @@ class HomePortadasBloc extends Bloc<HomePortadasEvent, HomePortadasState> {
   }
 
   Future<void> _onCargarPortadasHome(
-      CargarPortadasHome event, Emitter<HomePortadasState> emit) async {
+    CargarPortadasHome event,
+    Emitter<HomePortadasState> emit,
+  ) async {
     if (state.status == PortadasHomeStatus.cargando) return;
 
-    List<HomePortadaEntity> entries = state.portadas;
+    List<PortadaEntity> entries = state.portadas;
 
     var result = await _getHomePortadasUseCase
         .handle(GetHomePortadasRequest(titulo: state.filtros.titulo));
@@ -35,26 +37,36 @@ class HomePortadasBloc extends Bloc<HomePortadasEvent, HomePortadasState> {
     result.fold(
       (l) =>
           emit(state.copyWith(status: PortadasHomeStatus.failure, failure: l)),
-      (r) => emit(state.copyWith(
-          status: PortadasHomeStatus.initial, portadas: [...entries, ...r])),
+      (r) => emit(
+        state.copyWith(
+          status: PortadasHomeStatus.initial,
+          portadas: [...entries, ...r],
+        ),
+      ),
     );
   }
 
   _onRecargarPortadas(
-      RecargarHomePortadas event, Emitter<HomePortadasState> emit) {
+    RecargarHomePortadas event,
+    Emitter<HomePortadasState> emit,
+  ) {
     emit(const HomePortadasState());
     add(CargarPortadasHome());
   }
 
   FutureOr<void> _onAgregarPortada(
-      AgregarPortada event, Emitter<HomePortadasState> emit) {
+    AgregarPortada event,
+    Emitter<HomePortadasState> emit,
+  ) {
     emit(
       state.copyWith(portadas: [...state.portadas, event.portada]),
     );
   }
 
   FutureOr<void> _onEliminarPortada(
-      EliminarPortada event, Emitter<HomePortadasState> emit) {
+    EliminarPortada event,
+    Emitter<HomePortadasState> emit,
+  ) {
     emit(
       state.copyWith(
         portadas: state.portadas.where((element) => true).toList(),

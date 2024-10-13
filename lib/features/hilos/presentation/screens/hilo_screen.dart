@@ -32,7 +32,7 @@ import '../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
 import '../logic/bloc/hilo/hilo_bloc.dart';
 
 import '../logic/controllers/taggueos_controller.dart';
-import 'bottom_sheet.dart';
+import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 
 class HiloScreen extends StatefulWidget {
   final HiloId id;
@@ -574,7 +574,7 @@ class EncuestaDeHilo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-      child: EncuestaWidget(encuesta: encuesta),
+      child: EncuestaCard(encuesta: encuesta),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../domain/abstractions/ihome_repository.dart';
 import '../../domain/models/home_portada_entry.dart';
 
 abstract class IHomeDatasource {
-  Future<Either<Failure, List<HomePortadaEntity>>> getPortadas(
-      GetHomePortadasRequest request);
+  Future<Either<Failure, List<PortadaEntity>>> getPortadas(
+    GetHomePortadasRequest request,
+  );
 }
