@@ -18,58 +18,64 @@ class ComentarioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    _ComentarioColor(comentario: comentario),
-                    _ComentarioAutorDatos(comentario: comentario),
-                  ],
-                ),
-                Text(
-                  HorariosService.diferencia(
-                    utcNow: DateTime.now().toUtc(),
-                    time: comentario.creado_en,
-                  ).toString(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          if (comentario.media != null)
-            Container(
-              margin: const EdgeInsets.only(bottom: 5),
-              child: MultiMediaDisplay(
-                media: comentario.media!.spoileable,
-                dimensionableBuilder: (child) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: MediaSpoileable(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                          maxHeight: 400,
-                          maxWidth: double.infinity,
-                        ),
-                        child: child,
-                      ),
-                    ),
-                  );
-                },
+    return ClipRRect(
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xffF5F5F5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      _ComentarioColor(comentario: comentario),
+                      _ComentarioAutorDatos(comentario: comentario),
+                    ],
+                  ),
+                  Text(
+                    HorariosService.diferencia(
+                      utcNow: DateTime.now().toUtc(),
+                      time: comentario.creado_en,
+                    ).toString(),
+                  ),
+                ],
               ),
             ),
-          Text(comentario.texto),
-        ],
+            const SizedBox(
+              height: 5,
+            ),
+            if (comentario.media != null)
+              Container(
+                margin: const EdgeInsets.only(bottom: 5),
+                child: MultiMediaDisplay(
+                  media: comentario.media!.spoileable,
+                  dimensionableBuilder: (child) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: MediaSpoileable(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxHeight: 400,
+                            maxWidth: double.infinity,
+                          ),
+                          child: child,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            Text(comentario.texto),
+          ],
+        ),
       ),
     );
   }

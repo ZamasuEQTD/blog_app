@@ -13,7 +13,7 @@ class ItemGrupoSliverList extends StatelessWidget {
     return DecoratedSliver(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
+        color: const Color(0xffF5F5F5),
       ),
       sliver: SliverMainAxisGroup(
         slivers: [
@@ -47,13 +47,10 @@ class ItemGrupoSliverList extends StatelessWidget {
     List<Widget> slivers = [];
 
     for (var grupo in grupos) {
-      Widget child = ItemGrupoSliverList(grupo: grupo);
-      if (slivers.isNotEmpty) {
-        child = SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          sliver: child,
-        );
-      }
+      Widget child = SliverPadding(
+        padding: const EdgeInsets.only(bottom: 10),
+        sliver: ItemGrupoSliverList(grupo: grupo),
+      );
       slivers.add(child);
     }
 

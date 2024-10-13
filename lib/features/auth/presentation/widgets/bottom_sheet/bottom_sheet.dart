@@ -25,13 +25,7 @@ class RoundedBottomSheet extends StatelessWidget {
       borderRadius: radius,
       child: ColoredBox(
         color: Theme.of(context).colorScheme.surface,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (titulo != null) Text(titulo!),
-            child,
-          ],
-        ),
+        child: child,
       ),
     );
   }
@@ -186,25 +180,42 @@ class DestructibleBottomSheet extends StatelessWidget {
     return Column(
       children: [
         child,
-        ElevatedButton(
-          style: FlatBtnStyle().copyWith(
-            backgroundColor: const WidgetStatePropertyAll(
-              CupertinoColors.destructiveRed,
-            ),
+        const SizedBox(height: 10),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: FlatBtnStyle().copyWith(
+                    backgroundColor: WidgetStatePropertyAll(
+                      const Color(0xffEF4444).withOpacity(0.9),
+                    ),
+                  ),
+                  onPressed: onAccept,
+                  child: const Text("Seguir"),
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: FlatBtnStyle().copyWith(
+                    backgroundColor:
+                        const WidgetStatePropertyAll(Color(0xff212121)),
+                  ),
+                  onPressed: () => context.pop(),
+                  child: const Text(
+                    "Cancelar",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
           ),
-          onPressed: onAccept,
-          child: const Text("Cancelar"),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        ElevatedButton(
-          style: FlatBtnStyle().copyWith(
-            backgroundColor:
-                const WidgetStatePropertyAll(CupertinoColors.white),
-          ),
-          onPressed: () => context.pop(),
-          child: const Text("Cancelar"),
         ),
       ],
     );
@@ -225,4 +236,24 @@ class DestructibleBottomSheet extends StatelessWidget {
           child: child,
         ),
       );
+}
+
+class BottomSheetTitulo extends StatelessWidget {
+  final String titulo;
+  const BottomSheetTitulo({super.key, required this.titulo});
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Text(
+          titulo,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+        ),
+      ),
+    );
+  }
 }

@@ -93,7 +93,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
 
     final state = context.read<AuthBloc>().state;
 
-    if (state is SesionIniciada && state.usuario is Moderador) {
+    if (!(state is SesionIniciada && state.usuario is Moderador)) {
       opciones.add(
         GrupoSeleccionable(
           seleccionables: [
@@ -156,7 +156,7 @@ class OpcionesDePortadaBottomSheet extends StatelessWidget {
   }
 
   static void show(BuildContext context) {
-    SliverDraggableBottomSheet.show(
+    SliverBottomSheet.show(
       context,
       child: const OpcionesDePortadaBottomSheet(),
     );

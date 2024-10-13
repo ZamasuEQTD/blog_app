@@ -119,7 +119,7 @@ class _HiloInformacion extends StatelessWidget {
         padding: const EdgeInsets.all(7),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-          color: Color(0xffd8d9dd),
+          color: Color(0xffE0E0E0),
         ),
         child: SafeArea(
           child: Padding(

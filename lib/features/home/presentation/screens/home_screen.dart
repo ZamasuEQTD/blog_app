@@ -52,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         floatingActionButton: ColoredIconButton(
           border: BorderRadius.circular(10),
+          background: const Color(0xffF5F5F5),
           onPressed: () => context.push("/postear-hilo"),
           icon: const Icon(
             Icons.abc,
@@ -70,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () => context.go("mis-notificaciones"),
+              onPressed: () => context.push("/mis-notificaciones"),
               icon: badges.Badge(
                 position: badges.BadgePosition.bottomEnd(bottom: -10, end: -12),
                 badgeContent: const Text(
@@ -195,6 +196,7 @@ class _HomePortadasFiltros extends StatelessWidget {
               width: 10,
             ),
             ColoredIconButton(
+              background: const Color(0xffF5F5F5),
               onPressed: () {},
               icon: const FaIcon(FontAwesomeIcons.diceD6),
             ),
@@ -227,9 +229,11 @@ class _FiltrarPortadasPorTituloState extends State<_FiltrarPortadasPorTitulo> {
         decoration: BusquedaInputDecoration(
           borderRadius: 10,
           hintText: "Titulo de hilo",
-          onTap: () => context
-              .read<HomePortadasBloc>()
-              .add(CambiarFiltrosDePortadas(titulo: controller.text)),
+          onTap: () => context.read<HomePortadasBloc>().add(
+                CambiarFiltrosDePortadas(titulo: controller.text),
+              ),
+        ).copyWith(
+          fillColor: const Color(0xffF5F5F5),
         ),
       ),
     );
