@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../../common/logic/classes/spoileable.dart';
 import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 
 class VerUsuarioPanel extends StatelessWidget {
@@ -28,7 +27,7 @@ class VerUsuarioPanel extends StatelessWidget {
                 return _InformacionDeUsuario(
                   usuario: VistaDeUsuario(
                     id: "id",
-                    nombre: "Codubi",
+                    nombre: "nombre",
                     fechaDeRegistro: DateTime.now(),
                   ),
                 );
@@ -44,7 +43,7 @@ class VerUsuarioPanel extends StatelessWidget {
                 case TipoDeHistorial.hilos:
                   return const _HistorialDeHilos();
                 case TipoDeHistorial.comentarios:
-                  return const _HistorialDeComentarios();
+                  return const _HistorialDeHilos();
                 default:
               }
               throw Exception("");
@@ -82,11 +81,13 @@ class _SeleccionarHistorial extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: ColoredBox(
-          color: const Color(0xffF5F5F5),
+          color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: SizedBox(
               child: BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
+                buildWhen: (previous, current) =>
+                    previous.tipoDeHistorial != current.tipoDeHistorial,
                 builder: (context, state) {
                   return Row(
                     children: [
@@ -151,13 +152,13 @@ class SeleccionarHistorialBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color:
-                seleccionado ? Theme.of(context).scaffoldBackgroundColor : null,
+            color: !seleccionado
+                ? Theme.of(context).scaffoldBackgroundColor
+                : null,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
@@ -184,37 +185,11 @@ class _HistorialDeHilos extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
       builder: (context, state) => SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 0),
-        sliver: SliverGrid.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            mainAxisExtent: 200,
-            crossAxisSpacing: 5,
-            mainAxisSpacing: 5,
-            crossAxisCount: 2,
-          ),
-          itemCount: 10,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        sliver: SliverList.builder(
+          itemCount: state.hilos.length,
           itemBuilder: (context, index) => PortadaCard(
-            portada: PortadaEntity(
-              imagen: Spoileable(
-                true,
-                Imagen(
-                  provider: const NetworkProvider(
-                    path:
-                        "https://preview.redd.it/evie-templeton-is-portraying-laura-in-sh2-remake-and-the-v0-mc2fhcpkwq3d1.jpg?width=1080&crop=smart&auto=webp&s=a19290370f885c41d28cd175d03da150db609696",
-                  ),
-                ),
-              ),
-              id: "id",
-              titulo: "Entras y esta tu prima asi",
-              categoria: "NSFW",
-              features: [
-                HomePortadaFeatures.nuevo,
-                HomePortadaFeatures.sticky,
-                HomePortadaFeatures.dados,
-                HomePortadaFeatures.idUnico,
-              ],
-              ultimoBump: DateTime.now(),
-            ),
+            portada: state.hilos[index],
           ),
         ),
       ),
@@ -248,24 +223,19 @@ class _InformacionDeUsuario extends StatelessWidget {
             const SizedBox(width: 10),
             Column(
               children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: usuario.nombre,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                Row(
+                  children: [
+                    Text(
+                      usuario.nombre,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
                       ),
-                      TextSpan(text: usuario.id),
-                    ],
-                    style: const TextStyle(color: Colors.black),
-                  ),
+                    ),
+                    Text(usuario.id),
+                  ],
                 ),
-                Text(
-                  "Unido desde ${usuario.fechaDeRegistro.day}/${usuario.fechaDeRegistro.month}/${usuario.fechaDeRegistro.year}",
-                ),
+                Text("Unido desde ${usuario.fechaDeRegistro}"),
               ],
             ),
           ],
@@ -418,82 +388,5 @@ class _InformacionDeBaneo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
-  }
-}
-
-class _HistorialDeComentarios extends StatelessWidget {
-  const _HistorialDeComentarios({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverList.builder(
-      itemCount: 10,
-      itemBuilder: (context, index) => const ComentarioDeUsuario(),
-    );
-  }
-}
-
-class ComentarioDeUsuario extends StatelessWidget {
-  const ComentarioDeUsuario({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 80,
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: const ColoredBox(
-                  color: Colors.red,
-                  child: SizedBox(
-                    height: 80,
-                    width: 80,
-                    child: Image(
-                      image: NetworkImage(
-                        "https://comiquetaxxx.com/wp-content/uploads/2023/10/seme-pan-rom-0-350x487.jpg",
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              const Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Ha comentado en: Los Momos",
-                      maxLines: 2,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Flexible(
-                      child: Text(
-                        "Aguante la bornografia infaltilAguante la bornografia infaltilAguante la bornografia infaltilAguante la bornografia infaltilAguante la bornografia infaltil",
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        Row(
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: const Text("hola"),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }
