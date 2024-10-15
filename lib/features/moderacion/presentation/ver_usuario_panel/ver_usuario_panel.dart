@@ -1,3 +1,4 @@
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/features/home/domain/models/home_portada_entry.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/portada_card.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
@@ -46,6 +47,23 @@ class VerUsuarioPanel extends StatelessWidget {
                   ),
                 );
               },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ElevatedButton(
+              style: FlatBtnStyle(
+                boderRadius: BorderRadius.circular(5),
+              ).copyWith(
+                backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
+              ),
+              onPressed: () {},
+              child: const Text(
+                "Banear usuario",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ),
           const SliverToBoxAdapter(
@@ -206,7 +224,7 @@ class _InformacionDeUsuario extends StatelessWidget {
           children: [
             const ClipOval(
               child: ColoredBox(
-                color: Colors.white,
+                color: Color(0xfff2f2f2),
                 child: SizedBox(
                   height: 70,
                   width: 70,
@@ -216,6 +234,7 @@ class _InformacionDeUsuario extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   usuario.nombre,
@@ -286,4 +305,18 @@ class _InformacionDeBaneo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container();
   }
+}
+
+class Baneo {
+  final String id;
+  final String moderador;
+  final DateTime expiracion;
+  final String? texto;
+
+  const Baneo({
+    required this.id,
+    required this.moderador,
+    required this.expiracion,
+    required this.texto,
+  });
 }
