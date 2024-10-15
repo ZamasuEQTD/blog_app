@@ -4,12 +4,16 @@ import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:blog_app/features/moderacion/domain/models/historia_entry.dart';
 import 'package:blog_app/features/moderacion/domain/models/vista_de_usuario.dart';
-import 'package:blog_app/features/moderacion/presentation/logic/bloc/bloc/ver_usuario_bloc.dart';
+import 'package:blog_app/features/moderacion/presentation/logic/bloc/ver_usuario/ver_usuario_bloc.dart';
+import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel/widgets/historial_de_comentarios/historial_de_comentarios.dart';
+import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel/widgets/historial_de_comentarios/logic/historial_de_comentarios/historial_de_comentarios_bloc.dart';
+import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel/widgets/historial_de_hilos/historial_de_hilos.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
+import 'widgets/historial_de_hilos/logic/bloc/historial_de_hilos_bloc.dart';
 
 class VerUsuarioPanel extends StatelessWidget {
   final String usuario;
@@ -17,8 +21,18 @@ class VerUsuarioPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => VerUsuarioBloc(usuario)..add(CargarUsuario()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => VerUsuarioBloc(usuario)..add(CargarUsuario()),
+        ),
+        BlocProvider(
+          create: (context) => HistorialDeHilosBloc(),
+        ),
+        BlocProvider(
+          create: (context) => HistorialDeComentariosBloc(),
+        ),
+      ],
       child: SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(
@@ -41,9 +55,9 @@ class VerUsuarioPanel extends StatelessWidget {
             builder: (context, state) {
               switch (state.tipoDeHistorial) {
                 case TipoDeHistorial.hilos:
-                  return const _HistorialDeHilos();
+                  return const HistorialDeHilosPosteados();
                 case TipoDeHistorial.comentarios:
-                  return const _HistorialDeHilos();
+                  return const HistorialDeComentarios();
                 default:
               }
               throw Exception("");
@@ -77,11 +91,10 @@ class _SeleccionarHistorial extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: ColoredBox(
-          color: Colors.white,
+          color: const Color(0xffF5F5F5),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: SizedBox(
@@ -178,25 +191,6 @@ class SeleccionarHistorialBtn extends StatelessWidget {
   }
 }
 
-class _HistorialDeHilos extends StatelessWidget {
-  const _HistorialDeHilos({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-      builder: (context, state) => SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        sliver: SliverList.builder(
-          itemCount: state.hilos.length,
-          itemBuilder: (context, index) => PortadaCard(
-            portada: state.hilos[index],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _InformacionDeUsuario extends StatelessWidget {
   final VistaDeUsuario usuario;
 
@@ -223,116 +217,19 @@ class _InformacionDeUsuario extends StatelessWidget {
             const SizedBox(width: 10),
             Column(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      usuario.nombre,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                    Text(usuario.id),
-                  ],
+                Text(
+                  usuario.nombre,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
                 ),
-                Text("Unido desde ${usuario.fechaDeRegistro}"),
+                Text(
+                  "Unido desde ${usuario.fechaDeRegistro.day}/${usuario.fechaDeRegistro.month}/${usuario.fechaDeRegistro.year}",
+                ),
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PostDeUsuarioCreadoHistorial extends StatelessWidget {
-  final HiloCreadoHistorialEntry entry;
-  const _PostDeUsuarioCreadoHistorial({super.key, required this.entry});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 130,
-      child: _HistorialEntry(
-        child: Row(
-          children: [
-            _HistoriaHiloImagen(
-              imagen: entry.portada,
-            ),
-            const SizedBox(width: 10),
-            Flexible(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        RichText(
-                          maxLines: 1,
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: entry.titulo,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Text(entry.descripcion),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _HistoriaHiloImagen extends StatelessWidget {
-  final Imagen imagen;
-  const _HistoriaHiloImagen({
-    super.key,
-    required this.imagen,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: SizedBox(
-        height: 120,
-        width: 110,
-        child: Image(fit: BoxFit.cover, image: imagen.toProvider()),
-      ),
-    );
-  }
-}
-
-class _HistorialEntry extends StatelessWidget {
-  final Widget child;
-  const _HistorialEntry({super.key, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: ColoredBox(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: child,
         ),
       ),
     );

@@ -6,3 +6,5 @@ sealed class HistorialDeHilosEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class CargarSiguientePagina extends HistorialDeHilosEvent {}

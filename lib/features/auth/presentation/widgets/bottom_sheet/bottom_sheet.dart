@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 class RoundedBottomSheet extends StatelessWidget {
   final String? titulo;
@@ -102,9 +103,12 @@ class SliverBottomSheet extends StatelessWidget {
       shrinkWrap: true,
       controller: controller,
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          sliver: child,
+        ChangeNotifierProvider.value(
+          value: controller,
+          child: SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            sliver: child,
+          ),
         ),
       ],
     );
