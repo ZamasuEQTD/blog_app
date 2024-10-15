@@ -10,7 +10,7 @@ class AppColors {
   static const Color secondary = Color(0xffffffff);
   static const Color onSecondary = Color(0xFF8292aa);
   static const Color surface = Color.fromARGB(255, 255, 255, 255);
-  static const Color onSurface = Colors.white;
-  static const Color error = CupertinoColors.destructiveRed;
+  static const Color onSurface = Color(0xFFF5F5F5);
+  static const Color error = Color.fromRGBO(239, 68, 68, 0.9);
   static const Color onError = Colors.white;
 }

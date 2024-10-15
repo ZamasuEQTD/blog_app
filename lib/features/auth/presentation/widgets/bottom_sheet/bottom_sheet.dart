@@ -182,19 +182,21 @@ class DestructibleBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         child,
         const SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: FlatBtnStyle().copyWith(
                     backgroundColor: WidgetStatePropertyAll(
-                      const Color(0xffEF4444).withOpacity(0.9),
+                      Theme.of(context).colorScheme.error,
                     ),
                   ),
                   onPressed: onAccept,

@@ -16,8 +16,9 @@ class Miniatura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: SizedBox(height: 80, width: 80, child: _factory.create(media)));
+      borderRadius: BorderRadius.circular(15),
+      child: SizedBox(height: 80, width: 80, child: _factory.create(media)),
+    );
   }
 }
 
@@ -93,10 +94,11 @@ class MiniaturaDatosOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-        padding: EdgeInsets.all(5),
-        child: Align(
-          alignment: Alignment.topRight,
-        ));
+      padding: EdgeInsets.all(5),
+      child: Align(
+        alignment: Alignment.topRight,
+      ),
+    );
   }
 }
 

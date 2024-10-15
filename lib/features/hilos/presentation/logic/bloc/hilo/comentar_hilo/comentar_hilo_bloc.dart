@@ -15,6 +15,7 @@ class ComentarHiloBloc extends Bloc<ComentarHiloEvent, ComentarHiloState> {
   ComentarHiloBloc() : super(const ComentarHiloState()) {
     on<CambiarComentario>(_cambiarComentario);
     on<AggregarTaggueo>(_agregarTaggueo);
+    on<AgregarMedia>(_onAgregarMedia);
   }
 
   void _cambiarComentario(
@@ -35,5 +36,13 @@ class ComentarHiloBloc extends Bloc<ComentarHiloEvent, ComentarHiloState> {
     }
 
     emit(state.copyWith(taggueo: event.tag));
+  }
+
+  void _onAgregarMedia(AgregarMedia event, Emitter<ComentarHiloState> emit) {
+    emit(
+      state.copyWith(
+        media: Nullable(Spoileable(false, event.media)),
+      ),
+    );
   }
 }

@@ -481,14 +481,18 @@ class ComentarEnHilo extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
               buildWhen: (previous, current) => previous.media != current.media,
               builder: (context, state) {
                 if (state.media != null) {
-                  return Miniatura(
-                    media: state.media!.spoileable,
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 5),
+                    child: Miniatura(
+                      media: state.media!.spoileable,
+                    ),
                   );
                 }
                 return Container();

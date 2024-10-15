@@ -4,12 +4,13 @@ class ColoredIconButton extends IconButton {
   final Color? background;
   final BorderRadius? border;
 
-  const ColoredIconButton(
-      {super.key,
-      this.background,
-      this.border,
-      required super.onPressed,
-      required super.icon});
+  const ColoredIconButton({
+    super.key,
+    this.background,
+    this.border,
+    required super.onPressed,
+    required super.icon,
+  });
 
   @override
   Widget build(BuildContext context) {

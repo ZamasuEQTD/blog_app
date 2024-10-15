@@ -27,8 +27,12 @@ class MyApp extends StatelessWidget {
     // );
     return MaterialApp.router(
       title: 'Flutter Demo',
-      theme:
-          AppThemes.light.copyWith(textTheme: GoogleFonts.notoSansTextTheme()),
+      theme: AppThemes.light.copyWith(
+        textTheme: GoogleFonts.notoSansTextTheme(),
+        inputDecorationTheme: const InputDecorationTheme(
+          fillColor: Color(0xfff5f5f5),
+        ),
+      ),
       routerConfig: routes,
       builder: (context, child) {
         return BlocProvider(

@@ -7,20 +7,21 @@ class Skeleton extends StatelessWidget {
   final Widget? child;
   final BorderRadiusGeometry? borderRadius;
 
-  const Skeleton(
-      {super.key,
-      this.width,
-      this.height,
-      this.borderRadius,
-      this.color,
-      this.child});
+  const Skeleton({
+    super.key,
+    this.width,
+    this.height,
+    this.borderRadius,
+    this.color,
+    this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: borderRadius ?? BorderRadius.circular(8),
-        color: color ?? Colors.white,
+        color: color ?? const Color(0xfff2f2f2),
       ),
       height: height,
       width: width,

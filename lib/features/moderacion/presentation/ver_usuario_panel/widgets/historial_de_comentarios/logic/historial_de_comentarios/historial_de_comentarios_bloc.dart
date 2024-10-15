@@ -27,7 +27,7 @@ class HistorialDeComentariosBloc
               (index) => HistorialDeComentarioItem(
                 id: "ss",
                 hilo: HistorialDeComentarioHilo(
-                  id: "",
+                  id: "241",
                   titulo: "Aguante la b2filia",
                   portada: Imagen(
                     provider: const NetworkProvider(

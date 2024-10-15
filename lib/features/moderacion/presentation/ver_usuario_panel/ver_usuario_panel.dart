@@ -1,3 +1,4 @@
+import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/features/home/domain/models/home_portada_entry.dart';
 import 'package:blog_app/features/home/presentation/widgets/portada/portada_card.dart';
@@ -54,9 +55,11 @@ class VerUsuarioPanel extends StatelessWidget {
               style: FlatBtnStyle(
                 boderRadius: BorderRadius.circular(5),
               ).copyWith(
-                backgroundColor: const WidgetStatePropertyAll(Colors.redAccent),
+                backgroundColor: WidgetStatePropertyAll(
+                  Theme.of(context).colorScheme.error,
+                ),
               ),
-              onPressed: () {},
+              onPressed: () => BanearUsuarioBottomSheet.show(context),
               child: const Text(
                 "Banear usuario",
                 style: TextStyle(
@@ -187,9 +190,8 @@ class SeleccionarHistorialBtn extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: !seleccionado
-                ? Theme.of(context).scaffoldBackgroundColor
-                : null,
+            color:
+                seleccionado ? Theme.of(context).scaffoldBackgroundColor : null,
             borderRadius: BorderRadius.circular(5),
           ),
           child: Row(
@@ -224,7 +226,7 @@ class _InformacionDeUsuario extends StatelessWidget {
           children: [
             const ClipOval(
               child: ColoredBox(
-                color: Color(0xfff2f2f2),
+                color: Color(0xfff5f5f5),
                 child: SizedBox(
                   height: 70,
                   width: 70,
@@ -319,4 +321,41 @@ class Baneo {
     required this.expiracion,
     required this.texto,
   });
+}
+
+class BanearUsuarioBottomSheet extends StatelessWidget {
+  const BanearUsuarioBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Text(
+            "Razon",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const Text(
+            "Duración",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          TextField(
+            decoration: FlatInputDecoration(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static show(BuildContext context) {
+    DestructibleBottomSheet.show(
+      context,
+      titulo: "Banear usuario",
+      child: const BanearUsuarioBottomSheet(),
+      onAccept: () {},
+    );
+  }
 }
