@@ -29,10 +29,11 @@ class Miniatura extends StatelessWidget {
           child: BlocBuilder<MiniaturaGeneradorBloc, MiniaturaGeneradorState>(
             builder: (context, state) {
               if (state is! MiniaturaGenerada) {
-                const Skeletonizer.zone(child: Bone());
+                return const Skeletonizer.zone(child: Bone());
               }
               return Image(
-                image: (state as MiniaturaGenerada).miniatura.toProvider(),
+                image: (state).miniatura.toProvider(),
+                fit: BoxFit.cover,
               );
             },
           ),

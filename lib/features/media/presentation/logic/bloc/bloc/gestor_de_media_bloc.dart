@@ -24,6 +24,15 @@ class GestorDeMediaBloc extends Bloc<GestorDeMediaEvent, GestorDeMediaState> {
     AgregarMedia event,
     Emitter<GestorDeMediaState> emit,
   ) {
+    if (cantidadMaxima == 1) {
+      emit(
+        state.copyWith(
+          medias: [event.media],
+        ),
+      );
+      return;
+    }
+
     if (_haAlcanzadoCantidadMaxima) {
       emit(
         GestorDeMediasFailureState(

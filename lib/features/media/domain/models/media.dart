@@ -1,9 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-abstract class Media {
+import 'package:equatable/equatable.dart';
+
+abstract class Media extends Equatable {
   final MediaProvider provider;
   const Media({
     required this.provider,
   });
+
+  @override
+  List<Object?> get props => [provider];
 }
 
 class Video extends Media {
@@ -18,11 +23,14 @@ class Imagen extends Media {
   const Imagen({required super.provider});
 }
 
-abstract class MediaProvider {
+abstract class MediaProvider extends Equatable {
   final String path;
   const MediaProvider({
     required this.path,
   });
+
+  @override
+  List<Object?> get props => [path];
 }
 
 class NetworkProvider extends MediaProvider {

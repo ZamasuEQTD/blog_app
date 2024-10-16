@@ -54,6 +54,7 @@ class _HiloScreenState extends State<HiloScreen> {
           BlocProvider(
             create: (context) => HiloBloc("")..add(CargarHilo()),
           ),
+          BlocProvider(create: (_) => GestorDeMediaBloc()),
         ],
         child: Scaffold(
           body: BlocBuilder<HiloBloc, HiloState>(
@@ -486,14 +487,18 @@ class ComentarHiloBottomSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
-              buildWhen: (previous, current) =>
-                  previous.medias != current.medias,
               builder: (context, state) {
                 return Row(
                   children: state.medias
                       .map(
-                        (x) => Miniatura(
-                          media: x,
+                        (x) => GestureDetector(
+                          onTap: () => context
+                              .read<GestorDeMediaBloc>()
+                              .add(const EliminarMedia()),
+                          child: Miniatura(
+                            key: UniqueKey(),
+                            media: x,
+                          ),
                         ),
                       )
                       .toList(),
@@ -634,8 +639,15 @@ class ComentarHiloOpciones extends StatelessWidget {
       options: const ShowBottomSheetOptions(
         constraints: BoxConstraints(maxHeight: 500),
       ),
-      child: BlocProvider.value(
-        value: context.read<ComentarHiloBloc>(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider.value(
+            value: context.read<ComentarHiloBloc>(),
+          ),
+          BlocProvider.value(
+            value: context.read<GestorDeMediaBloc>(),
+          ),
+        ],
         child: const SliverPadding(
           padding: EdgeInsets.symmetric(vertical: 5),
           sliver: ComentarHiloOpciones(),

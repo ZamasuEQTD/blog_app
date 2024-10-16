@@ -43,6 +43,7 @@ extension DataDependencies on GetIt {
   }
 
   GetIt _addHilo() {
+    a();
     registerFactory(() => const GetHiloUseCase());
     registerFactory(() => GetComentariosDeHiloUsecase());
     return this;
@@ -51,6 +52,9 @@ extension DataDependencies on GetIt {
 
 extension iDS on GetIt {
   GetIt a() {
+    registerFactory(
+      () => MiniaturaStrategyContext(),
+    );
     registerFactory<IMiniaturaVideoGenerador>(
       () => VideoCompressMiniaturaGenerador(),
     );
