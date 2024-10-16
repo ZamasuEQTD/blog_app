@@ -7,4 +7,8 @@ sealed class MiniaturaGeneradorEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class GenerarMiniatura extends MiniaturaGeneradorEvent {}
+final class GenerarMiniatura extends MiniaturaGeneradorEvent {
+  final Media media;
+
+  const GenerarMiniatura({required this.media});
+}

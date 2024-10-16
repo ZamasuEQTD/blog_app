@@ -22,9 +22,3 @@ class AggregarTaggueo extends ComentarHiloEvent {
 
   const AggregarTaggueo({required this.tag});
 }
-
-class AgregarMedia extends ComentarHiloEvent {
-  final Media media;
-
-  const AgregarMedia({required this.media});
-}

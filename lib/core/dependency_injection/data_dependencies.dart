@@ -12,6 +12,7 @@ import 'package:blog_app/features/home/domain/usecases/get_home_portadas.dart';
 import 'package:blog_app/features/media/data/services/file_picker_gallery_service.dart';
 import 'package:blog_app/features/media/domain/abstractions/igallery_service.dart';
 import 'package:blog_app/features/media/domain/usecases/get_gallery_file_usecase.dart';
+import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
 import 'package:get_it/get_it.dart';
 
 extension DataDependencies on GetIt {
@@ -34,7 +35,8 @@ extension DataDependencies on GetIt {
     registerFactory<IHomeDatasource>(() => LocalHomeDatasource());
     registerFactory<IHomeRepository>(() => HomeRepository(get()));
     registerFactory<GetHomePortadasUseCase>(
-        () => GetHomePortadasUseCase(get()));
+      () => GetHomePortadasUseCase(get()),
+    );
     registerFactory<IHomeHub>(() => LocalHomeHub());
 
     return this;
@@ -43,6 +45,26 @@ extension DataDependencies on GetIt {
   GetIt _addHilo() {
     registerFactory(() => const GetHiloUseCase());
     registerFactory(() => GetComentariosDeHiloUsecase());
+    return this;
+  }
+}
+
+extension iDS on GetIt {
+  GetIt a() {
+    registerFactory<IMiniaturaVideoGenerador>(
+      () => VideoCompressMiniaturaGenerador(),
+    );
+
+    registerFactory<IMiniaturaStrategy>(
+      () => VideoMiniaturaStrategy(get()),
+      instanceName: "video",
+    );
+
+    registerFactory<IMiniaturaStrategy>(
+      () => ImagenMiniaturaStrategy(),
+      instanceName: "imagen",
+    );
+
     return this;
   }
 }

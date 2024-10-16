@@ -15,7 +15,7 @@ class Video extends Media {
 }
 
 class Imagen extends Media {
-  Imagen({required super.provider});
+  const Imagen({required super.provider});
 }
 
 abstract class MediaProvider {
@@ -34,13 +34,16 @@ class FileProvider extends MediaProvider {
 }
 
 class Youtube extends Video {
-  const Youtube(
-      {super.previsualizacion, required NetworkProvider super.provider});
+  const Youtube({
+    super.previsualizacion,
+    required NetworkProvider super.provider,
+  });
 
   factory Youtube.fromUrl(String url) {
     return Youtube(
-        previsualizacion: YoutubeService.miniaturaFromUrl(url),
-        provider: NetworkProvider(path: url));
+      previsualizacion: YoutubeService.miniaturaFromUrl(url),
+      provider: NetworkProvider(path: url),
+    );
   }
 }
 
@@ -49,7 +52,8 @@ class YoutubeService {
       RegExp(r'(youtu.*be.*)\/(watch\?v=|embed\/|v|shorts|)(.*?((?=[&#?])|$))');
 
   static RegExp youtubeLinkRegex = RegExp(
-      r'^https?:\/\/(www\.)?youtu(\.be\/|be\.com\/)(watch\?v=|embed\/|v\/|shorts\/)([A-Za-z0-9-_]{11})((?=[&#?])|$)');
+    r'^https?:\/\/(www\.)?youtu(\.be\/|be\.com\/)(watch\?v=|embed\/|v\/|shorts\/)([A-Za-z0-9-_]{11})((?=[&#?])|$)',
+  );
 
   static String miniaturaFromUrl(String url) =>
       miniaturaFromId(getVideoId(url));

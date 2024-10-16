@@ -12,11 +12,12 @@ class ComentarHiloState extends Equatable {
     this.taggueo,
   });
 
-  ComentarHiloState copyWith(
-          {String? texto,
-          Nullable<Spoileable<Media>>? media,
-          ComentarHiloStatus? status,
-          String? taggueo}) =>
+  ComentarHiloState copyWith({
+    String? texto,
+    Nullable<Spoileable<Media>>? media,
+    ComentarHiloStatus? status,
+    String? taggueo,
+  }) =>
       ComentarHiloState(
         texto: texto ?? this.texto,
         media: media != null ? media.value : this.media,
@@ -29,3 +30,9 @@ class ComentarHiloState extends Equatable {
 }
 
 enum ComentarHiloStatus { initial, enviando, enviado, failure }
+
+abstract class Texto {
+  final String texto;
+
+  const Texto({this.texto = ""});
+}

@@ -12,7 +12,7 @@ final class MiniaturaGeneradorInitial extends MiniaturaGeneradorState {}
 final class GenerandoMiniatura extends MiniaturaGeneradorState {}
 
 final class MiniaturaGenerada extends MiniaturaGeneradorState {
-  final String path;
+  final Imagen miniatura;
 
-  const MiniaturaGenerada({required this.path});
+  const MiniaturaGenerada({required this.miniatura});
 }

@@ -5,98 +5,38 @@ import 'package:blog_app/features/media/presentation/logic/bloc/miniatura_genera
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../domain/models/media.dart';
 
+import 'package:video_compress/video_compress.dart';
+
 class Miniatura extends StatelessWidget {
-  static const IMiniaturaFactory _factory = MiniaturaFactory();
   final Media media;
   const Miniatura({super.key, required this.media});
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: SizedBox(height: 80, width: 80, child: _factory.create(media)),
-    );
-  }
-}
-
-abstract class IMiniaturaFactory {
-  const IMiniaturaFactory();
-
-  Widget create(Media media);
-}
-
-class MiniaturaFactory extends IMiniaturaFactory {
-  const MiniaturaFactory();
-  @override
-  Widget create(Media media) {
-    switch (media) {
-      case Video video:
-        return VideoMiniatura(video: video);
-      case Imagen imagen:
-        return Image(image: imagen.toProvider());
-      default:
-        throw ArgumentError("");
-    }
-  }
-}
-
-class VideoMiniatura extends StatelessWidget {
-  final Video video;
-  const VideoMiniatura({super.key, required this.video});
-
-  @override
-  Widget build(BuildContext context) {
-    if (video.provider is FileProvider) {
-      return BlocProvider(
-        create: (context) => MiniaturaGeneradorBloc(video.provider.path),
-        child: BlocBuilder<MiniaturaGeneradorBloc, MiniaturaGeneradorState>(
-          builder: (context, state) {
-            switch (state) {
-              case MiniaturaGenerada state:
-                return Image.file(File(state.path));
-              default:
-                return Container();
-            }
-          },
+    return BlocProvider(
+      create: (context) =>
+          MiniaturaGeneradorBloc()..add(GenerarMiniatura(media: media)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: SizedBox(
+          height: 80,
+          width: 80,
+          child: BlocBuilder<MiniaturaGeneradorBloc, MiniaturaGeneradorState>(
+            builder: (context, state) {
+              if (state is! MiniaturaGenerada) {
+                const Skeletonizer.zone(child: Bone());
+              }
+              return Image(
+                image: (state as MiniaturaGenerada).miniatura.toProvider(),
+              );
+            },
+          ),
         ),
-      );
-    }
-    return Image.network(video.previsualizacion!);
-  }
-}
-
-class MiniaturaGenerador extends StatelessWidget {
-  final String path;
-  const MiniaturaGenerador({super.key, required this.path});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class ImagenMiniatura extends StatelessWidget {
-  final Imagen imagen;
-  const ImagenMiniatura({super.key, required this.imagen});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-
-class MiniaturaDatosOverlay extends StatelessWidget {
-  const MiniaturaDatosOverlay({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(5),
-      child: Align(
-        alignment: Alignment.topRight,
       ),
     );
   }
@@ -114,5 +54,62 @@ class UrlsDomains {
     }
 
     return _providers[uri.host]!;
+  }
+}
+
+class MiniaturaStrategyContext {
+  Future<Imagen> execute(String type, String path) {
+    GetIt services = GetIt.I;
+
+    IMiniaturaStrategy strategy = services.get(instanceName: type);
+
+    return strategy.execute(path);
+  }
+}
+
+abstract class IMiniaturaStrategy {
+  Future<Imagen> execute(String path);
+}
+
+class YoutubeMiniaturaStrategy extends IMiniaturaStrategy {
+  @override
+  Future<Imagen> execute(String path) {
+    return Future.value(
+      Imagen(
+        provider: NetworkProvider(path: YoutubeService.miniaturaFromUrl(path)),
+      ),
+    );
+  }
+}
+
+class VideoMiniaturaStrategy extends IMiniaturaStrategy {
+  final IMiniaturaVideoGenerador _generador;
+
+  VideoMiniaturaStrategy(this._generador);
+  @override
+  Future<Imagen> execute(String path) {
+    return _generador.generar(path);
+  }
+}
+
+class ImagenMiniaturaStrategy extends IMiniaturaStrategy {
+  @override
+  Future<Imagen> execute(String path) {
+    return Future.value(Imagen(provider: FileProvider(path: path)));
+  }
+}
+
+abstract class IMiniaturaVideoGenerador {
+  Future<Imagen> generar(String path);
+}
+
+class VideoCompressMiniaturaGenerador extends IMiniaturaVideoGenerador {
+  @override
+  Future<Imagen> generar(String path) async {
+    File miniatura = await VideoCompress.getFileThumbnail(
+      path,
+    );
+
+    return Imagen(provider: FileProvider(path: miniatura.path));
   }
 }

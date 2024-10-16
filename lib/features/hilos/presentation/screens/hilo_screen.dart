@@ -12,6 +12,7 @@ import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_
 import 'package:blog_app/features/encuestas/presentation/widgets/encuesta.dart';
 import 'package:blog_app/features/hilos/presentation/screens/widgets/comentario/comentario_card.dart';
 import 'package:blog_app/features/media/domain/usecases/get_gallery_file_usecase.dart';
+import 'package:blog_app/features/media/presentation/logic/bloc/bloc/gestor_de_media_bloc.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
 import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
@@ -69,7 +70,7 @@ class _HiloScreenState extends State<HiloScreen> {
           bottomSheet: BlocBuilder<HiloBloc, HiloState>(
             builder: (context, state) {
               if (state.status == HiloStatus.cargado) {
-                return const ComentarEnHilo();
+                return const ComentarHiloBottomSheet();
               }
               return Container();
             },
@@ -471,8 +472,8 @@ class TituloStyle extends TextStyle {
   const TituloStyle() : super(fontSize: 29, fontWeight: FontWeight.w900);
 }
 
-class ComentarEnHilo extends StatelessWidget {
-  const ComentarEnHilo({super.key});
+class ComentarHiloBottomSheet extends StatelessWidget {
+  const ComentarHiloBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -484,18 +485,19 @@ class ComentarEnHilo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            BlocBuilder<ComentarHiloBloc, ComentarHiloState>(
-              buildWhen: (previous, current) => previous.media != current.media,
+            BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
+              buildWhen: (previous, current) =>
+                  previous.medias != current.medias,
               builder: (context, state) {
-                if (state.media != null) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    child: Miniatura(
-                      media: state.media!.spoileable,
-                    ),
-                  );
-                }
-                return Container();
+                return Row(
+                  children: state.medias
+                      .map(
+                        (x) => Miniatura(
+                          media: x,
+                        ),
+                      )
+                      .toList(),
+                );
               },
             ),
             Row(
@@ -607,7 +609,7 @@ class ComentarHiloOpciones extends StatelessWidget {
                       value.fold((l) => null, (r) {
                         if (r != null) {
                           context
-                              .read<ComentarHiloBloc>()
+                              .read<GestorDeMediaBloc>()
                               .add(AgregarMedia(media: r));
                         }
                       });

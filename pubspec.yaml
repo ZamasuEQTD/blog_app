@@ -57,13 +57,14 @@ dependencies:
   path: ^1.9.0
   mime: ^1.0.5
   youtube_player_flutter: ^9.0.1
-  video_thumbnail: ^0.5.3
   font_awesome_flutter: ^10.7.0
   badges: ^3.1.2
   page_transition: ^2.1.0
   url_launcher: ^6.3.1
   modal_bottom_sheet: ^3.0.0
   skeletonizer: ^1.4.2
+  video_compress: ^3.1.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
