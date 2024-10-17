@@ -42,7 +42,9 @@ class ComentarioCard extends StatelessWidget {
             ),
             if (comentario.media != null)
               MediaEnComentario(comentario: comentario),
-            Text(comentario.texto),
+            TextoDeComentario(
+              comentario: comentario,
+            ),
           ],
         ),
       ),
@@ -196,6 +198,7 @@ class TextoDeComentario extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: spans,
+        style: const TextStyle(fontSize: 18),
       ),
     );
   }
@@ -209,7 +212,9 @@ class ComentarioCardCargando extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: const BoxDecoration(color: Color(0xfff5f5f5)),
+        decoration: const BoxDecoration(
+            color: Color(0xfff5f5f5),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         child: Column(
           children: [
             Row(

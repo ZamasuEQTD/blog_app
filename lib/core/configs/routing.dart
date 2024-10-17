@@ -1,6 +1,6 @@
 import 'package:blog_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:blog_app/features/auth/presentation/screens/registro_screen.dart';
-import 'package:blog_app/features/hilos/presentation/screens/hilo_screen.dart';
+import 'package:blog_app/features/hilos/presentation/screens/hilo/hilo_screen.dart';
 import 'package:blog_app/features/hilos/presentation/screens/postear_hilo_screen.dart';
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:blog_app/features/notificaciones/presentation/screens/notificaciones_screen.dart';
@@ -36,6 +36,6 @@ GoRouter routes = GoRouter(
     GoRoute(
       path: "/registro",
       builder: (context, state) => const RegistroScreen(),
-    )
+    ),
   ],
 );

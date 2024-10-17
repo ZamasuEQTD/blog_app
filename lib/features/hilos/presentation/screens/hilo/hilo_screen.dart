@@ -26,16 +26,16 @@ import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../common/widgets/inputs/decorations/decorations.dart';
-import '../../../encuestas/domain/models/encuesta.dart';
-import '../../domain/models/comentario.dart';
-import '../../domain/models/hilo.dart';
-import '../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
-import '../logic/bloc/hilo/hilo_bloc.dart';
+import '../../../../../common/widgets/inputs/decorations/decorations.dart';
+import '../../../../encuestas/domain/models/encuesta.dart';
+import '../../../domain/models/comentario.dart';
+import '../../../domain/models/hilo.dart';
+import '../../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
+import '../../logic/bloc/hilo/hilo_bloc.dart';
 
-import '../logic/controllers/taggueos_controller.dart';
-import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
-import 'widgets/comentar_hilo_bottom_sheet/comentar_hilo.dart';
+import '../../logic/controllers/taggueos_controller.dart';
+import '../../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
+import '../widgets/comentar_hilo_bottom_sheet/comentar_hilo.dart';
 
 class HiloScreen extends StatefulWidget {
   final HiloId id;
@@ -61,6 +61,7 @@ class _HiloScreenState extends State<HiloScreen> {
         child: Scaffold(
           body: BlocBuilder<HiloBloc, HiloState>(
             builder: (context, state) {
+              return const HiloScreenCargando();
               switch (state.status) {
                 case HiloStatus.cargado:
                   return _HiloScreenBody(hilo: state.hilo!);
@@ -123,7 +124,7 @@ class _HiloInformacion extends StatelessWidget {
         padding: const EdgeInsets.all(7),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-          color: Color(0xffE0E0E0),
+          color: Color(0xfff5f5f5),
         ),
         child: SafeArea(
           child: Padding(
@@ -565,6 +566,7 @@ class IrEnlaceExternoBottomSheet extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "Estás a punto de ser redirigido a $url. ¿Estás seguro de que deseas continuar?",
@@ -633,25 +635,60 @@ class HiloScreenCargando extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Skeletonizer.zone(
-            child: Column(
-              children: [
-                Bone(
-                  height: 200,
-                  width: double.infinity,
+    return Skeletonizer.zone(
+      effect: null,
+      enabled: false,
+      child: CustomScrollView(
+        slivers: [
+          const SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: ColoredBox(
+                  color: Color(0xfff5f5f5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Bone(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          height: 200,
+                          width: double.infinity,
+                        ),
+                      ),
+                      Bone.text(
+                        words: 3,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Bone.multiText(
+                        lines: 4,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                    ],
+                  ),
                 ),
-                Bone.multiText(
-                  lines: 4,
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                ),
-              ],
+              ),
+            ],
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            sliver: SliverToBoxAdapter(
+              child: Bone.text(
+                style: TextStyle(fontSize: 25),
+                words: 2,
+              ),
             ),
           ),
-        ),
-      ],
+          SliverMainAxisGroup(
+            slivers: List.generate(
+              10,
+              (index) =>
+                  const SliverToBoxAdapter(child: ComentarioCardCargando()),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
