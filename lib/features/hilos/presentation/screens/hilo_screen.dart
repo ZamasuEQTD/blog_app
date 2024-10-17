@@ -23,6 +23,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../common/widgets/inputs/decorations/decorations.dart';
@@ -34,6 +35,7 @@ import '../logic/bloc/hilo/hilo_bloc.dart';
 
 import '../logic/controllers/taggueos_controller.dart';
 import '../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
+import 'widgets/comentar_hilo_bottom_sheet/comentar_hilo.dart';
 
 class HiloScreen extends StatefulWidget {
   final HiloId id;
@@ -473,109 +475,6 @@ class TituloStyle extends TextStyle {
   const TituloStyle() : super(fontSize: 29, fontWeight: FontWeight.w900);
 }
 
-class ComentarHiloBottomSheet extends StatelessWidget {
-  const ComentarHiloBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
-              builder: (context, state) {
-                return Row(
-                  children: state.medias
-                      .map(
-                        (x) => GestureDetector(
-                          onTap: () => context
-                              .read<GestorDeMediaBloc>()
-                              .add(const EliminarMedia()),
-                          child: Miniatura(
-                            key: UniqueKey(),
-                            media: x,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
-            Row(
-              children: [
-                ColoredIconButton(
-                  onPressed: () => ComentarHiloOpciones.show(context),
-                  icon: const Icon(Icons.three_k_rounded),
-                ),
-                const _ComentarInput(),
-                ColoredIconButton(
-                  onPressed: () =>
-                      context.read<ComentarHiloBloc>().add(EnviarComentario()),
-                  icon: const Icon(Icons.send),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ComentarInput extends StatefulWidget {
-  const _ComentarInput({super.key});
-
-  @override
-  State<_ComentarInput> createState() => __ComentarInputState();
-}
-
-class __ComentarInputState extends State<_ComentarInput> {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  void initState() {
-    _controller.addListener(
-      () => context.read<ComentarHiloBloc>().add(
-            CambiarComentario(comentario: _controller.text),
-          ),
-    );
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<ComentarHiloBloc, ComentarHiloState>(
-      listenWhen: (previous, current) => previous.taggueo != current.taggueo,
-      listener: (context, state) {
-        if (state.taggueo != null) {
-          _controller.text = '${_controller.text}>>${state.taggueo}';
-        }
-      },
-      child: KeyboardVisibilityBuilder(
-        builder: (context, isKeyboardVisible) => Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: TextField(
-              controller: _controller,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: !isKeyboardVisible ? 1 : 4,
-              decoration: FlatInputDecoration(
-                borderRadius: 15,
-                hintText: "Escribe tu comentario...",
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class EncuestaDeHilo extends StatelessWidget {
   final Encuesta encuesta;
   const EncuestaDeHilo({super.key, required this.encuesta});
@@ -658,7 +557,8 @@ class ComentarHiloOpciones extends StatelessWidget {
 }
 
 class IrEnlaceExternoBottomSheet extends StatelessWidget {
-  const IrEnlaceExternoBottomSheet({super.key});
+  final String url;
+  const IrEnlaceExternoBottomSheet({super.key, required this.url});
 
   @override
   Widget build(BuildContext context) {
@@ -667,7 +567,7 @@ class IrEnlaceExternoBottomSheet extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Estás a punto de ser redirigido a . ¿Estás seguro de que deseas continuar?",
+            "Estás a punto de ser redirigido a $url. ¿Estás seguro de que deseas continuar?",
             style: TextStyle(
               fontSize: 15,
               color: Colors.black.withOpacity(0.8),
@@ -677,7 +577,7 @@ class IrEnlaceExternoBottomSheet extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => _launchUrl(Uri.parse("https://google.com")),
+              onPressed: () => _launchUrl(Uri.parse(url)),
               style:
                   FlatBtnStyle(boderRadius: BorderRadius.circular(3)).copyWith(
                 backgroundColor: const WidgetStatePropertyAll(Colors.black),
@@ -715,21 +615,43 @@ class IrEnlaceExternoBottomSheet extends StatelessWidget {
   }
 
   static void show(
-    BuildContext context,
-  ) {
+    BuildContext context, {
+    required String url,
+  }) {
     RoundedBottomSheet.show(
       context,
       options: const ShowBottomSheetOptions(),
-      child: const IrEnlaceExternoBottomSheet(),
+      child: IrEnlaceExternoBottomSheet(
+        url: url,
+      ),
     );
   }
 }
 
-class SpoileableMediaBox extends StatelessWidget {
-  const SpoileableMediaBox({super.key});
+class HiloScreenCargando extends StatelessWidget {
+  const HiloScreenCargando({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const SliverMainAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Skeletonizer.zone(
+            child: Column(
+              children: [
+                Bone(
+                  height: 200,
+                  width: double.infinity,
+                ),
+                Bone.multiText(
+                  lines: 4,
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }

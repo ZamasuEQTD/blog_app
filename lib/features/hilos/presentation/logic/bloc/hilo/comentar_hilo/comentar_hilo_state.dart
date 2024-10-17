@@ -1,38 +1,34 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'comentar_hilo_bloc.dart';
 
 class ComentarHiloState extends Equatable {
   final String texto;
-  final Spoileable<Media>? media;
   final ComentarHiloStatus status;
   final String? taggueo;
+  final bool enviando;
   const ComentarHiloState({
     this.status = ComentarHiloStatus.initial,
+    this.enviando = false,
     this.texto = "",
-    this.media,
     this.taggueo,
   });
 
+  @override
+  List<Object?> get props => [texto, taggueo, status, enviando];
+
   ComentarHiloState copyWith({
     String? texto,
-    Nullable<Spoileable<Media>>? media,
     ComentarHiloStatus? status,
     String? taggueo,
-  }) =>
-      ComentarHiloState(
-        texto: texto ?? this.texto,
-        media: media != null ? media.value : this.media,
-        status: status ?? this.status,
-        taggueo: taggueo,
-      );
-
-  @override
-  List<Object?> get props => [texto, media, status];
+    bool? enviando,
+  }) {
+    return ComentarHiloState(
+      texto: texto ?? this.texto,
+      status: status ?? this.status,
+      taggueo: taggueo ?? this.taggueo,
+      enviando: enviando ?? this.enviando,
+    );
+  }
 }
 
 enum ComentarHiloStatus { initial, enviando, enviado, failure }
-
-abstract class Texto {
-  final String texto;
-
-  const Texto({this.texto = ""});
-}
