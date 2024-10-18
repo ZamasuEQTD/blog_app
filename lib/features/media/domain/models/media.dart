@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 
 abstract class Media extends Equatable {
   final MediaProvider provider;
+  final TipoDeMedia tipo;
   const Media({
     required this.provider,
+    required this.tipo,
   });
 
   @override
@@ -16,11 +18,11 @@ class Video extends Media {
   const Video({
     this.previsualizacion,
     required super.provider,
-  });
+  }) : super(tipo: TipoDeMedia.video);
 }
 
 class Imagen extends Media {
-  const Imagen({required super.provider});
+  const Imagen({required super.provider}) : super(tipo: TipoDeMedia.imagen);
 }
 
 abstract class MediaProvider extends Equatable {
@@ -41,15 +43,13 @@ class FileProvider extends MediaProvider {
   const FileProvider({required super.path});
 }
 
-class Youtube extends Video {
+class Youtube extends Media {
   const Youtube({
-    super.previsualizacion,
     required NetworkProvider super.provider,
-  });
+  }) : super(tipo: TipoDeMedia.youtube);
 
   factory Youtube.fromUrl(String url) {
     return Youtube(
-      previsualizacion: YoutubeService.miniaturaFromUrl(url),
       provider: NetworkProvider(path: url),
     );
   }
@@ -76,4 +76,17 @@ class YoutubeService {
 
   static String miniaturaFromId(String id) =>
       'https://img.youtube.com/vi/$id/1.jpg';
+}
+
+class TipoDeMedia extends Equatable {
+  final String value;
+
+  const TipoDeMedia(this.value);
+
+  @override
+  List<Object?> get props => [value];
+
+  static const video = TipoDeMedia("video");
+  static const imagen = TipoDeMedia("imagen");
+  static const youtube = TipoDeMedia("youtube");
 }

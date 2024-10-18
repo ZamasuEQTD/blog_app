@@ -12,8 +12,7 @@ import 'package:badges/badges.dart' as badges;
 import '../../domain/models/home_portada_entry.dart';
 import '../logic/bloc/home_portadas_bloc.dart';
 import '../widgets/portada/bottom_sheet/opciones_bottom_sheet.dart';
-import '../widgets/portada/portada_card.dart';
-import '../widgets/portada/home_portada_cargando.dart';
+import 'widgets/portada_card.dart';
 
 class HomeScreen extends StatefulWidget {
   static const SliverGridDelegate _delegate =
@@ -129,8 +128,6 @@ class _HomePortadasGrid extends StatefulWidget {
 }
 
 class _HomePortadasGridState extends State<_HomePortadasGrid> {
-  static const Widget _cargando = HomePortadaCargando();
-
   final IHomeHub _hub = GetIt.I.get();
 
   @override
@@ -162,7 +159,7 @@ class _HomePortadasGridState extends State<_HomePortadasGrid> {
             gridDelegate: HomeScreen._delegate,
             itemBuilder: (context, index) {
               if (index > state.portadas.length) {
-                return _cargando;
+                return const PortadaCard.cargando();
               }
 
               PortadaEntity entry = state.portadas[index];

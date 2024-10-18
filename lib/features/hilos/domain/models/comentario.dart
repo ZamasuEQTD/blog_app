@@ -15,6 +15,7 @@ class ComentarioModel extends ComentarioEntry {
   final DatosDeComentario datos;
   final Autor autor;
   final Spoileable<Media>? media;
+  final List<String> tags = const [];
   const ComentarioModel({
     required this.id,
     required this.texto,

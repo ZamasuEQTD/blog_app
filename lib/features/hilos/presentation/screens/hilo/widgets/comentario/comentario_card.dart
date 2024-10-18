@@ -1,22 +1,18 @@
-import 'dart:collection';
 import 'dart:developer';
 
-import 'package:blog_app/common/widgets/effects/gradient/animated_gradient.dart';
-import 'package:blog_app/common/widgets/tag/tag.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
+import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/features/hilos/domain/models/comentario.dart';
-import 'package:blog_app/features/hilos/presentation/logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
-import 'package:blog_app/features/hilos/presentation/screens/hilo_screen.dart';
-import 'package:blog_app/features/hilos/presentation/screens/widgets/comentario/widgets/colores.dart';
+import 'package:blog_app/features/hilos/presentation/screens/hilo/widgets/comentario/widgets/colores.dart';
 import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../../../common/domain/services/horarios_service.dart';
-import '../../../../../../common/logic/services/color_picker.dart';
-import '../../../../../../common/widgets/media/widgets/spoiler_media.dart';
+import '../../../../../../../common/domain/services/horarios_service.dart';
+import '../../../../../../../common/widgets/media/widgets/spoiler_media.dart';
+import '../../abrir_enlace_externo_bottom_sheet.dart';
 import 'widgets/tags.dart';
 
 class ComentarioCard extends StatelessWidget {
@@ -37,6 +33,25 @@ class ComentarioCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ComentarioInfoRow(comentario: comentario),
+            Wrap(
+              runSpacing: 2,
+              spacing: 3,
+              children: comentario.tags
+                  .map(
+                    (tag) => GestureDetector(
+                      onTap: () {
+                        log(tag);
+                      },
+                      child: Text(
+                        ">>$tag",
+                        style: const TextStyle(
+                          color: CupertinoColors.link,
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
             const SizedBox(
               height: 5,
             ),
@@ -175,7 +190,7 @@ class TextoDeComentario extends StatelessWidget {
           recognizer: TapGestureRecognizer()
             ..onTap = () {
               if (!match.$2) {
-                IrEnlaceExternoBottomSheet.show(
+                AbrirEnlaceExternoBottomSheet.show(
                   context,
                   url: m.group(0).toString(),
                 );
@@ -213,8 +228,9 @@ class ComentarioCardCargando extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: const BoxDecoration(
-            color: Color(0xfff5f5f5),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
+          color: Color(0xfff5f5f5),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
         child: Column(
           children: [
             Row(

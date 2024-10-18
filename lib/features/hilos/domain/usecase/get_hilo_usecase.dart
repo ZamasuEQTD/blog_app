@@ -12,7 +12,8 @@ class GetHiloUseCase extends IUsecase<GetHiloRequest, Hilo> {
   @override
   Future<Either<Failure, Hilo>> handle(GetHiloRequest request) async {
     await Future.delayed(const Duration(seconds: 3));
-    return Right(Hilo(
+    return Right(
+      Hilo(
         comentarios: 20,
         esOp: false,
         id: "id",
@@ -23,21 +24,30 @@ class GetHiloUseCase extends IUsecase<GetHiloRequest, Hilo> {
         banderas: [
           BanderasDeHilo.dados,
           BanderasDeHilo.encuesta,
-          BanderasDeHilo.idUnico
+          BanderasDeHilo.idUnico,
         ],
-        categoria: Subcategoria(
-            "id",
-            "NSFW",
-            Imagen(
-                provider: const NetworkProvider(
-                    path: "https://i.redd.it/eopud74baswa1.png"))),
+        categoria: const Subcategoria(
+          "id",
+          "NSFW",
+          Imagen(
+            provider: NetworkProvider(
+              path: "https://i.redd.it/eopud74baswa1.png",
+            ),
+          ),
+        ),
         portada: const Spoileable(
-            false,
-            Video(
-                previsualizacion: "https://i.redd.it/eopud74baswa1.png",
-                provider: NetworkProvider(
-                    path:
-                        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")))));
+          false,
+          Video(
+            previsualizacion: "https://i.redd.it/eopud74baswa1.png",
+            provider: NetworkProvider(
+              path:
+                  "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            ),
+          ),
+        ),
+        autor: const Autor(id: "id", autor: "Gatubi", rango: "MOD"),
+      ),
+    );
   }
 }
 

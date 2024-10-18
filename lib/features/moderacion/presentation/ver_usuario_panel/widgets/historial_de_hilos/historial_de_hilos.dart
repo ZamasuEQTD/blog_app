@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
-import 'package:blog_app/features/home/presentation/widgets/portada/portada_card.dart';
+import 'package:blog_app/features/home/presentation/screens/widgets/portada_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -54,10 +54,10 @@ class _HistorialDeHilosPosteadosState extends State<HistorialDeHilosPosteados> {
           itemCount: state.portadas.length,
           itemBuilder: (context, index) => PortadaCard(
             portada: PortadaEntity(
-              imagen: Spoileable(
+              imagen: const Spoileable(
                 true,
                 Imagen(
-                  provider: const NetworkProvider(
+                  provider: NetworkProvider(
                     path:
                         "https://preview.redd.it/evie-templeton-is-portraying-laura-in-sh2-remake-and-the-v0-mc2fhcpkwq3d1.jpg?width=1080&crop=smart&auto=webp&s=a19290370f885c41d28cd175d03da150db609696",
                   ),

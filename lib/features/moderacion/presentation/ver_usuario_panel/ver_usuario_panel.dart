@@ -1,10 +1,5 @@
 import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
 import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
-import 'package:blog_app/features/home/domain/models/home_portada_entry.dart';
-import 'package:blog_app/features/home/presentation/widgets/portada/portada_card.dart';
-import 'package:blog_app/features/media/domain/models/media.dart';
-import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
-import 'package:blog_app/features/moderacion/domain/models/historia_entry.dart';
 import 'package:blog_app/features/moderacion/domain/models/vista_de_usuario.dart';
 import 'package:blog_app/features/moderacion/presentation/logic/bloc/ver_usuario/ver_usuario_bloc.dart';
 import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel/widgets/historial_de_comentarios/historial_de_comentarios.dart';

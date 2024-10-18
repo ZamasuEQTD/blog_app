@@ -1,11 +1,7 @@
 import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
-import 'package:blog_app/common/widgets/skeleton/skeleton.dart';
 import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
-import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';

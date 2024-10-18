@@ -37,6 +37,11 @@ class RoundedBottomSheet extends StatelessWidget {
     required Widget child,
     String? titulo,
   }) {
+    Widget rounded = RoundedBottomSheet(
+      titulo: titulo,
+      child: child,
+    );
+
     showMaterialModalBottomSheet(
       context: context,
       isDismissible: options.isDimissible,
@@ -44,15 +49,9 @@ class RoundedBottomSheet extends StatelessWidget {
       builder: (context) => options.builder != null
           ? options.builder!(
               context,
-              RoundedBottomSheet(
-                titulo: titulo,
-                child: child,
-              ),
+              rounded,
             )
-          : RoundedBottomSheet(
-              titulo: titulo,
-              child: child,
-            ),
+          : rounded,
     );
   }
 }

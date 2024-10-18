@@ -15,12 +15,12 @@ class Hilo {
   final EstadoDeHilo estado;
   final Subcategoria categoria;
   final Spoileable<Media> portada;
+  final Autor autor;
   final Encuesta? encuesta;
   final List<BanderasDeHilo> banderas;
   final int comentarios;
   final bool esOp;
-
-  const Hilo({
+  Hilo({
     required this.id,
     required this.titulo,
     required this.descripcion,
@@ -28,6 +28,7 @@ class Hilo {
     required this.estado,
     required this.categoria,
     required this.portada,
+    required this.autor,
     this.encuesta,
     required this.banderas,
     required this.comentarios,
@@ -42,7 +43,8 @@ class Hilo {
     EstadoDeHilo? estado,
     Subcategoria? categoria,
     Spoileable<Media>? portada,
-    ValueGetter<Encuesta?>? encuesta,
+    Autor? autor,
+    Encuesta? encuesta,
     List<BanderasDeHilo>? banderas,
     int? comentarios,
     bool? esOp,
@@ -55,12 +57,21 @@ class Hilo {
       estado: estado ?? this.estado,
       categoria: categoria ?? this.categoria,
       portada: portada ?? this.portada,
-      encuesta: encuesta != null ? encuesta() : this.encuesta,
+      autor: autor ?? this.autor,
+      encuesta: encuesta ?? this.encuesta,
       banderas: banderas ?? this.banderas,
       comentarios: comentarios ?? this.comentarios,
       esOp: esOp ?? this.esOp,
     );
   }
+}
+
+class Autor {
+  final String? id;
+  final String autor;
+  final String rango;
+
+  const Autor({required this.id, required this.autor, required this.rango});
 }
 
 typedef HiloId = String;

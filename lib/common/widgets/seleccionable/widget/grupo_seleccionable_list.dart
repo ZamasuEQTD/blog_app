@@ -46,11 +46,16 @@ class ItemGrupoSliverList extends StatelessWidget {
   static List<Widget> GenerarSlivers(List<GrupoSeleccionable> grupos) {
     List<Widget> slivers = [];
 
-    for (var grupo in grupos) {
-      Widget child = SliverPadding(
-        padding: const EdgeInsets.only(bottom: 10),
-        sliver: ItemGrupoSliverList(grupo: grupo),
-      );
+    for (var i = 0; i < grupos.length; i++) {
+      Widget child = ItemGrupoSliverList(grupo: grupos[i]);
+
+      if (i != grupos.length - 1) {
+        child = SliverPadding(
+          padding: const EdgeInsets.only(bottom: 5),
+          sliver: child,
+        );
+      }
+
       slivers.add(child);
     }
 

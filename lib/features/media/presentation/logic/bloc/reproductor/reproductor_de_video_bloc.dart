@@ -46,14 +46,16 @@ class ReproductorDeVideoBloc
     CambiarParametros event,
     Emitter<ReproductorDeVideoState> emit,
   ) {
-    emit(state.copyWith(
-      buffering: event.buffering,
-      pantalla_completa: event.pantalla_completa,
-      position: event.position,
-      volumen: event.volumen,
-      reproductor: event.reproductor,
-      reproduciendo: event.reproduciendo,
-    ));
+    emit(
+      state.copyWith(
+        buffering: event.buffering,
+        pantalla_completa: event.pantalla_completa,
+        position: event.position,
+        volumen: event.volumen,
+        reproductor: event.reproductor,
+        reproduciendo: event.reproduciendo,
+      ),
+    );
   }
 }
 

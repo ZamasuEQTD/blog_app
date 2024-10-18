@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:blog_app/common/widgets/effects/gradient/animated_gradient.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../domain/models/comentario.dart';
+import '../../../../../../domain/models/comentario.dart';
 
 class ColorDeComentario extends StatelessWidget {
   static final HashMap<ColoresDeComentario, Widget> _colores = HashMap.from({
