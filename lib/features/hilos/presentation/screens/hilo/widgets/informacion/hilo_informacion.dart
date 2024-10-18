@@ -4,7 +4,9 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'package:blog_app/common/widgets/seleccionable/logic/class/item.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 
 import '../../../../../../../common/domain/services/horarios_service.dart';
@@ -39,38 +41,28 @@ class HiloInformacion extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //banderas
-                _Banderas(
+                _BanderasDeHilo(
                   hilo: hilo,
                 ),
-                //subcategoria
+                const Subcategoria(subcategoria: "subcategoria"),
                 _Subcategoria(hilo: hilo),
-                const SizedBox(
-                  height: 5,
-                ),
-                //acciones
                 _HiloAccionesRow(hilo: hilo),
-                //encuesta
-                //portada
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 5),
-                  child: MultiMediaDisplay(
-                    media: hilo.portada.spoileable,
-                    dimensionableBuilder: (child) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: MediaSpoileable(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxHeight: 400,
-                              maxWidth: double.infinity,
-                            ),
-                            child: child,
+                MultiMediaDisplay(
+                  media: hilo.portada.spoileable,
+                  dimensionableBuilder: (child) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: MediaSpoileable(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxHeight: 400,
+                            maxWidth: double.infinity,
                           ),
+                          child: child,
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
                 Text(
                   hilo.titulo,
@@ -208,15 +200,15 @@ class _Subcategoria extends StatelessWidget {
   }
 }
 
-class _Banderas extends StatelessWidget {
+class _BanderasDeHilo extends StatelessWidget {
   static final HashMap<BanderasDeHilo, Widget> _banderas = HashMap.from({
-    BanderasDeHilo.dados: const Icon(Icons.casino_outlined),
-    BanderasDeHilo.encuesta: const Icon(Icons.bar_chart_outlined),
-    BanderasDeHilo.sticky: const Icon(CupertinoIcons.pin),
-    BanderasDeHilo.idUnico: const Icon(Icons.person_outline),
+    BanderasDeHilo.dados: const HiloIcon.dados(),
+    BanderasDeHilo.encuesta: const HiloIcon.encuesta(),
+    BanderasDeHilo.sticky: const HiloIcon.destacado(),
+    BanderasDeHilo.idUnico: const HiloIcon.idUnico(),
   });
 
-  const _Banderas({
+  const _BanderasDeHilo({
     super.key,
     required this.hilo,
   });
@@ -232,17 +224,19 @@ class _Banderas extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 5),
-      margin: const EdgeInsets.only(bottom: 5),
       child: Row(
         children: [
           const BackButton(),
           ...hilo.banderas.map(
-            (bandera) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2),
-              child: OutlinedIcon(
-                child: Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: _banderas[bandera]!,
+            (bandera) => SizedBox(
+              height: 30,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: OutlinedIcon(
+                  child: Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: FittedBox(child: _banderas[bandera]!),
+                  ),
                 ),
               ),
             ),
@@ -324,6 +318,141 @@ class _OcultarHilo extends HiloAccionDeUsuario {
     return HiloAccionDeUsuario(
       onTap: () {},
       child: const Icon(Icons.remove_red_eye),
+    );
+  }
+}
+
+abstract class HiloIcon extends StatelessWidget {
+  const HiloIcon._({super.key});
+
+  const factory HiloIcon.destacado({Color? color}) = _DestacadoIcon;
+  const factory HiloIcon.encuesta({Color? color}) = _EncuestaIcon;
+  const factory HiloIcon.dados({Color? color}) = _DadosIcon;
+  const factory HiloIcon.idUnico({Color? color}) = _IdUnicoIcon;
+}
+
+class _DestacadoIcon extends HiloIcon {
+  final Color? color;
+  const _DestacadoIcon({
+    this.color,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FaIcon(FontAwesomeIcons.thumbtack, color: color);
+  }
+}
+
+class _DadosIcon extends HiloIcon {
+  final Color? color;
+
+  const _DadosIcon({
+    this.color,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FaIcon(
+      FontAwesomeIcons.diceFour,
+      color: color,
+    );
+  }
+}
+
+class _EncuestaIcon extends HiloIcon {
+  final Color? color;
+
+  const _EncuestaIcon({
+    this.color,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FaIcon(
+      FontAwesomeIcons.chartSimple,
+      color: color,
+    );
+  }
+}
+
+class _IdUnicoIcon extends HiloIcon {
+  final Color? color;
+
+  const _IdUnicoIcon({
+    this.color,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FaIcon(
+      FontAwesomeIcons.user,
+      color: color,
+    );
+  }
+}
+
+abstract class Subcategoria extends StatelessWidget {
+  const Subcategoria._({super.key});
+
+  const factory Subcategoria({
+    void Function()? onTap,
+    Widget? trailing,
+    required String subcategoria,
+  }) = _Subcategorias;
+}
+
+class _SubcategoriaCargando extends Subcategoria {
+  const _SubcategoriaCargando({super.key}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
+class _Subcategorias extends Subcategoria {
+  final Widget? trailing;
+  final void Function()? onTap;
+  final String subcategoria;
+
+  const _Subcategorias({
+    this.trailing,
+    this.onTap,
+    required this.subcategoria,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: ItemSeleccionable(
+          onTap: onTap,
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: const SizedBox(
+              height: 35,
+              width: 35,
+              child: Image(
+                image: NetworkImage(
+                  "https://ae01.alicdn.com/kf/HTB1.H2xXsnrK1RkHFrdq6xCoFXag/CANDYDOLL-New-Girls-High-end-Jacquard-Dress-Sleeveless-Children-s-Princess-Dress-Black-Printed-Knee-dress.jpg",
+                ),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          titulo: Text(
+            subcategoria,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+          trailing: trailing,
+        ),
+      ),
     );
   }
 }

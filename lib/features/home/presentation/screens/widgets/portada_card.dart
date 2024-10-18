@@ -2,6 +2,7 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:blog_app/features/hilos/presentation/screens/hilo/widgets/informacion/hilo_informacion.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -180,10 +181,10 @@ abstract class PortadaCardTag extends StatelessWidget {
   const PortadaCardTag._({super.key});
 
   const factory PortadaCardTag({
-    required Color background,
-    required Widget child,
     Key? key,
+    required Color background,
     required EdgeInsets padding,
+    required Widget child,
   }) = _PortadaCardTag;
 
   const factory PortadaCardTag.text({
@@ -197,7 +198,7 @@ abstract class PortadaCardTag extends StatelessWidget {
   const factory PortadaCardTag.nuevo() = _EsNuevoPortadaCardTag;
 
   const factory PortadaCardTag.icon({
-    required Color background,
+    Color? background,
     required Widget child,
   }) = _PortadaCardIconTag;
 
@@ -215,14 +216,14 @@ abstract class PortadaCardTag extends StatelessWidget {
 class _PortadaCardTag extends PortadaCardTag {
   static const double height = 22;
 
-  final Widget child;
   final Color background;
   final EdgeInsets padding;
+  final Widget child;
   const _PortadaCardTag({
     super.key,
     required this.background,
-    required this.child,
     required this.padding,
+    required this.child,
   }) : super._();
 
   @override
@@ -252,8 +253,11 @@ class _TextPortadaCardTag extends PortadaCardTag {
     return PortadaCardTag(
       background: background,
       padding: _padding,
-      child: FittedBox(
-        child: Text(tag),
+      child: Text(
+        tag,
+        style: const TextStyle(
+          fontWeight: FontWeight.w900,
+        ),
       ),
     );
   }
@@ -266,7 +270,10 @@ class _CategoriaPortadaCardTag extends PortadaCardTag {
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return PortadaCardTag.text(background: Colors.blue, tag: categoria);
+    return PortadaCardTag.text(
+      background: const Color.fromRGBO(187, 247, 208, 1),
+      tag: categoria,
+    );
   }
 }
 
@@ -274,28 +281,37 @@ class _EsNuevoPortadaCardTag extends PortadaCardTag {
   const _EsNuevoPortadaCardTag({super.key}) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaCardTag.text(background: Colors.green, tag: "Nuevo");
+    return const PortadaCardTag.text(
+      background: Color.fromRGBO(199, 210, 254, 1),
+      tag: "Nuevo",
+    );
   }
 }
 
 class _PortadaCardIconTag extends PortadaCardTag {
   static EdgeInsets padding = const EdgeInsets.all(2);
 
-  final Color background;
+  final Color? background;
   final Widget child;
 
   const _PortadaCardIconTag({
-    required this.background,
+    this.background,
     required this.child,
   }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return PortadaCardTag(
-      background: background,
-      padding: padding,
-      child: FittedBox(
-        child: child,
+    return SizedBox(
+      width: 22,
+      child: PortadaCardTag(
+        background: background ?? const Color.fromRGBO(191, 219, 254, 1),
+        padding: padding,
+        child: Padding(
+          padding: padding,
+          child: FittedBox(
+            child: child,
+          ),
+        ),
       ),
     );
   }
@@ -308,8 +324,10 @@ class _PortadaCardDestacadoIconTag extends PortadaCardTag {
   @override
   Widget build(BuildContext context) {
     return const PortadaCardTag.icon(
-      background: Colors.yellow,
-      child: Icon(Icons.pin),
+      background: Color.fromRGBO(254, 240, 138, 1),
+      child: HiloIcon.destacado(
+        color: Color.fromRGBO(31, 41, 55, 1),
+      ),
     );
   }
 }
@@ -321,8 +339,7 @@ class _PortadaCardEncuestaIconTag extends PortadaCardTag {
   @override
   Widget build(BuildContext context) {
     return const PortadaCardTag.icon(
-      background: Colors.yellow,
-      child: Icon(Icons.pin),
+      child: HiloIcon.encuesta(),
     );
   }
 }
@@ -334,8 +351,7 @@ class _PortadaCardDadosIconTag extends PortadaCardTag {
   @override
   Widget build(BuildContext context) {
     return const PortadaCardTag.icon(
-      background: Colors.yellow,
-      child: Icon(Icons.pin),
+      child: HiloIcon.dados(),
     );
   }
 }
@@ -347,8 +363,7 @@ class _PortadaCardIdunicoIconTag extends PortadaCardTag {
   @override
   Widget build(BuildContext context) {
     return const PortadaCardTag.icon(
-      background: Colors.yellow,
-      child: Icon(Icons.pin),
+      child: HiloIcon.idUnico(),
     );
   }
 }
