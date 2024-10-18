@@ -4,13 +4,13 @@ import 'package:blog_app/features/hilos/domain/models/comentario.dart';
 import 'package:dartz/dartz.dart';
 
 class GetComentariosDeHiloUsecase
-    extends IUsecase<GetComentariosDeHiloRequest, List<ComentarioModel>> {
+    extends IUsecase<GetComentariosDeHiloRequest, List<ComentarioEntity>> {
   @override
-  Future<Either<Failure, List<ComentarioModel>>> handle(
+  Future<Either<Failure, List<ComentarioEntity>>> handle(
     GetComentariosDeHiloRequest request,
   ) async {
     return Right([
-      ComentarioModel(
+      ComentarioEntity(
         autor: const Autor(
           nombre: "Gatubi",
           rango: "Moderador",

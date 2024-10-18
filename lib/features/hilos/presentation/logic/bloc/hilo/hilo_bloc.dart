@@ -36,43 +36,66 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
     var result = await _getHiloUseCase.handle(GetHiloRequest(id: id));
 
     result.fold(
-        (l) => emit(state.copyWith(status: HiloStatus.initial)),
-        (r) => emit(
-              state.copyWith(hilo: r, status: HiloStatus.cargado),
-            ));
+      (l) => emit(state.copyWith(status: HiloStatus.initial)),
+      (r) => emit(
+        state.copyWith(hilo: r, status: HiloStatus.cargado),
+      ),
+    );
   }
 
   void _onEliminarHilo(EliminarHilo event, Emitter<HiloState> emit) {
-    emit(state.copyWith(
-        hilo: state.hilo!.copyWith(estado: EstadoDeHilo.eliminado)));
+    emit(
+      state.copyWith(
+        hilo: state.hilo!.copyWith(estado: EstadoDeHilo.eliminado),
+      ),
+    );
   }
 
   Future _onCargarComentarios(
-      CargarComentarios event, Emitter<HiloState> emit) async {
-    List<ComentarioEntry> comentarios = state.comentarios;
+    CargarComentarios event,
+    Emitter<HiloState> emit,
+  ) async {
+    List<ComentarioEntity> comentarios = state.comentarios;
 
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         comentariosStatus: ComentariosStatus.cargado,
-        comentarios: [...comentarios]));
+        comentarios: [...comentarios],
+      ),
+    );
 
     var result = await _getComentariosDeHiloUsecase
         .handle(GetComentariosDeHiloRequest());
 
     result.fold(
-        (l) =>
-            emit(state.copyWith(comentariosStatus: ComentariosStatus.failure)),
-        (r) => emit(state.copyWith(comentarios: [...comentarios, ...r])));
+      (l) => emit(state.copyWith(comentariosStatus: ComentariosStatus.failure)),
+      (r) => emit(state.copyWith(comentarios: [...comentarios, ...r])),
+    );
   }
 
   void _onEliminarComentario(
-      EliminarComentario event, Emitter<HiloState> emit) {
-    emit(state.copyWith(
+    EliminarComentario event,
+    Emitter<HiloState> emit,
+  ) {
+    emit(
+      state.copyWith(
         comentarios: state.comentarios
-            .where((c) => c is ComentarioModel ? c.id != event.id : true)
-            .toList()));
+            .where((c) => c is ComentarioEntity ? c.id != event.id : true)
+            .toList(),
+      ),
+    );
   }
 
   void _onAgregarComentario(AgregarComentario event, Emitter<HiloState> emit) {
-    emit(state.copyWith(comentarios: [...state.comentarios, event.comentario]));
+    emit(
+      state.copyWith(
+        comentarios: [
+          event.comentario,
+          ...state.comentarios.map((c) {
+            return c;
+          }),
+        ],
+      ),
+    );
   }
 }

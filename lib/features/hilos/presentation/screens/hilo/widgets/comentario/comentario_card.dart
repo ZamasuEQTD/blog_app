@@ -1,71 +1,22 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:blog_app/common/widgets/seleccionable/logic/class/grupo_seleccionable.dart';
 import 'package:blog_app/common/widgets/seleccionable/logic/class/item_seleccionable.dart';
 import 'package:blog_app/features/hilos/domain/models/comentario.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo/widgets/comentario/widgets/colores.dart';
 import 'package:blog_app/features/media/presentation/widgets/media_box/media_box.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../../common/domain/services/horarios_service.dart';
 import '../../../../../../../common/widgets/media/widgets/spoiler_media.dart';
 import '../../abrir_enlace_externo_bottom_sheet.dart';
 import 'widgets/tags.dart';
-
-class ComentarioCard extends StatelessWidget {
-  final ComentarioModel comentario;
-  const ComentarioCard({super.key, required this.comentario});
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xffF5F5F5),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ComentarioInfoRow(comentario: comentario),
-            Wrap(
-              runSpacing: 2,
-              spacing: 3,
-              children: comentario.tags
-                  .map(
-                    (tag) => GestureDetector(
-                      onTap: () {
-                        log(tag);
-                      },
-                      child: Text(
-                        ">>$tag",
-                        style: const TextStyle(
-                          color: CupertinoColors.link,
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            if (comentario.media != null)
-              MediaEnComentario(comentario: comentario),
-            TextoDeComentario(
-              comentario: comentario,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class ComentarioInfoRow extends StatelessWidget {
   const ComentarioInfoRow({
@@ -73,7 +24,7 @@ class ComentarioInfoRow extends StatelessWidget {
     required this.comentario,
   });
 
-  final ComentarioModel comentario;
+  final ComentarioEntity comentario;
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +38,10 @@ class ComentarioInfoRow extends StatelessWidget {
               ColorDeComentario(comentario: comentario),
               Row(
                 children: [
-                  const SizedBox(width: 5),
                   Text(
                     comentario.autor.nombre,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(width: 5),
                   TagsDeComentarios(comentario: comentario),
                 ],
               ),
@@ -116,7 +65,7 @@ class MediaEnComentario extends StatelessWidget {
     required this.comentario,
   });
 
-  final ComentarioModel comentario;
+  final ComentarioEntity comentario;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +98,7 @@ class TextoDeComentario extends StatelessWidget {
     r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?',
   );
 
-  final ComentarioModel comentario;
+  final ComentarioEntity comentario;
 
   String get texto => comentario.texto;
 
@@ -219,57 +168,132 @@ class TextoDeComentario extends StatelessWidget {
   }
 }
 
-class ComentarioCardCargando extends StatelessWidget {
-  const ComentarioCardCargando({super.key});
+abstract class ComentarioCard extends StatelessWidget {
+  const ComentarioCard._({super.key});
+
+  const factory ComentarioCard({
+    Key? key,
+    required ComentarioEntity comentario,
+  }) = _ComentarioCard;
+
+  const factory ComentarioCard.base({required Widget child}) =
+      _ComentarioCardBase;
+
+  const factory ComentarioCard.cargando() = _ComentarioCargando;
+}
+
+class _ComentarioCardBase extends ComentarioCard {
+  final Widget child;
+
+  const _ComentarioCardBase({
+    required this.child,
+  }) : super._();
+
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer.zone(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-        decoration: const BoxDecoration(
-          color: Color(0xfff5f5f5),
-          borderRadius: BorderRadius.all(Radius.circular(10)),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+          child: ColoredBox(
+            color: const Color(0xffF5F5F5),
+            child: child,
+          ),
         ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Row(
-                  children: [
-                    Bone.square(
-                      size: 50,
-                      borderRadius: BorderRadius.circular(5),
+      ),
+    );
+  }
+}
+
+class _ComentarioCard extends ComentarioCard {
+  final ComentarioEntity comentario;
+  const _ComentarioCard({
+    super.key,
+    required this.comentario,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return ComentarioCard.base(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ComentarioInfoRow(comentario: comentario),
+          Wrap(
+            runSpacing: 2,
+            spacing: 3,
+            children: comentario.tags
+                .map(
+                  (tag) => GestureDetector(
+                    onTap: () {
+                      log(tag);
+                    },
+                    child: Text(
+                      ">>$tag",
+                      style: const TextStyle(
+                        color: CupertinoColors.link,
+                      ),
                     ),
-                    const SizedBox(width: 5),
-                    Row(
-                      children: [
-                        Bone(
-                          width: 60,
-                          height: 16,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Bone(
-                          width: 60,
-                          height: 16,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Bone.multiText(
-              lines: 3,
-              borderRadius: BorderRadius.circular(5),
-            ),
-          ],
-        ),
+                  ),
+                )
+                .toList(),
+          ),
+          if (comentario.media != null)
+            MediaEnComentario(comentario: comentario),
+          TextoDeComentario(
+            comentario: comentario,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ComentarioCargando extends ComentarioCard {
+  const _ComentarioCargando() : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ComentarioCard.base(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Row(
+                children: [
+                  Bone.square(
+                    size: 50,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  const SizedBox(width: 5),
+                  Row(
+                    children: [
+                      Bone(
+                        width: 60,
+                        height: 16,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Bone(
+                        width: 60,
+                        height: 16,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Bone.multiText(
+            lines: 3,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ],
       ),
     );
   }

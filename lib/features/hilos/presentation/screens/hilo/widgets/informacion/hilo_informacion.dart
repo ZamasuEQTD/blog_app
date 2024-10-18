@@ -4,10 +4,12 @@ import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:blog_app/common/widgets/seleccionable/logic/class/item.dart';
 import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../../../common/domain/services/horarios_service.dart';
 import '../../../../../../../common/widgets/media/widgets/spoiler_media.dart';
@@ -44,8 +46,13 @@ class HiloInformacion extends StatelessWidget {
                 _BanderasDeHilo(
                   hilo: hilo,
                 ),
-                const Subcategoria(subcategoria: "subcategoria"),
-                _Subcategoria(hilo: hilo),
+                Subcategoria(
+                  subcategoria: "subcategoria",
+                  trailing: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(CupertinoIcons.chevron_right),
+                  ),
+                ),
                 _HiloAccionesRow(hilo: hilo),
                 MultiMediaDisplay(
                   media: hilo.portada.spoileable,
@@ -151,55 +158,6 @@ class _HiloAccionesRow extends StatelessWidget {
   }
 }
 
-class _Subcategoria extends StatelessWidget {
-  const _Subcategoria({
-    super.key,
-    required this.hilo,
-  });
-
-  final Hilo hilo;
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: SizedBox(
-                    height: 35,
-                    width: 35,
-                    child: Image(
-                      image: hilo.categoria.imagen.toProvider(),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  hilo.categoria.nombre,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.chevron_right)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _BanderasDeHilo extends StatelessWidget {
   static final HashMap<BanderasDeHilo, Widget> _banderas = HashMap.from({
     BanderasDeHilo.dados: const HiloIcon.dados(),
@@ -279,10 +237,16 @@ class _HiloAccionDeUsuario extends HiloAccionDeUsuario {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 35,
-      height: 35,
-      child: FittedBox(child: child),
+    return IconButton(
+      onPressed: onTap,
+      icon: SizedBox(
+        width: 35,
+        height: 35,
+        child: Padding(
+          padding: const EdgeInsets.all(2),
+          child: FittedBox(child: child),
+        ),
+      ),
     );
   }
 }
@@ -399,6 +363,10 @@ abstract class Subcategoria extends StatelessWidget {
     Widget? trailing,
     required String subcategoria,
   }) = _Subcategorias;
+
+  const factory Subcategoria.cargando() = _SubcategoriaCargando;
+
+  const factory Subcategoria.base({required Widget child}) = _SubcategoriaBase;
 }
 
 class _SubcategoriaCargando extends Subcategoria {
@@ -406,8 +374,31 @@ class _SubcategoriaCargando extends Subcategoria {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return const Subcategoria.base(
+      child: ItemSeleccionable(
+        leading: ImagenSubcategoria.cargando(),
+        titulo: Bone.text(
+          words: 1,
+        ),
+      ),
+    );
+  }
+}
+
+class _SubcategoriaBase extends Subcategoria {
+  final Widget child;
+  const _SubcategoriaBase({
+    required this.child,
+  }) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: child,
+      ),
+    );
   }
 }
 
@@ -424,35 +415,79 @@ class _Subcategorias extends Subcategoria {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: ColoredBox(
-        color: Colors.white,
-        child: ItemSeleccionable(
-          onTap: onTap,
-          leading: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: const SizedBox(
-              height: 35,
-              width: 35,
-              child: Image(
-                image: NetworkImage(
-                  "https://ae01.alicdn.com/kf/HTB1.H2xXsnrK1RkHFrdq6xCoFXag/CANDYDOLL-New-Girls-High-end-Jacquard-Dress-Sleeveless-Children-s-Princess-Dress-Black-Printed-Knee-dress.jpg",
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
+    return Subcategoria.base(
+      child: ItemSeleccionable(
+        onTap: onTap,
+        leading: const ImagenSubcategoria.image(
+          image: NetworkImage(
+            "https://ae01.alicdn.com/kf/HTB1.H2xXsnrK1RkHFrdq6xCoFXag/CANDYDOLL-New-Girls-High-end-Jacquard-Dress-Sleeveless-Children-s-Princess-Dress-Black-Printed-Knee-dress.jpg",
           ),
-          titulo: Text(
-            subcategoria,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
-          ),
-          trailing: trailing,
         ),
+        titulo: Text(
+          subcategoria,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
+        trailing: trailing,
       ),
     );
+  }
+}
+
+abstract class ImagenSubcategoria extends StatelessWidget {
+  const ImagenSubcategoria._({super.key});
+
+  const factory ImagenSubcategoria.base({required Widget child}) =
+      _ImagenSubcategoria;
+
+  const factory ImagenSubcategoria.image({
+    required ImageProvider image,
+  }) = _ImagenSubcategoriaCargada;
+
+  const factory ImagenSubcategoria.cargando() = _ImagenSubcategoriaCargando;
+}
+
+class _ImagenSubcategoria extends ImagenSubcategoria {
+  final Widget child;
+  const _ImagenSubcategoria({
+    required this.child,
+  }) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: SizedBox(
+        height: 35,
+        width: 35,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _ImagenSubcategoriaCargada extends ImagenSubcategoria {
+  final ImageProvider image;
+  const _ImagenSubcategoriaCargada({
+    required this.image,
+  }) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ImagenSubcategoria.base(
+      child: Image(
+        image: image,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+}
+
+class _ImagenSubcategoriaCargando extends ImagenSubcategoria {
+  const _ImagenSubcategoriaCargando() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Expanded(child: Bone());
   }
 }

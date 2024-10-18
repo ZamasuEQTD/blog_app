@@ -84,7 +84,7 @@ class _Comentarios extends StatefulWidget {
 class _ComentariosState extends State<_Comentarios> {
   final HashMap<ComentarioId, GlobalKey> _keys = HashMap();
 
-  static const Widget _cargando = ComentarioCardCargando();
+  static const Widget _cargando = ComentarioCard.cargando();
 
   @override
   void initState() {
@@ -101,6 +101,8 @@ class _ComentariosState extends State<_Comentarios> {
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: BlocBuilder<HiloBloc, HiloState>(
+              buildWhen: (previous, current) =>
+                  previous.hilo!.comentarios != current.hilo!.comentarios,
               builder: (context, state) {
                 return Text(
                   "Comentarios (${state.hilo!.comentarios})",
@@ -114,37 +116,25 @@ class _ComentariosState extends State<_Comentarios> {
           ),
         ),
         BlocListener<HiloBloc, HiloState>(
-          listenWhen: (previous, current) =>
-              previous.comentarios.length != current.comentarios.length,
           listener: (context, state) {
             for (var c in state.comentarios) {
-              if (c is! ComentarioModel) return;
-
               if (_keys[c.id] == null) {
                 _keys[c.id] = GlobalKey();
               }
             }
           },
           child: BlocBuilder<HiloBloc, HiloState>(
-            buildWhen: (previous, current) =>
-                previous.comentarios.length != current.comentarios.length,
             builder: (context, state) {
-              final List<ComentarioEntry> comentarios = state.comentarios;
+              final List<ComentarioEntity> comentarios = state.comentarios;
               return SliverList.builder(
                 itemCount: comentarios.length,
                 itemBuilder: (context, index) {
-                  ComentarioEntry comentario = comentarios[index];
-                  switch (comentario) {
-                    case ComentarioModel c:
-                      return ComentarioCard(
-                        key: _keys[c.id],
-                        comentario: comentario,
-                      );
-                    case ComentarioListCargandoEntry _:
-                      return _cargando;
-                    default:
-                      throw Exception("");
-                  }
+                  ComentarioEntity comentario = comentarios[index];
+
+                  return ComentarioCard(
+                    key: _keys[comentario.id],
+                    comentario: comentario,
+                  );
                 },
               );
             },
@@ -237,7 +227,7 @@ class HiloScreenCargando extends StatelessWidget {
             slivers: List.generate(
               10,
               (index) =>
-                  const SliverToBoxAdapter(child: ComentarioCardCargando()),
+                  const SliverToBoxAdapter(child: ComentarioCard.cargando()),
             ),
           ),
         ],

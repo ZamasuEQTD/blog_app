@@ -3,11 +3,7 @@ import 'package:blog_app/common/logic/classes/spoileable.dart';
 
 import '../../../media/domain/models/media.dart';
 
-abstract class ComentarioEntry {
-  const ComentarioEntry();
-}
-
-class ComentarioModel extends ComentarioEntry {
+class ComentarioEntity {
   final ComentarioId id;
   final String texto;
   final DateTime creado_en;
@@ -15,8 +11,9 @@ class ComentarioModel extends ComentarioEntry {
   final DatosDeComentario datos;
   final Autor autor;
   final Spoileable<Media>? media;
-  final List<String> tags = const [];
-  const ComentarioModel({
+  final bool destacado = false;
+  final List<String> tags = const [">>PEPEPEP"];
+  const ComentarioEntity({
     required this.id,
     required this.texto,
     required this.creado_en,
@@ -52,5 +49,3 @@ class Autor {
 typedef ComentarioId = String;
 
 enum ColoresDeComentario { rojo, amarillo, multi, invertido }
-
-class ComentarioListCargandoEntry extends ComentarioEntry {}

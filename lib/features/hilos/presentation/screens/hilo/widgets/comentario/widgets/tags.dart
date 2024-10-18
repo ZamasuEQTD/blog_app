@@ -8,43 +8,8 @@ import 'package:blog_app/common/widgets/tag/tag.dart';
 import '../../../../../../domain/models/comentario.dart';
 import '../../../../../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
 
-class TagUnico extends StatelessWidget {
-  static final List<Color> _colors = [
-    const Color(0xFFdacecd), // dacecd
-    const Color(0xFFfddad9), // fddad9
-    const Color(0xFFf1d2d5), // f1d2d5
-    const Color(0xFFfeebdc), // feebdc
-    const Color(0xFFf4f7ef), // f4f7ef
-    const Color(0xFFffdcd1), // ffdcd1
-    const Color(0xFFbbe7ff), // bbe7ff
-    const Color(0xFFccebd9), // ccebd9
-    const Color(0xFFf7e8d9), // f7e8d9
-    const Color(0xFFffffe5), // ffffe5
-  ];
-
-  final String tag;
-
-  const TagUnico({super.key, required this.tag});
-
-  @override
-  Widget build(BuildContext context) {
-    return Tag.text(
-      background: ColorPicker.pickColor(tag, _colors),
-      border: BorderRadius.circular(5),
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-      child: Text(
-        tag,
-        style: const TextStyle(
-          color: Colors.black,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
 class TagsDeComentarios extends StatelessWidget {
-  final ComentarioModel comentario;
+  final ComentarioEntity comentario;
 
   const TagsDeComentarios({super.key, required this.comentario});
 
@@ -53,16 +18,18 @@ class TagsDeComentarios extends StatelessWidget {
     return Row(
       children: [
         TagDeComentario.tag(tag: comentario.datos.tag),
+        TagDeComentario.rango(rango: comentario.autor.rangoCorto.toLowerCase()),
+        if (comentario.destacado) const TagDeComentario.destacado(),
         if (comentario.datos.tagUnico != null)
-          Row(
-            children: [
-              const SizedBox(
-                width: 5,
-              ),
-              TagDeComentario.unico(tag: comentario.datos.tagUnico!),
-            ],
-          ),
-      ],
+          TagDeComentario.unico(tag: comentario.datos.tagUnico!),
+      ]
+          .map(
+            (x) => Container(
+              margin: const EdgeInsets.symmetric(horizontal: 2),
+              child: x,
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -71,8 +38,9 @@ abstract class TagDeComentario extends StatelessWidget {
   const TagDeComentario._({super.key});
 
   const factory TagDeComentario({
-    required Color background,
     Key? key,
+    TextStyle? style,
+    required Color background,
     required String tag,
   }) = _TagDeComentario;
 
@@ -81,6 +49,12 @@ abstract class TagDeComentario extends StatelessWidget {
   const factory TagDeComentario.tag({
     required String tag,
   }) = _Tag;
+
+  const factory TagDeComentario.rango({
+    required String rango,
+  }) = _RangoTag;
+
+  const factory TagDeComentario.destacado() = _DestacadoTag;
 }
 
 class _TagDeComentario extends TagDeComentario {
@@ -88,9 +62,10 @@ class _TagDeComentario extends TagDeComentario {
 
   final String tag;
   final Color background;
-
+  final TextStyle? style;
   const _TagDeComentario({
     super.key,
+    this.style,
     required this.tag,
     required this.background,
   }) : super._();
@@ -101,7 +76,10 @@ class _TagDeComentario extends TagDeComentario {
       background: background,
       padding: padding,
       border: BorderRadius.circular(5),
-      child: Text(tag),
+      child: Text(
+        tag,
+        style: style,
+      ),
     );
   }
 }
@@ -145,7 +123,6 @@ class _TagUnico extends TagDeComentario {
   final String tag;
 
   const _TagUnico({
-    super.key,
     required this.tag,
   }) : super._();
 
@@ -155,5 +132,24 @@ class _TagUnico extends TagDeComentario {
       background: ColorPicker.pickColor(tag, _colors),
       tag: tag,
     );
+  }
+}
+
+class _DestacadoTag extends TagDeComentario {
+  const _DestacadoTag() : super._();
+  @override
+  Widget build(BuildContext context) {
+    return const TagDeComentario(background: Colors.red, tag: "Destacado");
+  }
+}
+
+class _RangoTag extends TagDeComentario {
+  final String rango;
+
+  const _RangoTag({required this.rango}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const TagDeComentario(background: Colors.green, tag: "tag");
   }
 }

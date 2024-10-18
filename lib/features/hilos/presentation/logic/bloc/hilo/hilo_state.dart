@@ -4,14 +4,15 @@ part of 'hilo_bloc.dart';
 class HiloState extends Equatable {
   final Hilo? hilo;
   final HiloStatus status;
-  final List<ComentarioEntry> comentarios;
+  final List<ComentarioEntity> comentarios;
   final ComentariosStatus comentariosStatus;
 
-  const HiloState(
-      {this.hilo,
-      this.status = HiloStatus.initial,
-      this.comentariosStatus = ComentariosStatus.cargado,
-      this.comentarios = const []});
+  const HiloState({
+    this.hilo,
+    this.status = HiloStatus.initial,
+    this.comentariosStatus = ComentariosStatus.cargado,
+    this.comentarios = const [],
+  });
 
   @override
   List<Object?> get props => [hilo, status, comentarios, comentariosStatus];
@@ -19,7 +20,7 @@ class HiloState extends Equatable {
   HiloState copyWith({
     Hilo? hilo,
     HiloStatus? status,
-    List<ComentarioEntry>? comentarios,
+    List<ComentarioEntity>? comentarios,
     ComentariosStatus? comentariosStatus,
   }) {
     return HiloState(

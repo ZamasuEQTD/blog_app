@@ -13,7 +13,7 @@ class ColorDeComentario extends StatelessWidget {
     ColoresDeComentario.rojo: const ColoredBox(color: Colors.red),
   });
 
-  final ComentarioModel comentario;
+  final ComentarioEntity comentario;
 
   const ColorDeComentario({super.key, required this.comentario});
 

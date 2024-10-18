@@ -1,5 +1,5 @@
-import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class NotificacionCard extends StatelessWidget {
   const NotificacionCard({super.key});
@@ -20,34 +20,38 @@ class NotificacionCard extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: const ColoredBox(
-                        color: Colors.red,
-                        child: SizedBox(
-                          height: 80,
-                          width: 80,
-                          child: Image(
-                            image: NetworkImage(
-                              "https://comiquetaxxx.com/wp-content/uploads/2023/10/seme-pan-rom-0-350x487.jpg",
-                            ),
-                            fit: BoxFit.cover,
+                      child: const SizedBox(
+                        height: 80,
+                        width: 80,
+                        child: Image(
+                          image: NetworkImage(
+                            "https://comiquetaxxx.com/wp-content/uploads/2023/10/seme-pan-rom-0-350x487.jpg",
                           ),
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     const SizedBox(
                       width: 5,
                     ),
-                    const Flexible(
+                    Flexible(
                       child: Column(
                         children: [
-                          Text(
-                            "Han comentado tu post: El secreto de las montañas",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                            ),
+                          RichText(
                             maxLines: 2,
+                            text: const TextSpan(
+                              text: "Han comentado",
+                              children: [
+                                TextSpan(
+                                  text: "El secreto",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          Flexible(
+                          const Flexible(
                             child: Text(
                               "Sos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudooooooooooooooooooooooooooooooooooooooooooo",
                             ),
@@ -62,10 +66,8 @@ class NotificacionCard extends StatelessWidget {
                 height: 10,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: Container(),
-                  ),
                   Row(
                     children: [
                       Container(

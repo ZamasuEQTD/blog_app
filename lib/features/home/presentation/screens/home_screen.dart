@@ -99,7 +99,6 @@ class _HomeScreenState extends State<HomeScreen> {
               sliver: SliverMainAxisGroup(
                 slivers: [
                   _HomePortadasFiltros(),
-                  //portadas grid
                   _HomePortadasGrid(),
                 ],
               ),
