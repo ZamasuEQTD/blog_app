@@ -36,6 +36,9 @@ class ComentarioInfoRow extends StatelessWidget {
           Row(
             children: [
               ColorDeComentario(comentario: comentario),
+              const SizedBox(
+                width: 5,
+              ),
               Row(
                 children: [
                   Text(
@@ -195,10 +198,10 @@ class _ComentarioCardBase extends ComentarioCard {
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-          child: ColoredBox(
-            color: const Color(0xffF5F5F5),
+        child: ColoredBox(
+          color: const Color(0xffF5F5F5),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
             child: child,
           ),
         ),

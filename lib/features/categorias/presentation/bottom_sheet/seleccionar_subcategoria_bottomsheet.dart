@@ -20,7 +20,7 @@ class SeleccionarSubcategoriaBottomsheet extends StatelessWidget {
 
   static void show(
     BuildContext context, {
-    required void Function(Subcategoria subcategoria) onSeleccionada,
+    required void Function(SubcategoriaEntity subcategoria) onSeleccionada,
   }) =>
       SliverBottomSheet.show(
         context,

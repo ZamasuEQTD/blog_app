@@ -12,7 +12,26 @@ class ComentarioEntity {
   final Autor autor;
   final Spoileable<Media>? media;
   final bool destacado = false;
-  final List<String> tags = const [">>PEPEPEP"];
+  final List<String> tags = const [
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+    "PEPEPEP",
+  ];
   const ComentarioEntity({
     required this.id,
     required this.texto,

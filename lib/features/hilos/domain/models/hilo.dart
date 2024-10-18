@@ -13,7 +13,7 @@ class Hilo {
   final String descripcion;
   final DateTime creadoEn;
   final EstadoDeHilo estado;
-  final Subcategoria categoria;
+  final SubcategoriaEntity categoria;
   final Spoileable<Media> portada;
   final Autor autor;
   final Encuesta? encuesta;
@@ -41,7 +41,7 @@ class Hilo {
     String? descripcion,
     DateTime? creadoEn,
     EstadoDeHilo? estado,
-    Subcategoria? categoria,
+    SubcategoriaEntity? categoria,
     Spoileable<Media>? portada,
     Autor? autor,
     Encuesta? encuesta,

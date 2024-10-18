@@ -8,7 +8,7 @@ import 'package:blog_app/features/media/presentation/logic/extensions/media_exte
 
 class SubcategoriaItem extends ItemSeleccionable {
   final String categoria;
-  final Subcategoria subcategoria;
+  final SubcategoriaEntity subcategoria;
   SubcategoriaItem(this.subcategoria, this.categoria, {super.onTap})
       : super(
           nombre: subcategoria.nombre,

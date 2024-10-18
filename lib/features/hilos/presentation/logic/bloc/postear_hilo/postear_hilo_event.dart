@@ -33,7 +33,7 @@ class AgregarMedia extends PostearHiloEvent {
 }
 
 class CambiarSubcategoria extends PostearHiloEvent {
-  final Subcategoria subcategoria;
+  final SubcategoriaEntity subcategoria;
 
   const CambiarSubcategoria({required this.subcategoria});
 }

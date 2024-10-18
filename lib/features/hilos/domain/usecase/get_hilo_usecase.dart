@@ -26,7 +26,7 @@ class GetHiloUseCase extends IUsecase<GetHiloRequest, Hilo> {
           BanderasDeHilo.encuesta,
           BanderasDeHilo.idUnico,
         ],
-        categoria: const Subcategoria(
+        categoria: const SubcategoriaEntity(
           "id",
           "NSFW",
           Imagen(

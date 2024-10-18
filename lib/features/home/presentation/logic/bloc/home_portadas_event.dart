@@ -10,7 +10,7 @@ sealed class HomePortadasEvent extends Equatable {
 class CargarPortadasHome extends HomePortadasEvent {}
 
 class CambiarFiltrosDePortadas extends HomePortadasEvent {
-  final Subcategoria? subcategoria;
+  final SubcategoriaEntity? subcategoria;
   final String? titulo;
 
   const CambiarFiltrosDePortadas({this.subcategoria, this.titulo});

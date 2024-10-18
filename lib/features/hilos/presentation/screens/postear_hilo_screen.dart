@@ -166,7 +166,7 @@ class _SeleccionarSubcategoria extends StatelessWidget {
           buildWhen: buildWhen,
           builder: (context, state) {
             if (state.subcategoria != null) {
-              Subcategoria subcategoria = state.subcategoria!;
+              SubcategoriaEntity subcategoria = state.subcategoria!;
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -299,7 +299,7 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
 
   static show(
     BuildContext context, {
-    required void Function(Subcategoria subcategoria) onSeleccionada,
+    required void Function(SubcategoriaEntity subcategoria) onSeleccionada,
   }) {}
 }
 

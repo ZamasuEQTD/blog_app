@@ -36,7 +36,7 @@ enum PortadasHomeStatus {
 }
 
 class PortadasHomeFiltrosState extends Equatable {
-  final Subcategoria? subcategoria;
+  final SubcategoriaEntity? subcategoria;
   final String? titulo;
   final DateTime? ultimoBump;
   const PortadasHomeFiltrosState({
@@ -46,7 +46,7 @@ class PortadasHomeFiltrosState extends Equatable {
   });
 
   PortadasHomeFiltrosState copyWith({
-    Subcategoria? subcategoria,
+    SubcategoriaEntity? subcategoria,
     String? titulo,
     DateTime? ultimoBump,
   }) {

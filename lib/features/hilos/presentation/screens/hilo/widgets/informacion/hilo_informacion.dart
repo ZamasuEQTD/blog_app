@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:collection';
+import 'dart:developer';
 
+import 'package:blog_app/features/categorias/domain/models/subcategoria.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -47,10 +49,12 @@ class HiloInformacion extends StatelessWidget {
                   hilo: hilo,
                 ),
                 Subcategoria(
-                  subcategoria: "subcategoria",
+                  subcategoria: hilo.categoria,
                   trailing: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(CupertinoIcons.chevron_right),
+                    onPressed: () {
+                      log("message");
+                    },
+                    icon: const Icon(Icons.chevron_right),
                   ),
                 ),
                 _HiloAccionesRow(hilo: hilo),
@@ -80,7 +84,14 @@ class HiloInformacion extends StatelessWidget {
                   hilo.descripcion,
                   style: const TextStyle(fontSize: 18),
                 ),
-              ],
+              ]
+                  .map(
+                    (x) => Container(
+                      margin: const EdgeInsets.only(bottom: 5),
+                      child: x,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ),
@@ -361,7 +372,7 @@ abstract class Subcategoria extends StatelessWidget {
   const factory Subcategoria({
     void Function()? onTap,
     Widget? trailing,
-    required String subcategoria,
+    required SubcategoriaEntity subcategoria,
   }) = _Subcategorias;
 
   const factory Subcategoria.cargando() = _SubcategoriaCargando;
@@ -405,7 +416,7 @@ class _SubcategoriaBase extends Subcategoria {
 class _Subcategorias extends Subcategoria {
   final Widget? trailing;
   final void Function()? onTap;
-  final String subcategoria;
+  final SubcategoriaEntity subcategoria;
 
   const _Subcategorias({
     this.trailing,
@@ -418,13 +429,11 @@ class _Subcategorias extends Subcategoria {
     return Subcategoria.base(
       child: ItemSeleccionable(
         onTap: onTap,
-        leading: const ImagenSubcategoria.image(
-          image: NetworkImage(
-            "https://ae01.alicdn.com/kf/HTB1.H2xXsnrK1RkHFrdq6xCoFXag/CANDYDOLL-New-Girls-High-end-Jacquard-Dress-Sleeveless-Children-s-Princess-Dress-Black-Printed-Knee-dress.jpg",
-          ),
+        leading: ImagenSubcategoria.image(
+          image: subcategoria.imagen.toProvider(),
         ),
         titulo: Text(
-          subcategoria,
+          subcategoria.nombre,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 15,

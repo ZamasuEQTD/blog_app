@@ -25,7 +25,7 @@ class TagsDeComentarios extends StatelessWidget {
       ]
           .map(
             (x) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 2),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
               child: x,
             ),
           )
@@ -150,6 +150,10 @@ class _RangoTag extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return const TagDeComentario(background: Colors.green, tag: "tag");
+    return TagDeComentario(
+      background: Colors.white,
+      tag: rango,
+      style: const TextStyle(fontWeight: FontWeight.bold),
+    );
   }
 }
