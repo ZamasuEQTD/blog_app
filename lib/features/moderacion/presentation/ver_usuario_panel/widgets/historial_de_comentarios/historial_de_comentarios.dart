@@ -1,10 +1,12 @@
-import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
-import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
-import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+
+import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
+import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
+import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
 
 import 'logic/historial_de_comentarios/historial_de_comentarios_bloc.dart';
 
@@ -200,6 +202,30 @@ class ItemHistorialDeComentarioCargando extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+abstract class HistorialItemCard extends StatelessWidget {
+  const HistorialItemCard({super.key});
+}
+
+class _HistorialItemCard extends HistorialItemCard {
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: SizedBox.square(
+                dimension: 80,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

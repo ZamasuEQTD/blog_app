@@ -25,10 +25,15 @@ class PostearHiloBloc extends Bloc<PostearHiloEvent, PostearHiloState> {
   }
 
   void _onCambiarBanderas(
-      CambiarBanderas event, Emitter<PostearHiloState> emit) {
-    emit(state.copyWith(
+    CambiarBanderas event,
+    Emitter<PostearHiloState> emit,
+  ) {
+    emit(
+      state.copyWith(
         banderas: state.banderas
-            .copyWith(dados: event.dados, tagUnico: event.tagUnico)));
+            .copyWith(dados: event.dados, tagUnico: event.tagUnico),
+      ),
+    );
   }
 
   void _onCambiarTitulo(CambiarTitulo event, Emitter<PostearHiloState> emit) {
@@ -44,20 +49,28 @@ class PostearHiloBloc extends Bloc<PostearHiloEvent, PostearHiloState> {
   }
 
   Future _onPostearHilo(
-      PostearHilo event, Emitter<PostearHiloState> emit) async {
+    PostearHilo event,
+    Emitter<PostearHiloState> emit,
+  ) async {
     emit(state.copyWith(status: PostearHiloStatus.posteando));
 
     var result = await _postearHiloUsecase.handle(PostearHiloRequest());
 
     result.fold(
-        (l) => emit(state.copyWith(status: PostearHiloStatus.failure)),
-        (r) => emit(
-            state.copyWith(status: PostearHiloStatus.posteado, hiloId: r)));
+      (l) => emit(state.copyWith(status: PostearHiloStatus.failure)),
+      (r) => emit(
+        state.copyWith(status: PostearHiloStatus.posteado, hiloId: r),
+      ),
+    );
   }
 
   void _onSwitchSpoiler(SwitchSpoiler event, Emitter<PostearHiloState> emit) {
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         portada: Nullable(
-            state.portada!.copyWith(spoiler: !state.portada!.esSpoiler))));
+          state.portada!.copyWith(spoiler: !state.portada!.esSpoiler),
+        ),
+      ),
+    );
   }
 }

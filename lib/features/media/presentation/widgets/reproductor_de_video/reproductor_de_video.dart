@@ -18,24 +18,34 @@ class ReproductorDeVideoWidget extends StatefulWidget {
   late final VideoPlayerController controller;
   final ImageProvider? previsualizacion;
 
-  ReproductorDeVideoWidget.fromNetwork(
-      {super.key, required String url, this.previsualizacion}) {
+  ReproductorDeVideoWidget.fromNetwork({
+    super.key,
+    required String url,
+    this.previsualizacion,
+  }) {
     controller = VideoPlayerController.networkUrl(Uri.parse(url));
   }
 
-  ReproductorDeVideoWidget.fromFile(
-      {super.key, required File video, this.previsualizacion}) {
+  ReproductorDeVideoWidget.fromFile({
+    super.key,
+    required File video,
+    this.previsualizacion,
+  }) {
     controller = VideoPlayerController.file(video);
   }
 
-  factory ReproductorDeVideoWidget.fromProvider(
-      {Key? key,
-      required VideoProvider provider,
-      ImageProvider? previsualizacion}) {
+  factory ReproductorDeVideoWidget.fromProvider({
+    Key? key,
+    required VideoProvider provider,
+    ImageProvider? previsualizacion,
+  }) {
     switch (provider) {
       case NetworkVideoProvider provider:
         return ReproductorDeVideoWidget.fromNetwork(
-            key: key, url: provider.url, previsualizacion: previsualizacion);
+          key: key,
+          url: provider.url,
+          previsualizacion: previsualizacion,
+        );
       case FileVideoProvider provider:
         return ReproductorDeVideoWidget.fromFile(
           key: key,
@@ -96,13 +106,15 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
 
         widget.controller.addListener(
           () {
-            bloc.add(CambiarParametros(
-              finalizado: controller.videoPlayerController.value.isCompleted,
-              volumen: widget.controller.value.volume,
-              reproduciendo: controller.isPlaying,
-              buffering: controller.estaBuffereando(),
-              position: controller.videoPlayerController.value.position,
-            ));
+            bloc.add(
+              CambiarParametros(
+                finalizado: controller.videoPlayerController.value.isCompleted,
+                volumen: widget.controller.value.volume,
+                reproduciendo: controller.isPlaying,
+                buffering: controller.estaBuffereando(),
+                position: controller.videoPlayerController.value.position,
+              ),
+            );
           },
         );
 

@@ -1,22 +1,18 @@
 // ignore_for_file: unused_element
 import 'dart:collection';
 
-import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo/widgets/comentario/comentario_card.dart';
 import 'package:blog_app/features/media/presentation/logic/bloc/bloc/gestor_de_media_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../domain/models/comentario.dart';
 import '../../../domain/models/hilo.dart';
 import '../../logic/bloc/hilo/comentar_hilo/comentar_hilo_bloc.dart';
 import '../../logic/bloc/hilo/hilo_bloc.dart';
 
-import '../../logic/controllers/taggueos_controller.dart';
-import '../../../../auth/presentation/widgets/bottom_sheet/bottom_sheet.dart';
 import 'widgets/comentar_hilo_bottom_sheet/comentar_hilo.dart';
 import 'widgets/informacion/hilo_informacion.dart';
 
@@ -28,7 +24,6 @@ class HiloScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TaggueosController()),
         ChangeNotifierProvider(create: (_) => WidgetAlturaController()),
       ],
       child: MultiBlocProvider(
@@ -142,15 +137,6 @@ class _ComentariosState extends State<_Comentarios> {
         ),
       ],
     );
-  }
-}
-
-class _ComentarioCargando extends StatelessWidget {
-  const _ComentarioCargando({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
 

@@ -1,6 +1,8 @@
 import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
+import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class NotificacionCard extends StatelessWidget {
   const NotificacionCard({super.key});
@@ -113,6 +115,63 @@ class NotificacionCard extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+abstract class Notificacion extends StatelessWidget {
+  const Notificacion._({super.key});
+
+  const factory Notificacion.bone() = _NotificacionBone;
+}
+
+class _Notificacion extends Notificacion {
+  const _Notificacion() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
+  }
+}
+
+class _NotificacionBone extends Notificacion {
+  const _NotificacionBone() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                child: Bone.circle(size: 80),
+              ),
+              SizedBox(width: 5),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Bone.text(
+                    fontSize: 20,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Bone.multiText(
+                    fontSize: 15,
+                    lines: 2,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

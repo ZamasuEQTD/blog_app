@@ -12,28 +12,36 @@ class RegistroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      const Text(
-        "¡Bienvenido!",
-        textAlign: TextAlign.center,
-        style: AuthLabelTextStyle(),
+      body: Column(
+        children: [
+          const Text(
+            "¡Bienvenido!",
+            textAlign: TextAlign.center,
+            style: AuthLabelTextStyle(),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            child: Text(
+              "Informacion de la cuenta",
+              textAlign: TextAlign.start,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+          TextField(
+            onChanged: (value) => context.read(),
+            decoration: FlatInputDecoration(hintText: "Usuario"),
+          ),
+          PasswordField(
+            onChanged: (value) => context.read(),
+            hintText: "Contraseña",
+          ),
+          PasswordField(
+            onChanged: (value) => context.read(),
+            hintText: "Repite Contraseña",
+          ),
+          AuthBtn(texto: "Registrarse", onPressed: () => context.read()),
+        ],
       ),
-      const Padding(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          child: Text(
-            "Informacion de la cuenta",
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 15),
-          )),
-      TextField(
-        onChanged: (value) => context.read(),
-        decoration: FlatInputDecoration(hintText: "Usuario"),
-      ),
-      PasswordField(
-          onChanged: (value) => context.read(), hintText: "Contraseña"),
-      PasswordField(
-          onChanged: (value) => context.read(), hintText: "Repite Contraseña"),
-      AuthBtn(texto: "Registrarse", onPressed: () => context.read())
-    ]));
+    );
   }
 }

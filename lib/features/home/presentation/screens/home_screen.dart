@@ -194,7 +194,7 @@ class _HomePortadasFiltros extends StatelessWidget {
             ColoredIconButton(
               background: const Color(0xffF5F5F5),
               onPressed: () {},
-              icon: const FaIcon(FontAwesomeIcons.diceD6),
+              icon: const FaIcon(FontAwesomeIcons.box),
             ),
           ],
         ),

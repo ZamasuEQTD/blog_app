@@ -1,101 +1,123 @@
+import 'package:skeletonizer/skeletonizer.dart';
+
 import '../../../domain/models/media.dart';
 import 'package:flutter/material.dart';
 import '../../logic/extensions/media_extensions.dart';
 import '../reproductor_de_video/reproductor_de_video.dart';
 
-class DimensionableMedia extends StatelessWidget {
-  final Media media;
-  final BoxConstraints? constraints;
-  const DimensionableMedia({super.key, required this.media, this.constraints})
-      : assert(media is Video || media is Imagen);
+abstract class Dimensionable extends StatelessWidget {
+  const Dimensionable._({super.key});
 
+  const factory Dimensionable({
+    Key? key,
+    required Widget child,
+  }) = _Dimensionable;
+
+  const factory Dimensionable.video({
+    Key? key,
+    required Video video,
+  }) = _Video;
+
+  const factory Dimensionable.imagen({
+    Key? key,
+    required Imagen imagen,
+  }) = _Imagen;
+}
+
+class _Dimensionable extends Dimensionable {
+  final Widget child;
+
+  const _Dimensionable({super.key, required this.child}) : super._();
   @override
   Widget build(BuildContext context) {
-    switch (media) {
-      case Imagen media:
-        return Image(image: media.toProvider());
-      case Video media:
-        return ReproductorDeVideoWidget.fromProvider(
-            previsualizacion: media.previsualizacion != null
-                ? const NetworkImage("https://i.redd.it/eopud74baswa1.png")
-                : null,
-            provider: media.toProvider());
-      default:
-        throw Exception("Tipo de media no soportado!!!");
+    DimensionableScope? config = DimensionableScope.of(context);
+
+    Widget child = this.child;
+
+    if (config != null) {
+      if (config.builder != null) {
+        child = config.builder!(context, child);
+      }
+
+      if (config.constraints != null) {
+        child = ConstrainedBox(
+          constraints: config.constraints!,
+          child: child,
+        );
+      }
     }
+    return child;
   }
 }
 
-class MultiMediaDisplay extends StatelessWidget {
-  final Media media;
-  final Widget Function(DimensionableMedia child)? dimensionableBuilder;
-  const MultiMediaDisplay(
-      {super.key, required this.media, this.dimensionableBuilder});
+class _Video extends Dimensionable {
+  final Video video;
+  const _Video({super.key, required this.video}) : super._();
+
+  Widget get reproductor => ReproductorDeVideoWidget.fromProvider(
+        provider: video.toProvider(),
+      );
 
   @override
   Widget build(BuildContext context) {
-    if (media is Video || media is Imagen) {
-      return dimensionableBuilder != null
-          ? dimensionableBuilder!(DimensionableMedia(media: media))
-          : DimensionableMedia(media: media);
-    }
-    throw Exception("Tipo de media no soportado!!!");
+    return Dimensionable(
+      child: reproductor,
+    );
   }
 }
 
-class MediaBox extends StatelessWidget {
-  final Media media;
-  final MediaBoxOptions options;
-  const MediaBox({
+class _Imagen extends Dimensionable {
+  final Imagen imagen;
+  const _Imagen({
     super.key,
-    required this.media,
-    required this.options,
+    required this.imagen,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return Dimensionable(
+      child: Image(
+        image: imagen.toProvider(),
+      ),
+    );
+  }
+}
+
+class DimensionableScope extends InheritedWidget {
+  final Widget Function(BuildContext context, Widget dimensionable)? builder;
+  final BoxConstraints? constraints;
+  final BorderRadius? borderRadius;
+  const DimensionableScope({
+    super.key,
+    this.constraints,
+    this.borderRadius,
+    this.builder,
+    required super.child,
   });
 
+  static DimensionableScope? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<DimensionableScope>();
+
   @override
-  Widget build(BuildContext context) {
-    return Container(
-        constraints: options.constraints, child: _getMedia(context));
-  }
-
-  Widget _getMedia(BuildContext context) {
-    return options.builder != null
-        ? options.builder!(
-            context,
-            MediaManager(
-              media: media,
-            ))
-        : MediaManager(
-            media: media,
-          );
+  bool updateShouldNotify(covariant DimensionableScope oldWidget) {
+    return constraints != oldWidget.constraints ||
+        borderRadius != oldWidget.borderRadius ||
+        builder != oldWidget.builder;
   }
 }
 
-class MediaBoxOptions {
-  final BoxConstraints? constraints;
-  final Widget Function(BuildContext context, Widget child)? builder;
-
-  const MediaBoxOptions({this.constraints, this.builder});
-}
-
-class MediaManager extends StatelessWidget {
+class MultiMedia extends StatelessWidget {
   final Media media;
-
-  const MediaManager({super.key, required this.media});
+  const MultiMedia({super.key, required this.media});
 
   @override
   Widget build(BuildContext context) {
     switch (media) {
-      case Imagen media:
-        return Image(image: media.toProvider());
-      case Video media:
-        return ReproductorDeVideoWidget.fromProvider(
-            previsualizacion: media.previsualizacion != null
-                ? NetworkImage(media.previsualizacion!)
-                : null,
-            provider: media.toProvider());
-      default:
-        throw Exception("Tipo de media no soportado!!!");
+      case Video video:
+        return Dimensionable.video(video: video);
+      case Imagen imagen:
+        return Dimensionable.imagen(imagen: imagen);
     }
+    throw Exception("Media no soportada");
   }
 }
