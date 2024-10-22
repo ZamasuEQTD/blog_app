@@ -4,7 +4,7 @@ import 'item_seleccionable.dart';
 
 class GrupoSeleccionableSliver extends StatelessWidget {
   final String? titulo;
-  final List<ItemSeleccionable> seleccionables;
+  final List<Widget> seleccionables;
   const GrupoSeleccionableSliver({
     super.key,
     this.titulo,

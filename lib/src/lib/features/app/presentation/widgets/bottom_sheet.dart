@@ -154,11 +154,6 @@ class DestructibleBottomSheet extends RoundedBottomSheet {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: FlatBtnStyle().copyWith(
-                backgroundColor: WidgetStatePropertyAll(
-                  Theme.of(context).colorScheme.error,
-                ),
-              ),
               onPressed: () {},
               child: const Text("Seguir"),
             ),
@@ -166,10 +161,6 @@ class DestructibleBottomSheet extends RoundedBottomSheet {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              style: FlatBtnStyle().copyWith(
-                backgroundColor:
-                    const WidgetStatePropertyAll(Color(0xff212121)),
-              ),
               onPressed: () => context.pop(),
               child: const Text(
                 "Cancelar",

@@ -16,35 +16,39 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(children: [
-            const Text(
-              "¡Bienvenido de nuevo!",
-              textAlign: TextAlign.center,
-              style: AuthLabelTextStyle(),
-            ),
-            RichText(
-              text: const TextSpan(
-                text: "Inicia sesión o",
-                children: [TextSpan(text: "Registrate")],
+          child: Column(
+            children: [
+              const Text(
+                "¡Bienvenido de nuevo!",
+                textAlign: TextAlign.center,
+                style: AuthLabelTextStyle(),
               ),
-            ),
-            const Padding(
+              RichText(
+                text: const TextSpan(
+                  text: "Inicia sesión o",
+                  children: [TextSpan(text: "Registrate")],
+                ),
+              ),
+              const Padding(
                 padding: EdgeInsets.symmetric(vertical: 5),
                 child: Text(
                   "Informacion de la cuenta",
                   textAlign: TextAlign.start,
                   style: TextStyle(fontSize: 15),
-                )),
-            TextField(
-              decoration: FlatInputDecoration(hintText: "Usuario"),
-            ),
-            const SizedBox(height: 15),
-            PasswordField(onChanged: (value) {}, hintText: "Contraseña"),
-            const SizedBox(height: 10),
-            AuthBtn(
+                ),
+              ),
+              TextField(
+                decoration: FlatInputDecoration(hintText: "Usuario"),
+              ),
+              const SizedBox(height: 15),
+              PasswordField(onChanged: (value) {}, hintText: "Contraseña"),
+              const SizedBox(height: 10),
+              AuthBtn(
                 texto: "Iniciar sesión",
-                onPressed: () => SesionRequeridaBottomsheet.show(context))
-          ]),
+                onPressed: () => SesionRequeridaBottomsheet.show(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
