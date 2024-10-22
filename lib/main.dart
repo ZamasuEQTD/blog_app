@@ -30,7 +30,17 @@ class MyApp extends StatelessWidget {
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.notoSansTextTheme(),
         inputDecorationTheme: const InputDecorationTheme(
+          filled: true,
           fillColor: Color(0xfff5f5f5),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+            borderSide: BorderSide(
+              width: 0,
+              style: BorderStyle.none,
+            ),
+          ),
         ),
       ),
       routerConfig: routes,

@@ -11,6 +11,7 @@ import 'package:video_compress/video_compress.dart';
 
 import '../../../../domain/iminiatura_video_service.dart';
 import '../../../../domain/models/media.dart';
+import '../../../../domain/youtube_service.dart';
 
 part 'miniatura_generador_event.dart';
 part 'miniatura_generador_state.dart';

@@ -1,9 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
+import 'package:blog_app/common/widgets/inputs/decorations/decorations.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
+import '../../../media/presentation/miniatura.dart';
 import '../blocs/comentar_hilo/comentar_hilo_bloc.dart';
 
 class ComentarHiloBottomSheet extends StatelessWidget {
@@ -86,6 +91,7 @@ class __ComentarInputState extends State<_ComentarInput> {
 
   @override
   Widget build(BuildContext context) {
+    const InputDecorationTheme();
     return BlocListener<ComentarHiloBloc, ComentarHiloState>(
       listenWhen: (previous, current) => previous.taggueo != current.taggueo,
       listener: (context, state) {
@@ -102,14 +108,51 @@ class __ComentarInputState extends State<_ComentarInput> {
               keyboardType: TextInputType.multiline,
               minLines: 1,
               maxLines: !isKeyboardVisible ? 1 : 4,
-              decoration: FlatInputDecoration(
-                borderRadius: 15,
-                hintText: "Escribe tu comentario...",
-              ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+abstract class OpcionDeComentario extends StatelessWidget {
+  const OpcionDeComentario._({super.key});
+  const factory OpcionDeComentario({
+    required void Function() onTap,
+    required String opcion,
+  }) = _OpcionDeComentario;
+}
+
+class _OpcionDeComentario extends OpcionDeComentario {
+  final String opcion;
+  final void Function() onTap;
+
+  const _OpcionDeComentario({
+    required this.opcion,
+    required this.onTap,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return ItemSeleccionable.text(titulo: opcion, onTap: onTap);
+  }
+}
+
+class _AgregarEnlace extends OpcionDeComentario {
+  const _AgregarEnlace() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return OpcionDeComentario(onTap: () {}, opcion: "Agregar enlace");
+  }
+}
+
+class AgregarMedia extends OpcionDeComentario {
+  const AgregarMedia({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return OpcionDeComentario(onTap: () {}, opcion: "Agregar desde galeria");
   }
 }
