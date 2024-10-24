@@ -1,7 +1,5 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:blog_app/features/media/presentation/widgets/reproductor_de_video/previsualizacion.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../../../../features/media/presentation/widgets/reproductor_de_video/controles/controles_custom.dart';
 import 'blocs/reproductor/reproductor_de_video_bloc.dart';
 import 'providers/video_provider.dart';
+import 'widgets/controles/controles_custom.dart';
+import 'widgets/previsualizacion.dart';
 
 class ReproductorDeVideoWidget extends StatefulWidget {
   late final VideoPlayerController controller;

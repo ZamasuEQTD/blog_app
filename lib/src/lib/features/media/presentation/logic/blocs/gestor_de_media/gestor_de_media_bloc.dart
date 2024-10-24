@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:blog_app/core/classes/failure.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../../../utils/clases/failure.dart';
 import '../../../../domain/models/media.dart';
 
 part 'gestor_de_media_event.dart';

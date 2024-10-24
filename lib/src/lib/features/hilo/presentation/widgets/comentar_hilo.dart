@@ -102,7 +102,6 @@ class __ComentarInputState extends State<_ComentarInput> {
 
   @override
   Widget build(BuildContext context) {
-    const InputDecorationTheme();
     return BlocListener<ComentarHiloBloc, ComentarHiloState>(
       listenWhen: (previous, current) => previous.taggueo != current.taggueo,
       listener: (context, state) {

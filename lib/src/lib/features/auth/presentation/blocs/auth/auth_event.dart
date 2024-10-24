@@ -14,3 +14,5 @@ class IniciarSesion extends AuthEvent {
 }
 
 class RestaurarSesion extends AuthEvent {}
+
+class CerrarSesion extends AuthEvent {}

@@ -1,4 +1,3 @@
-import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
@@ -68,7 +67,6 @@ class PostearHiloScreen extends StatelessWidget {
                         },
                       );
                     },
-                    style: FlatBtnStyle(),
                     child: const Text(
                       "Agregar portada",
                     ),

@@ -12,3 +12,5 @@ class CargarHilo extends HiloEvent {}
 class RecargarHilo extends HiloEvent {}
 
 class EliminarHilo extends HiloEvent {}
+
+class CargarComentarios extends HiloEvent {}

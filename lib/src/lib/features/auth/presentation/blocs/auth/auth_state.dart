@@ -10,6 +10,7 @@ sealed class AuthState extends Equatable {
   }) = SesionIniciada;
 
   const factory AuthState.iniciando() = IniciandoSesion;
+  const factory AuthState.sinSesion() = SinSesion;
 
   @override
   List<Object> get props => [];
@@ -30,4 +31,8 @@ final class SesionIniciada extends AuthState {
 
 final class IniciandoSesion extends AuthState {
   const IniciandoSesion();
+}
+
+final class SinSesion extends AuthState {
+  const SinSesion();
 }

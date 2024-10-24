@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
-import 'package:blog_app/src/lib/features/auth/presentation/screens/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+
+import 'package:blog_app/src/lib/features/auth/presentation/screens/widgets/button.dart';
 
 import '../blocs/auth/auth_bloc.dart';
 import '../blocs/login/login_bloc.dart';
@@ -45,6 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   TextField(
+                    maxLines: 1,
                     onChanged: (value) {
                       log(value);
                     },
@@ -53,6 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   TextField(
+                    maxLines: 1,
+                    obscureText: true,
                     onChanged: (value) {
                       log(value);
                     },
@@ -67,6 +72,68 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+abstract class AuthInput extends StatelessWidget {
+  const AuthInput._({super.key});
+
+  const factory AuthInput({
+    required String hintText,
+    required bool obscure,
+    Widget? suffix,
+  }) = _AuthInput;
+}
+
+class _AuthInput extends AuthInput {
+  final String hintText;
+  final Widget? suffix;
+  final bool obscure;
+
+  const _AuthInput({
+    required this.hintText,
+    required this.obscure,
+    this.suffix,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      obscureText: obscure,
+      maxLines: 1,
+      decoration: InputDecoration(
+        hintText: hintText,
+        suffix: suffix,
+      ),
+    );
+  }
+}
+
+class _UsuarioInput extends AuthInput {
+  const _UsuarioInput({super.key}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const AuthInput(
+      hintText: "Usuario",
+      obscure: false,
+    );
+  }
+}
+
+class _ObscureInput extends AuthInput {
+  final Widget? suffix;
+  const _ObscureInput({
+    this.suffix,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthInput(
+      hintText: "Usuario",
+      obscure: false,
+      suffix: suffix,
     );
   }
 }

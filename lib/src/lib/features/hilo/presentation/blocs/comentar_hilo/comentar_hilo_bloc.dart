@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:blog_app/core/nullable.dart';
 import 'package:equatable/equatable.dart';
 
 import '../../../domain/services/tag_service.dart';

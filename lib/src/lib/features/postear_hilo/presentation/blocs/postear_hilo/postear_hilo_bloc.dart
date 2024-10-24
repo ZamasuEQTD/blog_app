@@ -1,4 +1,4 @@
-import 'package:blog_app/src/lib/features/categorias/domain/subcategoria.dart';
+import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

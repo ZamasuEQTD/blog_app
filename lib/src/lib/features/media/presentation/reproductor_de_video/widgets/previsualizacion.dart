@@ -1,8 +1,8 @@
-import 'package:blog_app/features/media/presentation/widgets/reproductor_de_video/controles/controles_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/reproductor/reproductor_de_video_bloc.dart';
+import 'controles/controles_custom.dart';
 
 class PrevisualizacionDeVideo extends StatelessWidget {
   final ImageProvider previsualizacion;

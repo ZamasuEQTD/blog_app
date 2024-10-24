@@ -1,5 +1,5 @@
 import '../../../app/domain/models/spoileable.dart';
-import '../../../categorias/domain/subcategoria.dart';
+import '../../../categorias/domain/models/subcategoria.dart';
 import '../../../media/domain/models/media.dart';
 import 'types.dart';
 

@@ -64,7 +64,7 @@ class YoutubeMiniaturaStrategy extends IMiniaturaStrategy {
   Future<Imagen> execute(String path) {
     return Future.value(
       Imagen(
-        provider: NetworkProvider(path: YoutubeService.miniaturaFromUrl(path)),
+        provider: NetworkProvider(path: YoutubeService.miniaturaFromUrl(path)!),
       ),
     );
   }

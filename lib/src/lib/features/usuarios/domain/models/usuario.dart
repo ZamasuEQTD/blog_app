@@ -8,6 +8,17 @@ class Usuario extends Equatable {
     required this.usuario,
     required this.rango,
   });
+
+  factory Usuario.formJson(Map<String, dynamic> json) {
+    late final Rango rango;
+    String tipo = json["rango"];
+    if (tipo == "anonimo") {
+      rango = const Anonimo();
+    } else {
+      rango = Moderador(nombre: json["moderador"]);
+    }
+    return Usuario(usuario: json["usuario"], rango: rango);
+  }
   @override
   List<Object?> get props => throw UnimplementedError();
 }

@@ -1,17 +1,13 @@
 import 'dart:collection';
-import 'dart:io';
 
-import 'package:blog_app/features/media/presentation/logic/bloc/miniatura_generador/miniatura_generador_bloc.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-import 'package:video_compress/video_compress.dart';
 
 import '../domain/models/media.dart';
 import '../domain/youtube_service.dart';
+import 'logic/blocs/miniatura_generador/miniatura_generador_bloc.dart';
 
 class Miniatura extends StatelessWidget {
   final Media media;

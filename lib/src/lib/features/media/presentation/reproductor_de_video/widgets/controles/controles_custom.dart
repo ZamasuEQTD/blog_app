@@ -8,8 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:video_player/video_player.dart';
 
-import 'package:blog_app/common/widgets/button/filled_icon_button.dart';
-import 'package:blog_app/features/media/presentation/logic/bloc/reproductor/reproductor_de_video_bloc.dart';
+import '../../../../../app/presentation/widgets/colored_icon_button.dart';
+import '../../blocs/reproductor/reproductor_de_video_bloc.dart';
 
 class ControlesDeReproductorDeVideo extends StatelessWidget {
   const ControlesDeReproductorDeVideo({

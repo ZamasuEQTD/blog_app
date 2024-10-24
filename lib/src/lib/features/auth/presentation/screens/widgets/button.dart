@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/login/login_bloc.dart';
+import '../../blocs/registro/registro_bloc.dart';
 
 abstract class AuthButton extends StatelessWidget {
   const AuthButton._({super.key});
@@ -61,7 +62,7 @@ class _RegistrarseButton extends AuthButton {
   @override
   Widget build(BuildContext context) {
     return AuthButton(
-      onPressed: () => context.read<LoginBloc>().add(Loguearse()),
+      onPressed: () => context.read<RegistroBloc>().add(Registrarse()),
       label: "Registrarse",
     );
   }

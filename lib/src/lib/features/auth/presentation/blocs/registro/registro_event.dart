@@ -6,3 +6,5 @@ sealed class RegistroEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class Registrarse extends RegistroEvent {}

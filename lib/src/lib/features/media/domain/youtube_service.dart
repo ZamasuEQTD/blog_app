@@ -6,10 +6,15 @@ class YoutubeService {
     r'^https?:\/\/(www\.)?youtu(\.be\/|be\.com\/)(watch\?v=|embed\/|v\/|shorts\/)([A-Za-z0-9-_]{11})((?=[&#?])|$)',
   );
 
-  static String miniaturaFromUrl(String url) =>
-      miniaturaFromId(getVideoId(url));
+  static String? miniaturaFromUrl(String url) {
+    String? id = getVideoId(url);
 
-  static String getVideoId(String url) {
+    if (id == null) return null;
+
+    return miniaturaFromId(id);
+  }
+
+  static String? getVideoId(String url) {
     var match = youtubeIdRegex.firstMatch(url);
 
     if (match == null) throw Exception("Link invalido");
