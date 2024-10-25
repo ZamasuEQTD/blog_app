@@ -25,7 +25,11 @@ class RegistroBloc extends Bloc<RegistroEvent, RegistroState> {
         form: const RegistroFormStatus.registrando(),
       ),
     );
-    var response = await _repository.registro();
+
+    var response = await _repository.registro(
+      usuario: state.username,
+      password: state.password,
+    );
 
     response.fold(
       (l) => null,

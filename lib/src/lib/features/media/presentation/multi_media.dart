@@ -34,8 +34,11 @@ class _Dimensionable extends Dimensionable {
     Widget child = this.child;
 
     if (config != null) {
-      if (config.builder != null) {
-        child = config.builder!(context, child);
+      if (config.borderRadius != null) {
+        child = ClipRRect(
+          borderRadius: config.borderRadius!,
+          child: child,
+        );
       }
 
       if (config.constraints != null) {
@@ -43,6 +46,10 @@ class _Dimensionable extends Dimensionable {
           constraints: config.constraints!,
           child: child,
         );
+      }
+
+      if (config.builder != null) {
+        child = config.builder!(context, child);
       }
     }
     return child;

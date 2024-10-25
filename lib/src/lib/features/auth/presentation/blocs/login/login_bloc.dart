@@ -26,7 +26,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ),
     );
 
-    var response = await _authRepository.login();
+    var response = await _authRepository.login(
+      password: state.password,
+      usuario: state.username,
+    );
 
     response.fold(
       (l) => emit(

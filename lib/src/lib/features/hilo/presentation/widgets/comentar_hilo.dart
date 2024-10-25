@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
+import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -39,7 +40,45 @@ class ComentarHiloBottomSheet extends StatelessWidget {
                               .read<GestorDeMediaBloc>()
                               .add(const EliminarMedia()),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              showMaterialModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  // return RoundedBottomSheet.normal(
+                                  //   child: ConstrainedBox(
+                                  //     constraints: const BoxConstraints(
+                                  //       maxHeight: 200,
+                                  //       maxWidth: double.infinity,
+                                  //     ),
+                                  //     child: const Image(
+                                  //       image: NetworkImage(
+                                  //         "https://i.pinimg.com/564x/c0/51/4a/c0514ad71f49a6f94b879b863184e621.jpg",
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // );
+                                  return RoundedBottomSheet.normal(
+                                    titulo: const Text("hola"),
+                                    child: DimensionableScope(
+                                      builder: (context, dimensionable) =>
+                                          Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          child: dimensionable,
+                                        ),
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 350,
+                                        maxWidth: double.infinity,
+                                      ),
+                                      child: MultiMedia(media: x),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
                             child: Miniatura(
                               key: UniqueKey(),
                               media: x,
