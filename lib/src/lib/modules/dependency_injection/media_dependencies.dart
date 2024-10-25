@@ -26,6 +26,14 @@ extension MediaDependencies on GetIt {
       instanceName: "imagen",
     );
 
+    registerLazySingleton<IMediaFromFileStrategy>(
+      () => VideoStrategy(),
+      instanceName: "video",
+    );
+    registerLazySingleton<IMediaFromFileStrategy>(
+      () => ImagenStrategy(),
+      instanceName: "image",
+    );
     return this;
   }
 }

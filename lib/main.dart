@@ -1,12 +1,16 @@
-import 'package:blog_app/core/configs/routing.dart';
-import 'package:blog_app/core/configs/theme/app_themes.dart';
+import 'package:blog_app/src/lib/modules/dependency_injection/init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:blog_app/src/lib/features/auth/presentation/blocs/auth/auth_bloc.dart';
 
+import 'package:blog_app/src/lib/modules/routing.dart';
+import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
+
 void main() {
+  GetIt.I.addDepedencies();
   runApp(const MyApp());
 }
 

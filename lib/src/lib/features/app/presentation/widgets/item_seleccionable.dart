@@ -53,6 +53,7 @@ class _ItemSeleccionable extends ItemSeleccionable {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap,
       title: titulo,
       leading: leading,
       trailing: trailing,
@@ -131,17 +132,18 @@ class _CheckboxItem extends ItemSeleccionable {
   @override
   Widget build(BuildContext context) {
     return ItemSeleccionable.text(
-        titulo: titulo,
-        trailing: SizedBox(
-          height: 20,
-          child: SwitchTheme(
-            data: const SwitchThemeData(),
-            child: Checkbox(
-              value: value,
-              onChanged: onChange,
-            ),
+      titulo: titulo,
+      trailing: SizedBox(
+        height: 20,
+        child: SwitchTheme(
+          data: const SwitchThemeData(),
+          child: Checkbox(
+            value: value,
+            onChanged: onChange,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

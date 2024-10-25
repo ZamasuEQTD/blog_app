@@ -19,10 +19,9 @@ class Miniatura extends StatelessWidget {
       create: (context) =>
           MiniaturaGeneradorBloc()..add(GenerarMiniatura(media: media)),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(15),
-        child: SizedBox(
-          height: 80,
-          width: 80,
+        borderRadius: BorderRadius.circular(10),
+        child: SizedBox.square(
+          dimension: 80,
           child: BlocBuilder<MiniaturaGeneradorBloc, MiniaturaGeneradorState>(
             builder: (context, state) {
               if (state is! MiniaturaGenerada) {

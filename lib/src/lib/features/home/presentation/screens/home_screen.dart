@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 
@@ -14,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(),
+      create: (context) => HomeBloc()..add(CargarPortadas()),
       child: Scaffold(
         appBar: AppBar(),
         body: const CustomScrollView(
@@ -89,8 +90,8 @@ class _HomePortadasGrid extends StatelessWidget {
             itemCount: count,
             gridDelegate: _delegate,
             itemBuilder: (context, index) {
-              if (index > state.portadas.length) {
-                return const Portada.bone();
+              if (index >= state.portadas.length) {
+                return const Skeletonizer.zone(child: Portada.bone());
               }
 
               HomePortada entry = state.portadas[index];

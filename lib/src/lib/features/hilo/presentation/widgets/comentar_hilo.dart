@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -50,14 +51,20 @@ class ComentarHiloBottomSheet extends StatelessWidget {
                 );
               },
             ),
+            const SizedBox(
+              height: 5,
+            ),
             Row(
               children: [
                 ColoredIconButton(
                   onPressed: () {
                     showMaterialModalBottomSheet(
                       context: context,
-                      builder: (context) {
-                        return const ComentarHiloOpcionesItems();
+                      builder: (_) {
+                        return BlocProvider.value(
+                          value: context.read<GestorDeMediaBloc>(),
+                          child: const ComentarHiloOpcionesItems(),
+                        );
                       },
                     );
                   },
@@ -131,8 +138,8 @@ class ComentarHiloOpcionesItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RoundedBottomSheet.normal(
-      child: GrupoSeleccionableSliver(
+    return const RoundedBottomSheet.sliver(
+      sliver: GrupoSeleccionableSliver(
         seleccionables: [
           OpcionDeComentario.agregarEnlace(),
           OpcionDeComentario.agregarMedia(),
@@ -184,7 +191,7 @@ class _AgregarMediaItem extends OpcionDeComentario {
   Widget build(BuildContext context) {
     return OpcionDeComentario(
       onTap: () async {
-        FilePickerGalleryService service = GetIt.I.get();
+        IGalleryService service = GetIt.I.get();
 
         var response = await service.pickFile(extensions: []);
 
@@ -194,7 +201,7 @@ class _AgregarMediaItem extends OpcionDeComentario {
           }
         });
       },
-      opcion: "Agregar desde galeria",
+      opcion: "Agregar desde galeria mi nepe",
     );
   }
 }

@@ -5,12 +5,11 @@ import 'package:mime/mime.dart';
 
 import '../../../utils/clases/failure.dart';
 import '../../app/domain/abstractions/istrategy_context.dart';
-import '../../app/domain/strategy_context.dart';
 import '../domain/igallery_service.dart';
 import '../domain/models/media.dart';
 
 class FilePickerGalleryService extends IGalleryService {
-  final StrategyContext context = GetIt.I.get();
+  final IStrategyContext context = GetIt.I.get();
   @override
   Future<Either<Failure, Media?>> pickFile({
     required List<String> extensions,
@@ -47,7 +46,10 @@ class FilePickerGalleryService extends IGalleryService {
       IFilePicked file = FilePicked(pick);
 
       medias.add(
-        await context.execute(file.mime, file.path),
+        await context.execute<String, Media, IMediaFromFileStrategy>(
+          file.mime,
+          file.path,
+        ),
       );
     }
 
@@ -70,7 +72,7 @@ class FilePicked extends IFilePicked {
   FilePicked(this.file);
 
   @override
-  String get mime => MimeService.getMime(path);
+  String get mime => MimeService.getMime(path).split("/")[0];
 
   @override
   String get path => file.path!;

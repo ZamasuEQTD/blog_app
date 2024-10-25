@@ -1,4 +1,4 @@
-import 'package:blog_app/common/domain/services/horarios_service.dart';
+import 'package:blog_app/src/lib/features/app/presentation/logic/horarios_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -16,9 +16,12 @@ void main() {
               HorariosService.diferencia(time: time, utcNow: now);
 
           expect(
-              diferencia,
-              const TiempoTranscurrido(
-                  diferencia: 10, tipo: TiposTiempoTranscurrido.segundos));
+            diferencia,
+            const TiempoTranscurrido(
+              diferencia: 10,
+              tipo: TiposTiempoTranscurrido.segundos,
+            ),
+          );
         },
       );
       test(
@@ -30,9 +33,12 @@ void main() {
               HorariosService.diferencia(time: time, utcNow: now);
 
           expect(
-              diferencia,
-              const TiempoTranscurrido(
-                  diferencia: 10, tipo: TiposTiempoTranscurrido.minutos));
+            diferencia,
+            const TiempoTranscurrido(
+              diferencia: 10,
+              tipo: TiposTiempoTranscurrido.minutos,
+            ),
+          );
         },
       );
       test(
@@ -44,9 +50,12 @@ void main() {
               HorariosService.diferencia(time: time, utcNow: now);
 
           expect(
-              diferencia,
-              const TiempoTranscurrido(
-                  diferencia: 10, tipo: TiposTiempoTranscurrido.dias));
+            diferencia,
+            const TiempoTranscurrido(
+              diferencia: 10,
+              tipo: TiposTiempoTranscurrido.dias,
+            ),
+          );
         },
       );
       test(
@@ -58,9 +67,12 @@ void main() {
               HorariosService.diferencia(time: time, utcNow: now);
 
           expect(
-              diferencia,
-              const TiempoTranscurrido(
-                  diferencia: 1, tipo: TiposTiempoTranscurrido.mes));
+            diferencia,
+            const TiempoTranscurrido(
+              diferencia: 1,
+              tipo: TiposTiempoTranscurrido.mes,
+            ),
+          );
         },
       );
       test(
@@ -72,9 +84,12 @@ void main() {
               HorariosService.diferencia(time: time, utcNow: now);
 
           expect(
-              diferencia,
-              const TiempoTranscurrido(
-                  diferencia: 2, tipo: TiposTiempoTranscurrido.meses));
+            diferencia,
+            const TiempoTranscurrido(
+              diferencia: 2,
+              tipo: TiposTiempoTranscurrido.meses,
+            ),
+          );
         },
       );
     },

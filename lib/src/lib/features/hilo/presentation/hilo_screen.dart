@@ -13,6 +13,7 @@ import '../domain/models/hilo.dart';
 import 'blocs/comentar_hilo/comentar_hilo_bloc.dart';
 import 'blocs/hilo/hilo_bloc.dart';
 import 'widgets/acciones.dart';
+import 'widgets/comentar_hilo.dart';
 
 class HiloScreen extends StatelessWidget {
   final String id;
@@ -33,9 +34,10 @@ class HiloScreen extends StatelessWidget {
           BlocProvider(create: (context) => HiloBloc(id)..add(CargarHilo())),
         ],
         child: Scaffold(
+          bottomSheet: const ComentarHiloBottomSheet(),
           body: BlocBuilder<HiloBloc, HiloState>(
             builder: (context, state) {
-              if (state.status != HiloStatus.cargado) {
+              if (state.status == HiloStatus.cargado) {
                 return Container(
                   margin: EdgeInsets.only(
                     bottom: context.watch<AlturaController>().altura,
@@ -82,17 +84,22 @@ class InformacionDeHilo extends StatelessWidget {
                 HiloAccionesRow(
                   hilo: hilo,
                 ),
-                DimensionableScope(
-                  builder: (context, dimensionable) {
-                    return MediaSpoileable(child: dimensionable);
-                  },
-                  borderRadius: BorderRadius.circular(10),
-                  constraints: const BoxConstraints(
-                    maxHeight: 300,
-                    maxWidth: double.infinity,
-                  ),
-                  child: MultiMedia(
-                    media: hilo.portada.spoileable,
+                Center(
+                  child: DimensionableScope(
+                    borderRadius: BorderRadius.circular(10),
+                    constraints: const BoxConstraints(
+                      maxHeight: 300,
+                      maxWidth: double.infinity,
+                    ),
+                    builder: (context, dimensionable) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: dimensionable,
+                      );
+                    },
+                    child: MultiMedia(
+                      media: hilo.portada.spoileable,
+                    ),
                   ),
                 ),
                 Text(
@@ -103,7 +110,14 @@ class InformacionDeHilo extends StatelessWidget {
                   hilo.descripcion,
                   style: const TextStyle(fontSize: 18),
                 ),
-              ],
+              ]
+                  .map(
+                    (w) => Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: w,
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ),

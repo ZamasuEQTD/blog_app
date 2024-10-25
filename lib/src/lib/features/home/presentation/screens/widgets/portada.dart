@@ -105,15 +105,17 @@ class _PortadaCargada extends Portada {
     return Portada(
       child: ImageOverlapped.provider(
         provider: portada.imagen.spoileable.toProvider(),
+        boxFit: BoxFit.cover,
         child: BlurEffect(
-          builder: (child, controller) {
-            return Stack(
-              children: [
-                GradientEffectWidget(
-                  colors: _gradient,
-                  stops: _stops,
-                ),
-                Padding(
+          blurear: portada.imagen.esSpoiler,
+          child: Stack(
+            children: [
+              GradientEffectWidget(
+                colors: _gradient,
+                stops: _stops,
+              ),
+              Positioned.fill(
+                child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,9 +132,9 @@ class _PortadaCargada extends Portada {
                     ],
                   ),
                 ),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       ),
     );
