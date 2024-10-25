@@ -25,7 +25,7 @@ class LocalHilosRepository extends IHilosRepository {
             Imagen(
               provider: NetworkProvider(
                 path:
-                    "https://i.pinimg.com/564x/c0/51/4a/c0514ad71f49a6f94b879b863184e621.jpg",
+                    "https://freeadultcomix.com/wp-content/uploads/2022/11/Shadbase-One-Shot-Comics-6.jpg",
               ),
             ),
           ),
@@ -34,7 +34,7 @@ class LocalHilosRepository extends IHilosRepository {
             Imagen(
               provider: NetworkProvider(
                 path:
-                    "https://i.pinimg.com/564x/c0/51/4a/c0514ad71f49a6f94b879b863184e621.jpg",
+                    "https://freeadultcomix.com/wp-content/uploads/2022/11/Shadbase-One-Shot-Comics-6.jpg",
               ),
             ),
           ),

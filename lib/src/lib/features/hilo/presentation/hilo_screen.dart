@@ -46,6 +46,15 @@ class HiloScreen extends StatelessWidget {
                   child: CustomScrollView(
                     slivers: [
                       InformacionDeHilo(hilo: state.hilo!),
+                      BlocBuilder<HiloBloc, HiloState>(
+                        builder: (context, state) {
+                          return SliverList.builder(
+                            itemBuilder: (context, index) {
+                              return null;
+                            },
+                          );
+                        },
+                      ),
                     ],
                   ),
                 );
@@ -89,13 +98,15 @@ class InformacionDeHilo extends StatelessWidget {
                   child: DimensionableScope(
                     borderRadius: BorderRadius.circular(10),
                     constraints: const BoxConstraints(
-                      maxHeight: 300,
+                      maxHeight: 500,
                       maxWidth: double.infinity,
                     ),
                     builder: (context, dimensionable) {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: dimensionable,
+                        child: MediaSpoileable(
+                          child: dimensionable,
+                        ),
                       );
                     },
                     child: MultiMedia(
@@ -195,23 +206,29 @@ class MediaSpoileable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlurEffect.builder(
-      blurear: true,
-      builder: (controller, child) {
-        return Stack(
-          children: [
-            child,
-            controller.blurear
-                ? const Positioned.fill(
-                    child: Center(
-                      child: _VerContenidoButton(),
-                    ),
-                  )
-                : const SizedBox(),
-          ],
-        );
-      },
-      child: child,
+    return Stack(
+      children: [
+        child,
+        BlurEffect.builder(
+          blurear: true,
+          builder: (controller, p1) {
+            if (controller.blurear) {
+              return Positioned.fill(
+                child: ColoredBox(
+                  color: Colors.black.withOpacity(0.3),
+                  child: Stack(
+                    children: [
+                      Positioned.fill(child: p1),
+                      const _VerContenidoButton(),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return p1;
+          },
+        ),
+      ],
     );
   }
 }
@@ -223,28 +240,36 @@ class _VerContenidoButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: () => context.read<BlurController>().switchBlur(),
-      style: ButtonStyle(
-        backgroundColor: WidgetStatePropertyAll(Colors.white.withOpacity(0.15)),
-        side: const WidgetStatePropertyAll(
-          BorderSide(width: 0.5, color: Colors.transparent),
-        ),
-        shape: const WidgetStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: OutlinedButton(
+          onPressed: () => context.read<BlurController>().switchBlur(),
+          style: ButtonStyle(
+            backgroundColor:
+                WidgetStatePropertyAll(Colors.white.withOpacity(0.15)),
+            side: const WidgetStatePropertyAll(
+              BorderSide(width: 0.5, color: Colors.transparent),
+            ),
+            shape: const WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+            ),
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+            ),
           ),
-        ),
-        padding: const WidgetStatePropertyAll(
-          EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-        ),
-      ),
-      child: const Text(
-        "Ver contenido",
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
+          child: const FittedBox(
+            child: Text(
+              "Ver contenido",
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
       ),
     );

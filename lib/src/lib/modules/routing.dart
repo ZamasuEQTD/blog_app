@@ -12,7 +12,7 @@ GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: "/",
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
       path: "/hilo/:id",
