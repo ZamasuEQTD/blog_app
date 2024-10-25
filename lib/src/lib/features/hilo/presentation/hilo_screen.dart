@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
@@ -46,15 +48,7 @@ class HiloScreen extends StatelessWidget {
                   child: CustomScrollView(
                     slivers: [
                       InformacionDeHilo(hilo: state.hilo!),
-                      BlocBuilder<HiloBloc, HiloState>(
-                        builder: (context, state) {
-                          return SliverList.builder(
-                            itemBuilder: (context, index) {
-                              return null;
-                            },
-                          );
-                        },
-                      ),
+                      const ComentariosEnHilo(),
                     ],
                   ),
                 );
@@ -211,21 +205,21 @@ class MediaSpoileable extends StatelessWidget {
         child,
         BlurEffect.builder(
           blurear: true,
-          builder: (controller, p1) {
+          builder: (controller, child) {
             if (controller.blurear) {
               return Positioned.fill(
                 child: ColoredBox(
                   color: Colors.black.withOpacity(0.3),
                   child: Stack(
                     children: [
-                      Positioned.fill(child: p1),
+                      Positioned.fill(child: child),
                       const _VerContenidoButton(),
                     ],
                   ),
                 ),
               );
             }
-            return p1;
+            return child;
           },
         ),
       ],

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/measured_sized.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
@@ -16,108 +18,121 @@ import '../../../media/data/file_picker_gallery_service.dart';
 import '../../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../../media/presentation/miniatura.dart';
 import '../blocs/comentar_hilo/comentar_hilo_bloc.dart';
+import '../hilo_screen.dart';
 
 class ComentarHiloBottomSheet extends StatelessWidget {
   const ComentarHiloBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
-              builder: (context, state) {
-                return Row(
-                  children: state.medias
-                      .map(
-                        (x) => GestureDetector(
-                          onTap: () => context
-                              .read<GestorDeMediaBloc>()
-                              .add(const EliminarMedia()),
-                          child: GestureDetector(
-                            onTap: () {
-                              showMaterialModalBottomSheet(
-                                context: context,
-                                builder: (context) {
-                                  // return RoundedBottomSheet.normal(
-                                  //   child: ConstrainedBox(
-                                  //     constraints: const BoxConstraints(
-                                  //       maxHeight: 200,
-                                  //       maxWidth: double.infinity,
-                                  //     ),
-                                  //     child: const Image(
-                                  //       image: NetworkImage(
-                                  //         "https://i.pinimg.com/564x/c0/51/4a/c0514ad71f49a6f94b879b863184e621.jpg",
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  return RoundedBottomSheet.normal(
-                                    titulo: const Text("hola"),
-                                    child: DimensionableScope(
-                                      builder: (context, dimensionable) =>
-                                          Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: dimensionable,
+    return MeasureSize(
+      onChange: (size) {
+        context.read<AlturaController>().cambiar(size.height);
+      },
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.surface,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
+                builder: (context, state) {
+                  return Row(
+                    children: state.medias
+                        .map(
+                          (x) => GestureDetector(
+                            onTap: () => context
+                                .read<GestorDeMediaBloc>()
+                                .add(const EliminarMedia()),
+                            child: GestureDetector(
+                              onTap: () {
+                                showMaterialModalBottomSheet(
+                                  context: context,
+                                  builder: (context) {
+                                    return RoundedBottomSheet.normal(
+                                      child: DimensionableScope(
+                                        builder: (context, dimensionable) =>
+                                            Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: dimensionable,
+                                              ),
+                                            ),
+                                            ItemSeleccionable.checkbox(
+                                              titulo: "Marcar spoiler",
+                                              onChange: (value) {},
+                                              value: true,
+                                            ),
+                                            ItemSeleccionable.text(
+                                              titulo: "Eliminar",
+                                              onTap: () {
+                                                context
+                                                    .read<GestorDeMediaBloc>()
+                                                    .add(
+                                                      const EliminarMedia(),
+                                                    );
+                                                context.pop();
+                                              },
+                                            ),
+                                          ],
                                         ),
+                                        constraints: const BoxConstraints(
+                                          maxHeight: 350,
+                                          maxWidth: double.infinity,
+                                        ),
+                                        child: MultiMedia(media: x),
                                       ),
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 350,
-                                        maxWidth: double.infinity,
-                                      ),
-                                      child: MultiMedia(media: x),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: Miniatura(
-                              key: UniqueKey(),
-                              media: x,
+                                    );
+                                  },
+                                );
+                              },
+                              child: Miniatura(
+                                key: UniqueKey(),
+                                media: x,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Row(
-              children: [
-                ColoredIconButton(
-                  onPressed: () {
-                    showMaterialModalBottomSheet(
-                      context: context,
-                      builder: (_) {
-                        return BlocProvider.value(
-                          value: context.read<GestorDeMediaBloc>(),
-                          child: const ComentarHiloOpcionesItems(),
-                        );
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.three_k_rounded),
-                ),
-                const _ComentarInput(),
-                ColoredIconButton(
-                  onPressed: () =>
-                      context.read<ComentarHiloBloc>().add(EnviarComentario()),
-                  icon: const Icon(Icons.send),
-                ),
-              ],
-            ),
-          ],
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  ColoredIconButton(
+                    onPressed: () {
+                      showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (_) {
+                          return BlocProvider.value(
+                            value: context.read<GestorDeMediaBloc>(),
+                            child: const ComentarHiloOpcionesItems(),
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.three_k_rounded),
+                  ),
+                  const _ComentarInput(),
+                  ColoredIconButton(
+                    onPressed: () => context
+                        .read<ComentarHiloBloc>()
+                        .add(EnviarComentario()),
+                    icon: const Icon(Icons.send),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
