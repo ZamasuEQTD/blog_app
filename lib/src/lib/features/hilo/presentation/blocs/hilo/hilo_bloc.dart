@@ -77,6 +77,9 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
             comentarios: [...state.comentarios, ...r],
           ),
         );
+        emit(
+          state.copyWith(comentariosState: const ComentariosState.initial()),
+        );
       },
     );
   }

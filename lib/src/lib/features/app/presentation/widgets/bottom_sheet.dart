@@ -14,13 +14,13 @@ abstract class RoundedBottomSheet extends StatelessWidget {
     Key? key,
     Widget? titulo,
     ScrollController? controller,
-    required Widget sliver,
+    required List<Widget> slivers,
   }) = _SliverBottomSheet;
 
   const factory RoundedBottomSheet.draggable({
     Key? key,
     Widget? titulo,
-    required Widget sliver,
+    required List<Widget> slivers,
   }) = _DraggableSliverBottomSheet;
 
   const factory RoundedBottomSheet.normal({
@@ -45,7 +45,7 @@ class _BottomSheet extends RoundedBottomSheet {
     Widget child = ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: ColoredBox(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.onSurface,
         child: this.child,
       ),
     );
@@ -90,35 +90,37 @@ class _NormalBottomSheet extends RoundedBottomSheet {
 class _SliverBottomSheet extends RoundedBottomSheet {
   final ScrollController? controller;
   final Widget? titulo;
-  final Widget sliver;
+  final List<Widget> slivers;
   const _SliverBottomSheet({
     super.key,
-    required this.sliver,
+    required this.slivers,
     this.titulo,
     this.controller,
   }) : super._();
 
   @override
   Widget build(BuildContext context) {
+    return CustomScrollView(
+      shrinkWrap: true,
+      controller: controller,
+      slivers: slivers,
+    );
     return RoundedBottomSheet(
       child: CustomScrollView(
         shrinkWrap: true,
         controller: controller,
-        slivers: [
-          if (titulo != null) titulo!,
-          sliver,
-        ],
+        slivers: slivers,
       ),
     );
   }
 }
 
 class _DraggableSliverBottomSheet extends RoundedBottomSheet {
-  final Widget sliver;
+  final List<Widget> slivers;
   final Widget? titulo;
   const _DraggableSliverBottomSheet({
     super.key,
-    required this.sliver,
+    required this.slivers,
     this.titulo,
   }) : super._();
 
@@ -127,7 +129,7 @@ class _DraggableSliverBottomSheet extends RoundedBottomSheet {
     return DraggableScrollableSheet(
       builder: (context, controller) => RoundedBottomSheet.sliver(
         controller: controller,
-        sliver: sliver,
+        slivers: slivers,
         titulo: titulo,
       ),
     );

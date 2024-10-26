@@ -16,7 +16,13 @@ class HiloState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [hilo, status];
+  List<Object?> get props => [
+        hilo,
+        status,
+        comentarios,
+        ultimoComentario,
+        comentariosState,
+      ];
 
   HiloState copyWith({
     Hilo? hilo,

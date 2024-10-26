@@ -1,33 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 typedef OnWidgetSizeChange = void Function(Size size);
 
-class MeasureSize extends StatefulWidget {
+class AlturaNotifier extends StatelessWidget {
+  final GlobalKey widgetKey = GlobalKey();
   final Widget child;
-  final OnWidgetSizeChange onChange;
-
-  const MeasureSize({
-    super.key,
-    required this.onChange,
-    required this.child,
-  });
-
-  @override
-  createState() => _MeasureSizeState();
-}
-
-class _MeasureSizeState extends State<MeasureSize> {
-  var widgetKey = GlobalKey();
+  final OnWidgetSizeChange onSizeChange;
+  AlturaNotifier({super.key, required this.child, required this.onSizeChange});
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => widget.onChange(widgetKey.currentContext!.size!),
+    return NotificationListener(
+      onNotification: _onNotification,
+      child: SizeChangedLayoutNotifier(
+        child: Container(
+          key: widgetKey,
+          child: child,
+        ),
+      ),
     );
+  }
 
-    return SizedBox(
-      key: widgetKey,
-      child: widget.child,
-    );
+  bool _onNotification(Notification onNotification) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // Obtienes la altura del widget usando la llave
+      final size = widgetKey.currentContext?.size!;
+      // Actualizas el valor de la altura con la nueva altura
+      if (size != null) {
+        onSizeChange(size);
+      }
+    });
+    return true;
   }
 }

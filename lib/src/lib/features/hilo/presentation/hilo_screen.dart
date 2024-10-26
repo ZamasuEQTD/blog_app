@@ -43,7 +43,7 @@ class HiloScreen extends StatelessWidget {
               if (state.status == HiloStatus.cargado) {
                 return Container(
                   margin: EdgeInsets.only(
-                    bottom: context.watch<AlturaController>().altura,
+                    bottom: context.watch<AlturaController>().altura + 20,
                   ),
                   child: CustomScrollView(
                     slivers: [
@@ -143,6 +143,13 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   final Map<ComentarioId, GlobalKey> keys = {};
 
   @override
+  void initState() {
+    context.read<HiloBloc>().add(CargarComentarios());
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<HiloBloc, HiloState>(
       listenWhen: (previous, current) =>
@@ -157,14 +164,30 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
       },
       child: BlocBuilder<HiloBloc, HiloState>(
         builder: (context, state) {
-          return SliverList.builder(
-            itemCount: state.comentarios.length,
-            itemBuilder: (context, index) {
-              return ComentarioCard.comentario(
-                key: keys[state.comentarios[index].id],
-                comentario: state.comentarios[index],
-              );
-            },
+          return SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    "Comentarios ${state.hilo!.comentarios}",
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              SliverList.builder(
+                itemCount: state.comentarios.length,
+                itemBuilder: (context, index) {
+                  return ComentarioCard.comentario(
+                    key: keys[state.comentarios[index].id],
+                    comentario: state.comentarios[index],
+                  );
+                },
+              ),
+            ],
           );
         },
       ),
@@ -247,7 +270,9 @@ class _VerContenidoButton extends StatelessWidget {
             ),
             shape: const WidgetStatePropertyAll(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
+                ),
               ),
             ),
             padding: const WidgetStatePropertyAll(

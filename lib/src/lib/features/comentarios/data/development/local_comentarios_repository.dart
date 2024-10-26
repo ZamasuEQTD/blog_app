@@ -13,17 +13,31 @@ class LocalComentariosRepository extends IComentariosRepository {
     return Future.value(
       Right([
         Comentario(
-          id: "CP",
+          id: "12",
           texto: "Aguante la bornografia",
           creado_en: DateTime(2000, 5, 1, 2),
           color: ColoresDeComentario.rojo,
           op: const OpData(
-            nombre: "ANONIMMO",
+            nombre: "ANONIMO",
             rango: "ANONIMO",
             rangoCorto: "ANON",
           ),
           tag: "CPDENEN",
-          tags: [],
+          tags: ["CPDENEN", "CPDENEN", "CPDENEN", "CPDENEN"],
+          taggueos: [],
+        ),
+        Comentario(
+          id: "3231",
+          texto: "Aguante la bornografia",
+          creado_en: DateTime(2000, 5, 1, 2),
+          color: ColoresDeComentario.multi,
+          op: const OpData(
+            nombre: "ANONIMO",
+            rango: "ANONIMO",
+            rangoCorto: "ANON",
+          ),
+          tag: "CPDENEN",
+          tags: ["CPDENEN", "CPDENEN", "CPDENEN", "CPDENEN"],
           taggueos: [],
         ),
       ]),

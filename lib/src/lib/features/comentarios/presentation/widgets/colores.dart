@@ -26,20 +26,36 @@ class ColorDeComentario extends StatelessWidget {
         width: 50,
         child: Stack(
           children: [
-            _colores[comentario.color]!,
-            Positioned.fill(
-              child: Center(
-                child: Text(
-                  comentario.dados ?? comentario.op.rangoCorto,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 20,
+            Positioned.fill(child: _colores[comentario.color]!),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: FittedBox(
+                  child: Text(
+                    comentario.dados ?? comentario.op.rangoCorto,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 20,
+                    ),
                   ),
                 ),
               ),
             ),
+            // Positioned.fill(
+            //   child: Center(
+            //     child: Text(
+            //       comentario.dados ?? comentario.op.rangoCorto,
+            //       textAlign: TextAlign.center,
+            //       style: const TextStyle(
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.w900,
+            //         fontSize: 20,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

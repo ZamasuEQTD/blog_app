@@ -11,7 +11,7 @@ extension ImagenExtensions on Imagen {
       case NetworkProvider provider:
         return NetworkImage(provider.path);
       case FileProvider provider:
-        return FileImage(File(provider.path));
+        return FileImage(File(provider.path), scale: 1);
       default:
         throw Exception("No se puede convertir a [ImageProvider]");
     }

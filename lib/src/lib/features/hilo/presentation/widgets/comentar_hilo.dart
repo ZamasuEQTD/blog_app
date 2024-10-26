@@ -2,6 +2,7 @@
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/measured_sized.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../app/presentation/widgets/grupo_seleccionable.dart';
 import '../../../media/data/file_picker_gallery_service.dart';
+import '../../../media/domain/models/media.dart';
 import '../../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../../media/presentation/miniatura.dart';
 import '../blocs/comentar_hilo/comentar_hilo_bloc.dart';
@@ -25,8 +27,8 @@ class ComentarHiloBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MeasureSize(
-      onChange: (size) {
+    return AlturaNotifier(
+      onSizeChange: (size) {
         context.read<AlturaController>().cambiar(size.height);
       },
       child: ColoredBox(
@@ -48,45 +50,72 @@ class ComentarHiloBottomSheet extends StatelessWidget {
                                 .add(const EliminarMedia()),
                             child: GestureDetector(
                               onTap: () {
-                                showMaterialModalBottomSheet(
+                                showModalBottomSheet(
                                   context: context,
-                                  builder: (context) {
-                                    return RoundedBottomSheet.normal(
-                                      child: DimensionableScope(
-                                        builder: (context, dimensionable) =>
-                                            Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(8),
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: dimensionable,
+                                  isScrollControlled: true,
+                                  builder: (_) {
+                                    return BlocProvider.value(
+                                      value: context.read<GestorDeMediaBloc>(),
+                                      child: RoundedBottomSheet.sliver(
+                                        slivers: [
+                                          SliverToBoxAdapter(
+                                            child: DimensionableScope(
+                                              builder:
+                                                  (context, dimensionable) =>
+                                                      Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    ConstrainedBox(
+                                                      constraints:
+                                                          const BoxConstraints(
+                                                        maxHeight: 350,
+                                                      ),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                          10,
+                                                        ),
+                                                        child: dimensionable,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
+                                              child: MultiMedia(media: x),
                                             ),
-                                            ItemSeleccionable.checkbox(
-                                              titulo: "Marcar spoiler",
-                                              onChange: (value) {},
-                                              value: true,
+                                          ),
+                                          SliverPadding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 5,
                                             ),
-                                            ItemSeleccionable.text(
-                                              titulo: "Eliminar",
-                                              onTap: () {
-                                                context
-                                                    .read<GestorDeMediaBloc>()
-                                                    .add(
-                                                      const EliminarMedia(),
-                                                    );
-                                                context.pop();
-                                              },
+                                            sliver: GrupoSeleccionableSliver(
+                                              seleccionables: [
+                                                ItemSeleccionable.checkbox(
+                                                  titulo: "Marcar spoiler",
+                                                  onChange: (value) {},
+                                                  value: true,
+                                                ),
+                                                ItemSeleccionable.text(
+                                                  titulo: "Eliminar",
+                                                  onTap: () {
+                                                    context
+                                                        .read<
+                                                            GestorDeMediaBloc>()
+                                                        .add(
+                                                          const EliminarMedia(),
+                                                        );
+                                                    context.pop();
+                                                  },
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                        constraints: const BoxConstraints(
-                                          maxHeight: 350,
-                                          maxWidth: double.infinity,
-                                        ),
-                                        child: MultiMedia(media: x),
+                                          ),
+                                        ],
                                       ),
                                     );
                                   },
@@ -102,9 +131,6 @@ class ComentarHiloBottomSheet extends StatelessWidget {
                         .toList(),
                   );
                 },
-              ),
-              const SizedBox(
-                height: 5,
               ),
               Row(
                 children: [
@@ -193,12 +219,14 @@ class ComentarHiloOpcionesItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const RoundedBottomSheet.sliver(
-      sliver: GrupoSeleccionableSliver(
-        seleccionables: [
-          OpcionDeComentario.agregarEnlace(),
-          OpcionDeComentario.agregarMedia(),
-        ],
-      ),
+      slivers: [
+        GrupoSeleccionableSliver(
+          seleccionables: [
+            OpcionDeComentario.agregarEnlace(),
+            OpcionDeComentario.agregarMedia(),
+          ],
+        ),
+      ],
     );
   }
 }
