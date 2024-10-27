@@ -43,9 +43,9 @@ class _BottomSheet extends RoundedBottomSheet {
   @override
   Widget build(BuildContext context) {
     Widget child = ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: ColoredBox(
-        color: Theme.of(context).colorScheme.onSurface,
+        color: Theme.of(context).colorScheme.surface,
         child: this.child,
       ),
     );
@@ -174,4 +174,8 @@ class DestructibleBottomSheet extends RoundedBottomSheet {
       ),
     );
   }
+}
+
+abstract class TituloBottomSheet extends StatelessWidget {
+  const TituloBottomSheet({super.key});
 }

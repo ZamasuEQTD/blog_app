@@ -23,7 +23,7 @@ class TagsDeComentarios extends StatelessWidget {
       ]
           .map(
             (x) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3),
+              margin: const EdgeInsets.symmetric(horizontal: 2),
               child: x,
             ),
           )
@@ -70,13 +70,13 @@ class _TagDeComentario extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return Tag.text(
+    return Tag(
       background: background,
       padding: padding,
       border: BorderRadius.circular(5),
       child: Text(
         tag,
-        style: style,
+        style: const TextStyle(fontSize: 12).merge(style),
       ),
     );
   }
@@ -137,7 +137,10 @@ class _DestacadoTag extends TagDeComentario {
   const _DestacadoTag() : super._();
   @override
   Widget build(BuildContext context) {
-    return const TagDeComentario(background: Colors.red, tag: "Destacado");
+    return const TagDeComentario(
+      background: Color.fromRGBO(254, 240, 138, 1),
+      tag: "Destacado",
+    );
   }
 }
 
@@ -148,10 +151,10 @@ class _RangoTag extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return TagDeComentario(
+    return const TagDeComentario(
       background: Colors.white,
-      tag: rango,
-      style: const TextStyle(fontWeight: FontWeight.bold),
+      tag: "anon",
+      style: TextStyle(fontWeight: FontWeight.bold),
     );
   }
 }

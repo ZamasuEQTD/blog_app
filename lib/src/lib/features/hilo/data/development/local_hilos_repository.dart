@@ -31,10 +31,10 @@ class LocalHilosRepository extends IHilosRepository {
           ),
           portada: const Spoileable(
             true,
-            Imagen(
+            Video(
               provider: NetworkProvider(
                 path:
-                    "https://freeadultcomix.com/wp-content/uploads/2022/11/Shadbase-One-Shot-Comics-6.jpg",
+                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
               ),
             ),
           ),

@@ -40,7 +40,7 @@ class BanderasDeHiloRow extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: OutlinedIcon(
                   child: Padding(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(4),
                     child: FittedBox(child: _banderas[bandera]!),
                   ),
                 ),

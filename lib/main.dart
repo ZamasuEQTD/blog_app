@@ -9,6 +9,8 @@ import 'package:blog_app/src/lib/features/auth/presentation/blocs/auth/auth_bloc
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
 
+import 'package:blog_app/src/lib/modules/theme/app_colors.dart';
+
 void main() {
   GetIt.I.addDepedencies();
   runApp(const MyApp());
@@ -19,20 +21,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return MaterialApp(
-    //   title: 'Flutter Demo',
-    //   theme: AppThemes.light.copyWith(
-    //     textTheme: GoogleFonts.notoSansTextTheme(),
-    //   ),
-    //   home: const Home.Screen(),
-    // );
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.notoSansTextTheme(),
+        elevatedButtonTheme: const ElevatedButtonThemeData(
+          style: ButtonStyle(
+            elevation: WidgetStatePropertyAll(0),
+          ),
+        ),
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
-          fillColor: Color(0xfff5f5f5),
+          fillColor: AppColors.onSurface,
           contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       routerConfig: routes,
       builder: (context, child) {
         return BlocProvider(
-          create: (_) => AuthBloc(),
+          create: (_) => AuthBloc()..add(RestaurarSesion()),
           child: child,
         );
       },

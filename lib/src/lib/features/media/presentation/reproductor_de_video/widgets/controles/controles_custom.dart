@@ -41,14 +41,18 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
       );
     }
 
-    return Container(
-      color: Colors.transparent,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () =>
-            context.read<ReproductorDeVideoBloc>().add(const ToggleControls()),
-        child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-          builder: builder,
+    return IconTheme(
+      data: const IconThemeData(color: Colors.white),
+      child: Container(
+        color: Colors.transparent,
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () => context
+              .read<ReproductorDeVideoBloc>()
+              .add(const ToggleControls()),
+          child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
+            builder: builder,
+          ),
         ),
       ),
     );
@@ -115,6 +119,9 @@ class ControlesDeReproductor extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButtonReproductor.volumen(),
+                  SizedBox(
+                    width: 5,
+                  ),
                   IconButtonReproductor.fullscreen(),
                 ],
               ),
@@ -172,6 +179,8 @@ abstract class IconButtonReproductor extends StatelessWidget {
   const factory IconButtonReproductor.play() = _PlayButton;
 
   const factory IconButtonReproductor.volumen() = _VolumenButton;
+
+  const factory IconButtonReproductor.inicializar() = _VolumenButton;
 }
 
 class _IconButtonReproductor extends IconButtonReproductor {
@@ -185,15 +194,15 @@ class _IconButtonReproductor extends IconButtonReproductor {
     required this.onPressed,
     required this.icon,
   }) : super._();
+
   @override
   Widget build(BuildContext context) {
-    return ColoredIconButton(
-      onPressed: onPressed,
-      icon: SizedBox.square(
-        dimension: size,
-        child: FittedBox(
-          child: icon,
-        ),
+    return SizedBox.square(
+      dimension: size,
+      child: ColoredIconButton(
+        background: Colors.black.withOpacity(0.3),
+        onPressed: onPressed,
+        icon: icon,
       ),
     );
   }
@@ -205,33 +214,11 @@ class _PlayButton extends IconButtonReproductor {
   @override
   Widget build(BuildContext context) {
     return IconButtonReproductor(
-      onPressed: () => context.read<ReproductorDeVideoBloc>(),
+      onPressed: () =>
+          context.read<ReproductorDeVideoBloc>()..add(SwitchReproduccion()),
       size: 60,
-      icon: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-        builder: (context, state) {
-          if (state.finalizado) {
-            return const Icon(
-              Icons.replay,
-              color: Colors.white,
-            );
-          }
-
-          if (state.buffering) {
-            return const CircularProgressIndicator();
-          }
-
-          if (state.reproduciendo) {
-            return const Icon(
-              Icons.pause,
-              color: Colors.white,
-            );
-          }
-
-          return const Icon(
-            Icons.play_arrow,
-            color: Colors.white,
-          );
-        },
+      icon: const Icon(
+        Icons.replay,
       ),
     );
   }
@@ -245,13 +232,17 @@ class _FullscreenButton extends IconButtonReproductor {
     return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
       builder: (context, state) {
         return IconButtonReproductor(
-          size: 30,
+          size: 45,
           onPressed: () => !state.pantalla_completa
               ? context.read<ChewieController>().enterFullScreen()
               : context.read<ChewieController>().exitFullScreen(),
           icon: !state.pantalla_completa
-              ? const Icon(Icons.fullscreen)
-              : const Icon(Icons.fullscreen_exit),
+              ? const Icon(
+                  Icons.fullscreen,
+                )
+              : const Icon(
+                  Icons.fullscreen_exit,
+                ),
         );
       },
     );
@@ -266,7 +257,7 @@ class _VolumenButton extends IconButtonReproductor {
     return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
       builder: (context, state) {
         return IconButtonReproductor(
-          size: 30,
+          size: 45,
           onPressed: () => context
               .read<VideoPlayerController>()
               .setVolume(state.volumen == 0 ? 1 : 0),
@@ -276,7 +267,6 @@ class _VolumenButton extends IconButtonReproductor {
                 state.volumen != -1
                     ? (state.volumen == 0 ? Icons.volume_mute : Icons.volume_up)
                     : Icons.volume_off,
-                color: Colors.white,
               );
             },
           ),
@@ -285,3 +275,9 @@ class _VolumenButton extends IconButtonReproductor {
     );
   }
 }
+
+abstract class ReproductorDeVideoButton extends StatelessWidget {
+  const ReproductorDeVideoButton({super.key});
+}
+
+class _ReproductorDeVideoButton {}

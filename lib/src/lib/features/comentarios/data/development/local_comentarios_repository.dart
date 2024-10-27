@@ -15,7 +15,7 @@ class LocalComentariosRepository extends IComentariosRepository {
         Comentario(
           id: "12",
           texto: "Aguante la bornografia",
-          creado_en: DateTime(2000, 5, 1, 2),
+          creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.rojo,
           op: const OpData(
             nombre: "ANONIMO",
@@ -29,13 +29,14 @@ class LocalComentariosRepository extends IComentariosRepository {
         Comentario(
           id: "3231",
           texto: "Aguante la bornografia",
-          creado_en: DateTime(2000, 5, 1, 2),
+          creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.multi,
           op: const OpData(
             nombre: "ANONIMO",
             rango: "ANONIMO",
             rangoCorto: "ANON",
           ),
+          tagUnico: "CP3",
           tag: "CPDENEN",
           tags: ["CPDENEN", "CPDENEN", "CPDENEN", "CPDENEN"],
           taggueos: [],

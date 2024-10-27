@@ -32,9 +32,19 @@ class _AuthButton extends AuthButton {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
+      width: double.infinity,
       child: ElevatedButton(
+        style: const ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(Color(0xff495057)),
+        ),
         onPressed: onPressed,
-        child: Text(label),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
     );
   }

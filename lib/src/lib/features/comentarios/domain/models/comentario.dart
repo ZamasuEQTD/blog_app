@@ -10,7 +10,7 @@ class Comentario {
   final ColoresDeComentario color;
   final OpData op;
   final Spoileable<Media>? media;
-  final bool destacado = false;
+  final bool destacado = true;
   final String tag;
   final String? autor;
   final String? tagUnico;

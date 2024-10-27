@@ -36,7 +36,7 @@ class CambiarParametros extends ReproductorDeVideoEvent {
         buffering,
         pantalla_completa,
         position,
-        volumen
+        volumen,
       ];
 }
 
@@ -55,6 +55,8 @@ final class PausarVideo extends ReproductorDeVideoEvent {
 final class ReproducirVideo extends ReproductorDeVideoEvent {
   const ReproducirVideo();
 }
+
+final class SwitchReproduccion extends ReproductorDeVideoEvent {}
 
 final class EntrarEnPantallaCompleta extends ReproductorDeVideoEvent {
   const EntrarEnPantallaCompleta();

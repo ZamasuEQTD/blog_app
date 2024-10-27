@@ -17,6 +17,9 @@ class ReproductorDeVideoBloc
     on<ToggleControls>(_toggleControls);
     on<CambiarParametros>(_cambiarParametros);
     on<InicializarReproductor>(_onInicializarReproductor);
+    on<SwitchReproduccion>(_onSwitchReproduccion);
+    on<ReproducirVideo>(_onReproducirVideo);
+    on<PausarVideo>(_onPausarVideo);
   }
 
   FutureOr<void> _onInicializarReproductor(
@@ -54,6 +57,41 @@ class ReproductorDeVideoBloc
         volumen: event.volumen,
         reproductor: event.reproductor,
         reproduciendo: event.reproduciendo,
+      ),
+    );
+  }
+
+  FutureOr<void> _onSwitchReproduccion(
+    SwitchReproduccion event,
+    Emitter<ReproductorDeVideoState> emit,
+  ) {
+    if (state.finalizado || !state.reproduciendo) {
+      add(const ReproducirVideo());
+    } else {
+      add(const PausarVideo());
+    }
+  }
+
+  FutureOr<void> _onReproducirVideo(
+    ReproducirVideo event,
+    Emitter<ReproductorDeVideoState> emit,
+  ) async {
+    await controller.play();
+    emit(
+      state.copyWith(
+        reproduciendo: true,
+      ),
+    );
+  }
+
+  FutureOr<void> _onPausarVideo(
+    PausarVideo event,
+    Emitter<ReproductorDeVideoState> emit,
+  ) async {
+    await controller.pause();
+    emit(
+      state.copyWith(
+        reproduciendo: false,
       ),
     );
   }

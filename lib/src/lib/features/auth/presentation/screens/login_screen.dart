@@ -34,16 +34,22 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Scaffold(
+          appBar: AppBar(
+            leading: const BackButton(
+              color: Colors.black,
+            ),
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const AuthLabel.login(),
-                  RichText(
-                    text: const TextSpan(
-                      text: "Inicia sesión o",
-                      children: [TextSpan(text: "Registrate")],
+                  Text(
+                    "Informacion de cuenta",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
                     ),
                   ),
                   TextField(
@@ -55,15 +61,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: "Usuario",
                     ),
                   ),
+                  const SizedBox(height: 10),
                   TextField(
                     maxLines: 1,
                     obscureText: true,
                     onChanged: (value) {
                       log(value);
                     },
-                    decoration: const InputDecoration(
-                      hintText: "Password",
+                    decoration: InputDecoration(
+                      hintText: "Contraseña",
+                      suffixIcon: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.remove_red_eye),
+                      ),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   const AuthButton.login(),
                 ],

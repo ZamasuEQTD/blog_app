@@ -72,9 +72,11 @@ class InformacionDeHilo extends StatelessWidget {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(7),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15)),
-          color: Color(0xfff5f5f5),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(15),
+          ),
+          color: Theme.of(context).colorScheme.onSurface,
         ),
         child: SafeArea(
           child: Padding(
@@ -90,18 +92,12 @@ class InformacionDeHilo extends StatelessWidget {
                 ),
                 Center(
                   child: DimensionableScope(
-                    borderRadius: BorderRadius.circular(10),
                     constraints: const BoxConstraints(
                       maxHeight: 500,
                       maxWidth: double.infinity,
                     ),
                     builder: (context, dimensionable) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: MediaSpoileable(
-                          child: dimensionable,
-                        ),
-                      );
+                      return dimensionable;
                     },
                     child: MultiMedia(
                       media: hilo.portada.spoileable,
@@ -168,7 +164,10 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 5,
+                    vertical: 5,
+                  ),
                   child: Text(
                     "Comentarios ${state.hilo!.comentarios}",
                     style: const TextStyle(

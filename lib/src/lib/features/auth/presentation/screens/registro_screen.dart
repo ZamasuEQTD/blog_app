@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ffi';
 
 import 'package:blog_app/src/lib/features/auth/presentation/screens/widgets/button.dart';
@@ -29,13 +30,37 @@ class _RegistroScreenState extends State<RegistroScreen> {
             context.read<AuthBloc>().add(IniciarSesion(token: form.token));
           }
         },
-        child: const Scaffold(
+        child: Scaffold(
           body: SafeArea(
-            child: Column(
-              children: [
-                AuthLabel.registro(),
-                AuthButton.registrarse(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                children: [
+                  const AuthLabel.registro(),
+                  TextField(
+                    onChanged: (value) {
+                      log(value);
+                    },
+                    decoration: const InputDecoration(hintText: "Usuario"),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(hintText: "Contraseña"),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(hintText: "Repite contraseña"),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const AuthButton.registrarse(),
+                ],
+              ),
             ),
           ),
         ),

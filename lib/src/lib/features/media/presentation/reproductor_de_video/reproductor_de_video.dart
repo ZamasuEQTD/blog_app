@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -100,8 +102,13 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
     void listener(BuildContext context, ReproductorDeVideoState state) {
       if (state.reproductor == EstadoDeReproductor.iniciado) {
         setState(() {
-          ratio = widget.controller.value.aspectRatio;
+          ratio = controller.videoPlayerController.value.aspectRatio;
         });
+
+        // Timer(
+        //     const Duration(seconds: 3),
+        //     () => log(
+        //         controller.videoPlayerController.value.aspectRatio.toString()));
 
         widget.controller.addListener(
           () {

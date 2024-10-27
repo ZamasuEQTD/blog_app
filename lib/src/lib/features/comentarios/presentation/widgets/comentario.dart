@@ -28,13 +28,13 @@ class _ComentarioCard extends ComentarioCard {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: ColoredBox(
           color: Theme.of(context).colorScheme.onSurface,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
             child: child,
           ),
         ),
@@ -177,35 +177,36 @@ class ComentarioInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              ColorDeComentario(comentario: comentario),
-              const SizedBox(
-                width: 5,
-              ),
-              Row(
-                children: [
-                  Text(
-                    comentario.op.nombre,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            ColorDeComentario(comentario: comentario),
+            const SizedBox(
+              width: 3,
+            ),
+            Row(
+              children: [
+                Text(
+                  comentario.op.nombre,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
-                  TagsDeComentarios(comentario: comentario),
-                ],
-              ),
-            ],
-          ),
-          Text(
-            HorariosService.diferencia(
-              utcNow: DateTime.now().toUtc(),
-              time: comentario.creado_en,
-            ).toString(),
-          ),
-        ],
-      ),
+                ),
+                TagsDeComentarios(comentario: comentario),
+              ],
+            ),
+          ],
+        ),
+        Text(
+          HorariosService.diferencia(
+            utcNow: DateTime.now().toUtc(),
+            time: comentario.creado_en,
+          ).toString(),
+          style: const TextStyle(fontSize: 12),
+        ),
+      ],
     );
   }
 }

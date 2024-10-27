@@ -19,13 +19,15 @@ class _AuthLabel extends AuthLabel {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      label,
-      style: const TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.w700,
+    return Center(
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 25,
+          fontWeight: FontWeight.bold,
+        ),
+        textAlign: TextAlign.center,
       ),
-      textAlign: TextAlign.center,
     );
   }
 }
@@ -44,6 +46,6 @@ class _RegistroLabel extends AuthLabel {
 
   @override
   Widget build(BuildContext context) {
-    return const AuthLabel(label: "¡Bienvenido de nuevo!");
+    return const AuthLabel(label: "Introduce tus datos");
   }
 }
