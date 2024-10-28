@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/auth/presentation/screens/login_screen.dart';
@@ -8,6 +9,7 @@ import '../features/notificaciones/presentation/screens/notificaciones_screen.da
 import '../features/postear_hilo/presentation/postear_hilo_screen.dart';
 
 GoRouter routes = GoRouter(
+  navigatorKey: Get.key,
   initialLocation: "/",
   routes: [
     GoRoute(

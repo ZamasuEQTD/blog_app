@@ -20,25 +20,30 @@ class HiloScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      global: false,
-      init: VerHiloController(),
-      builder: (controller) {
+    return ListenableProvider(
+      create: (context) => VerHiloController()..cargar(id),
+      builder: (context, child) {
         return Scaffold(
           bottomSheet: const ComentarHiloBottomSheet(),
-          body: !controller.cargando.value
-              ? Container(
-                  margin: EdgeInsets.only(
-                    bottom: context.watch<AlturaController>().altura + 20,
-                  ),
-                  child: CustomScrollView(
-                    slivers: [
-                      InformacionDeHilo(hilo: controller.hilo.value!),
-                      const ComentariosEnHilo(),
-                    ],
-                  ),
-                )
-              : Container(),
+          body: Obx(
+            () => !(context.read<VerHiloController>().hilo.value == null)
+                ? Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 20,
+                    ),
+                    child: CustomScrollView(
+                      controller:
+                          context.read<VerHiloController>().scrollController,
+                      slivers: [
+                        InformacionDeHilo(
+                          hilo: (context.read<VerHiloController>().hilo.value!),
+                        ),
+                        const ComentariosEnHilo(),
+                      ],
+                    ),
+                  )
+                : Container(),
+          ),
         );
       },
     );
@@ -117,11 +122,12 @@ class ComentariosEnHilo extends StatefulWidget {
 
 class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   final Map<ComentarioId, GlobalKey> keys = {};
-  final VerHiloController controller = Get.find();
-
+  late final VerHiloController controller = context.read();
   @override
   void initState() {
-    controller.comentariosAgregados.listen(
+    controller.cargarComentarios();
+
+    context.read<VerHiloController>().comentariosAgregados.listen(
       (comentarios) {
         for (var element in comentarios) {
           keys[element.id] = GlobalKey();
@@ -151,14 +157,16 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
             ),
           ),
         ),
-        SliverList.builder(
-          itemCount: controller.comentarios.value.length,
-          itemBuilder: (context, index) {
-            return ComentarioCard.comentario(
-              key: keys[controller.comentarios.value[index].id],
-              comentario: controller.comentarios.value[index],
-            );
-          },
+        Obx(
+          () => SliverList.builder(
+            itemCount: controller.comentarios.value.length,
+            itemBuilder: (context, index) {
+              return ComentarioCard.comentario(
+                key: keys[controller.comentarios.value[index].id],
+                comentario: controller.comentarios.value[index],
+              );
+            },
+          ),
         ),
       ],
     );
@@ -262,5 +270,20 @@ class _VerContenidoButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class HiloContext extends InheritedWidget {
+  final String id;
+
+  const HiloContext({
+    super.key,
+    required this.id,
+    required super.child,
+  });
+
+  @override
+  bool updateShouldNotify(covariant HiloContext oldWidget) {
+    return id != oldWidget.id;
   }
 }

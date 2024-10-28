@@ -42,13 +42,44 @@ class LocalComentariosRepository extends IComentariosRepository {
           tags: ["CPDENEN", "CPDENEN", "CPDENEN", "CPDENEN"],
           taggueos: [],
         ),
+        Comentario(
+          id: "12342",
+          texto: "Aguante la bornografia",
+          creado_en: DateTime(2024, 5, 1, 2),
+          color: ColoresDeComentario.rojo,
+          op: const OpData(
+            nombre: "ANONIMO",
+            rango: "ANONIMO",
+            rangoCorto: "ANON",
+          ),
+          tag: "CPDENEN",
+          tags: ["CPDENEN", "CPDENEN", "CPDENEN", "CPDENEN"],
+          taggueos: [],
+        ),
+        Comentario(
+          id: "142122",
+          texto: "Aguante la bornografia",
+          creado_en: DateTime(2024, 5, 1, 2),
+          color: ColoresDeComentario.rojo,
+          op: const OpData(
+            nombre: "ANONIMO",
+            rango: "ANONIMO",
+            rangoCorto: "ANON",
+          ),
+          tag: "CPDENEN",
+          tags: ["NENILLA", "CPDENEN", "CPDENEN", "CPDENEN"],
+          taggueos: [],
+        ),
       ]),
     );
   }
 
   @override
-  Future<Either<Failure, Unit>> enviar(
-      {required HiloId hilo, required String comentario, Media? media}) {
+  Future<Either<Failure, Unit>> enviar({
+    required HiloId hilo,
+    required String comentario,
+    Media? media,
+  }) {
     // TODO: implement enviar
     throw UnimplementedError();
   }

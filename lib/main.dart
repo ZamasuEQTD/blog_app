@@ -1,6 +1,8 @@
+import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +12,7 @@ import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
 
 import 'package:blog_app/src/lib/modules/theme/app_colors.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   GetIt.I.addDepedencies();
@@ -21,7 +24,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
+    return GetMaterialApp.router(
+      routeInformationParser: routes.routeInformationParser,
+      routeInformationProvider: routes.routeInformationProvider,
+      routerDelegate: routes.routerDelegate,
+      backButtonDispatcher: routes.backButtonDispatcher,
       title: 'Flutter Demo',
       theme: AppThemes.light.copyWith(
         textTheme: GoogleFonts.notoSansTextTheme(),
@@ -45,11 +52,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      routerConfig: routes,
       builder: (context, child) {
-        return BlocProvider(
-          create: (_) => AuthBloc()..add(RestaurarSesion()),
-          child: child,
+        return ListenableProvider(
+          create: (context) => AuthController()..restaurarSesion(),
+          builder: (context, _) {
+            return child!;
+          },
         );
       },
     );

@@ -15,6 +15,8 @@ import 'package:get_it/get_it.dart';
 import '../../../domain/models/hilo.dart';
 
 class VerHiloController extends GetxController {
+  ScrollController scrollController = ScrollController();
+
   Rx<Failure?> failure = Rx(null);
   Rx<bool> cargando = false.obs;
 
@@ -34,13 +36,21 @@ class VerHiloController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
+    scrollController.addListener(
+      () {
+        if (scrollController.position.pixels ==
+            scrollController.position.maxScrollExtent) {
+          cargarComentarios();
+        }
+      },
+    );
 
     comentarioController.addListener(
       () {
         taggueos = TagService.getTags(comentarioController.text);
       },
     );
+    super.onInit();
   }
 
   Future<void> cargar(String id) async {

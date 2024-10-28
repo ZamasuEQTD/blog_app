@@ -1,9 +1,9 @@
+import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/presentation/logic/color_picker.dart';
 import '../../../app/presentation/widgets/tag.dart';
-import '../../../hilo/presentation/blocs/comentar_hilo/comentar_hilo_bloc.dart';
 import '../../domain/models/comentario.dart';
 
 class TagsDeComentarios extends StatelessWidget {
@@ -15,9 +15,9 @@ class TagsDeComentarios extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        TagDeComentario.tag(tag: comentario.tag),
-        TagDeComentario.rango(rango: comentario.op.rangoCorto.toLowerCase()),
         if (comentario.destacado) const TagDeComentario.destacado(),
+        TagDeComentario.rango(rango: comentario.op.rangoCorto.toLowerCase()),
+        TagDeComentario.tag(tag: comentario.tag),
         if (comentario.tagUnico != null)
           TagDeComentario.unico(tag: comentario.tagUnico!),
       ]
@@ -88,11 +88,7 @@ class _Tag extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    void tagguear() => context.read<ComentarHiloBloc>().add(
-          AggregarTaggueo(
-            tag: tag,
-          ),
-        );
+    void tagguear() => context.read<VerHiloController>().tagguear(tag);
 
     return GestureDetector(
       onTap: tagguear,

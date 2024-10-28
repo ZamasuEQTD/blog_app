@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../app/presentation/widgets/grupo_seleccionable.dart';
@@ -31,8 +32,6 @@ class ComentarHiloBottomSheet extends StatefulWidget {
 }
 
 class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
-  final VerHiloController controller = Get.find();
-  final AuthController auth = Get.find();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -41,14 +40,17 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
         showMaterialModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
-          builder: (context) {
-            return const ComentarHiloOpcionesItems();
+          builder: (_) {
+            return ListenableProvider.value(
+              value: context.read<VerHiloController>(),
+              child: const ComentarHiloOpcionesItems(),
+            );
           },
         );
       },
       child: Obx(
         () => IgnorePointer(
-          ignoring: auth.usuario.value == null,
+          ignoring: context.read<AuthController>().usuario.value == null,
           child: ColoredBox(
             color: Theme.of(context).colorScheme.surface,
             child: Padding(
@@ -58,9 +60,11 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(
-                    () => controller.media.value != null
+                    () => context.read<VerHiloController>().media.value != null
                         ? Row(
-                            children: <Media>[controller.media.value!]
+                            children: <Media>[
+                              context.read<VerHiloController>().media.value!,
+                            ]
                                 .map(
                                   (x) => GestureDetector(
                                     onTap: () {
@@ -93,11 +97,11 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                         icon: const Icon(Icons.three_k_rounded),
                       ),
                       const _ComentarInput(),
-                      Obx(
-                        () => ColoredIconButton(
-                          onPressed: () => controller.enviarComentario,
-                          icon: const Icon(Icons.send),
-                        ),
+                      ColoredIconButton(
+                        onPressed: () {
+                          context.read<VerHiloController>().enviarComentario();
+                        },
+                        icon: const Icon(Icons.send),
                       ),
                     ],
                   ),
@@ -170,7 +174,7 @@ class _ComentarInput extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: TextField(
-            controller: Get.find<VerHiloController>().comentarioController,
+            controller: context.read<VerHiloController>().comentarioController,
             keyboardType: TextInputType.multiline,
             minLines: 1,
             maxLines: !isKeyboardVisible ? 1 : 4,
@@ -241,7 +245,7 @@ class _EliminarMedia extends VerMediaOpcion {
         ),
       ),
       onTap: () {
-        Get.find<VerHiloController>().eliminarMedia();
+        context.read<VerHiloController>().eliminarMedia();
         context.pop();
       },
       titulo: "Eliminar",
@@ -297,7 +301,7 @@ class _AgregarMediaItem extends OpcionDeComentario {
 
         response.fold((l) => null, (r) {
           if (r != null) {
-            Get.find<VerHiloController>().agregarMedia(r);
+            context.read<VerHiloController>().agregarMedia(r);
           }
         });
       },
