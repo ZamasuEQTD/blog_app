@@ -1,11 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:blog_app/src/lib/features/media/presentation/logic/reproductor_de_video_controller.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../../app/presentation/widgets/colored_icon_button.dart';
@@ -41,17 +43,33 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
       );
     }
 
-    return IconTheme(
-      data: const IconThemeData(color: Colors.white),
-      child: Container(
-        color: Colors.transparent,
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () => context
-              .read<ReproductorDeVideoBloc>()
-              .add(const ToggleControls()),
-          child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-            builder: builder,
+    return GetBuilder(
+      init: ReproductorDeVideoController(
+        controller: context.read(),
+      ),
+      builder: (controller) => IconTheme(
+        data: const IconThemeData(color: Colors.white),
+        child: Container(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            opacity: controller.mostrar_controles.value ? 1 : 0,
+            duration: const Duration(milliseconds: 500),
+            child: ColoredBox(
+              color: Colors.black.withOpacity(0.3),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: GestureDetector(
+                      onTap: () => controller.mostrar_controles.value =
+                          !controller.mostrar_controles.value,
+                    ),
+                  ),
+                  const ControlesDeTiempo(),
+                  if (controller.mostrar_controles.value)
+                    const ControlesDeReproductor(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -14,7 +14,9 @@ import 'package:get_it/get_it.dart';
 
 import '../../../domain/models/hilo.dart';
 
-class VerHiloController extends GetxController {
+class HiloController extends GetxController {
+  final String id;
+
   ScrollController scrollController = ScrollController();
 
   Rx<Failure?> failure = Rx(null);
@@ -34,6 +36,8 @@ class VerHiloController extends GetxController {
   Rx<Media?> media = Rx(null);
   List<String> taggueos = [];
 
+  HiloController({required this.id});
+
   @override
   void onInit() {
     scrollController.addListener(
@@ -51,6 +55,11 @@ class VerHiloController extends GetxController {
       },
     );
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    cargar(id);
   }
 
   Future<void> cargar(String id) async {

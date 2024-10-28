@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../../../utils/clases/failure.dart';
+import '../../../../../utils/clases/failure.dart';
 import 'auth_controller.dart';
 
 class LoginController extends GetxController {
@@ -33,11 +33,7 @@ class LoginController extends GetxController {
       (l) {
         failure.value = l;
       },
-      (r) {
-        AuthController controller = Get.find<AuthController>();
-
-        controller.login(r);
-      },
+      (r) => Get.find<AuthController>().login(r),
     );
 
     enviando.value = false;

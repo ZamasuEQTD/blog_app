@@ -1,9 +1,34 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class NotificacionesScreen extends StatelessWidget {
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
+import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
+
+import '../../domain/models/notificacion.dart';
+
+class NotificacionesScreen extends StatefulWidget {
   const NotificacionesScreen({super.key});
+
+  @override
+  State<NotificacionesScreen> createState() => _NotificacionesScreenState();
+}
+
+class _NotificacionesScreenState extends State<NotificacionesScreen> {
+  final ScrollController scroll = ScrollController();
+  final MisNotificacionesController controller = MisNotificacionesController();
+  @override
+  void initState() {
+    scroll.addListener(() {
+      if (scroll.IsBottom) controller.cargar();
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +52,13 @@ class NotificacionesScreen extends StatelessWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          SliverList.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) => const NotificacionCard(),
+          Obx(
+            () => SliverList.builder(
+              itemCount: controller.notificaciones.value.length,
+              itemBuilder: (context, index) => SocialInteraction.notificacion(
+                notificacion: controller.notificaciones.value[index],
+              ),
+            ),
           ),
         ],
       ),
@@ -37,124 +66,169 @@ class NotificacionesScreen extends StatelessWidget {
   }
 }
 
-class NotificacionCard extends StatelessWidget {
-  const NotificacionCard({super.key});
+abstract class SocialInteraction extends StatelessWidget {
+  const SocialInteraction._({super.key});
+
+  const factory SocialInteraction({
+    ImageProvider<Object>? imagen,
+    List<Widget>? actions,
+    required String descripcion,
+    required String subtitulo,
+    required String titulo,
+  }) = _SocialInteraction;
+
+  const factory SocialInteraction.notificacion({
+    Key? key,
+    required Notificacion notificacion,
+  }) = _NotificacionSocialInteraction;
+
+  const factory SocialInteraction.historial() = _HistorialSocialInteraction;
+
+  const factory SocialInteraction.bone() = _BoneSocialInteraction;
+}
+
+class _SocialInteraction extends SocialInteraction {
+  final ImageProvider? imagen;
+
+  final String titulo;
+  final String subtitulo;
+  final String descripcion;
+
+  final List<Widget>? actions;
+  const _SocialInteraction({
+    required this.titulo,
+    required this.subtitulo,
+    required this.descripcion,
+    this.imagen,
+    this.actions,
+  }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(4),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(4),
-        child: ColoredBox(
-          color: const Color(0xfff5f5f5),
-          child: SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 80,
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: const SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: Image(
-                              image: NetworkImage(
-                                "https://comiquetaxxx.com/wp-content/uploads/2023/10/seme-pan-rom-0-350x487.jpg",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.onSurface,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                if (imagen != null)
+                  SocialInteractionImage.image(provider: imagen!),
+                const SizedBox(
+                  width: 5,
+                ),
+                Column(
+                  children: [
+                    RichText(
+                      maxLines: 2,
+                      text: TextSpan(
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
                         ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        Flexible(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              RichText(
-                                maxLines: 2,
-                                text: const TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                  text: "Han comentado el hilo: ",
-                                  children: [
-                                    TextSpan(
-                                      text:
-                                          "El secreto de las montañasdsadasdasdasdasdasdasdasdsadada",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              const Flexible(
-                                child: Text(
-                                  "Sos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudoooooooooooooooooooooooooooooooooooooooooooSos un pelotudooooooooooooooooooooooooooooooooooooooooooo",
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Row(
+                        text: titulo,
                         children: [
-                          Container(
-                            decoration: const BoxDecoration(),
-                            child: TextButton(
-                              onPressed: () {},
-                              child: const Text("Marcar como leida"),
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(),
-                            child: TextButton(
-                              onPressed: () {},
-                              child: const Text("Ver post"),
+                          TextSpan(
+                            text: subtitulo,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      descripcion,
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ),
+            if (actions != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: actions!,
+              ),
+          ],
         ),
       ),
     );
   }
 }
 
-abstract class Notificacion extends StatelessWidget {
-  const Notificacion._({super.key});
+class _BoneSocialInteraction extends SocialInteraction {
+  static final Random random = Random();
 
-  const factory Notificacion.bone() = _NotificacionBone;
+  const _BoneSocialInteraction({super.key}) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const SocialInteractionImage.bone(),
+        const SizedBox(
+          width: 5,
+        ),
+        Column(
+          children: [
+            Bone.text(
+              width: random.nextInt(250).toDouble(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Bone.text(
+              width: random.nextInt(250).toDouble(),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
-class _Notificacion extends Notificacion {
-  const _Notificacion() : super._();
+class _NotificacionSocialInteraction extends SocialInteraction {
+  final Notificacion notificacion;
+
+  const _NotificacionSocialInteraction({super.key, required this.notificacion})
+      : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return SocialInteraction(
+      titulo: titulo,
+      subtitulo: notificacion.titulo,
+      descripcion: descripcion,
+      imagen: notificacion.portada.toProvider(),
+      actions: [
+        ElevatedButton(
+          onPressed: () => context.push("/hilo/${notificacion.hiloId}"),
+          child: const Text("Ir a hilo"),
+        ),
+        const SizedBox(width: 10),
+        ElevatedButton(
+          onPressed: () =>
+              Get.find<MisNotificacionesController>().leer(notificacion.hiloId),
+          child: const Text("Leer"),
+        ),
+      ],
+    );
+  }
+
+  String get descripcion => notificacion is HiloComentado
+      ? (notificacion as HiloComentado).descripcion
+      : (notificacion as ComentarioRespondido).comentario;
+
+  String get titulo => notificacion is HiloComentado
+      ? "Han comentado el hilo: "
+      : "Te han respondido en:";
+}
+
+class _HistorialSocialInteraction extends SocialInteraction {
+  const _HistorialSocialInteraction() : super._();
 
   @override
   Widget build(BuildContext context) {
@@ -163,42 +237,59 @@ class _Notificacion extends Notificacion {
   }
 }
 
-class _NotificacionBone extends Notificacion {
-  const _NotificacionBone() : super._();
+abstract class SocialInteractionImage extends StatelessWidget {
+  const SocialInteractionImage._({super.key});
+
+  const factory SocialInteractionImage({required Widget imagen, Key? key}) =
+      _SocialInteractionImage;
+
+  const factory SocialInteractionImage.image({
+    Key? key,
+    required ImageProvider<Object> provider,
+  }) = _SocialInteractionProvider;
+
+  const factory SocialInteractionImage.bone() = _SocialInteractionBone;
+}
+
+class _SocialInteractionImage extends SocialInteractionImage {
+  final Widget imagen;
+
+  const _SocialInteractionImage({super.key, required this.imagen}) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(
+        height: 80,
+        width: 80,
+        child: imagen,
+      ),
+    );
+  }
+}
+
+class _SocialInteractionBone extends SocialInteractionImage {
+  const _SocialInteractionBone({
+    super.key,
+  }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                child: Bone.circle(size: 80),
-              ),
-              SizedBox(width: 5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Bone.text(
-                    fontSize: 20,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Bone.multiText(
-                    fontSize: 15,
-                    lines: 2,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+    return const SocialInteractionImage(imagen: Bone());
+  }
+}
+
+class _SocialInteractionProvider extends SocialInteractionImage {
+  final ImageProvider provider;
+
+  const _SocialInteractionProvider({super.key, required this.provider})
+      : super._();
+  @override
+  Widget build(BuildContext context) {
+    return SocialInteractionImage(
+      imagen: Image(
+        image: provider,
+        fit: BoxFit.cover,
       ),
     );
   }

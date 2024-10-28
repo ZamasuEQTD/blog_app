@@ -76,15 +76,6 @@ class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
       customControls: ChangeNotifierProvider.value(
         value: widget.controller,
         child: const ControlesDeReproductorDeVideo(),
-        builder: (context, child) {
-          return BlocProvider.value(
-            value: bloc,
-            child: ChangeNotifierProvider.value(
-              value: controller,
-              child: child,
-            ),
-          );
-        },
       ),
     );
 

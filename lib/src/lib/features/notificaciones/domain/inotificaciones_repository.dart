@@ -6,6 +6,8 @@ import 'models/notificacion.dart';
 abstract class INotificacionesRepository {
   Future<Either<Failure, List<Notificacion>>> getMisNotificaciones();
   Future<Either<Failure, Unit>> leerNotificacion({
-    NotificacionId id,
+    required NotificacionId id,
   });
+
+  Future<Either<Failure, Unit>> leerTodas();
 }

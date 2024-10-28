@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
@@ -42,7 +42,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
           backgroundColor: Colors.transparent,
           builder: (_) {
             return ListenableProvider.value(
-              value: context.read<VerHiloController>(),
+              value: context.read<HiloController>(),
               child: const ComentarHiloOpcionesItems(),
             );
           },
@@ -60,10 +60,10 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(
-                    () => context.read<VerHiloController>().media.value != null
+                    () => context.read<HiloController>().media.value != null
                         ? Row(
                             children: <Media>[
-                              context.read<VerHiloController>().media.value!,
+                              context.read<HiloController>().media.value!,
                             ]
                                 .map(
                                   (x) => GestureDetector(
@@ -99,7 +99,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                       const _ComentarInput(),
                       ColoredIconButton(
                         onPressed: () {
-                          context.read<VerHiloController>().enviarComentario();
+                          context.read<HiloController>().enviarComentario();
                         },
                         icon: const Icon(Icons.send),
                       ),
@@ -174,7 +174,7 @@ class _ComentarInput extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: TextField(
-            controller: context.read<VerHiloController>().comentarioController,
+            controller: context.read<HiloController>().comentarioController,
             keyboardType: TextInputType.multiline,
             minLines: 1,
             maxLines: !isKeyboardVisible ? 1 : 4,
@@ -245,7 +245,7 @@ class _EliminarMedia extends VerMediaOpcion {
         ),
       ),
       onTap: () {
-        context.read<VerHiloController>().eliminarMedia();
+        context.read<HiloController>().eliminarMedia();
         context.pop();
       },
       titulo: "Eliminar",
@@ -301,7 +301,7 @@ class _AgregarMediaItem extends OpcionDeComentario {
 
         response.fold((l) => null, (r) {
           if (r != null) {
-            context.read<VerHiloController>().agregarMedia(r);
+            context.read<HiloController>().agregarMedia(r);
           }
         });
       },

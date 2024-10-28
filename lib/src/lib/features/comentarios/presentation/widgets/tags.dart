@@ -1,6 +1,7 @@
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../../../app/presentation/logic/color_picker.dart';
 import '../../../app/presentation/widgets/tag.dart';
@@ -88,7 +89,7 @@ class _Tag extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    void tagguear() => context.read<VerHiloController>().tagguear(tag);
+    void tagguear() => Get.find<HiloController>().tagguear(tag);
 
     return GestureDetector(
       onTap: tagguear,

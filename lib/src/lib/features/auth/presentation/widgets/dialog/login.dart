@@ -1,16 +1,14 @@
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/dialog.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/button.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/blocs/auth/auth_bloc.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/blocs/login/login_bloc.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/logic/controlls/login_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/login_controller.dart';
 import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-import 'logic/controlls/password_controller.dart';
+import '../../logic/controlls/password_controller.dart';
 
 class LoginDialog extends StatefulWidget {
   const LoginDialog({super.key});
@@ -21,10 +19,7 @@ class LoginDialog extends StatefulWidget {
   static void show(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => BlocProvider.value(
-        value: context.read<AuthBloc>(),
-        child: const LoginDialog(),
-      ),
+      builder: (_) => const LoginDialog(),
     );
   }
 }

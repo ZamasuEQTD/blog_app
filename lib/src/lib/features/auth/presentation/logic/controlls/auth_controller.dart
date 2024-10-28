@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../../../../usuarios/domain/models/usuario.dart';
-import '../../../../../domain/itoken_decode.dart';
-import '../../../../../domain/itoken_storage.dart';
+import '../../../../usuarios/domain/models/usuario.dart';
+import '../../../domain/itoken_decode.dart';
+import '../../../domain/itoken_storage.dart';
 
 class AuthController extends GetxController {
   final ITokenDecode _tokenService = GetIt.I.get();

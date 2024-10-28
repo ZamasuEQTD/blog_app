@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/auth/presentation/screens/login_screen.dart';
-import '../features/auth/presentation/screens/registro_screen.dart';
 import '../features/hilo/presentation/hilo_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../features/notificaciones/presentation/screens/notificaciones_screen.dart';
@@ -31,14 +29,6 @@ GoRouter routes = GoRouter(
     GoRoute(
       path: "/postear-hilo",
       builder: (context, state) => const PostearHiloScreen(),
-    ),
-    GoRoute(
-      path: "/login",
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: "/registro",
-      builder: (context, state) => const RegistroScreen(),
     ),
   ],
 );

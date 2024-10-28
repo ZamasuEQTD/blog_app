@@ -1,12 +1,10 @@
-import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:blog_app/src/lib/features/auth/presentation/blocs/auth/auth_bloc.dart';
 
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
@@ -16,6 +14,9 @@ import 'package:provider/provider.dart';
 
 void main() {
   GetIt.I.addDepedencies();
+
+  Get.put(AuthController()..restaurarSesion());
+
   runApp(const MyApp());
 }
 
@@ -52,14 +53,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      builder: (context, child) {
-        return ListenableProvider(
-          create: (context) => AuthController()..restaurarSesion(),
-          builder: (context, _) {
-            return child!;
-          },
-        );
-      },
     );
   }
 }

@@ -14,38 +14,48 @@ import '../domain/models/hilo.dart';
 import 'widgets/acciones.dart';
 import 'widgets/comentar_hilo.dart';
 
-class HiloScreen extends StatelessWidget {
+class HiloScreen extends StatefulWidget {
   final String id;
   const HiloScreen({super.key, required this.id});
 
   @override
+  State<HiloScreen> createState() => _HiloScreenState();
+}
+
+class _HiloScreenState extends State<HiloScreen> {
+  late final HiloController controller = Get.put(
+    HiloController(id: widget.id),
+  );
+
+  @override
+  void initState() {
+    controller.cargar(widget.id);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListenableProvider(
-      create: (context) => VerHiloController()..cargar(id),
-      builder: (context, child) {
-        return Scaffold(
-          bottomSheet: const ComentarHiloBottomSheet(),
-          body: Obx(
-            () => !(context.read<VerHiloController>().hilo.value == null)
-                ? Container(
-                    margin: const EdgeInsets.only(
-                      bottom: 20,
+    return Scaffold(
+      bottomSheet: const ComentarHiloBottomSheet(),
+      body: Obx(
+        () => !(controller.hilo.value == null)
+            ? Container(
+                margin: const EdgeInsets.only(
+                  bottom: 20,
+                ),
+                child: CustomScrollView(
+                  controller: controller.scrollController,
+                  slivers: [
+                    InformacionDeHilo(
+                      hilo: (controller.hilo.value!),
                     ),
-                    child: CustomScrollView(
-                      controller:
-                          context.read<VerHiloController>().scrollController,
-                      slivers: [
-                        InformacionDeHilo(
-                          hilo: (context.read<VerHiloController>().hilo.value!),
-                        ),
-                        const ComentariosEnHilo(),
-                      ],
-                    ),
-                  )
-                : Container(),
-          ),
-        );
-      },
+                    const ComentariosEnHilo(),
+                  ],
+                ),
+              )
+            : Container(),
+      ),
     );
   }
 }
@@ -122,12 +132,12 @@ class ComentariosEnHilo extends StatefulWidget {
 
 class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   final Map<ComentarioId, GlobalKey> keys = {};
-  late final VerHiloController controller = context.read();
+  final HiloController controller = Get.find();
   @override
   void initState() {
     controller.cargarComentarios();
 
-    context.read<VerHiloController>().comentariosAgregados.listen(
+    context.read<HiloController>().comentariosAgregados.listen(
       (comentarios) {
         for (var element in comentarios) {
           keys[element.id] = GlobalKey();
@@ -140,25 +150,26 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 5,
-              vertical: 5,
-            ),
-            child: Text(
-              "Comentarios ${controller.hilo.value!.comentarios}",
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+    return GetBuilder(
+      init: controller,
+      builder: (controller) => SliverMainAxisGroup(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: 5,
+              ),
+              child: Text(
+                "Comentarios ${controller.hilo.value!.comentarios}",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
-        ),
-        Obx(
-          () => SliverList.builder(
+          SliverList.builder(
             itemCount: controller.comentarios.value.length,
             itemBuilder: (context, index) {
               return ComentarioCard.comentario(
@@ -167,8 +178,8 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
               );
             },
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
