@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
+import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -22,6 +23,8 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
     on<CargarHilo>(_onCargarHilo);
     on<EliminarHilo>(_onEliminarHilo);
     on<CargarComentarios>(_onCargarComentarios);
+    on<EliminarComentario>(_onEliminarComentario);
+    on<AgregarComentario>(_onAgregarComentario);
   }
 
   void _onRecargarHilo(RecargarHilo event, Emitter<HiloState> emit) {
@@ -82,5 +85,27 @@ class HiloBloc extends Bloc<HiloEvent, HiloState> {
         );
       },
     );
+  }
+
+  void _onEliminarComentario(
+    EliminarComentario event,
+    Emitter<HiloState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        comentarios: state.comentarios
+            .where(
+              (element) => element.id != event.id,
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  FutureOr<void> _onAgregarComentario(
+    AgregarComentario event,
+    Emitter<HiloState> emit,
+  ) {
+    emit(state.copyWith(comentarios: [event.comentario, ...state.comentarios]));
   }
 }

@@ -4,10 +4,12 @@ import 'item_seleccionable.dart';
 
 class GrupoSeleccionableSliver extends StatelessWidget {
   final String? titulo;
+  final Color? color;
   final List<Widget> seleccionables;
   const GrupoSeleccionableSliver({
     super.key,
     this.titulo,
+    this.color,
     required this.seleccionables,
   });
 
@@ -16,7 +18,7 @@ class GrupoSeleccionableSliver extends StatelessWidget {
     return DecoratedSliver(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: Theme.of(context).colorScheme.surface,
+        color: color ?? Theme.of(context).colorScheme.surface,
       ),
       sliver: SliverMainAxisGroup(
         slivers: [

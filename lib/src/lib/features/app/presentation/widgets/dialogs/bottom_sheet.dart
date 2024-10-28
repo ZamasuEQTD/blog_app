@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 abstract class RoundedBottomSheet extends StatelessWidget {
   const RoundedBottomSheet._({super.key});
@@ -127,46 +125,6 @@ class _DraggableSliverBottomSheet extends RoundedBottomSheet {
         controller: controller,
         slivers: slivers,
         titulo: titulo,
-      ),
-    );
-  }
-}
-
-class DestructibleBottomSheet extends RoundedBottomSheet {
-  final Widget child;
-  final String? titulo;
-
-  const DestructibleBottomSheet({
-    super.key,
-    required this.child,
-    this.titulo,
-  }) : super._();
-
-  @override
-  Widget build(BuildContext context) {
-    return RoundedBottomSheet.normal(
-      titulo: titulo != null ? Text(titulo!) : null,
-      child: Column(
-        children: [
-          child,
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text("Seguir"),
-            ),
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => context.pop(),
-              child: const Text(
-                "Cancelar",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

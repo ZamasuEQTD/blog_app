@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/domain/services/horario_service.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/button.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
 import 'package:flutter/material.dart';
 
 import 'package:blog_app/src/lib/features/baneos/domain/models/baneo.dart';
@@ -17,8 +19,7 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RoundedBottomSheet.normal(
-      titulo: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 15),
+      titulo: const DialogTitulo(
         child: Column(
           children: [
             Icon(
@@ -28,9 +29,7 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
             ),
             Text(
               "Has sido baneado",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
+              style: DialogTituloTextStyle(
                 color: Color.fromRGBO(73, 80, 87, 1),
               ),
             ),
@@ -116,21 +115,11 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: ElevatedButton(
-                onPressed: () {
-                  context.pop();
-                },
-                style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(Color(0xff495057)),
-                ),
-                child: const Text(
-                  "Aceptar",
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ),
+            DialogButton.normal(
+              onPressed: () {
+                context.pop();
+              },
+              text: "Aceptar",
             ),
           ],
         ),

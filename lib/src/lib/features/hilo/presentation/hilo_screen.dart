@@ -1,20 +1,16 @@
-import 'dart:developer';
-
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
-import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../comentarios/presentation/widgets/comentario.dart';
-import '../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../media/presentation/multi_media.dart';
 import '../domain/models/hilo.dart';
-import 'blocs/comentar_hilo/comentar_hilo_bloc.dart';
-import 'blocs/hilo/hilo_bloc.dart';
 import 'widgets/acciones.dart';
 import 'widgets/comentar_hilo.dart';
 
@@ -24,40 +20,27 @@ class HiloScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AlturaController(),
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => GestorDeMediaBloc(),
-          ),
-          BlocProvider(
-            create: (context) => ComentarHiloBloc(),
-          ),
-          BlocProvider(create: (context) => HiloBloc(id)..add(CargarHilo())),
-        ],
-        child: Scaffold(
+    return GetBuilder(
+      global: false,
+      init: VerHiloController(),
+      builder: (controller) {
+        return Scaffold(
           bottomSheet: const ComentarHiloBottomSheet(),
-          body: BlocBuilder<HiloBloc, HiloState>(
-            builder: (context, state) {
-              if (state.status == HiloStatus.cargado) {
-                return Container(
+          body: !controller.cargando.value
+              ? Container(
                   margin: EdgeInsets.only(
                     bottom: context.watch<AlturaController>().altura + 20,
                   ),
                   child: CustomScrollView(
                     slivers: [
-                      InformacionDeHilo(hilo: state.hilo!),
+                      InformacionDeHilo(hilo: controller.hilo.value!),
                       const ComentariosEnHilo(),
                     ],
                   ),
-                );
-              }
-              return Container();
-            },
-          ),
-        ),
-      ),
+                )
+              : Container(),
+        );
+      },
     );
   }
 }
@@ -96,9 +79,6 @@ class InformacionDeHilo extends StatelessWidget {
                       maxHeight: 500,
                       maxWidth: double.infinity,
                     ),
-                    builder: (context, dimensionable) {
-                      return dimensionable;
-                    },
                     child: MultiMedia(
                       media: hilo.portada.spoileable,
                     ),
@@ -137,59 +117,50 @@ class ComentariosEnHilo extends StatefulWidget {
 
 class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   final Map<ComentarioId, GlobalKey> keys = {};
+  final VerHiloController controller = Get.find();
 
   @override
   void initState() {
-    context.read<HiloBloc>().add(CargarComentarios());
+    controller.comentariosAgregados.listen(
+      (comentarios) {
+        for (var element in comentarios) {
+          keys[element.id] = GlobalKey();
+        }
+      },
+    );
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<HiloBloc, HiloState>(
-      listenWhen: (previous, current) =>
-          current.comentariosState is ComentariosCargadosState,
-      listener: (context, state) {
-        List<Comentario> comentarios =
-            (state.comentariosState as ComentariosCargadosState).comentarios;
-
-        for (var c in comentarios) {
-          keys[c.id] = GlobalKey();
-        }
-      },
-      child: BlocBuilder<HiloBloc, HiloState>(
-        builder: (context, state) {
-          return SliverMainAxisGroup(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                    vertical: 5,
-                  ),
-                  child: Text(
-                    "Comentarios ${state.hilo!.comentarios}",
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 5,
+              vertical: 5,
+            ),
+            child: Text(
+              "Comentarios ${controller.hilo.value!.comentarios}",
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
-              SliverList.builder(
-                itemCount: state.comentarios.length,
-                itemBuilder: (context, index) {
-                  return ComentarioCard.comentario(
-                    key: keys[state.comentarios[index].id],
-                    comentario: state.comentarios[index],
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+          ),
+        ),
+        SliverList.builder(
+          itemCount: controller.comentarios.value.length,
+          itemBuilder: (context, index) {
+            return ComentarioCard.comentario(
+              key: keys[controller.comentarios.value[index].id],
+              comentario: controller.comentarios.value[index],
+            );
+          },
+        ),
+      ],
     );
   }
 }

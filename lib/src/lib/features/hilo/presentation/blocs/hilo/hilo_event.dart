@@ -7,6 +7,18 @@ sealed class HiloEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class EliminarComentario extends HiloEvent {
+  final ComentarioId id;
+
+  const EliminarComentario({required this.id});
+}
+
+class AgregarComentario extends HiloEvent {
+  final Comentario comentario;
+
+  const AgregarComentario({required this.comentario});
+}
+
 class CargarHilo extends HiloEvent {}
 
 class RecargarHilo extends HiloEvent {}

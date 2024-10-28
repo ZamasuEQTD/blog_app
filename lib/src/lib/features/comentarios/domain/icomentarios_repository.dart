@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:dartz/dartz.dart';
 
 import '../../../utils/clases/failure.dart';
@@ -8,5 +9,11 @@ abstract class IComentariosRepository {
   Future<Either<Failure, List<Comentario>>> getComentarios({
     required HiloId hilo,
     DateTime? ultimoComentario,
+  });
+
+  Future<Either<Failure, Unit>> enviar({
+    required HiloId hilo,
+    required String comentario,
+    Media? media,
   });
 }

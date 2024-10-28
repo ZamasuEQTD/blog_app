@@ -1,6 +1,7 @@
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
+import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
 
@@ -43,5 +44,12 @@ class LocalComentariosRepository extends IComentariosRepository {
         ),
       ]),
     );
+  }
+
+  @override
+  Future<Either<Failure, Unit>> enviar(
+      {required HiloId hilo, required String comentario, Media? media}) {
+    // TODO: implement enviar
+    throw UnimplementedError();
   }
 }

@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/login.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/registro.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,14 +15,7 @@ class SesionRequeridaButtonsheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const RoundedBottomSheet.normal(
-      titulo: Text(
-        "Iniciar Sesión Requerido",
-        style: TextStyle(
-          color: Color.fromRGBO(73, 80, 87, 1),
-          fontWeight: FontWeight.w700,
-          fontSize: 22,
-        ),
-      ),
+      titulo: DialogTitulo.text(titulo: "Iniciar Sesión Requerido"),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
@@ -111,8 +107,7 @@ class _IniciarSesionButton extends SesionRequeridaButton {
         color: Colors.white,
       ),
       onPressed: () {
-        context.push("/login");
-        log("holaa");
+        LoginDialog.show(context);
       },
     );
   }
@@ -127,7 +122,7 @@ class _RegistrarseButton extends SesionRequeridaButton {
       color: Colors.white,
       text: "Registrarse",
       onPressed: () {
-        context.push("/login");
+        RegistroDialog.show(context);
       },
     );
   }

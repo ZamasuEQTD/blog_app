@@ -59,28 +59,20 @@ class _BlurEffect extends BlurEffect {
   @override
   Widget build(BuildContext context) {
     Widget child = this.child ?? const SizedBox();
-    // if (blurear) {
-    //   child = ClipRRect(
-    //     clipBehavior: Clip.hardEdge,
-    //     child: BackdropFilter(
-    //       filter: ImageFilter.blur(
-    //         sigmaX: 20,
-    //         sigmaY: 15,
-    //         tileMode: TileMode.clamp,
-    //       ),
-    //       child: child,
-    //     ),
-    //   );
-    // }
-    return ClipRRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 20,
-          sigmaY: 15,
+    if (blurear) {
+      child = ClipRRect(
+        clipBehavior: Clip.hardEdge,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: 20,
+            sigmaY: 15,
+            tileMode: TileMode.clamp,
+          ),
+          child: child,
         ),
-        child: child,
-      ),
-    );
+      );
+    }
+    return child;
   }
 }
 
