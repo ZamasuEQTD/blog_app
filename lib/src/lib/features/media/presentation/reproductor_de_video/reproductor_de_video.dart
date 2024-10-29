@@ -65,10 +65,8 @@ class ReproductorDeVideo extends StatefulWidget {
 
 class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   late final ChewieController controller;
-  late final ReproductorDeVideoController _controller =
-      ReproductorDeVideoController(
-    controller: controller,
-  );
+  late final ReproductorDeVideoController _controller;
+
   bool get hayPrevisualizacion => widget.previsualizacion != null;
 
   bool get mostrarPrevisualizacion =>
@@ -82,6 +80,10 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
       customControls: const ControlesDeReproductorDeVideo(),
     );
 
+    _controller = ReproductorDeVideoController(
+      controller: controller,
+    );
+
     if (!hayPrevisualizacion) {
       _controller.iniciar();
     }
@@ -90,19 +92,22 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (mostrarPrevisualizacion) {
-        return PrevisualizacionDeVideo(
-          previsualizacion: widget.previsualizacion!,
-          init: _controller.iniciar,
-          estado: _controller.reproductor.value,
-        );
-      }
+    return VideoControllerProvider(
+      controller: _controller,
+      child: Obx(() {
+        if (mostrarPrevisualizacion) {
+          return PrevisualizacionDeVideo(
+            previsualizacion: widget.previsualizacion!,
+            init: _controller.iniciar,
+            estado: _controller.reproductor.value,
+          );
+        }
 
-      return AspectRatio(
-        aspectRatio: _controller.aspectRatio.value!,
-        child: Chewie(controller: controller),
-      );
-    });
+        return AspectRatio(
+          aspectRatio: _controller.aspectRatio.value!,
+          child: Chewie(controller: controller),
+        );
+      }),
+    );
   }
 }

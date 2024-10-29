@@ -66,15 +66,13 @@ class _LinearGradientAnimationState extends State<LinearGradientAnimation> {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: _getColors(patterns[pattern]),
-            stops: stops,
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: _getColors(patterns[pattern]),
+          stops: stops,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
     );

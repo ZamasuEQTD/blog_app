@@ -98,9 +98,10 @@ class _BlurEffectBuilder extends BlurEffect {
   Widget build(BuildContext context) {
     return GetBuilder(
       init: BlurController(),
+      global: false,
       builder: (controller) {
         return builder(
-          context.read(),
+          controller,
           BlurEffect(
             blurear: controller.blurear.value,
             child: child,

@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
@@ -41,16 +42,13 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
           context: context,
           backgroundColor: Colors.transparent,
           builder: (_) {
-            return ListenableProvider.value(
-              value: context.read<HiloController>(),
-              child: const ComentarHiloOpcionesItems(),
-            );
+            return const ComentarHiloOpcionesItems();
           },
         );
       },
       child: Obx(
         () => IgnorePointer(
-          ignoring: context.read<AuthController>().usuario.value == null,
+          ignoring: Get.find<AuthController>().usuario.value == null,
           child: ColoredBox(
             color: Theme.of(context).colorScheme.surface,
             child: Padding(
@@ -60,10 +58,10 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Obx(
-                    () => context.read<HiloController>().media.value != null
+                    () => Get.find<HiloController>().media.value != null
                         ? Row(
                             children: <Media>[
-                              context.read<HiloController>().media.value!,
+                              Get.find<HiloController>().media.value!,
                             ]
                                 .map(
                                   (x) => GestureDetector(
@@ -174,7 +172,7 @@ class _ComentarInput extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: TextField(
-            controller: context.read<HiloController>().comentarioController,
+            controller: Get.find<HiloController>().comentarioController,
             keyboardType: TextInputType.multiline,
             minLines: 1,
             maxLines: !isKeyboardVisible ? 1 : 4,

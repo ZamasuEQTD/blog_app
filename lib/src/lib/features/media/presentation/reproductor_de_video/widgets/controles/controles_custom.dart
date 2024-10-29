@@ -269,9 +269,9 @@ class _VolumenButton extends IconButtonReproductor {
 
 class VideoControllerProvider extends InheritedWidget {
   final ReproductorDeVideoController controller;
-  const VideoControllerProvider(
-    this.controller, {
+  const VideoControllerProvider({
     super.key,
+    required this.controller,
     required super.child,
   });
 

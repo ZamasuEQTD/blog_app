@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
@@ -11,10 +13,11 @@ class LocalComentariosRepository extends IComentariosRepository {
     required HiloId hilo,
     DateTime? ultimoComentario,
   }) {
-    return Future.value(
-      Right([
+    return Future.delayed(
+      const Duration(seconds: 3),
+      () => Right([
         Comentario(
-          id: "12",
+          id: Random().nextInt(150000).toString(),
           texto: "Aguante la bornografia",
           creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.rojo,
@@ -28,7 +31,7 @@ class LocalComentariosRepository extends IComentariosRepository {
           taggueos: [],
         ),
         Comentario(
-          id: "3231",
+          id: Random().nextInt(150000).toString(),
           texto: "Aguante la bornografia",
           creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.multi,
@@ -43,7 +46,7 @@ class LocalComentariosRepository extends IComentariosRepository {
           taggueos: [],
         ),
         Comentario(
-          id: "12342",
+          id: Random().nextInt(150000).toString(),
           texto: "Aguante la bornografia",
           creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.rojo,
@@ -57,7 +60,7 @@ class LocalComentariosRepository extends IComentariosRepository {
           taggueos: [],
         ),
         Comentario(
-          id: "142122",
+          id: Random().nextInt(150000).toString(),
           texto: "Aguante la bornografia",
           creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.rojo,

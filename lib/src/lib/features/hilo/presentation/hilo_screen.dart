@@ -28,8 +28,9 @@ class _HiloScreenState extends State<HiloScreen> {
   )..cargar(widget.id);
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    Get.delete<HiloController>();
+    super.dispose();
   }
 
   @override
@@ -93,6 +94,7 @@ class InformacionDeHilo extends StatelessWidget {
                     ),
                     builder: (context, dimensionable) {
                       Widget child = dimensionable;
+
                       if (hilo.portada.esSpoiler) {
                         child = ContenidoCensurable(child: dimensionable);
                       }
@@ -143,7 +145,7 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   void initState() {
     controller.cargarComentarios();
 
-    context.read<HiloController>().comentariosAgregados.listen(
+    controller.comentariosAgregados.listen(
       (comentarios) {
         for (var element in comentarios) {
           keys[element.id] = GlobalKey();
@@ -156,9 +158,8 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      init: controller,
-      builder: (controller) => SliverMainAxisGroup(
+    return Obx(
+      () => SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(
             child: Padding(

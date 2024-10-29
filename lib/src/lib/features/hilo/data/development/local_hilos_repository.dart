@@ -31,10 +31,10 @@ class LocalHilosRepository extends IHilosRepository {
           ),
           portada: const Spoileable(
             true,
-            Video(
+            Imagen(
               provider: NetworkProvider(
                 path:
-                    "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                    "https://static.wikia.nocookie.net/p__/images/e/ef/LauraPachislot.png/revision/latest?cb=20171007170755&path-prefix=protagonist",
               ),
             ),
           ),

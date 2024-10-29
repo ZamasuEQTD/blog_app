@@ -11,6 +11,7 @@ import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
 import 'package:blog_app/src/lib/modules/theme/app_colors.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.addDepedencies();
 
   Get.put(AuthController()..restaurarSesion());
