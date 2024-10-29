@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 class ReproductorDeVideoController extends GetxController {
   Rx<EstadoDeReproductor> reproductor = Rx(EstadoDeReproductor.iniciado);
+  Rx<double?> aspectRatio = Rx(null);
   Rx<bool> reproduciendo = Rx(false);
   Rx<bool> buffering = Rx(false);
   Rx<bool> pantalla_completa = Rx(false);
@@ -36,10 +37,13 @@ class ReproductorDeVideoController extends GetxController {
       }
     });
 
-    controller.addListener(() {
+    controller.videoPlayerController.addListener(() {
       finalizado.value = controller.videoPlayerController.value.isCompleted;
       buffering.value = controller.videoPlayerController.value.isBuffering;
       position.value = controller.videoPlayerController.value.position;
+    });
+
+    controller.addListener(() {
       pantalla_completa.value = controller.isFullScreen;
     });
   }
@@ -50,12 +54,14 @@ class ReproductorDeVideoController extends GetxController {
 
   void iniciar() async {
     reproductor.value = EstadoDeReproductor.iniciando;
-
     try {
       await controller.videoPlayerController.initialize();
       reproductor.value = EstadoDeReproductor.iniciado;
     } catch (e) {}
   }
+
+  void adelantar(Duration time) => controller.seekTo(position.value + time);
+  void retroceder(Duration time) => controller.seekTo(position.value - time);
 }
 
 enum EstadoDeReproductor {

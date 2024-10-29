@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../../app/presentation/widgets/colored_icon_button.dart';
-import '../../blocs/reproductor/reproductor_de_video_bloc.dart';
 
 class ControlesDeReproductorDeVideo extends StatelessWidget {
   const ControlesDeReproductorDeVideo({
@@ -20,55 +19,30 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget builder(BuildContext context, ReproductorDeVideoState state) {
-      return AnimatedOpacity(
-        opacity: state.mostrar_controles ? 1 : 0,
-        duration: const Duration(milliseconds: 500),
-        child: ColoredBox(
-          color: Colors.black.withOpacity(0.3),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: GestureDetector(
-                  onTap: () => context
-                      .read<ReproductorDeVideoBloc>()
-                      .add(const ToggleControls()),
-                ),
-              ),
-              const ControlesDeTiempo(),
-              if (state.mostrar_controles) const ControlesDeReproductor(),
-            ],
-          ),
-        ),
-      );
-    }
+    ReproductorDeVideoController controller =
+        VideoControllerProvider.of(context)!.controller;
 
-    return GetBuilder(
-      init: ReproductorDeVideoController(
-        controller: context.read(),
-      ),
-      builder: (controller) => IconTheme(
-        data: const IconThemeData(color: Colors.white),
-        child: Container(
-          color: Colors.transparent,
-          child: AnimatedOpacity(
-            opacity: controller.mostrar_controles.value ? 1 : 0,
-            duration: const Duration(milliseconds: 500),
-            child: ColoredBox(
-              color: Colors.black.withOpacity(0.3),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: GestureDetector(
-                      onTap: () => controller.mostrar_controles.value =
-                          !controller.mostrar_controles.value,
-                    ),
+    return IconTheme(
+      data: const IconThemeData(color: Colors.white),
+      child: Container(
+        color: Colors.transparent,
+        child: AnimatedOpacity(
+          opacity: controller.mostrar_controles.value ? 1 : 0,
+          duration: const Duration(milliseconds: 500),
+          child: ColoredBox(
+            color: Colors.black.withOpacity(0.3),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: GestureDetector(
+                    onTap: () => controller.mostrar_controles.value =
+                        !controller.mostrar_controles.value,
                   ),
-                  const ControlesDeTiempo(),
-                  if (controller.mostrar_controles.value)
-                    const ControlesDeReproductor(),
-                ],
-              ),
+                ),
+                const ControlesDeTiempo(),
+                if (controller.mostrar_controles.value)
+                  const ControlesDeReproductor(),
+              ],
             ),
           ),
         ),
@@ -84,7 +58,8 @@ class ControlesDeTiempo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    VideoPlayerController controller = context.read();
+    ReproductorDeVideoController controller =
+        VideoControllerProvider.of(context)!.controller;
 
     void retroceder() {
       controller.retroceder(const Duration(seconds: 10));
@@ -232,8 +207,7 @@ class _PlayButton extends IconButtonReproductor {
   @override
   Widget build(BuildContext context) {
     return IconButtonReproductor(
-      onPressed: () =>
-          context.read<ReproductorDeVideoBloc>()..add(SwitchReproduccion()),
+      onPressed: () => VideoControllerProvider.of(context)!.controller.play(),
       size: 60,
       icon: const Icon(
         Icons.replay,
@@ -247,22 +221,25 @@ class _FullscreenButton extends IconButtonReproductor {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-      builder: (context, state) {
-        return IconButtonReproductor(
-          size: 45,
-          onPressed: () => !state.pantalla_completa
-              ? context.read<ChewieController>().enterFullScreen()
-              : context.read<ChewieController>().exitFullScreen(),
-          icon: !state.pantalla_completa
-              ? const Icon(
-                  Icons.fullscreen,
-                )
-              : const Icon(
-                  Icons.fullscreen_exit,
-                ),
-        );
-      },
+    ReproductorDeVideoController controller = VideoControllerProvider.of(
+      context,
+    )!
+        .controller;
+
+    return Obx(
+      () => IconButtonReproductor(
+        size: 45,
+        icon: !controller.pantalla_completa.value
+            ? const Icon(
+                Icons.fullscreen,
+              )
+            : const Icon(
+                Icons.fullscreen_exit,
+              ),
+        onPressed: () => controller.pantalla_completa.value
+            ? controller.controller.exitFullScreen
+            : controller.controller.enterFullScreen,
+      ),
     );
   }
 }
@@ -272,30 +249,37 @@ class _VolumenButton extends IconButtonReproductor {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-      builder: (context, state) {
-        return IconButtonReproductor(
-          size: 45,
-          onPressed: () => context
-              .read<VideoPlayerController>()
-              .setVolume(state.volumen == 0 ? 1 : 0),
-          icon: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-            builder: (context, state) {
-              return Icon(
-                state.volumen != -1
-                    ? (state.volumen == 0 ? Icons.volume_mute : Icons.volume_up)
-                    : Icons.volume_off,
-              );
-            },
-          ),
-        );
-      },
+    ReproductorDeVideoController controller =
+        VideoControllerProvider.of(context)!.controller;
+    return Obx(
+      () => IconButtonReproductor(
+        size: 45,
+        onPressed: () => controller.play,
+        icon: Icon(
+          controller.volumen.value != -1
+              ? (controller.volumen.value == 0
+                  ? Icons.volume_mute
+                  : Icons.volume_up)
+              : Icons.volume_off,
+        ),
+      ),
     );
   }
 }
 
-abstract class ReproductorDeVideoButton extends StatelessWidget {
-  const ReproductorDeVideoButton({super.key});
-}
+class VideoControllerProvider extends InheritedWidget {
+  final ReproductorDeVideoController controller;
+  const VideoControllerProvider(
+    this.controller, {
+    super.key,
+    required super.child,
+  });
 
-class _ReproductorDeVideoButton {}
+  static VideoControllerProvider? of(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<VideoControllerProvider>();
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return true;
+  }
+}

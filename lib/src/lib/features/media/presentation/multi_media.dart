@@ -60,7 +60,7 @@ class _Video extends Dimensionable {
   final Video video;
   const _Video({super.key, required this.video}) : super._();
 
-  Widget get reproductor => ReproductorDeVideoWidget.fromProvider(
+  Widget get reproductor => ReproductorDeVideo.provider(
         provider: video.toProvider(),
       );
 
@@ -118,6 +118,20 @@ class MultiMedia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    switch (media) {
+      case Video video:
+        return Dimensionable.video(video: video);
+      case Imagen imagen:
+        return Dimensionable.imagen(imagen: imagen);
+    }
+    throw Exception("Media no soportada");
+  }
+}
+
+extension MediaExtension on Media {
+  Widget get widget => toWidget(this);
+
+  static Widget toWidget(Media media) {
     switch (media) {
       case Video video:
         return Dimensionable.video(video: video);

@@ -26,9 +26,5 @@ GoRouter routes = GoRouter(
       path: "/mis-notificaciones",
       builder: (context, state) => const NotificacionesScreen(),
     ),
-    GoRoute(
-      path: "/postear-hilo",
-      builder: (context, state) => const PostearHiloScreen(),
-    ),
   ],
 );

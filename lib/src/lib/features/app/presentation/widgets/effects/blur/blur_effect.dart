@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:provider/provider.dart';
 
 // class BlurEffect extends StatelessWidget {
@@ -34,6 +36,11 @@ import 'package:provider/provider.dart';
 //   }
 // }
 
+typedef BlurEffectBuilder = Widget Function(
+  BlurController controller,
+  Widget child,
+);
+
 abstract class BlurEffect extends StatelessWidget {
   const BlurEffect._({super.key});
 
@@ -44,7 +51,7 @@ abstract class BlurEffect extends StatelessWidget {
 
   const factory BlurEffect.builder({
     required bool blurear,
-    required Widget Function(BlurController, Widget) builder,
+    required BlurEffectBuilder builder,
     Widget? child,
   }) = _BlurEffectBuilder;
 }
@@ -77,7 +84,7 @@ class _BlurEffect extends BlurEffect {
 }
 
 class _BlurEffectBuilder extends BlurEffect {
-  final Widget Function(BlurController controller, Widget child) builder;
+  final BlurEffectBuilder builder;
   final bool blurear;
   final Widget? child;
 
@@ -89,15 +96,14 @@ class _BlurEffectBuilder extends BlurEffect {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => BlurController(
-        blurear: blurear,
-      ),
-      builder: (context, child) {
+    return GetBuilder(
+      init: BlurController(),
+      builder: (controller) {
         return builder(
           context.read(),
           BlurEffect(
-            blurear: context.watch<BlurController>().blurear,
+            blurear: controller.blurear.value,
+            child: child,
           ),
         );
       },
@@ -105,15 +111,6 @@ class _BlurEffectBuilder extends BlurEffect {
   }
 }
 
-class BlurController extends ChangeNotifier {
-  bool blurear;
-  BlurController({
-    this.blurear = true,
-  });
-
-  void switchBlur() {
-    blurear = !blurear;
-
-    notifyListeners();
-  }
+class BlurController extends GetxController {
+  RxBool blurear = RxBool(true);
 }

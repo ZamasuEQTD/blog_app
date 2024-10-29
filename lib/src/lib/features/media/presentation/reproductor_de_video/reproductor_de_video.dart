@@ -2,24 +2,25 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:blog_app/src/lib/features/media/presentation/logic/reproductor_de_video_controller.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-import 'blocs/reproductor/reproductor_de_video_bloc.dart';
 import 'providers/video_provider.dart';
 import 'widgets/controles/controles_custom.dart';
 import 'widgets/previsualizacion.dart';
 
-class ReproductorDeVideoWidget extends StatefulWidget {
+class ReproductorDeVideo extends StatefulWidget {
   late final VideoPlayerController controller;
   final ImageProvider? previsualizacion;
 
-  ReproductorDeVideoWidget.fromNetwork({
+  ReproductorDeVideo.network({
     super.key,
     required String url,
     this.previsualizacion,
@@ -27,7 +28,7 @@ class ReproductorDeVideoWidget extends StatefulWidget {
     controller = VideoPlayerController.networkUrl(Uri.parse(url));
   }
 
-  ReproductorDeVideoWidget.fromFile({
+  ReproductorDeVideo.file({
     super.key,
     required File video,
     this.previsualizacion,
@@ -35,20 +36,20 @@ class ReproductorDeVideoWidget extends StatefulWidget {
     controller = VideoPlayerController.file(video);
   }
 
-  factory ReproductorDeVideoWidget.fromProvider({
+  factory ReproductorDeVideo.provider({
     Key? key,
     required VideoProvider provider,
     ImageProvider? previsualizacion,
   }) {
     switch (provider) {
       case NetworkVideoProvider provider:
-        return ReproductorDeVideoWidget.fromNetwork(
+        return ReproductorDeVideo.network(
           key: key,
           url: provider.url,
           previsualizacion: previsualizacion,
         );
       case FileVideoProvider provider:
-        return ReproductorDeVideoWidget.fromFile(
+        return ReproductorDeVideo.file(
           key: key,
           video: provider.file,
           previsualizacion: previsualizacion,
@@ -59,103 +60,49 @@ class ReproductorDeVideoWidget extends StatefulWidget {
   }
 
   @override
-  State<ReproductorDeVideoWidget> createState() =>
-      _ReproductorDeVideoWidgetState();
+  State<ReproductorDeVideo> createState() => _ReproductorDeVideoState();
 }
 
-class _ReproductorDeVideoWidgetState extends State<ReproductorDeVideoWidget> {
+class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   late final ChewieController controller;
-  late final ReproductorDeVideoBloc bloc;
+  late final ReproductorDeVideoController _controller =
+      ReproductorDeVideoController(
+    controller: controller,
+  );
+  bool get hayPrevisualizacion => widget.previsualizacion != null;
 
-  double ratio = 1;
+  bool get mostrarPrevisualizacion =>
+      !hayPrevisualizacion ||
+      _controller.reproductor.value != EstadoDeReproductor.iniciado;
 
   @override
   void initState() {
     controller = ChewieController(
       videoPlayerController: widget.controller,
-      customControls: ChangeNotifierProvider.value(
-        value: widget.controller,
-        child: const ControlesDeReproductorDeVideo(),
-      ),
+      customControls: const ControlesDeReproductorDeVideo(),
     );
 
-    bloc = ReproductorDeVideoBloc(controller);
-
-    if (widget.previsualizacion == null) {
-      initReproductor();
+    if (!hayPrevisualizacion) {
+      _controller.iniciar();
     }
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    void listener(BuildContext context, ReproductorDeVideoState state) {
-      if (state.reproductor == EstadoDeReproductor.iniciado) {
-        setState(() {
-          ratio = controller.videoPlayerController.value.aspectRatio;
-        });
-
-        // Timer(
-        //     const Duration(seconds: 3),
-        //     () => log(
-        //         controller.videoPlayerController.value.aspectRatio.toString()));
-
-        widget.controller.addListener(
-          () {
-            bloc.add(
-              CambiarParametros(
-                finalizado: controller.videoPlayerController.value.isCompleted,
-                volumen: widget.controller.value.volume,
-                reproduciendo: controller.isPlaying,
-                buffering: controller.estaBuffereando(),
-                position: controller.videoPlayerController.value.position,
-              ),
-            );
-          },
-        );
-
-        controller.addListener(() {
-          bloc.add(
-            CambiarParametros(
-              pantalla_completa: controller.isFullScreen,
-            ),
-          );
-        });
-
-        controller.play();
-      }
-    }
-
-    Widget builder(BuildContext context, ReproductorDeVideoState state) {
-      bool mostrarPrevisualizacion() =>
-          widget.previsualizacion != null &&
-          state.reproductor != EstadoDeReproductor.corriendo;
-
-      if (mostrarPrevisualizacion()) {
+    return Obx(() {
+      if (mostrarPrevisualizacion) {
         return PrevisualizacionDeVideo(
           previsualizacion: widget.previsualizacion!,
-          init: initReproductor,
+          init: _controller.iniciar,
+          estado: _controller.reproductor.value,
         );
       }
+
       return AspectRatio(
-        aspectRatio: ratio,
+        aspectRatio: _controller.aspectRatio.value!,
         child: Chewie(controller: controller),
       );
-    }
-
-    return BlocProvider.value(
-      value: bloc,
-      child: BlocListener<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-        listener: listener,
-        child: BlocBuilder<ReproductorDeVideoBloc, ReproductorDeVideoState>(
-          builder: builder,
-        ),
-      ),
-    );
-  }
-
-  void initReproductor() {
-    bloc.add(const InicializarReproductor());
+    });
   }
 }
