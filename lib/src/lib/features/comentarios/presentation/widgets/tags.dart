@@ -8,12 +8,12 @@ import '../../../app/presentation/widgets/tag.dart';
 import '../../domain/models/comentario.dart';
 
 class TagsDeComentarios extends StatelessWidget {
-  final Comentario comentario;
-
-  const TagsDeComentarios({super.key, required this.comentario});
+  const TagsDeComentarios({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Comentario comentario = context.read();
+
     return Row(
       children: [
         if (comentario.destacado) const TagDeComentario.destacado(),

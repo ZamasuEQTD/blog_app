@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/domain/services/horario_service.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/button.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/models/baneo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+import '../../app/presentation/widgets/dialogs/bottom_sheet.dart';
 
 class HasSidoBaneadoBottomsheet extends StatelessWidget {
   final Baneo baneo;
@@ -124,6 +126,20 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  static void show(
+    BuildContext context, {
+    required Baneo baneo,
+  }) {
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return HasSidoBaneadoBottomsheet(
+          baneo: baneo,
+        );
+      },
     );
   }
 }

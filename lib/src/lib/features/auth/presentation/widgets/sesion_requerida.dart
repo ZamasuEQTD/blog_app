@@ -7,10 +7,12 @@ import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/regis
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
-class SesionRequeridaButtonsheet extends StatelessWidget {
-  const SesionRequeridaButtonsheet({super.key});
+import '../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
+
+class SesionRequeridaBottomSheet extends StatelessWidget {
+  const SesionRequeridaBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,15 @@ class SesionRequeridaButtonsheet extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  static void show(BuildContext context) {
+    showMaterialModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return const SesionRequeridaBottomSheet();
+      },
     );
   }
 }

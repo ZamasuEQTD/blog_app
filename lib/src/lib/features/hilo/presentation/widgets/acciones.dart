@@ -1,4 +1,6 @@
+import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/domain/services/horario_service.dart';
 import '../../../app/presentation/widgets/tag.dart';
@@ -7,13 +9,12 @@ import '../../domain/models/hilo.dart';
 class HiloAccionesRow extends StatelessWidget {
   const HiloAccionesRow({
     super.key,
-    required this.hilo,
   });
-
-  final Hilo hilo;
 
   @override
   Widget build(BuildContext context) {
+    final Hilo hilo = context.read();
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: ColoredBox(

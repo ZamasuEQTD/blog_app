@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/notificaciones/domain/inotificaciones_repository.dart';
 import 'package:blog_app/src/lib/features/notificaciones/domain/models/notificacion.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,4 @@ class MisNotificacionesController extends GetxController {
   void leer(NotificacionId id) async {
     await repository.leerNotificacion(id: id);
   }
-}
-
-extension ScrollControllerExtensions on ScrollController {
-  bool get IsBottom => position.pixels == position.maxScrollExtent - 100;
 }

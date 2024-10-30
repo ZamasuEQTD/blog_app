@@ -1,14 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
-
 import 'package:blog_app/src/lib/features/media/presentation/logic/reproductor_de_video_controller.dart';
-import 'package:chewie/chewie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../../../../app/presentation/widgets/colored_icon_button.dart';
 
@@ -19,72 +11,33 @@ class ControlesDeReproductorDeVideo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ReproductorDeVideoController controller =
-        VideoControllerProvider.of(context)!.controller;
-
     return IconTheme(
       data: const IconThemeData(color: Colors.white),
       child: Container(
         color: Colors.transparent,
         child: AnimatedOpacity(
-          opacity: controller.mostrar_controles.value ? 1 : 0,
+          opacity: 1,
           duration: const Duration(milliseconds: 500),
           child: ColoredBox(
             color: Colors.black.withOpacity(0.3),
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: GestureDetector(
-                    onTap: () => controller.mostrar_controles.value =
-                        !controller.mostrar_controles.value,
+                  child: GestureDetector(),
+                ),
+                Positioned.fill(
+                  child: Row(
+                    children: [
+                      Expanded(child: GestureDetector()),
+                      Expanded(child: GestureDetector()),
+                    ],
                   ),
                 ),
-                const ControlesDeTiempo(),
-                if (controller.mostrar_controles.value)
-                  const ControlesDeReproductor(),
+                if (true) const ControlesDeReproductor(),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ControlesDeTiempo extends StatelessWidget {
-  const ControlesDeTiempo({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    ReproductorDeVideoController controller =
-        VideoControllerProvider.of(context)!.controller;
-
-    void retroceder() {
-      controller.retroceder(const Duration(seconds: 10));
-    }
-
-    void adelantar() {
-      controller.adelantar(const Duration(seconds: 10));
-    }
-
-    return Positioned.fill(
-      child: GestureDetector(
-        onDoubleTapDown: (details) {
-          final RenderBox box = context.findRenderObject() as RenderBox;
-          final Offset localPosition =
-              box.globalToLocal(details.globalPosition);
-          final width = box.size.width;
-
-          bool ladoIzquierdo() => localPosition.dx < width / 2;
-
-          if (ladoIzquierdo()) {
-            retroceder();
-          } else {
-            adelantar();
-          }
-        },
       ),
     );
   }

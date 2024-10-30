@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:collection';
 
+import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
@@ -18,8 +20,6 @@ import '../../../domain/models/hilo.dart';
 class HiloController extends GetxController {
   final String id;
 
-  ScrollController scrollController = ScrollController();
-
   Rx<Failure?> failure = Rx(null);
   Rx<bool> cargando = false.obs;
 
@@ -27,35 +27,19 @@ class HiloController extends GetxController {
 
   DateTime? ultimoComentario;
 
+  Rx<String?> taggueo = Rx(null);
+
   Rx<bool> cargandoComentarios = false.obs;
   Rx<List<Comentario>> comentarios = Rx([]);
-  Rx<List<Comentario>> comentariosAgregados = Rx([]);
 
-  TextEditingController comentarioController = TextEditingController();
+  final ultimoComentarioAgregadoStream = StreamController<Comentario>();
+
   Rx<bool> enviando = false.obs;
   Rx<String> comentario = "".obs;
-  Rx<Media?> media = Rx(null);
+  Rx<Spoileable<Media>?> media = Rx(null);
   List<String> taggueos = [];
 
   HiloController({required this.id});
-
-  @override
-  void onInit() {
-    scrollController.addListener(
-      () {
-        if (scrollController.IsBottom) {
-          cargarComentarios();
-        }
-      },
-    );
-
-    comentarioController.addListener(
-      () {
-        taggueos = TagService.getTags(comentarioController.text);
-      },
-    );
-    super.onInit();
-  }
 
   @override
   void onReady() {
@@ -94,7 +78,9 @@ class HiloController extends GetxController {
         failure.value = l;
       },
       (r) {
-        comentariosAgregados.value = r;
+        for (var c in r) {
+          ultimoComentarioAgregadoStream.add(c);
+        }
 
         ultimoComentario = r.lastOrNull?.creado_en;
 
@@ -131,13 +117,13 @@ class HiloController extends GetxController {
       return;
     }
 
-    taggueos.add(tag);
+    taggueo.value = tag;
 
-    comentarioController.text = "${comentarioController.text}>>$tag";
+    taggueos.add(tag);
   }
 
   void agregarMedia(Media media) {
-    this.media.value = media;
+    this.media.value = Spoileable(false, media);
   }
 
   void eliminarMedia() {

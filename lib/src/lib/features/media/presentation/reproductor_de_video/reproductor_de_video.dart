@@ -64,7 +64,7 @@ class ReproductorDeVideo extends StatefulWidget {
 }
 
 class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
-  late final ChewieController controller;
+  late final ChewieController chewie;
   late final ReproductorDeVideoController _controller;
 
   bool get hayPrevisualizacion => widget.previsualizacion != null;
@@ -75,20 +75,25 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
 
   @override
   void initState() {
-    controller = ChewieController(
+    chewie = ChewieController(
       videoPlayerController: widget.controller,
       customControls: const ControlesDeReproductorDeVideo(),
     );
 
-    _controller = ReproductorDeVideoController(
-      controller: controller,
-    );
+    _controller = ReproductorDeVideoController();
 
     if (!hayPrevisualizacion) {
-      _controller.iniciar();
+      iniciar();
     }
+
+    chewie.addListener(() {
+      _controller.pantalla_completa.value = chewie.isFullScreen;
+    });
+
     super.initState();
   }
+
+  void iniciar() => _controller.iniciar(widget.controller);
 
   @override
   Widget build(BuildContext context) {
@@ -98,14 +103,14 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
         if (mostrarPrevisualizacion) {
           return PrevisualizacionDeVideo(
             previsualizacion: widget.previsualizacion!,
-            init: _controller.iniciar,
+            init: iniciar,
             estado: _controller.reproductor.value,
           );
         }
 
         return AspectRatio(
           aspectRatio: _controller.aspectRatio.value!,
-          child: Chewie(controller: controller),
+          child: Chewie(controller: chewie),
         );
       }),
     );

@@ -8,8 +8,6 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
 class HomeController extends GetxController {
-  ScrollController scroll = ScrollController();
-
   Rx<SubcategoriaEntity?> subcategoria = Rx(null);
   Rx<DateTime?> ultimoBump = Rx(null);
   Rx<String> titulo = Rx("");

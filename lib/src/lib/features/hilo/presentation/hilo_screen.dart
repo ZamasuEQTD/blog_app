@@ -1,8 +1,12 @@
+import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/contenido_censurable.dart';
+import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
+import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -23,14 +27,30 @@ class HiloScreen extends StatefulWidget {
 }
 
 class _HiloScreenState extends State<HiloScreen> {
+  final ScrollController scroll = ScrollController();
   late final HiloController controller = Get.put(
     HiloController(id: widget.id),
   )..cargar(widget.id);
 
   @override
-  void dispose() {
-    Get.delete<HiloController>();
-    super.dispose();
+  void initState() {
+    scroll.addListener(
+      () {
+        if (scroll.IsBottom) {
+          controller.cargarComentarios();
+        }
+      },
+    );
+
+    controller.failure.listen((failure) {
+      if (failure != null) {
+        if (failure is EstasBaneadoFailure) {
+          HasSidoBaneadoBottomsheet.show(context, baneo: failure.baneo);
+        }
+      }
+    });
+
+    super.initState();
   }
 
   @override
@@ -39,32 +59,40 @@ class _HiloScreenState extends State<HiloScreen> {
       bottomSheet: const ComentarHiloBottomSheet(),
       body: Obx(
         () => !(controller.hilo.value == null)
-            ? Container(
-                margin: const EdgeInsets.only(
-                  bottom: 20,
-                ),
-                child: CustomScrollView(
-                  controller: controller.scrollController,
-                  slivers: [
-                    InformacionDeHilo(
-                      hilo: (controller.hilo.value!),
-                    ),
-                    const ComentariosEnHilo(),
-                  ],
+            ? Provider.value(
+                value: controller.hilo.value,
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    bottom: 20,
+                  ),
+                  child: CustomScrollView(
+                    controller: scroll,
+                    slivers: const [
+                      InformacionDeHilo(),
+                      ComentariosEnHilo(),
+                    ],
+                  ),
                 ),
               )
             : Container(),
       ),
     );
   }
+
+  @override
+  void dispose() {
+    Get.delete<HiloController>();
+    super.dispose();
+  }
 }
 
 class InformacionDeHilo extends StatelessWidget {
-  final Hilo hilo;
-  const InformacionDeHilo({super.key, required this.hilo});
+  const InformacionDeHilo({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Hilo hilo = context.read();
+
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.all(7),
@@ -81,11 +109,9 @@ class InformacionDeHilo extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                BanderasDeHiloRow(hilo: hilo),
+                const BanderasDeHiloRow(),
                 SubcategoriaTile(subcategoria: hilo.categoria),
-                HiloAccionesRow(
-                  hilo: hilo,
-                ),
+                const HiloAccionesRow(),
                 Center(
                   child: DimensionableScope(
                     constraints: const BoxConstraints(
@@ -140,16 +166,13 @@ class ComentariosEnHilo extends StatefulWidget {
 
 class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
   final Map<ComentarioId, GlobalKey> keys = {};
-  final HiloController controller = Get.find();
+  final HiloController controller = Get.find()..cargarComentarios();
+
   @override
   void initState() {
-    controller.cargarComentarios();
-
-    controller.comentariosAgregados.listen(
-      (comentarios) {
-        for (var element in comentarios) {
-          keys[element.id] = GlobalKey();
-        }
+    controller.ultimoComentarioAgregadoStream.stream.listen(
+      (comentario) {
+        keys[comentario.id] = GlobalKey();
       },
     );
 
@@ -212,3 +235,5 @@ class HiloScreenCargando extends StatelessWidget {
     return Container();
   }
 }
+
+abstract class IComentariosHub {}

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../app/presentation/logic/horarios_service.dart';
 import '../../domain/models/comentario.dart';
@@ -53,33 +54,33 @@ class _ComentarioCardEntity extends ComentarioCard {
 
   @override
   Widget build(BuildContext context) {
-    return ComentarioCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ComentarioInfoRow(comentario: comentario),
-          Wrap(
-            runSpacing: 2,
-            spacing: 3,
-            children: comentario.tags
-                .map(
-                  (tag) => GestureDetector(
-                    onTap: () {},
-                    child: Text(
-                      ">>$tag",
-                      style: const TextStyle(
-                        color: CupertinoColors.link,
+    return Provider.value(
+      value: comentario,
+      child: ComentarioCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ComentarioInfoRow(),
+            Wrap(
+              runSpacing: 2,
+              spacing: 3,
+              children: comentario.tags
+                  .map(
+                    (tag) => GestureDetector(
+                      onTap: () {},
+                      child: Text(
+                        ">>$tag",
+                        style: const TextStyle(
+                          color: CupertinoColors.link,
+                        ),
                       ),
                     ),
-                  ),
-                )
-                .toList(),
-          ),
-          if (comentario.media != null)
-            _Texto(
-              comentario: comentario,
+                  )
+                  .toList(),
             ),
-        ],
+            if (comentario.media != null) const _Texto(),
+          ],
+        ),
       ),
     );
   }
@@ -114,14 +115,14 @@ class _Texto extends StatelessWidget {
         ),
   };
 
-  final Comentario comentario;
-
-  String get texto => comentario.texto;
-
-  const _Texto({super.key, required this.comentario});
+  const _Texto({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Comentario comentario = context.read();
+
+    final String texto = comentario.texto;
+
     final List<TextSpan> spans = [];
     int currentIndex = 0;
 
@@ -170,19 +171,18 @@ class _Texto extends StatelessWidget {
 class ComentarioInfoRow extends StatelessWidget {
   const ComentarioInfoRow({
     super.key,
-    required this.comentario,
   });
-
-  final Comentario comentario;
 
   @override
   Widget build(BuildContext context) {
+    final Comentario comentario = context.read();
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
-            ColorDeComentario(comentario: comentario),
+            const ColorDeComentario(),
             const SizedBox(
               width: 3,
             ),
@@ -194,7 +194,7 @@ class ComentarioInfoRow extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                TagsDeComentarios(comentario: comentario),
+                const TagsDeComentarios(),
               ],
             ),
           ],

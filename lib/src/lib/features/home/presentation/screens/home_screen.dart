@@ -1,7 +1,9 @@
+import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/blocs/home/home_bloc.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
+import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -20,12 +22,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   HomeController controller = Get.put(HomeController()..cargarPortadas());
-
+  final ScrollController scroll = ScrollController();
   @override
   void initState() {
-    controller.addListener(
+    scroll.addListener(
       () {
-        if (true) controller.cargarPortadas();
+        if (scroll.IsBottom) controller.cargarPortadas();
       },
     );
 
@@ -37,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: CustomScrollView(
-        controller: controller.scroll,
+        controller: scroll,
         slivers: const [
           _HomePortadasFiltros(),
           _HomePortadasGrid(),

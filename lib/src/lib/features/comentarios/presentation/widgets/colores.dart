@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../app/presentation/widgets/effects/gradient/animated_gradient.dart';
 import '../../domain/models/comentario.dart';
@@ -13,12 +14,11 @@ class ColorDeComentario extends StatelessWidget {
     ColoresDeComentario.rojo: const ColoredBox(color: Colors.red),
   });
 
-  final Comentario comentario;
-
-  const ColorDeComentario({super.key, required this.comentario});
+  const ColorDeComentario({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final Comentario comentario = context.read();
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(
@@ -43,19 +43,6 @@ class ColorDeComentario extends StatelessWidget {
                 ),
               ),
             ),
-            // Positioned.fill(
-            //   child: Center(
-            //     child: Text(
-            //       comentario.dados ?? comentario.op.rangoCorto,
-            //       textAlign: TextAlign.center,
-            //       style: const TextStyle(
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.w900,
-            //         fontSize: 20,
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),

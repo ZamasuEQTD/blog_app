@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
@@ -6,7 +8,7 @@ import '../../../domain/itoken_decode.dart';
 import '../../../domain/itoken_storage.dart';
 
 class AuthController extends GetxController {
-  final ITokenDecode _tokenService = GetIt.I.get();
+  final ITokenDecode _tokenDecoder = GetIt.I.get();
   final ITokenStorage _tokenStorage = GetIt.I.get();
 
   var iniciando = false.obs;
@@ -18,7 +20,7 @@ class AuthController extends GetxController {
 
     await _tokenStorage.guardar(token);
 
-    Usuario decodedUsuario = await _tokenService.decode(token);
+    Usuario decodedUsuario = await _tokenDecoder.decode(token);
 
     usuario.value = decodedUsuario;
 
@@ -29,7 +31,15 @@ class AuthController extends GetxController {
     String? token = await _tokenStorage.recuperar();
 
     if (token != null) {
-      usuario.value = await _tokenService.decode(token);
+      usuario.value = await _tokenDecoder.decode(token);
     }
   }
+
+  Future<void> cerrarSesion() async {
+    await _tokenStorage.eliminar();
+
+    usuario.value = null;
+  }
+
+  bool get sesionIniciada => usuario.value != null;
 }

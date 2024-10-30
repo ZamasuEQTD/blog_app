@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:chewie/chewie.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 
 class ReproductorDeVideoController extends GetxController {
   Rx<EstadoDeReproductor> reproductor = Rx(EstadoDeReproductor.iniciado);
@@ -16,9 +16,7 @@ class ReproductorDeVideoController extends GetxController {
 
   Timer? timer;
 
-  final ChewieController controller;
-
-  ReproductorDeVideoController({required this.controller});
+  ReproductorDeVideoController();
 
   @override
   void onInit() {
@@ -36,32 +34,15 @@ class ReproductorDeVideoController extends GetxController {
         if (timer?.isActive ?? false) timer?.cancel();
       }
     });
-
-    controller.videoPlayerController.addListener(() {
-      finalizado.value = controller.videoPlayerController.value.isCompleted;
-      buffering.value = controller.videoPlayerController.value.isBuffering;
-      position.value = controller.videoPlayerController.value.position;
-    });
-
-    controller.addListener(() {
-      pantalla_completa.value = controller.isFullScreen;
-    });
   }
 
-  void play() => controller.play();
-
-  void pause() => controller.pause();
-
-  void iniciar() async {
+  void iniciar(VideoPlayerController controller) async {
     reproductor.value = EstadoDeReproductor.iniciando;
     try {
-      await controller.videoPlayerController.initialize();
+      await controller.initialize();
       reproductor.value = EstadoDeReproductor.iniciado;
     } catch (e) {}
   }
-
-  void adelantar(Duration time) => controller.seekTo(position.value + time);
-  void retroceder(Duration time) => controller.seekTo(position.value - time);
 }
 
 enum EstadoDeReproductor {

@@ -1,7 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:blog_app/src/lib/features/app/presentation/widgets/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
+import 'package:blog_app/src/lib/features/hilo/domain/services/tag_service.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
@@ -15,14 +16,13 @@ import 'package:get_it/get_it.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:provider/provider.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
+import '../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
 import '../../../app/presentation/widgets/grupo_seleccionable.dart';
 import '../../../media/domain/models/media.dart';
 import '../../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../../media/presentation/miniatura.dart';
-import '../blocs/comentar_hilo/comentar_hilo_bloc.dart';
 
 class ComentarHiloBottomSheet extends StatefulWidget {
   const ComentarHiloBottomSheet({super.key});
@@ -33,22 +33,40 @@ class ComentarHiloBottomSheet extends StatefulWidget {
 }
 
 class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
+  final TextEditingController comentario = TextEditingController();
+
+  @override
+  void initState() {
+    final HiloController controller = Get.find();
+    comentario.addListener(
+      () {
+        controller.taggueos = TagService.getTags(comentario.text);
+      },
+    );
+
+    controller.taggueo.listen(
+      (tag) {
+        if (tag != null) {
+          comentario.text += ">>$tag";
+        }
+      },
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        showMaterialModalBottomSheet(
-          context: context,
-          backgroundColor: Colors.transparent,
-          builder: (_) {
-            return const ComentarHiloOpcionesItems();
-          },
-        );
+        if (!Get.find<AuthController>().sesionIniciada) {
+          SesionRequeridaBottomSheet.show(context);
+        }
       },
       child: Obx(
         () => IgnorePointer(
-          ignoring: Get.find<AuthController>().usuario.value == null,
+          ignoring: !Get.find<AuthController>().sesionIniciada,
           child: ColoredBox(
             color: Theme.of(context).colorScheme.surface,
             child: Padding(
@@ -61,7 +79,10 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                     () => Get.find<HiloController>().media.value != null
                         ? Row(
                             children: <Media>[
-                              Get.find<HiloController>().media.value!,
+                              Get.find<HiloController>()
+                                  .media
+                                  .value!
+                                  .spoileable,
                             ]
                                 .map(
                                   (x) => GestureDetector(
@@ -81,24 +102,25 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                   Row(
                     children: [
                       ColoredIconButton(
-                        onPressed: () {
-                          showMaterialModalBottomSheet(
-                            context: context,
-                            builder: (_) {
-                              return BlocProvider.value(
-                                value: context.read<GestorDeMediaBloc>(),
-                                child: const ComentarHiloOpcionesItems(),
-                              );
-                            },
-                          );
-                        },
+                        onPressed: () {},
                         icon: const Icon(Icons.three_k_rounded),
                       ),
-                      const _ComentarInput(),
+                      KeyboardVisibilityBuilder(
+                        builder: (context, isKeyboardVisible) => Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextField(
+                              controller: comentario,
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: !isKeyboardVisible ? 1 : 4,
+                            ),
+                          ),
+                        ),
+                      ),
                       ColoredIconButton(
-                        onPressed: () {
-                          context.read<HiloController>().enviarComentario();
-                        },
+                        onPressed: () =>
+                            Get.find<HiloController>().enviarComentario,
                         icon: const Icon(Icons.send),
                       ),
                     ],
@@ -158,27 +180,6 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
           ],
         );
       },
-    );
-  }
-}
-
-class _ComentarInput extends StatelessWidget {
-  const _ComentarInput({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return KeyboardVisibilityBuilder(
-      builder: (context, isKeyboardVisible) => Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: TextField(
-            controller: Get.find<HiloController>().comentarioController,
-            keyboardType: TextInputType.multiline,
-            minLines: 1,
-            maxLines: !isKeyboardVisible ? 1 : 4,
-          ),
-        ),
-      ),
     );
   }
 }
