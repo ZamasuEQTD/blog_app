@@ -1,5 +1,7 @@
+import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
+import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
@@ -15,8 +17,9 @@ class PostearHiloController extends GetxController {
 
   Rx<HiloId?> id = Rx(null);
 
-  RxBool posteando = false.obs;
+  Rx<Spoileable<Media>?> portada = Rx(null);
 
+  RxBool posteando = false.obs;
   void postear() async {
     posteando.value = true;
 
@@ -31,5 +34,9 @@ class PostearHiloController extends GetxController {
     );
 
     posteando.value = false;
+  }
+
+  void agregarPortada(Media portada) {
+    this.portada.value = Spoileable(false, portada);
   }
 }

@@ -10,9 +10,9 @@ import 'package:dartz/dartz.dart';
 
 class LocalHilosRepository extends IHilosRepository {
   @override
-  Future<Either<Failure, Hilo>> getHilo({required String id}) {
-    return Future.delayed(
-      const Duration(seconds: 2),
+  Future<Either<Failure, Hilo>> getHilo({required String id}) async {
+    return await Future.delayed(
+      const Duration(seconds: 5),
       () => Right(
         Hilo(
           id: "sfasf",
@@ -34,7 +34,7 @@ class LocalHilosRepository extends IHilosRepository {
             Imagen(
               provider: NetworkProvider(
                 path:
-                    "https://static.wikia.nocookie.net/p__/images/e/ef/LauraPachislot.png/revision/latest?cb=20171007170755&path-prefix=protagonist",
+                    "https://es.gizmodo.com/app/uploads/2023/10/ce488f6891156e5ef7a395f5b590eeb1.jpg",
               ),
             ),
           ),
@@ -55,8 +55,9 @@ class LocalHilosRepository extends IHilosRepository {
   Future<Either<Failure, List<HomePortada>>> getPortadas({
     DateTime? ultimoBump,
   }) {
-    return Future.value(
-      Right([
+    return Future.delayed(
+      const Duration(seconds: 5),
+      () => Right([
         HomePortada(
           id: "123",
           titulo: "Holanda",

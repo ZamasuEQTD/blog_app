@@ -70,17 +70,25 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   bool get hayPrevisualizacion => widget.previsualizacion != null;
 
   bool get mostrarPrevisualizacion =>
-      !hayPrevisualizacion ||
+      hayPrevisualizacion &&
       _controller.reproductor.value != EstadoDeReproductor.iniciado;
 
   @override
   void initState() {
+    _controller = ReproductorDeVideoController();
+
     chewie = ChewieController(
       videoPlayerController: widget.controller,
-      customControls: const ControlesDeReproductorDeVideo(),
+      customControls: ChangeNotifierProvider.value(
+        value: widget.controller,
+        builder: (context, child) {
+          return ChangeNotifierProvider.value(
+            value: chewie,
+            child: const ControlesDeReproductorDeVideo(),
+          );
+        },
+      ),
     );
-
-    _controller = ReproductorDeVideoController();
 
     if (!hayPrevisualizacion) {
       iniciar();
@@ -90,6 +98,10 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
       _controller.pantalla_completa.value = chewie.isFullScreen;
     });
 
+    widget.controller.addListener(() {
+      _controller.buffering.value = widget.controller.value.isBuffering;
+    });
+
     super.initState();
   }
 
@@ -97,22 +109,24 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return VideoControllerProvider(
-      controller: _controller,
-      child: Obx(() {
-        if (mostrarPrevisualizacion) {
-          return PrevisualizacionDeVideo(
-            previsualizacion: widget.previsualizacion!,
-            init: iniciar,
-            estado: _controller.reproductor.value,
-          );
-        }
+    return GetBuilder(
+      init: _controller,
+      builder: (controller) {
+        return Obx(() {
+          if (mostrarPrevisualizacion) {
+            return PrevisualizacionDeVideo(
+              previsualizacion: widget.previsualizacion!,
+              init: iniciar,
+              estado: _controller.reproductor.value,
+            );
+          }
 
-        return AspectRatio(
-          aspectRatio: _controller.aspectRatio.value!,
-          child: Chewie(controller: chewie),
-        );
-      }),
+          return AspectRatio(
+            aspectRatio: _controller.aspectRatio.value ?? 1,
+            child: Chewie(controller: chewie),
+          );
+        });
+      },
     );
   }
 }

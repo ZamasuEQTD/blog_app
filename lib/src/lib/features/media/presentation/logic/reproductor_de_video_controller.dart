@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 
 class ReproductorDeVideoController extends GetxController {
   Rx<EstadoDeReproductor> reproductor = Rx(EstadoDeReproductor.iniciado);
+
   Rx<double?> aspectRatio = Rx(null);
   Rx<bool> reproduciendo = Rx(false);
   Rx<bool> buffering = Rx(false);
@@ -40,9 +41,12 @@ class ReproductorDeVideoController extends GetxController {
     reproductor.value = EstadoDeReproductor.iniciando;
     try {
       await controller.initialize();
+      aspectRatio.value = controller.value.aspectRatio;
       reproductor.value = EstadoDeReproductor.iniciado;
     } catch (e) {}
   }
+
+  void switchControlers() => mostrar_controles.value = !mostrar_controles.value;
 }
 
 enum EstadoDeReproductor {

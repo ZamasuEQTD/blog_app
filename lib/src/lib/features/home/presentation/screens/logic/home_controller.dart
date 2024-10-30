@@ -17,6 +17,7 @@ class HomeController extends GetxController {
   Rx<List<HomePortada>> portadas = Rx([]);
 
   void cargarPortadas() async {
+    if (cargando.value) return;
     IHilosRepository repository = GetIt.I.get();
 
     var response = await repository.getPortadas(ultimoBump: ultimoBump.value);
@@ -43,9 +44,15 @@ class HomeController extends GetxController {
       )
       .toList();
 
-  void agregarPortada(HomePortada portada) =>
-      portadas.value = [portada, ...portadas.value];
+  void agregarPortada(HomePortada portada) {
+    if (hayFiltrosCambiados) return;
+
+    portadas.value = [portada, ...portadas.value];
+  }
 
   void cambiarCategoria(SubcategoriaEntity subcategoria) =>
       this.subcategoria.value = subcategoria;
+
+  bool get hayFiltrosCambiados =>
+      subcategoria.value != null || titulo.value != "";
 }

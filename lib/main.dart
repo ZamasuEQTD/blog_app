@@ -31,6 +31,9 @@ class MyApp extends StatelessWidget {
       backButtonDispatcher: routes.backButtonDispatcher,
       title: 'Flutter Demo',
       theme: AppThemes.light.copyWith(
+        bottomSheetTheme: const BottomSheetThemeData(
+          backgroundColor: Colors.transparent,
+        ),
         textTheme: GoogleFonts.notoSansTextTheme(),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(

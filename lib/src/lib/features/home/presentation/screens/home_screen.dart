@@ -1,9 +1,12 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
+import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/blocs/home/home_bloc.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late IHomePortadasHub hub = HomeLocalHub();
   HomeController controller = Get.put(HomeController()..cargarPortadas());
   final ScrollController scroll = ScrollController();
   @override
@@ -30,6 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scroll.IsBottom) controller.cargarPortadas();
       },
     );
+
+    hub.onHiloCreado(
+      (portada) {
+        controller.agregarPortada(portada);
+      },
+    );
+
+    hub.onHiloEliminado((id) => controller.eliminar(id));
 
     super.initState();
   }

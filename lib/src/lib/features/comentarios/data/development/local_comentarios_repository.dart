@@ -18,9 +18,10 @@ class LocalComentariosRepository extends IComentariosRepository {
       () => Right([
         Comentario(
           id: Random().nextInt(150000).toString(),
-          texto: "Aguante la bornografia",
+          texto:
+              "https://play.max.com/video/watch/54c9a2ac-0eae-4215-b70a-2afea02982f7/4b7fa446-a2d9-45c9-9b85-69dee077bb58",
           creado_en: DateTime(2024, 5, 1, 2),
-          color: ColoresDeComentario.rojo,
+          color: ColoresDeComentario.amarillo,
           op: const OpData(
             nombre: "ANONIMO",
             rango: "ANONIMO",
@@ -32,7 +33,7 @@ class LocalComentariosRepository extends IComentariosRepository {
         ),
         Comentario(
           id: Random().nextInt(150000).toString(),
-          texto: "Aguante la bornografia",
+          texto: "Aguante la bornografia>>CPDENEN>>CPDENEN>>CPDENEN",
           creado_en: DateTime(2024, 5, 1, 2),
           color: ColoresDeComentario.multi,
           op: const OpData(

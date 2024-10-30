@@ -1,6 +1,9 @@
+import 'package:blog_app/src/lib/features/media/presentation/enlaces/abrir_enlace_externo_bottomsheet.dart';
+import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app/presentation/logic/horarios_service.dart';
@@ -61,9 +64,12 @@ class _ComentarioCardEntity extends ComentarioCard {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const ComentarioInfoRow(),
+            const SizedBox(
+              height: 10,
+            ),
             Wrap(
               runSpacing: 2,
-              spacing: 3,
+              spacing: 5,
               children: comentario.tags
                   .map(
                     (tag) => GestureDetector(
@@ -78,7 +84,12 @@ class _ComentarioCardEntity extends ComentarioCard {
                   )
                   .toList(),
             ),
-            if (comentario.media != null) const _Texto(),
+            const SizedBox(
+              height: 5,
+            ),
+            if (comentario.media != null)
+              MultiMedia(media: comentario.media!.spoileable),
+            const _Texto(),
           ],
         ),
       ),
@@ -88,29 +99,37 @@ class _ComentarioCardEntity extends ComentarioCard {
 
 class _Texto extends StatelessWidget {
   static final RegExp _tag = RegExp(">>[A-Z0-9]{7}");
-  static final RegExp _greenText = RegExp(">>[A-Z0-9]{7}");
+  static final RegExp _greenText = RegExp("dasdassadas");
   static final RegExp _url = RegExp(
     r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?',
   );
 
   static final Map<RegExp, Maker> _makers = {
-    _tag: (context, match) => TextSpan(
+    _url: (context, match) => TextSpan(
           text: match.group(0),
           style: const TextStyle(
             color: CupertinoColors.link,
           ),
-          recognizer: TapGestureRecognizer()..onTap = () {},
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              showMaterialModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return AbrirEnlaceExternoBottomSheet(url: match.group(0)!);
+                },
+              );
+            },
         ),
     _greenText: (context, match) => TextSpan(
           text: match.group(0),
           style: const TextStyle(
-            color: CupertinoColors.activeGreen,
+            color: CupertinoColors.systemRed,
           ),
         ),
-    _url: (context, match) => TextSpan(
+    _tag: (context, match) => TextSpan(
           text: match.group(0),
           style: const TextStyle(
-            color: CupertinoColors.activeGreen,
+            color: CupertinoColors.systemYellow,
           ),
         ),
   };
@@ -162,7 +181,7 @@ class _Texto extends StatelessWidget {
     return RichText(
       text: TextSpan(
         children: spans,
-        style: const TextStyle(fontSize: 18),
+        style: const TextStyle(fontSize: 15),
       ),
     );
   }

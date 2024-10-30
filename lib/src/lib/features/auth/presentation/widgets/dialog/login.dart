@@ -40,12 +40,47 @@ class _LoginDialogState extends State<LoginDialog> {
 
   @override
   Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: const EdgeInsets.all(20),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const DialogTitulo.text(titulo: "Iniciar sesion"),
+            ...[
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "Usuario",
+                ),
+              ),
+              const TextField(
+                decoration: InputDecoration(
+                  hintText: "Contraseña",
+                ),
+              ),
+              DialogButton.normal(
+                onPressed: () => context.read(),
+                text: "Iniciar sesion",
+              ),
+            ].map(
+              (e) => Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                child: e,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
     return GetBuilder(
       init: controller,
       builder: (controller) => DialogRounded.normal(
-        titulo: const DialogTitulo.text(titulo: "Iniciar sesion"),
+        titulo: const DialogTitulo.text(titulo: "Iniciassr sesion"),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
+            const Text("hola"),
             const TextField(
               decoration: InputDecoration(
                 hintText: "Usuario",

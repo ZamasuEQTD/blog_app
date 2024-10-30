@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
+import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/blocs/postear_hilo/postear_hilo_bloc.dart';
@@ -20,87 +25,149 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
   final PostearHiloController controller = PostearHiloController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        leading: const BackButton(
-          color: Colors.black,
+    ThemeData actualTheme = Theme.of(context);
+    return Theme(
+      data: actualTheme.copyWith(
+        appBarTheme: actualTheme.appBarTheme.copyWith(
+          backgroundColor: Theme.of(context).colorScheme.onSurface,
         ),
-        title: const Text(
-          "Postear hilo",
-          style: TextStyle(
+        scaffoldBackgroundColor: actualTheme.colorScheme.onSurface,
+        inputDecorationTheme: Theme.of(context)
+            .inputDecorationTheme
+            .copyWith(fillColor: actualTheme.colorScheme.surface),
+      ),
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          leading: const BackButton(
             color: Colors.black,
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => context.read<PostearHiloBloc>().add(
-                  PostearHilo(),
+          title: const Text(
+            "Postear hilo",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => controller.postear,
+              child: const Text(
+                "Postear",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-            child: const Text(
-              "Postear",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-        ],
-      ),
-      body: CustomScrollView(
-        slivers: [
-          const TextField(
-            decoration: InputDecoration(
-              hintText: "Titulo",
+          ],
+        ),
+        body: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const PostearHiloLabelSection(label: "Titulo"),
+                    const TextField(
+                      decoration: InputDecoration(
+                        hintText: "Titulo",
+                      ),
+                    ).marginOnly(bottom: 24, top: 8),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const PostearHiloLabelSection(label: "Descripción"),
+                    const TextField(
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        hintText: "Descripción",
+                      ),
+                    ).marginOnly(bottom: 24, top: 8),
+                    const PostearHiloLabelSection(label: "Portada"),
+                    Obx(
+                      () {
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (controller.portada.value != null)
+                              GetBuilder(
+                                key: UniqueKey(),
+                                init: BlurController()..blurear.value = false,
+                                builder: (blur) => DimensionableScope(
+                                  borderRadius: BorderRadius.circular(20),
+                                  builder: (context, dimensionable) {
+                                    return Stack(
+                                      children: [
+                                        dimensionable,
+                                        Positioned.fill(
+                                          child: BlurEffect(
+                                            blurear: blur.blurear.value,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                  child: controller
+                                      .portada.value!.spoileable.widget
+                                      .marginOnly(bottom: 10),
+                                ),
+                              ),
+                            SizedBox(
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  IGalleryService service = GetIt.I.get();
+
+                                  var response = await service.pickFile(
+                                    extensions: [],
+                                  );
+
+                                  response.fold(
+                                    (l) {},
+                                    (r) {
+                                      if (r != null) {
+                                        controller.agregarPortada(r);
+                                      }
+                                    },
+                                  );
+                                },
+                                child: const Text("Agregar portada "),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    )..marginOnly(bottom: 24, top: 8),
+                  ],
+                ),
+              ),
             ),
-          ),
-          const TextField(
-            maxLines: 5,
-            decoration: InputDecoration(
-              hintText: "Descripción",
-            ),
-          ),
-          BlocBuilder<GestorDeMediaBloc, GestorDeMediaState>(
-            builder: (context, state) {
-              if (state.medias.isEmpty) {
-                return SizedBox(
-                  height: 40,
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("Agregar portadas"),
-                  ),
-                );
-              }
-              return MultiMedia(media: state.medias[0]);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-abstract class PostearHiloLabelSection extends StatelessWidget {
-  const PostearHiloLabelSection._({super.key});
+class PostearHiloLabelSection extends StatelessWidget {
+  final String label;
+  const PostearHiloLabelSection({super.key, required this.label});
 
-  const factory PostearHiloLabelSection({
-    Key? key,
-    required String text,
-  }) = _PostearHiloLabelSection;
-}
-
-class _PostearHiloLabelSection extends PostearHiloLabelSection {
-  final String text;
-
-  const _PostearHiloLabelSection({super.key, required this.text}) : super._();
   @override
   Widget build(BuildContext context) {
     return Text(
-      text,
+      label,
       style: const TextStyle(
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
         color: Color.fromRGBO(73, 80, 87, 1),
       ),
     );

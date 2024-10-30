@@ -46,6 +46,7 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
   static void show(BuildContext context) {
     showMaterialModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent,
       builder: (context) {
         return const SesionRequeridaBottomSheet();
       },

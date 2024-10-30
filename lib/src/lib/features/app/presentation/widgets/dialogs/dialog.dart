@@ -64,6 +64,7 @@ class _NormalRoundedDialog extends DialogRounded {
     return DialogRounded(
       constraints: constraints,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           if (titulo != null) titulo!,
           child,

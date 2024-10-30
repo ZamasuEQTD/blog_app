@@ -2,13 +2,9 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/get_rx.dart';
-import 'package:provider/provider.dart';
 
 // class BlurEffect extends StatelessWidget {
 //   final bool blurear;
@@ -38,7 +34,7 @@ import 'package:provider/provider.dart';
 
 typedef BlurEffectBuilder = Widget Function(
   BlurController controller,
-  Widget child,
+  Widget blur,
 );
 
 abstract class BlurEffect extends StatelessWidget {
@@ -50,9 +46,10 @@ abstract class BlurEffect extends StatelessWidget {
   }) = _BlurEffect;
 
   const factory BlurEffect.builder({
-    required bool blurear,
+    Key? key,
+    required BlurEffect blur,
     required BlurEffectBuilder builder,
-    Widget? child,
+    required Widget child,
   }) = _BlurEffectBuilder;
 }
 
@@ -71,8 +68,8 @@ class _BlurEffect extends BlurEffect {
         clipBehavior: Clip.hardEdge,
         child: BackdropFilter(
           filter: ImageFilter.blur(
-            sigmaX: 20,
-            sigmaY: 15,
+            sigmaX: 30,
+            sigmaY: 25,
             tileMode: TileMode.clamp,
           ),
           child: child,
@@ -84,30 +81,27 @@ class _BlurEffect extends BlurEffect {
 }
 
 class _BlurEffectBuilder extends BlurEffect {
+  final Widget child;
+  final BlurEffect blur;
   final BlurEffectBuilder builder;
-  final bool blurear;
-  final Widget? child;
 
   const _BlurEffectBuilder({
+    super.key,
     required this.builder,
-    required this.blurear,
-    this.child,
+    required this.child,
+    required this.blur,
   }) : super._();
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
       init: BlurController(),
-      global: false,
-      builder: (controller) {
-        return builder(
-          controller,
-          BlurEffect(
-            blurear: controller.blurear.value,
-            child: child,
-          ),
-        );
-      },
+      builder: (controller) => Stack(
+        children: [
+          child,
+          if (controller.blurear.value) builder(controller, blur),
+        ],
+      ),
     );
   }
 }

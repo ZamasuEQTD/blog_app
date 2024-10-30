@@ -46,6 +46,11 @@ class HiloController extends GetxController {
     cargar(id);
   }
 
+  @override
+  void onClose() {
+    ultimoComentarioAgregadoStream.close();
+  }
+
   Future<void> cargar(String id) async {
     cargando.value = true;
 
@@ -79,7 +84,9 @@ class HiloController extends GetxController {
       },
       (r) {
         for (var c in r) {
-          ultimoComentarioAgregadoStream.add(c);
+          if (!ultimoComentarioAgregadoStream.isClosed) {
+            ultimoComentarioAgregadoStream.sink.add(c);
+          }
         }
 
         ultimoComentario = r.lastOrNull?.creado_en;
