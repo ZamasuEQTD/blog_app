@@ -1,57 +1,143 @@
-import 'package:flutter/cupertino.dart';
+import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/notificaciones/presentation/screens/notificaciones_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../domain/models/usuario.dart';
-import 'logic/blocs/ver_usuario_bloc.dart';
+import 'logic/controllers/ver_usuario_controller.dart';
 
-class VerUsuarioPanel extends StatelessWidget {
+class VerUsuarioPanel extends StatefulWidget {
   final String usuario;
   const VerUsuarioPanel({super.key, required this.usuario});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => VerUsuarioBloc(usuario),
-      child: SliverMainAxisGroup(
-        slivers: [
-          BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-            builder: (context, state) {
-              if (state.usuario == null) {
-                return Container();
-              }
+  State<VerUsuarioPanel> createState() => _VerUsuarioPanelState();
+}
 
-              return _InformacionDeUsuario(usuario: state.usuario!);
+class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
+  late final controller = Get.put(
+    VerUsuarioController(
+      id: widget.usuario,
+    ),
+  );
+  @override
+  void initState() {
+    ScrollController scroll = context.read();
+
+    controller.usuario.listen(
+      (usuario) {
+        if (usuario != null) {
+          scroll.addListener(
+            () {
+              if (scroll.IsBottom) {
+                controller.cargarHistorial();
+              }
             },
-          ),
-          SliverToBoxAdapter(
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(
-                  Theme.of(context).colorScheme.error,
+          );
+        }
+      },
+    );
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () {
+        if (controller.cargando.value) {
+          return SliverMainAxisGroup(
+            slivers: [
+              const SliverToBoxAdapter(
+                child: Center(
+                  child: Row(
+                    children: [
+                      Bone.circle(
+                        size: 70,
+                      ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Bone.text(
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Bone.text(
+                            words: 10,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: const Text("Banear usuario"),
+              SliverList.builder(
+                itemBuilder: (context, index) => const SocialInteraction.bone(),
+              ),
+            ],
+          );
+        }
+
+        return SliverMainAxisGroup(
+          slivers: [
+            _InformacionDeUsuario(usuario: controller.usuario.value!),
+            SliverToBoxAdapter(
+              child: ElevatedButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    Theme.of(context).colorScheme.error,
+                  ),
+                ),
+                child: const Text("Banear usuario"),
+              ),
             ),
-          ),
-          const SliverToBoxAdapter(
-            child: _SeleccionarHistorial(),
-          ),
-          BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-            builder: (context, state) {
-              if (state.tipoDeHistorial == TipoDeHistorial.comentarios) {
-                return Container();
-              }
-              if (state.tipoDeHistorial == TipoDeHistorial.hilos) {
-                return Container();
-              }
-              return Container();
-            },
-          ),
-        ],
-      ),
+            SliverToBoxAdapter(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: const ColoredBox(
+                  color: Color(0xffF5F5F5),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    child: Row(
+                      children: [
+                        SeleccionarHistorialButton.hilos(),
+                        SeleccionarHistorialButton.comentarios(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Obx(
+              () {
+                if (controller.historial.value == TipoDeHistorial.hilos) {
+                  return SliverList.builder(
+                    itemCount: controller.hilos.value.length,
+                    itemBuilder: (context, index) =>
+                        SocialInteraction.historial(
+                      historial: controller.hilos.value[index],
+                    ),
+                  );
+                }
+
+                return SliverList.builder(
+                  itemCount: controller.comentarios.value.length,
+                  itemBuilder: (context, index) => SocialInteraction.historial(
+                    historial: controller.comentarios.value[index],
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -63,70 +149,41 @@ class _InformacionDeUsuario extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const ClipOval(
-              child: ColoredBox(
-                color: Color(0xfff5f5f5),
-                child: SizedBox.square(
-                  dimension: 70,
-                  child: Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.user,
-                      size: 35,
-                    ),
+    return Center(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const ClipOval(
+            child: ColoredBox(
+              color: Color(0xfff5f5f5),
+              child: SizedBox.square(
+                dimension: 70,
+                child: Center(
+                  child: FaIcon(
+                    FontAwesomeIcons.user,
+                    size: 35,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  usuario.nombre,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                  ),
-                ),
-                Text(
-                  "Unido desde ${usuario.registrado.day}/${usuario.registrado.month}/${usuario.registrado.year}",
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SeleccionarHistorial extends StatelessWidget {
-  const _SeleccionarHistorial({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: const ColoredBox(
-          color: Color(0xffF5F5F5),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            child: Row(
-              children: [
-                SeleccionarHistorialButton.hilos(),
-                SeleccionarHistorialButton.comentarios(),
-              ],
-            ),
           ),
-        ),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                usuario.nombre,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+              ),
+              Text(
+                "Unido desde ${usuario.registrado.day}/${usuario.registrado.month}/${usuario.registrado.year}",
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -185,35 +242,26 @@ class _SeleccionarHistorialDeHilos extends SeleccionarHistorialButton {
   const _SeleccionarHistorialDeHilos() : super._();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-      builder: (context, state) {
-        bool seleccionado() {
-          return state.tipoDeHistorial == TipoDeHistorial.hilos;
-        }
-
-        void onTap() => context.read<VerUsuarioBloc>().add(
-              const CambiarTipoDeHistorial(tipo: TipoDeHistorial.hilos),
-            );
-
-        return SeleccionarHistorialButton(
-          onTap: () => onTap,
-          seleccionado: seleccionado(),
-          child: const Row(
-            children: [
-              FaIcon(
-                FontAwesomeIcons.noteSticky,
-                size: 20,
-                color: Colors.black,
-              ),
-              SizedBox(width: 8),
-              Text(
-                "Hilos",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        );
-      },
+    final controller = Get.find<VerUsuarioController>();
+    return Obx(
+      () => SeleccionarHistorialButton(
+        onTap: () => controller.historial.value = TipoDeHistorial.hilos,
+        seleccionado: controller.historial.value == TipoDeHistorial.hilos,
+        child: const Row(
+          children: [
+            FaIcon(
+              FontAwesomeIcons.noteSticky,
+              size: 20,
+              color: Colors.black,
+            ),
+            SizedBox(width: 8),
+            Text(
+              "Hilos",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -222,277 +270,28 @@ class _SeleccionarHistorialDeComentarios extends SeleccionarHistorialButton {
   const _SeleccionarHistorialDeComentarios() : super._();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VerUsuarioBloc, VerUsuarioState>(
-      builder: (context, state) {
-        bool seleccionado() {
-          return state.tipoDeHistorial == TipoDeHistorial.comentarios;
-        }
+    final controller = Get.find<VerUsuarioController>();
 
-        void onTap() => context.read<VerUsuarioBloc>().add(
-              const CambiarTipoDeHistorial(tipo: TipoDeHistorial.comentarios),
-            );
-
-        return SeleccionarHistorialButton(
-          onTap: () => onTap,
-          seleccionado: seleccionado(),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FaIcon(
-                FontAwesomeIcons.message,
-                size: 20,
-                color: Colors.black,
-              ),
-              SizedBox(width: 8),
-              Text(
-                "Comentarios",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+    return SeleccionarHistorialButton(
+      onTap: () => controller.historial.value = TipoDeHistorial.comentarios,
+      seleccionado: controller.historial.value == TipoDeHistorial.comentarios,
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FaIcon(
+            FontAwesomeIcons.message,
+            size: 20,
+            color: Colors.black,
           ),
-        );
-      },
+          SizedBox(width: 8),
+          Text(
+            "Comentarios",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
-
-class HistorialDeComentarios extends StatelessWidget {
-  const HistorialDeComentarios({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:skeletonizer/skeletonizer.dart';
-
-// import 'package:blog_app/common/logic/extensions/scroll_controller.dart';
-// import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida_bottomsheet.dart';
-// import 'package:blog_app/features/media/presentation/logic/extensions/media_extensions.dart';
-
-// import 'logic/historial_de_comentarios/historial_de_comentarios_bloc.dart';
-
-// class HistorialDeComentarios extends StatefulWidget {
-//   const HistorialDeComentarios({super.key});
-
-//   @override
-//   State<HistorialDeComentarios> createState() => _HistorialDeComentariosState();
-// }
-
-// class _HistorialDeComentariosState extends State<HistorialDeComentarios> {
-//   @override
-//   void initState() {
-//     HistorialDeComentariosBloc bloc = context.read();
-//     ScrollController controller = context.read();
-
-//     bloc.add(CargarSiguientePagina());
-
-//     controller.addListener(() {
-//       if (controller.isBottom()) {
-//         if (bloc.state.status != HistorialDeComentariosStatus.cargando) {
-//           bloc.add(CargarSiguientePagina());
-//         }
-//       }
-//     });
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocBuilder<HistorialDeComentariosBloc, HistorialDeComentariosState>(
-//       builder: (context, state) {
-//         Widget builder(BuildContext context, int index) {
-//           if (index >= state.comentarios.length &&
-//               state.status == HistorialDeComentariosStatus.cargando) {
-//             return const ItemHistorialDeComentarioCargando();
-//           }
-//           return ItemHistorialDeComentario(state.comentarios[index]);
-//         }
-
-//         return SliverList.builder(
-//           itemCount: state.comentarios.length +
-//               (state.status == HistorialDeComentariosStatus.cargando ? 5 : 0),
-//           itemBuilder: builder,
-//         );
-//       },
-//     );
-//   }
-// }
-
-// class ItemHistorialDeComentario extends StatelessWidget {
-//   final HistorialDeComentarioItem comentario;
-//   const ItemHistorialDeComentario(
-//     this.comentario, {
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       children: [
-//         SizedBox(
-//           height: 80,
-//           child: Row(
-//             children: [
-//               ClipRRect(
-//                 borderRadius: BorderRadius.circular(10),
-//                 child: SizedBox(
-//                   height: 80,
-//                   width: 80,
-//                   child: Image(
-//                     fit: BoxFit.cover,
-//                     image: comentario.hilo.portada.toProvider(),
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(
-//                 width: 5,
-//               ),
-//               Flexible(
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       "Ha comentado: ${comentario.hilo.titulo}",
-//                       maxLines: 2,
-//                       style: const TextStyle(
-//                         fontWeight: FontWeight.w900,
-//                       ),
-//                     ),
-//                     Flexible(child: Text(comentario.comentario)),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//         const SizedBox(
-//           height: 2,
-//         ),
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: [
-//             ElevatedButton(
-//               style: FlatBtnStyle().copyWith(
-//                 shape: WidgetStatePropertyAll(
-//                   RoundedRectangleBorder(
-//                     borderRadius: BorderRadius.circular(12),
-//                     side: const BorderSide(
-//                       width: 1,
-//                       color: Color.fromARGB(255, 237, 232, 232),
-//                     ),
-//                   ),
-//                 ),
-//                 padding: const WidgetStatePropertyAll(
-//                   EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-//                 ),
-//                 backgroundColor: const WidgetStatePropertyAll(Colors.white),
-//               ),
-//               onPressed: () => context.push("/hilo/${comentario.hilo.id}"),
-//               child: const Text(
-//                 "Ver hilo",
-//                 style: TextStyle(color: Colors.black, fontSize: 17),
-//               ),
-//             ),
-//           ],
-//         ),
-//         const SizedBox(
-//           height: 2,
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-// class ItemHistorialDeComentarioCargando extends StatelessWidget {
-//   const ItemHistorialDeComentarioCargando({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Skeletonizer.zone(
-//       containersColor: const Color(0xfff2f2f2),
-//       child: Column(
-//         children: [
-//           const SizedBox(
-//             height: 80,
-//             child: Row(
-//               children: [
-//                 Bone.square(
-//                   size: 80,
-//                   borderRadius: BorderRadius.all(Radius.circular(10)),
-//                 ),
-//                 SizedBox(
-//                   width: 5,
-//                 ),
-//                 Flexible(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Flexible(
-//                         child: Bone.text(
-//                           words: 20,
-//                           borderRadius: BorderRadius.all(Radius.circular(5)),
-//                         ),
-//                       ),
-//                       SizedBox(
-//                         height: 5,
-//                       ),
-//                       Flexible(
-//                         child: Bone.text(
-//                           words: 3,
-//                           borderRadius: BorderRadius.all(Radius.circular(5)),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Container(
-//             margin: const EdgeInsets.symmetric(vertical: 5),
-//             child: const Row(
-//               mainAxisAlignment: MainAxisAlignment.end,
-//               children: [
-//                 Bone(
-//                   borderRadius: BorderRadius.all(Radius.circular(20)),
-//                   width: 80,
-//                   height: 40,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-// abstract class HistorialItemCard extends StatelessWidget {
-//   const HistorialItemCard({super.key});
-// }
-
-// class _HistorialItemCard extends HistorialItemCard {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Column(
-//       children: [
-//         Row(
-//           children: [
-//             ClipRRect(
-//               borderRadius: BorderRadius.all(Radius.circular(10)),
-//               child: SizedBox.square(
-//                 dimension: 80,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ],
-//     );
-//   }
-// }

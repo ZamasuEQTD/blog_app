@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
 import 'package:flutter/material.dart';
@@ -93,59 +95,94 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     const PostearHiloLabelSection(label: "Portada"),
                     Obx(
                       () {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (controller.portada.value != null)
-                              GetBuilder(
-                                key: UniqueKey(),
-                                init: BlurController()..blurear.value = false,
-                                builder: (blur) => DimensionableScope(
-                                  borderRadius: BorderRadius.circular(20),
-                                  builder: (context, dimensionable) {
-                                    return Stack(
-                                      children: [
-                                        dimensionable,
-                                        Positioned.fill(
-                                          child: BlurEffect(
-                                            blurear: blur.blurear.value,
-                                          ),
-                                        ),
-                                      ],
-                                    );
+                        if (controller.portada.value != null) {
+                          SizedBox(
+                            height: 40,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                IGalleryService service = GetIt.I.get();
+
+                                var response = await service.pickFile(
+                                  extensions: [],
+                                );
+
+                                response.fold(
+                                  (l) {},
+                                  (r) {
+                                    if (r != null) {
+                                      controller.agregarPortada(r);
+                                    }
                                   },
-                                  child: controller
-                                      .portada.value!.spoileable.widget
-                                      .marginOnly(bottom: 10),
-                                ),
-                              ),
-                            SizedBox(
-                              height: 40,
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: () async {
-                                  IGalleryService service = GetIt.I.get();
+                                );
+                              },
+                              child: const Text("Agregar portada "),
+                            ),
+                          );
+                        }
 
-                                  var response = await service.pickFile(
-                                    extensions: [],
-                                  );
-
-                                  response.fold(
-                                    (l) {},
-                                    (r) {
-                                      if (r != null) {
-                                        controller.agregarPortada(r);
-                                      }
-                                    },
+                        return GetBuilder(
+                          key: UniqueKey(),
+                          init: BlurController()..blurear.value = false,
+                          builder: (blur) => Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              DimensionableScope(
+                                borderRadius: BorderRadius.circular(20),
+                                builder: (context, dimensionable) {
+                                  return Stack(
+                                    children: [
+                                      dimensionable,
+                                      Positioned.fill(
+                                        child: BlurEffect(
+                                          blurear: blur.blurear.value,
+                                        ),
+                                      ),
+                                    ],
                                   );
                                 },
-                                child: const Text("Agregar portada "),
+                                child: controller
+                                    .portada.value!.spoileable.widget
+                                    .marginOnly(bottom: 10),
                               ),
-                            ),
-                          ],
+                              GrupoSeleccionable(
+                                seleccionables: [
+                                  ItemSeleccionable.checkbox(
+                                    onChange: (value) {
+                                      controller.portada.value = controller
+                                          .portada.value!
+                                          .copyWith(spoiler: value!);
+                                    },
+                                    titulo: "Censurar",
+                                    value: controller.portada.value!.esSpoiler,
+                                  ),
+                                  ItemSeleccionable.destructible(
+                                    titulo: "Eliminar portada",
+                                    onTap: () =>
+                                        controller.portada.value = null,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         );
                       },
-                    )..marginOnly(bottom: 24, top: 8),
+                    ).marginOnly(bottom: 24, top: 8),
+                    GrupoSeleccionable(
+                      seleccionables: [
+                        ItemSeleccionable.checkbox(
+                          onChange: (value) => controller.dados.value = value!,
+                          titulo: "Dados",
+                          value: controller.dados.value,
+                        ),
+                        ItemSeleccionable.checkbox(
+                          titulo: "Eliminar",
+                          onChange: (value) =>
+                              controller.idunico.value = value!,
+                          value: controller.idunico.value,
+                        ),
+                      ],
+                    ).marginOnly(bottom: 24, top: 8),
                   ],
                 ),
               ),

@@ -41,3 +41,30 @@ class GrupoSeleccionableSliver extends StatelessWidget {
     );
   }
 }
+
+class GrupoSeleccionable extends StatelessWidget {
+  final String? titulo;
+  final Color? color;
+  final List<Widget> seleccionables;
+
+  const GrupoSeleccionable({
+    super.key,
+    this.titulo,
+    this.color,
+    required this.seleccionables,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: color ?? Theme.of(context).colorScheme.surface,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: seleccionables,
+      ),
+    );
+  }
+}

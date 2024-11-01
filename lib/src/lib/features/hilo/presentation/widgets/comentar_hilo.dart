@@ -15,13 +15,11 @@ import 'package:get_it/get_it.dart';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
 import '../../../app/presentation/widgets/grupo_seleccionable.dart';
 import '../../../media/domain/models/media.dart';
-import '../../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../../media/presentation/miniatura.dart';
 
 class ComentarHiloBottomSheet extends StatefulWidget {

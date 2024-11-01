@@ -1,15 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
-import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
+import 'package:blog_app/src/lib/features/moderacion/domain/models/registro_de_comentario.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 
+import '../../../moderacion/domain/models/registro_de_hilo.dart';
 import '../../domain/models/notificacion.dart';
 
 class NotificacionesScreen extends StatefulWidget {
@@ -83,7 +85,8 @@ abstract class SocialInteraction extends StatelessWidget {
     required Notificacion notificacion,
   }) = _NotificacionSocialInteraction;
 
-  const factory SocialInteraction.historial() = _HistorialSocialInteraction;
+  const factory SocialInteraction.historial({required Historial historial}) =
+      _HistorialSocialInteraction;
 
   const factory SocialInteraction.bone() = _BoneSocialInteraction;
 }
@@ -229,13 +232,26 @@ class _NotificacionSocialInteraction extends SocialInteraction {
 }
 
 class _HistorialSocialInteraction extends SocialInteraction {
-  const _HistorialSocialInteraction() : super._();
+  final Historial historial;
+  const _HistorialSocialInteraction({
+    required this.historial,
+  }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return SocialInteraction(
+      descripcion: descripcion,
+      subtitulo: historial.titulo,
+      titulo: titulo,
+    );
   }
+
+  String get titulo =>
+      historial is HiloHistorial ? "Ha posteado" : "Ha comentado";
+
+  String get descripcion => historial is HiloHistorial
+      ? (historial as HiloHistorial).descripcion
+      : (historial as HistorialComentario).texto;
 }
 
 abstract class SocialInteractionImage extends StatelessWidget {

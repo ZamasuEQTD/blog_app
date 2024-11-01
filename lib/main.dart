@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),
-        textTheme: GoogleFonts.notoSansTextTheme(),
+        textTheme: GoogleFonts.nunitoSansTextTheme(),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
             elevation: WidgetStatePropertyAll(0),

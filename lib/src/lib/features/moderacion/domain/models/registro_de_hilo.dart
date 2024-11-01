@@ -1,16 +1,13 @@
 import '../../../hilo/domain/models/types.dart';
 import '../../../media/domain/models/media.dart';
+import 'registro_de_comentario.dart';
 
-class HistorialHilo {
-  final HiloId id;
-  final String titulo;
+class HiloHistorial extends Historial {
   final String descripcion;
-  final Imagen portada;
-
-  const HistorialHilo({
-    required this.id,
-    required this.titulo,
+  const HiloHistorial({
     required this.descripcion,
-    required this.portada,
+    required super.hilo,
+    required super.titulo,
+    required super.portada,
   });
 }

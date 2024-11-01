@@ -1,5 +1,8 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/contenido_censurable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
 import 'package:blog_app/src/lib/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
@@ -8,7 +11,6 @@ import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ve
 import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
@@ -185,19 +187,13 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
       () => SliverMainAxisGroup(
         slivers: [
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 5,
-                vertical: 5,
+            child: Text(
+              "Comentarios ${controller.hilo.value!.comentarios}",
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
-              child: Text(
-                "Comentarios ${controller.hilo.value!.comentarios}",
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            ).marginSymmetric(vertical: 10, horizontal: 5),
           ),
           SliverList.builder(
             itemCount: controller.comentarios.value.length,
@@ -236,4 +232,38 @@ class HiloScreenCargando extends StatelessWidget {
   }
 }
 
-abstract class IComentariosHub {}
+class HiloOpciones extends StatelessWidget {
+  const HiloOpciones({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final HiloController controller = Get.find();
+    return RoundedBottomSheet.sliver(
+      slivers: [
+        GrupoSeleccionableSliver(
+          seleccionables: [
+            ItemSeleccionable.text(
+              titulo: "Denunciar",
+              onTap: () {},
+            ),
+          ],
+        ),
+        if (controller.hilo.value!.esOp)
+          const GrupoSeleccionableSliver(
+            seleccionables: [
+              ItemSeleccionable.text(titulo: "Desactivar notificaciones"),
+            ],
+          ),
+        GrupoSeleccionableSliver(
+          seleccionables: [
+            ItemSeleccionable.text(
+              titulo: "Ver usuario",
+              onTap: () {},
+            ),
+            const ItemSeleccionable.text(titulo: "Eliminar"),
+          ],
+        ),
+      ],
+    );
+  }
+}
