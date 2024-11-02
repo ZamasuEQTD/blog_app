@@ -2,6 +2,7 @@ import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
+import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,26 +11,35 @@ class PostearHiloController extends GetxController {
 
   Rx<String> titulo = Rx("");
   Rx<String> descripcion = Rx("");
+
+  Rx<int?> respuestaEliminada = Rx(null);
   Rx<List<String>> encuesta = Rx([]);
 
   Rx<bool> idunico = Rx(false);
   Rx<bool> dados = Rx(false);
 
   Rx<HiloId?> id = Rx(null);
-
   Rx<Spoileable<Media>?> portada = Rx(null);
 
   RxBool posteando = false.obs;
+
+  Rx<Failure?> failure = Rx(null);
   void postear() async {
     posteando.value = true;
 
     var result = await repository.postear(
       titulo: titulo.value,
+      encuesta: encuesta.value,
       descripcion: descripcion.value,
+      portada: portada.value!,
+      idUnico: idunico.value,
+      dados: dados.value,
     );
 
+    id.value = null;
+
     result.fold(
-      (l) => null,
+      (l) => failure.value = l,
       (r) => id.value = r,
     );
 
@@ -38,5 +48,24 @@ class PostearHiloController extends GetxController {
 
   void agregarPortada(Media portada) {
     this.portada.value = Spoileable(false, portada);
+  }
+
+  void censurar() {
+    portada.value = portada.value!.copyWith(
+      spoiler: !portada.value!.esSpoiler,
+    );
+  }
+
+  void eliminarRespuesta(int idx) {
+    respuestaEliminada.value = idx;
+    respuestaEliminada.refresh();
+    encuesta.value.removeAt(idx);
+    encuesta.refresh();
+  }
+
+  void agregarRespuesta() {
+    if (encuesta.value.length >= 4) return;
+
+    encuesta.value = [...encuesta.value, ""];
   }
 }

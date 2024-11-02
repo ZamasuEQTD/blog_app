@@ -7,39 +7,48 @@ import '../../../../usuarios/domain/models/usuario.dart';
 import '../../../domain/itoken_decode.dart';
 import '../../../domain/itoken_storage.dart';
 
+enum AuthState { initial, authenticating, authenticated, unauthenticated }
+
 class AuthController extends GetxController {
   final ITokenDecode _tokenDecoder = GetIt.I.get();
   final ITokenStorage _tokenStorage = GetIt.I.get();
 
   var iniciando = false.obs;
-
-  Rx<Usuario?> usuario = Rx(null);
+  final usuario = Rx<Usuario?>(null);
+  final token = Rx<String?>(null);
+  final authState = Rx<AuthState>(AuthState.initial);
 
   Future<void> login(String token) async {
     iniciando.value = true;
 
     await _tokenStorage.guardar(token);
+    this.token.value = token;
 
     Usuario decodedUsuario = await _tokenDecoder.decode(token);
 
     usuario.value = decodedUsuario;
 
+    authState.value = AuthState.authenticated;
+
     iniciando.value = false;
   }
 
-  Future<void> restaurarSesion() async {
-    String? token = await _tokenStorage.recuperar();
+  Future<void> logout() async {
+    await _tokenStorage.eliminar();
 
-    if (token != null) {
-      usuario.value = await _tokenDecoder.decode(token);
+    token.value = null;
+    usuario.value = null;
+
+    authState.value = AuthState.unauthenticated;
+  }
+
+  Future<void> restaurarSesion() async {
+    authState.value = AuthState.authenticating;
+    final storedToken = await _tokenStorage.recuperar();
+    if (storedToken != null) {
+      await login(storedToken);
     }
   }
 
-  Future<void> cerrarSesion() async {
-    await _tokenStorage.eliminar();
-
-    usuario.value = null;
-  }
-
-  bool get sesionIniciada => usuario.value != null;
+  bool get sesionIniciada => authState.value == AuthState.authenticated;
 }

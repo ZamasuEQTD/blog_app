@@ -2,27 +2,27 @@
 import 'package:equatable/equatable.dart';
 
 class Encuesta {
-  final int votos;
-  final bool haVotado;
+  final RespuestaId? respuesta;
   final List<Respuesta> respuestas;
 
+  int get votos => respuestas.map((e) => e.votos).reduce((a, b) => a + b);
   const Encuesta({
-    required this.votos,
-    required this.haVotado,
     required this.respuestas,
+    this.respuesta,
   });
 
   Encuesta copyWith({
     int? votos,
-    bool? haVotado,
+    RespuestaId? respuesta,
     List<Respuesta>? respuestas,
   }) {
     return Encuesta(
-      votos: votos ?? this.votos,
-      haVotado: haVotado ?? this.haVotado,
+      respuesta: respuesta ?? this.respuesta,
       respuestas: respuestas ?? this.respuestas,
     );
   }
+
+  void sumarVoto(RespuestaId id) {}
 }
 
 class Respuesta extends Equatable {

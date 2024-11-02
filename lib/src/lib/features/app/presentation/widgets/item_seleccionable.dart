@@ -138,6 +138,7 @@ class _CheckboxItem extends ItemSeleccionable {
         child: SwitchTheme(
           data: const SwitchThemeData(),
           child: Checkbox(
+            fillColor: const WidgetStatePropertyAll(Colors.black),
             value: value,
             onChanged: onChange,
           ),

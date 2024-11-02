@@ -34,14 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scroll.IsBottom) controller.cargarPortadas();
       },
     );
+    hub.connect();
 
-    hub.onHiloCreado(
-      (portada) {
-        controller.agregarPortada(portada);
-      },
-    );
+    hub.onHiloPosteado.listen((portada) => controller.agregarPortada(portada));
 
-    hub.onHiloEliminado((id) => controller.eliminar(id));
+    hub.onHiloEliminado.listen((id) => controller.eliminar(id));
 
     super.initState();
   }

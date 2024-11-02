@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:collection';
+import 'dart:math';
 
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
@@ -8,34 +10,61 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class HomeLocalHub extends IHomePortadasHub {
+  final HashSet<String> portadas = HashSet();
+  static Random random = Random();
   static const uuid = Uuid();
+
+  final _newPortadaController = StreamController<HomePortada>.broadcast();
+  final _portadaDeletedController = StreamController<String>.broadcast();
+
   @override
-  void onHiloCreado(OnHiloCreado on) {
-    Timer.periodic(
-      const Duration(seconds: 10),
-      (timer) => on(
-        HomePortada(
-          id: uuid.v4(),
-          titulo: "Pepito",
-          categoria: "NSFW",
-          features: const [HomePortadaFeatures.sticky],
-          ultimoBump: DateTime.now(),
-          imagen: const Spoileable(
-            true,
-            Imagen(
-              provider: NetworkProvider(
-                path:
-                    "https://s201.erome.com/1467/xpM0lLFN/gTt5OlKt.jpeg?v=1702625248",
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+  Stream<HomePortada> get onHiloPosteado => _newPortadaController.stream;
+
+  @override
+  Stream<String> get onHiloEliminado => _portadaDeletedController.stream;
+
+  @override
+  void connect() {
+    //_init();
   }
 
   @override
-  void onHiloEliminado(OnHiloEliminado on) {
-    // TODO: implement onHiloEliminado
+  void dispose() {
+    // TODO: implement dispose
+  }
+
+  void _init() {
+    // Simulate new portadas every 5-15 seconds
+    Timer.periodic(
+      const Duration(seconds: 5),
+      (_) {
+        final id = uuid.v4();
+        portadas.add(id);
+        _newPortadaController.add(
+          HomePortada(
+            id: id,
+            titulo: "Pepito",
+            categoria: "NSFW",
+            features: const [HomePortadaFeatures.sticky],
+            ultimoBump: DateTime.now(),
+            imagen: Spoileable(
+              random.nextBool(),
+              const Imagen(
+                provider: NetworkProvider(
+                  path:
+                      "https://upload.wikimedia.org/wikipedia/en/4/4c/GokumangaToriyama.png?20210917000338",
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+
+    Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => _portadaDeletedController
+          .add(portadas.elementAt(random.nextInt(portadas.length))),
+    );
   }
 }

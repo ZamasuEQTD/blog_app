@@ -199,8 +199,11 @@ class LocalHilosRepository extends IHilosRepository {
   Future<Either<Failure, HiloId>> postear({
     required String titulo,
     required String descripcion,
-  }) {
-    // TODO: implement postear
-    throw UnimplementedError();
+    required Spoileable<Media> portada,
+    required List<String> encuesta,
+    required bool dados,
+    required bool idUnico,
+  }) async {
+    return const Right("123");
   }
 }

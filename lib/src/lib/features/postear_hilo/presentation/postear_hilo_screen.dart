@@ -1,19 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
-import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
-import 'package:go_router/go_router.dart';
 
-import 'package:blog_app/src/lib/features/postear_hilo/presentation/blocs/postear_hilo/postear_hilo_bloc.dart';
-
-import '../../media/presentation/logic/blocs/gestor_de_media/gestor_de_media_bloc.dart';
 import '../../media/presentation/multi_media.dart';
 
 class PostearHiloScreen extends StatefulWidget {
@@ -25,18 +20,87 @@ class PostearHiloScreen extends StatefulWidget {
 
 class _PostearHiloScreenState extends State<PostearHiloScreen> {
   final PostearHiloController controller = PostearHiloController();
+  final Map<int, TextEditingController> respuestas = {};
+  @override
+  void initState() {
+    controller.failure.listen(
+      (failure) {
+        if (failure != null) {
+          context.showFlash(
+            duration: const Duration(seconds: 1),
+            builder: (context, controller) {
+              return Container();
+            },
+          );
+        }
+      },
+    );
+    controller.id.listen((id) {
+      context.showFlash(
+        duration: const Duration(seconds: 1),
+        persistent: true,
+        builder: (context, controller) {
+          return FlashBar(
+            margin: const EdgeInsets.only(top: 100),
+            behavior: FlashBehavior.floating,
+            backgroundColor: const Color(0xff2e2e2e),
+            position: FlashPosition.top,
+            controller: controller,
+            content: const Text("Hilo creado"),
+          ).marginOnly(top: 100);
+        },
+      );
+      if (id != null) {
+        // context.go("/hilo/$id");
+      }
+    });
+
+    controller.respuestaEliminada.listen((idx) {
+      if (idx != null) {
+        respuestas.remove(idx);
+      }
+    });
+
+    controller.encuesta.listen((value) {
+      for (var i = 0; i < value.length; i++) {
+        if (!respuestas.containsKey(i)) {
+          respuestas[i] = TextEditingController();
+        }
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData actualTheme = Theme.of(context);
     return Theme(
       data: actualTheme.copyWith(
+        checkboxTheme: const CheckboxThemeData(),
         appBarTheme: actualTheme.appBarTheme.copyWith(
           backgroundColor: Theme.of(context).colorScheme.onSurface,
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: actualTheme.elevatedButtonTheme.style?.copyWith(
+            foregroundColor: const WidgetStatePropertyAll(Colors.black),
+            backgroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.symmetric(vertical: 16),
+            ),
+            iconColor: const WidgetStatePropertyAll(Colors.black),
+            textStyle: const WidgetStatePropertyAll(
+              TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         scaffoldBackgroundColor: actualTheme.colorScheme.onSurface,
-        inputDecorationTheme: Theme.of(context)
-            .inputDecorationTheme
-            .copyWith(fillColor: actualTheme.colorScheme.surface),
+        inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
+              fillColor: actualTheme.colorScheme.surface,
+            ),
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -54,7 +118,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
           ),
           actions: [
             TextButton(
-              onPressed: () => controller.postear,
+              onPressed: () => controller.postear(),
               child: const Text(
                 "Postear",
                 style: TextStyle(
@@ -95,79 +159,173 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     const PostearHiloLabelSection(label: "Portada"),
                     Obx(
                       () {
-                        if (controller.portada.value != null) {
-                          SizedBox(
-                            height: 40,
+                        if (controller.portada.value == null) {
+                          return SizedBox(
                             width: double.infinity,
-                            child: ElevatedButton(
+                            child: ElevatedButton.icon(
                               onPressed: () async {
-                                IGalleryService service = GetIt.I.get();
-
-                                var response = await service.pickFile(
-                                  extensions: [],
-                                );
-
-                                response.fold(
-                                  (l) {},
-                                  (r) {
-                                    if (r != null) {
-                                      controller.agregarPortada(r);
-                                    }
+                                context.showFlash(
+                                  duration: const Duration(seconds: 1),
+                                  builder: (context, controller) {
+                                    return FlashBar(
+                                      behavior: FlashBehavior.floating,
+                                      backgroundColor: const Color(0xff2e2e2e),
+                                      position: FlashPosition.top,
+                                      controller: controller,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      icon: const Center(
+                                        child: ClipOval(
+                                          child: Center(
+                                            child: SizedBox.square(
+                                              dimension: 25,
+                                              child: ColoredBox(
+                                                color: Colors.white,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(5),
+                                                  child: FittedBox(
+                                                    child: FaIcon(
+                                                      FontAwesomeIcons.check,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      content: const Text(
+                                        "Hilo creado",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ).paddingSymmetric(
+                                      horizontal: 10,
+                                      vertical: 10,
+                                    );
                                   },
                                 );
+                                //IGalleryService service = GetIt.I.get();
+//
+                                //var response = await service.pickFile(
+                                //  extensions: [],
+                                //);
+//
+                                //response.fold(
+                                //  (l) {},
+                                //  (r) {
+                                //    if (r != null) {
+                                //      controller.agregarPortada(r);
+                                //    }
+                                //  },
+                                //);
                               },
-                              child: const Text("Agregar portada "),
+                              label: const Text(
+                                "Agregar portada ",
+                              ),
+                              icon: const FaIcon(
+                                FontAwesomeIcons.image,
+                              ),
                             ),
                           );
                         }
-
-                        return GetBuilder(
-                          key: UniqueKey(),
-                          init: BlurController()..blurear.value = false,
-                          builder: (blur) => Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              DimensionableScope(
-                                borderRadius: BorderRadius.circular(20),
-                                builder: (context, dimensionable) {
-                                  return Stack(
-                                    children: [
-                                      dimensionable,
-                                      Positioned.fill(
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            DimensionableScope(
+                              borderRadius: BorderRadius.circular(20),
+                              builder: (context, dimensionable) {
+                                return Stack(
+                                  children: [
+                                    dimensionable,
+                                    Obx(
+                                      () => Positioned.fill(
                                         child: BlurEffect(
-                                          blurear: blur.blurear.value,
+                                          blurear: controller
+                                              .portada.value!.esSpoiler,
                                         ),
                                       ),
-                                    ],
-                                  );
-                                },
-                                child: controller
-                                    .portada.value!.spoileable.widget
-                                    .marginOnly(bottom: 10),
-                              ),
-                              GrupoSeleccionable(
-                                seleccionables: [
-                                  ItemSeleccionable.checkbox(
-                                    onChange: (value) {
-                                      controller.portada.value = controller
-                                          .portada.value!
-                                          .copyWith(spoiler: value!);
-                                    },
-                                    titulo: "Censurar",
-                                    value: controller.portada.value!.esSpoiler,
-                                  ),
-                                  ItemSeleccionable.destructible(
-                                    titulo: "Eliminar portada",
-                                    onTap: () =>
-                                        controller.portada.value = null,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                    ),
+                                  ],
+                                );
+                              },
+                              child: controller.portada.value!.spoileable.widget
+                                  .marginOnly(bottom: 10),
+                            ),
+                            GrupoSeleccionable(
+                              seleccionables: [
+                                ItemSeleccionable.checkbox(
+                                  onChange: (value) => controller.censurar(),
+                                  titulo: "Censurar",
+                                  value: controller.portada.value!.esSpoiler,
+                                ),
+                                ItemSeleccionable.destructible(
+                                  titulo: "Eliminar portada",
+                                  onTap: () => controller.portada.value = null,
+                                ),
+                              ],
+                            ),
+                          ],
                         );
                       },
                     ).marginOnly(bottom: 24, top: 8),
+                    const PostearHiloLabelSection(label: "Encuesta"),
+                    Obx(() {
+                      if (controller.encuesta.value.isEmpty) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () => controller.agregarRespuesta(),
+                            label: const Text("Agregar encuesta"),
+                            icon: const FaIcon(FontAwesomeIcons.chartSimple),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          ...controller.encuesta.value.asMap().entries.map(
+                                (e) => TextField(
+                                  controller: respuestas[e.key],
+                                  decoration: InputDecoration(
+                                    hintText: "Respuesta",
+                                    suffixIconConstraints: const BoxConstraints(
+                                      maxHeight: 30,
+                                      maxWidth: 30,
+                                    ),
+                                    suffixIcon: Padding(
+                                      padding: const EdgeInsets.only(right: 1),
+                                      child: ColoredIconButton(
+                                        onPressed: () {
+                                          controller.eliminarRespuesta(e.key);
+                                        },
+                                        icon: const FittedBox(
+                                          child: FaIcon(
+                                            FontAwesomeIcons.x,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ).marginOnly(bottom: 5),
+                              ),
+                          if (controller.encuesta.value.length < 4)
+                            SizedBox(
+                              height: 40,
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: controller.agregarRespuesta,
+                                child: const Text("Agregar respuesta"),
+                              ),
+                            ),
+                        ],
+                      );
+                    }).marginOnly(bottom: 24, top: 8),
+                    const PostearHiloLabelSection(label: "Opciones"),
                     GrupoSeleccionable(
                       seleccionables: [
                         ItemSeleccionable.checkbox(
@@ -207,6 +365,33 @@ class PostearHiloLabelSection extends StatelessWidget {
         fontWeight: FontWeight.w600,
         color: Color.fromRGBO(73, 80, 87, 1),
       ),
+    );
+  }
+}
+
+typedef SnackbarBuilder = Widget Function(BuildContext context, Widget? child);
+
+abstract class Snackbar extends StatelessWidget {
+  const Snackbar._({super.key});
+}
+
+class _Snackbar extends Snackbar {
+  final FlashController controller;
+  final SnackbarBuilder builder;
+  const _Snackbar({
+    super.key,
+    required this.controller,
+    required this.builder,
+  }) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlashBar(
+      content: const Text("data"),
+      controller: controller,
+      backgroundColor: const Color(0xff2e2e2e),
+      position: FlashPosition.top,
+      builder: builder,
     );
   }
 }

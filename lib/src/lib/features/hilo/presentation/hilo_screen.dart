@@ -7,9 +7,10 @@ import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_f
 import 'package:blog_app/src/lib/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
+import 'package:blog_app/src/lib/features/encuestas/domain/models/encuesta.dart';
+import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
-import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -114,6 +115,33 @@ class InformacionDeHilo extends StatelessWidget {
                 const BanderasDeHiloRow(),
                 SubcategoriaTile(subcategoria: hilo.categoria),
                 const HiloAccionesRow(),
+                const EncuestaView(
+                  encuesta: Encuesta(
+                    respuesta: null,
+                    respuestas: [
+                      Respuesta(
+                        id: "pep",
+                        respuesta: "Masha ",
+                        votos: 0,
+                      ),
+                      Respuesta(
+                        id: "peep",
+                        respuesta: "Sidako",
+                        votos: 0,
+                      ),
+                      Respuesta(
+                        id: "sp",
+                        respuesta: "La tigresa",
+                        votos: 0,
+                      ),
+                      Respuesta(
+                        id: "peep",
+                        respuesta: "Franchesca",
+                        votos: 0,
+                      ),
+                    ],
+                  ),
+                ),
                 Center(
                   child: DimensionableScope(
                     constraints: const BoxConstraints(

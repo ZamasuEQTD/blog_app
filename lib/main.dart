@@ -14,7 +14,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   GetIt.I.addDepedencies();
 
-  Get.put(AuthController()..restaurarSesion());
+  Get.put(AuthController()).restaurarSesion();
 
   runApp(const MyApp());
 }
