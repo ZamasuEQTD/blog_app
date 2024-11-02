@@ -11,6 +11,11 @@ class EncuestaController extends GetxController {
     this.encuesta = Rx<Encuesta>(encuesta);
   }
 
+  void votar() {
+    if (seleccionada.value == null) return;
+    sumarVoto(seleccionada.value!);
+  }
+
   void sumarVoto(RespuestaId id) {
     encuesta.value = encuesta.value.copyWith(
       votos: encuesta.value.votos + 1,

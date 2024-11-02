@@ -5,6 +5,7 @@ import 'package:blog_app/src/lib/features/auth/domain/itoken_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../features/auth/data/development/local_token_decode.dart';
 import '../../features/auth/data/secure_token_storage.dart';
 import '../../features/auth/data/token_decode.dart';
 
@@ -15,7 +16,9 @@ extension AuthDependencies on GetIt {
     registerFactory<IAuthRepository>(
       () => LocalAuthRepository(),
     );
-    registerFactory<ITokenDecode>(() => TokenDecode());
+
+    registerFactory<ITokenDecode>(() => LocalTokenDecode());
+    //registerFactory<ITokenDecode>(() => TokenDecode());
 
     registerFactory<ITokenStorage>(() => TokenSecureStorage());
     return this;

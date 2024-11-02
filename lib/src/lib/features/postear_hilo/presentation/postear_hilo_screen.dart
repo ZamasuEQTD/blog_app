@@ -73,35 +73,8 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData actualTheme = Theme.of(context);
     return Theme(
-      data: actualTheme.copyWith(
-        checkboxTheme: const CheckboxThemeData(),
-        appBarTheme: actualTheme.appBarTheme.copyWith(
-          backgroundColor: Theme.of(context).colorScheme.onSurface,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: actualTheme.elevatedButtonTheme.style?.copyWith(
-            foregroundColor: const WidgetStatePropertyAll(Colors.black),
-            backgroundColor: const WidgetStatePropertyAll(Colors.white),
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.symmetric(vertical: 16),
-            ),
-            iconColor: const WidgetStatePropertyAll(Colors.black),
-            textStyle: const WidgetStatePropertyAll(
-              TextStyle(
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        scaffoldBackgroundColor: actualTheme.colorScheme.onSurface,
-        inputDecorationTheme: Theme.of(context).inputDecorationTheme.copyWith(
-              fillColor: actualTheme.colorScheme.surface,
-            ),
-      ),
+      data: context.newTheme,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -110,11 +83,6 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
           ),
           title: const Text(
             "Postear hilo",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
           ),
           actions: [
             TextButton(
@@ -394,4 +362,41 @@ class _Snackbar extends Snackbar {
       builder: builder,
     );
   }
+}
+
+extension BuildContextExtensions on BuildContext {
+  ThemeData get actualTheme => Theme.of(this);
+
+  ThemeData get newTheme => Theme.of(this).copyWith(
+        checkboxTheme: const CheckboxThemeData(),
+        appBarTheme: actualTheme.appBarTheme.copyWith(
+          backgroundColor: actualTheme.colorScheme.onSurface,
+          titleTextStyle: const TextStyle(
+            color: Colors.black,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: actualTheme.elevatedButtonTheme.style?.copyWith(
+            foregroundColor: const WidgetStatePropertyAll(Colors.black),
+            backgroundColor: const WidgetStatePropertyAll(Colors.white),
+            padding: const WidgetStatePropertyAll(
+              EdgeInsets.symmetric(vertical: 16),
+            ),
+            iconColor: const WidgetStatePropertyAll(Colors.black),
+            textStyle: const WidgetStatePropertyAll(
+              TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        scaffoldBackgroundColor: actualTheme.colorScheme.onSurface,
+        inputDecorationTheme: actualTheme.inputDecorationTheme.copyWith(
+          fillColor: actualTheme.colorScheme.surface,
+        ),
+      );
 }

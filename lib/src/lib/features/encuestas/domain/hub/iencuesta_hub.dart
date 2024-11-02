@@ -23,11 +23,11 @@ class LocalEncuestaHub extends IEncuestaHub {
 
   @override
   void connect() {
-    Timer.periodic(const Duration(seconds: 10), (timer) {
-      final respuesta =
-          respuestas.elementAt(Random().nextInt(respuestas.length));
-      _onVotoSumado.add(respuesta);
-    });
+    //Timer.periodic(const Duration(seconds: 10), (timer) {
+    //  final respuesta =
+    //      respuestas.elementAt(Random().nextInt(respuestas.length));
+    //  _onVotoSumado.add(respuesta);
+    //});
   }
 
   @override

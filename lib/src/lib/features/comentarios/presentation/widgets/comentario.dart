@@ -32,15 +32,14 @@ class _ComentarioCard extends ComentarioCard {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 5,
+      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: ColoredBox(
-          color: Theme.of(context).colorScheme.onSurface,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-            child: child,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+          child: child,
         ),
       ),
     );

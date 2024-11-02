@@ -12,7 +12,7 @@ class LocalHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Hilo>> getHilo({required String id}) async {
     return await Future.delayed(
-      const Duration(seconds: 5),
+      const Duration(seconds: 1),
       () => Right(
         Hilo(
           id: "sfasf",

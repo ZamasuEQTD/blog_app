@@ -33,36 +33,9 @@ class LoginController extends GetxController {
       (l) {
         failure.value = l;
       },
-      (r) => Get.find<AuthController>().login(r),
+      (r) async => await Get.find<AuthController>().login(r),
     );
 
     enviando.value = false;
-  }
-}
-
-class Auths1 extends StatefulWidget {
-  const Auths1({super.key});
-
-  @override
-  State<Auths1> createState() => _Auths1State();
-}
-
-class _Auths1State extends State<Auths1> {
-  final controller = Get.put(LoginController());
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Obx(
-        () {
-          return Container();
-        },
-      ),
-    );
   }
 }

@@ -59,7 +59,14 @@ class _HiloScreenState extends State<HiloScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomSheet: const ComentarHiloBottomSheet(),
+      bottomSheet: Obx(
+        () {
+          if (controller.hilo.value != null) {
+            return const ComentarHiloBottomSheet();
+          }
+          return const SizedBox();
+        },
+      ),
       body: Obx(
         () => !(controller.hilo.value == null)
             ? Provider.value(
@@ -121,7 +128,7 @@ class InformacionDeHilo extends StatelessWidget {
                     respuestas: [
                       Respuesta(
                         id: "pep",
-                        respuesta: "Masha ",
+                        respuesta: "Ma\nsha ",
                         votos: 0,
                       ),
                       Respuesta(

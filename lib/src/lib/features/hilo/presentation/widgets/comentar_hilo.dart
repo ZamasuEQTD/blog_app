@@ -1,12 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
+import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/services/tag_service.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,7 +34,7 @@ class ComentarHiloBottomSheet extends StatefulWidget {
 
 class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
   final TextEditingController comentario = TextEditingController();
-
+  final GlobalKey key = GlobalKey();
   @override
   void initState() {
     final HiloController controller = Get.find();
@@ -55,80 +57,98 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        if (!Get.find<AuthController>().sesionIniciada) {
-          SesionRequeridaBottomSheet.show(context);
-        }
-      },
-      child: Obx(
-        () => IgnorePointer(
-          ignoring: !Get.find<AuthController>().sesionIniciada,
-          child: ColoredBox(
-            color: Theme.of(context).colorScheme.surface,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Obx(
-                    () => Get.find<HiloController>().media.value != null
-                        ? Row(
-                            children: <Media>[
-                              Get.find<HiloController>()
-                                  .media
-                                  .value!
-                                  .spoileable,
-                            ]
-                                .map(
-                                  (x) => GestureDetector(
-                                    onTap: () {
-                                      _showMediaBottomSheet(context, x);
-                                    },
-                                    child: Miniatura(
-                                      key: UniqueKey(),
-                                      media: x,
-                                    ),
-                                  ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            if (!Get.find<AuthController>().sesionIniciada) {
+              SesionRequeridaBottomSheet.show(context);
+            }
+          },
+          child: Obx(
+            () => IgnorePointer(
+              ignoring: !Get.find<AuthController>().sesionIniciada,
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.surface,
+                child: DecoratedBox(
+                  decoration: const BoxDecoration(
+                    border: Border(top: BorderSide(color: Color(0xffe1e1e1))),
+                  ),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(
+                          () => Get.find<HiloController>().media.value != null
+                              ? Row(
+                                  children: <Media>[
+                                    Get.find<HiloController>()
+                                        .media
+                                        .value!
+                                        .spoileable,
+                                  ]
+                                      .map(
+                                        (x) => GestureDetector(
+                                          onTap: () {
+                                            _showMediaBottomSheet(context, x);
+                                          },
+                                          child: Miniatura(
+                                            key: UniqueKey(),
+                                            media: x,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
                                 )
-                                .toList(),
-                          )
-                        : const SizedBox(),
-                  ),
-                  Row(
-                    children: [
-                      ColoredIconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.three_k_rounded),
-                      ),
-                      KeyboardVisibilityBuilder(
-                        builder: (context, isKeyboardVisible) => Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextField(
-                              controller: comentario,
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: !isKeyboardVisible ? 1 : 4,
-                            ),
-                          ),
+                              : const SizedBox(),
                         ),
-                      ),
-                      ColoredIconButton(
-                        onPressed: () =>
-                            Get.find<HiloController>().enviarComentario,
-                        icon: const Icon(Icons.send),
-                      ),
-                    ],
+                        Row(
+                          children: [
+                            ColoredIconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.three_k_rounded),
+                            ),
+                            Flexible(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      width: 0,
+                                      style: BorderStyle.none,
+                                    ),
+                                    borderRadius: BorderRadius.circular(25),
+                                  ),
+                                ),
+                                controller: comentario,
+                                keyboardType: TextInputType.multiline,
+                                minLines: 1,
+                                maxLines: 4,
+                              ).marginSymmetric(horizontal: 5),
+                            ),
+                            ColoredIconButton(
+                              onPressed: () =>
+                                  Get.find<HiloController>().enviarComentario,
+                              icon: const Icon(Icons.send),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        ).animate().moveY(
+              curve: Curves.easeInOut,
+              begin: 300,
+              duration: const Duration(milliseconds: 500),
+            );
+      },
     );
   }
 

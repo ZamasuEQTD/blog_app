@@ -22,6 +22,7 @@ class AuthController extends GetxController {
     iniciando.value = true;
 
     await _tokenStorage.guardar(token);
+
     this.token.value = token;
 
     Usuario decodedUsuario = await _tokenDecoder.decode(token);

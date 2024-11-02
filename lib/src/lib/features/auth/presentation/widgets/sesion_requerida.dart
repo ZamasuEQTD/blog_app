@@ -2,8 +2,7 @@
 import 'dart:developer';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/login.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/widgets/dialog/registro.dart';
+import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -118,9 +117,7 @@ class _IniciarSesionButton extends SesionRequeridaButton {
       style: const TextStyle(
         color: Colors.white,
       ),
-      onPressed: () {
-        LoginDialog.show(context);
-      },
+      onPressed: () => context.push(Routes.login),
     );
   }
 }
@@ -133,9 +130,7 @@ class _RegistrarseButton extends SesionRequeridaButton {
     return SesionRequeridaButton(
       color: Colors.white,
       text: "Registrarse",
-      onPressed: () {
-        RegistroDialog.show(context);
-      },
+      onPressed: () => context.push(Routes.registro),
     );
   }
 }

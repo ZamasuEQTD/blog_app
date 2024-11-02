@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +70,13 @@ class _EncuestaViewState extends State<EncuestaView> {
                 () => Text("Votos ${controller.encuesta.value.votos}"),
               ),
             ],
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => controller.votar(),
+              child: const Text("Votar"),
+            ),
           ),
         ],
       ),
@@ -155,16 +162,22 @@ class RespuestaView extends StatelessWidget {
                               child: ColoredBox(
                                 color: Colors.green.withOpacity(0.7),
                                 child: SizedBox.square(
-                                  dimension: 16,
+                                  dimension: 18,
                                   child: FittedBox(
                                     child: const FaIcon(
                                       FontAwesomeIcons.check,
                                       color: Colors.white,
-                                    ).paddingAll(1),
+                                    ).paddingAll(5),
                                   ),
                                 ),
                               ),
-                            ).marginOnly(left: 5);
+                            )
+                                .animate()
+                                .scale(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.bounceOut,
+                                )
+                                .marginOnly(left: 5);
                           }
                           return const SizedBox();
                         }),
