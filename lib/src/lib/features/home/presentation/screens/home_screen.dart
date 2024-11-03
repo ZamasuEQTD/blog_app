@@ -1,4 +1,8 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
@@ -11,7 +15,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
@@ -125,8 +131,13 @@ class _HomePortadasGrid extends StatelessWidget {
               HomePortada entry = controller.portadas.value[index];
 
               return GestureDetector(
+                onLongPress: () => showMaterialModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return HomePortadaOpciones(portada: entry);
+                  },
+                ),
                 onTap: () => context.push("/hilo/${entry.id}"),
-                // onLongPress: () => OpcionesDePortadaBottomSheet.show(context),
                 child: Portada.portada(
                   portada: entry,
                 ),
@@ -160,6 +171,54 @@ class _FiltrarPortadasPorTitulo extends StatelessWidget {
             icon: const Icon(Icons.search_outlined),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomePortadaOpciones extends StatelessWidget {
+  final HomePortada portada;
+  const HomePortadaOpciones({super.key, required this.portada});
+
+  @override
+  Widget build(BuildContext context) {
+    return RoundedBottomSheet.normal(
+      child: Column(
+        children: [
+          GrupoSeleccionable(
+            seleccionables: [
+              ItemSeleccionable.text(
+                titulo: "Seguir",
+                onTap: () =>
+                    GetIt.I.get<IHilosRepository>().seguir(id: portada.id),
+              ),
+              ItemSeleccionable.text(
+                titulo: "Poner en favoritos",
+                onTap: () => GetIt.I.get<IHilosRepository>().ponerEnFavoritos(
+                      id: portada.id,
+                    ),
+              ),
+              ItemSeleccionable.text(
+                titulo: "Ocultar",
+                onTap: () => GetIt.I.get<IHilosRepository>().ocultar(
+                      id: portada.id,
+                    ),
+              ),
+              ItemSeleccionable.text(titulo: "Denunciar", onTap: () => {}),
+            ],
+          ),
+          GrupoSeleccionable(
+            seleccionables: [
+              ItemSeleccionable.text(titulo: "Ver usuario", onTap: () => {}),
+              ItemSeleccionable.text(
+                titulo: "Eliminar",
+                onTap: () => GetIt.I.get<IHilosRepository>().eliminar(
+                      id: portada.id,
+                    ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

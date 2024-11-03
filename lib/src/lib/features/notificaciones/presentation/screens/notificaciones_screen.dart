@@ -50,7 +50,10 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
           ),
         ),
         actions: [
-          TextButton(onPressed: () {}, child: const Text("Leer todas")),
+          TextButton(
+            onPressed: controller.leerTodas,
+            child: const Text("Leer todas"),
+          ),
         ],
       ),
       body: CustomScrollView(

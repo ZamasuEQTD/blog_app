@@ -24,4 +24,20 @@ abstract class IHilosRepository {
   Future<Either<Failure, List<HomePortada>>> getPortadas({
     DateTime? ultimoBump,
   });
+
+  Future<Either<Failure, void>> eliminar({
+    required String id,
+  });
+
+  Future<Either<Failure, void>> seguir({
+    required String id,
+  });
+
+  Future<Either<Failure, void>> ponerEnFavoritos({
+    required String id,
+  });
+
+  Future<Either<Failure, void>> ocultar({
+    required String id,
+  });
 }
