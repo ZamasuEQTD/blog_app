@@ -61,10 +61,11 @@ class ImagenMiniaturaStrategy extends IMiniaturaStrategy {
 
 class YoutubeMiniaturaStrategy extends IMiniaturaStrategy {
   @override
-  Future<Imagen> execute(String path) {
+  Future<Imagen> execute(String input) {
     return Future.value(
       Imagen(
-        provider: NetworkProvider(path: YoutubeService.miniaturaFromUrl(path)!),
+        provider:
+            NetworkProvider(path: YoutubeService.miniaturaFromUrl(input)!),
       ),
     );
   }

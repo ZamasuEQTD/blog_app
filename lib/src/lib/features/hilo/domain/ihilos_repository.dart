@@ -25,19 +25,19 @@ abstract class IHilosRepository {
     DateTime? ultimoBump,
   });
 
-  Future<Either<Failure, void>> eliminar({
+  Future<Either<Failure, Unit>> eliminar({
     required String id,
   });
 
-  Future<Either<Failure, void>> seguir({
+  Future<Either<Failure, Unit>> seguir({
     required String id,
   });
 
-  Future<Either<Failure, void>> ponerEnFavoritos({
+  Future<Either<Failure, Unit>> ponerEnFavoritos({
     required String id,
   });
 
-  Future<Either<Failure, void>> ocultar({
+  Future<Either<Failure, Unit>> ocultar({
     required String id,
   });
 }

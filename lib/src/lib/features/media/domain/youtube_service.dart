@@ -17,7 +17,7 @@ class YoutubeService {
   static String? getVideoId(String url) {
     var match = youtubeIdRegex.firstMatch(url);
 
-    if (match == null) throw Exception("Link invalido");
+    if (match == null) return null;
 
     return match.group(3)!;
   }

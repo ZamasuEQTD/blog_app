@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
+import 'package:blog_app/src/lib/features/auth/presentation/screens/login_screen.dart';
+import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +25,11 @@ class NotificacionesScreen extends StatefulWidget {
 
 class _NotificacionesScreenState extends State<NotificacionesScreen> {
   final ScrollController scroll = ScrollController();
-  final MisNotificacionesController controller = MisNotificacionesController();
+
+  final MisNotificacionesController controller = Get.put(
+    MisNotificacionesController(),
+  )..cargar();
+
   @override
   void initState() {
     scroll.addListener(() {
@@ -34,39 +40,44 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
   }
 
   @override
+  void dispose() {
+    scroll.dispose();
+    Get.delete<MisNotificacionesController>();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(
-          color: Colors.black,
-          onPressed: () => context.pop(),
-        ),
-        title: const Text(
-          "Mis notificaciones",
-          style: TextStyle(
+    return Theme(
+      data: context.newTheme,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: BackButton(
             color: Colors.black,
-            fontWeight: FontWeight.w900,
-            fontSize: 20,
+            onPressed: () => context.pop(),
           ),
+          title: const Text(
+            "Mis notificaciones",
+          ),
+          actions: [
+            TextButton(
+              onPressed: controller.leerTodas,
+              child: const Text("Leer todas"),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: controller.leerTodas,
-            child: const Text("Leer todas"),
-          ),
-        ],
-      ),
-      body: CustomScrollView(
-        slivers: [
-          Obx(
-            () => SliverList.builder(
-              itemCount: controller.notificaciones.value.length,
-              itemBuilder: (context, index) => SocialInteraction.notificacion(
-                notificacion: controller.notificaciones.value[index],
+        body: CustomScrollView(
+          slivers: [
+            Obx(
+              () => SliverList.builder(
+                itemCount: controller.notificaciones.value.length,
+                itemBuilder: (context, index) => SocialInteraction.notificacion(
+                  notificacion: controller.notificaciones.value[index],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -119,39 +130,45 @@ class _SocialInteraction extends SocialInteraction {
         child: Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (imagen != null)
                   SocialInteractionImage.image(provider: imagen!),
                 const SizedBox(
                   width: 5,
                 ),
-                Column(
-                  children: [
-                    RichText(
-                      maxLines: 2,
-                      text: TextSpan(
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        text: titulo,
-                        children: [
-                          TextSpan(
-                            text: subtitulo,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w900,
-                            ),
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        maxLines: 2,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
                           ),
-                        ],
+                          text: titulo,
+                          children: [
+                            TextSpan(
+                              text: subtitulo,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      descripcion,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        descripcion,
+                        maxLines: 5,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -205,23 +222,40 @@ class _NotificacionSocialInteraction extends SocialInteraction {
 
   @override
   Widget build(BuildContext context) {
-    return SocialInteraction(
-      titulo: titulo,
-      subtitulo: notificacion.titulo,
-      descripcion: descripcion,
-      imagen: notificacion.portada.toProvider(),
-      actions: [
-        ElevatedButton(
-          onPressed: () => context.push("/hilo/${notificacion.hiloId}"),
-          child: const Text("Ir a hilo"),
+    return Theme(
+      data: Theme.of(context).copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                minimumSize: const WidgetStatePropertyAll(Size(100, 0)),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
         ),
-        const SizedBox(width: 10),
-        ElevatedButton(
-          onPressed: () =>
-              Get.find<MisNotificacionesController>().leer(notificacion.hiloId),
-          child: const Text("Leer"),
-        ),
-      ],
+      ),
+      child: SocialInteraction(
+        titulo: titulo,
+        subtitulo: notificacion.titulo,
+        descripcion: descripcion,
+        imagen: notificacion.portada.toProvider(),
+        actions: [
+          SizedBox(
+            width: 100,
+            child: ElevatedButton(
+              onPressed: () => context.push("/hilo/${notificacion.hiloId}"),
+              child: const Text("Ir a hilo"),
+            ),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () =>
+                Get.find<MisNotificacionesController>().leer(notificacion.id),
+            child: const Text("Leer"),
+          ),
+        ],
+      ),
     );
   }
 

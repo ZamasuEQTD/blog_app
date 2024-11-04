@@ -206,4 +206,28 @@ class LocalHilosRepository extends IHilosRepository {
   }) async {
     return const Right("123");
   }
+
+  @override
+  Future<Either<Failure, Unit>> eliminar({required String id}) {
+    // TODO: implement eliminar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> ocultar({required String id}) {
+    // TODO: implement ocultar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> ponerEnFavoritos({required String id}) {
+    // TODO: implement ponerEnFavoritos
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> seguir({required String id}) {
+    // TODO: implement seguir
+    throw UnimplementedError();
+  }
 }

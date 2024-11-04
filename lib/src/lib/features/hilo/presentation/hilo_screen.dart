@@ -11,8 +11,10 @@ import 'package:blog_app/src/lib/features/encuestas/domain/models/encuesta.dart'
 import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
+import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../comentarios/presentation/widgets/comentario.dart';
@@ -293,7 +295,15 @@ class HiloOpciones extends StatelessWidget {
           seleccionables: [
             ItemSeleccionable.text(
               titulo: "Ver usuario",
-              onTap: () {},
+              onTap: () {
+                showMaterialModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    //return const VerUsuarioPanel(usuario: "");
+                    return const SizedBox();
+                  },
+                );
+              },
             ),
             const ItemSeleccionable.text(titulo: "Eliminar"),
           ],

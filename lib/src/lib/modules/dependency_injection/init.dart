@@ -5,6 +5,7 @@ import 'package:blog_app/src/lib/modules/dependency_injection/auth_dependencies.
 import 'package:blog_app/src/lib/modules/dependency_injection/comentarios_dependencies.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/hilos_dependencies.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/media_dependencies.dart';
+import 'package:blog_app/src/lib/modules/dependency_injection/notificaciones_dependencies.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
@@ -20,7 +21,12 @@ extension InitDependencies on GetIt {
         ),
       ),
     );
-    addStrategyContext().addMedia().addHilos().addComentarios().addAuth();
+    addStrategyContext()
+        .addMedia()
+        .addHilos()
+        .addComentarios()
+        .addAuth()
+        .addNotificaciones();
     return this;
   }
 

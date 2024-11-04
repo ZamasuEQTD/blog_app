@@ -8,20 +8,9 @@ import 'package:get_it/get_it.dart';
 class MisNotificacionesController extends GetxController {
   final INotificacionesRepository repository = GetIt.I.get();
 
-  final ScrollController scroll = ScrollController();
-
   var cargando = false.obs;
 
   Rx<List<Notificacion>> notificaciones = Rx([]);
-
-  @override
-  void onInit() {
-    scroll.addListener(() {
-      if (scroll.IsBottom) cargar();
-    });
-
-    super.onInit();
-  }
 
   void cargar() async {
     cargando.value = true;

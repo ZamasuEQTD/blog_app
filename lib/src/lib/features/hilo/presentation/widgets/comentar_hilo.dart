@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
@@ -7,16 +9,19 @@ import 'package:blog_app/src/lib/features/hilo/domain/services/tag_service.dart'
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
+import 'package:blog_app/src/lib/features/media/presentation/screens/agregar_enlace_screen.dart';
+import 'package:blog_app/src/lib/modules/routing.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
@@ -34,7 +39,7 @@ class ComentarHiloBottomSheet extends StatefulWidget {
 
 class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
   final TextEditingController comentario = TextEditingController();
-  final GlobalKey key = GlobalKey();
+
   @override
   void initState() {
     final HiloController controller = Get.find();
@@ -75,70 +80,79 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                   decoration: const BoxDecoration(
                     border: Border(top: BorderSide(color: Color(0xffe1e1e1))),
                   ),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Obx(
-                          () => Get.find<HiloController>().media.value != null
-                              ? Row(
-                                  children: <Media>[
-                                    Get.find<HiloController>()
-                                        .media
-                                        .value!
-                                        .spoileable,
-                                  ]
-                                      .map(
-                                        (x) => GestureDetector(
-                                          onTap: () {
-                                            _showMediaBottomSheet(context, x);
-                                          },
-                                          child: Miniatura(
-                                            key: UniqueKey(),
-                                            media: x,
-                                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Obx(
+                        () => Get.find<HiloController>().media.value != null
+                            ? Row(
+                                children: <Media>[
+                                  Get.find<HiloController>()
+                                      .media
+                                      .value!
+                                      .spoileable,
+                                ]
+                                    .map(
+                                      (x) => GestureDetector(
+                                        onTap: () {
+                                          _showMediaBottomSheet(context, x);
+                                        },
+                                        child: Miniatura(
+                                          key: UniqueKey(),
+                                          media: x,
                                         ),
-                                      )
-                                      .toList(),
-                                )
-                              : const SizedBox(),
-                        ),
-                        Row(
-                          children: [
-                            ColoredIconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.three_k_rounded),
+                                      ),
+                                    )
+                                    .toList(),
+                              ).marginOnly(bottom: 5)
+                            : const SizedBox(),
+                      ),
+                      Row(
+                        children: [
+                          ColoredIconButton(
+                            onPressed: () => showMaterialModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return const ComentarHiloOpcionesItems();
+                              },
                             ),
-                            Flexible(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      width: 0,
-                                      style: BorderStyle.none,
-                                    ),
-                                    borderRadius: BorderRadius.circular(25),
-                                  ),
+                            icon: const Icon(Icons.three_k_rounded),
+                          ),
+                          Flexible(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 11,
                                 ),
-                                controller: comentario,
-                                keyboardType: TextInputType.multiline,
-                                minLines: 1,
-                                maxLines: 4,
-                              ).marginSymmetric(horizontal: 5),
+                                border: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              controller: comentario,
+                              keyboardType: TextInputType.multiline,
+                              minLines: 1,
+                              maxLines: 4,
+                            ).marginSymmetric(horizontal: 5),
+                          ),
+                          ColoredIconButton(
+                            background: const Color.fromRGBO(22, 22, 23, 1),
+                            onPressed: () =>
+                                Get.find<HiloController>().enviarComentario,
+                            icon: const Icon(
+                              CupertinoIcons.paperplane_fill,
+                              color: Colors.white,
                             ),
-                            ColoredIconButton(
-                              onPressed: () =>
-                                  Get.find<HiloController>().enviarComentario,
-                              icon: const Icon(Icons.send),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ).paddingSymmetric(horizontal: 5, vertical: 5),
                 ),
               ),
             ),
@@ -262,7 +276,7 @@ class _EliminarMedia extends VerMediaOpcion {
         ),
       ),
       onTap: () {
-        context.read<HiloController>().eliminarMedia();
+        Get.find<HiloController>().eliminarMedia();
         context.pop();
       },
       titulo: "Eliminar",
@@ -301,7 +315,18 @@ class _AgregarEnlace extends OpcionDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return OpcionDeComentario(onTap: () {}, opcion: "Agregar enlace");
+    return OpcionDeComentario(
+      onTap: () => context.push(
+        Routes.agregarEnlace,
+        extra: (String enlace) {
+          Get.find<HiloController>().agregarMedia(
+            Youtube.fromUrl(enlace),
+          );
+          context.pop();
+        },
+      ),
+      opcion: "Agregar enlace",
+    );
   }
 }
 
@@ -318,49 +343,11 @@ class _AgregarMediaItem extends OpcionDeComentario {
 
         response.fold((l) => null, (r) {
           if (r != null) {
-            context.read<HiloController>().agregarMedia(r);
+            Get.find<HiloController>().agregarMedia(r);
           }
         });
       },
       opcion: "Agregar desde galeria",
-    );
-  }
-}
-
-class AgregarEnlaces extends StatefulWidget {
-  final void Function(String url) onAgregar;
-  const AgregarEnlaces({
-    super.key,
-    required this.onAgregar,
-  });
-
-  @override
-  State<AgregarEnlaces> createState() => _AgregarEnlacesState();
-}
-
-class _AgregarEnlacesState extends State<AgregarEnlaces> {
-  final TextEditingController controller = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TextButton(
-            onPressed: () {
-              widget.onAgregar(controller.text);
-            },
-            child: const Text("Agregar"),
-          ),
-        ],
-      ),
-      body: TextField(
-        minLines: 5,
-        maxLines: 5,
-        decoration: const InputDecoration(
-          hintText: "Enlace",
-        ),
-        controller: controller,
-      ),
     );
   }
 }

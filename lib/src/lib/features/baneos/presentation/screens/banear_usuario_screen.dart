@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/screens/registro_screen.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,21 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import 'logic/controllers/banear_usuario.dart';
+
+final HashMap<Duracion, String> duraciones = HashMap.from({
+  Duracion.minutos: " 5 Minutos",
+  Duracion.unaHora: "1 Hora",
+  Duracion.unDia: "1 Día",
+  Duracion.unaSemana: "1 Semana",
+  Duracion.unMes: "1 Mes",
+  Duracion.indefinido: "Permanente",
+});
+
+final HashMap<Razon, String> razones = HashMap.from({
+  Razon.spam: "Spam",
+  Razon.contenidoInapropiado: "Contenido inapropiado",
+  Razon.otros: "Otros",
+});
 
 class BanearUsuarioScreen extends StatefulWidget {
   const BanearUsuarioScreen({super.key});
@@ -17,21 +33,6 @@ class BanearUsuarioScreen extends StatefulWidget {
 }
 
 class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
-  static final HashMap<Duracion, String> _duraciones = HashMap.from({
-    Duracion.minutos: " 5 Minutos",
-    Duracion.unaHora: "1 Hora",
-    Duracion.unDia: "1 Día",
-    Duracion.unaSemana: "1 Semana",
-    Duracion.unMes: "1 Mes",
-    Duracion.indefinido: "Permanente",
-  });
-
-  static final HashMap<Razon, String> _razones = HashMap.from({
-    Razon.spam: "Spam",
-    Razon.contenidoInapropiado: "Contenido inapropiado",
-    Razon.otros: "Otros",
-  });
-
   final controller = Get.put(BanearUsuarioController());
   @override
   void initState() {
@@ -54,6 +55,7 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
             title: const Text("Banear usuario"),
           ),
           body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 "Mensaje",
@@ -65,9 +67,9 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
                   hintText: "Mensaje",
                 ),
               ).withMarginSection,
-              const Text("Razon"),
+              Text("Razon", style: context.labelStyle),
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(15),
                 child: GestureDetector(
                   onTap: () => showModalBottomSheet(
                     context: context,
@@ -84,24 +86,25 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
                         horizontal: 10,
                       ),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Obx(
                             () => Text(
                               controller.razon.value != null
-                                  ? _razones[controller.razon.value!]!
+                                  ? razones[controller.razon.value!]!
                                   : "Seleccionar razon",
                             ),
                           ),
-                          const Icon(Icons.chevron_left),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
-                  ).withMarginSection,
+                  ),
                 ),
-              ),
+              ).withMarginSection,
               Text("Duracion", style: context.labelStyle),
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(15),
                 child: GestureDetector(
                   onTap: () => showModalBottomSheet(
                     context: context,
@@ -123,23 +126,31 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
                           Obx(
                             () => Text(
                               controller.duracion.value != null
-                                  ? _duraciones[controller.duracion.value!]!
+                                  ? duraciones[controller.duracion.value!]!
                                   : "Seleccionar duración",
                             ),
                           ),
-                          const Icon(Icons.chevron_left),
+                          const Icon(Icons.chevron_right),
                         ],
                       ),
                     ),
-                  ).withMarginSection,
+                  ),
+                ),
+              ).withMarginSection,
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: const ButtonStyle(
+                    padding: WidgetStatePropertyAll(
+                      EdgeInsets.symmetric(vertical: 16, horizontal: 10),
+                    ),
+                  ),
+                  onPressed: () => controller.banear(),
+                  child: const Text("Banear usuario"),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () => controller.banear(),
-                child: const Text("Banear usuario"),
-              ),
             ],
-          ).paddingSymmetric(horizontal: 24),
+          ).paddingSymmetric(horizontal: 20),
         ),
       ),
     );
@@ -165,7 +176,7 @@ class SeleccionarRazon extends StatelessWidget {
             .map(
               (e) => GestureDetector(
                 onTap: () => onRazonSeleccionada(e),
-                child: Text(e.name),
+                child: ItemSeleccionable.text(titulo: razones[e]!),
               ),
             )
             .toList(),
@@ -188,8 +199,11 @@ class SeleccionarDuracion extends StatelessWidget {
         children: Duracion.values
             .map(
               (e) => GestureDetector(
-                onTap: () => onDuracionSeleccionada(e),
-                child: Text(e.name),
+                onTap: () => {
+                  onDuracionSeleccionada(e),
+                  context.pop(),
+                },
+                child: ItemSeleccionable.text(titulo: duraciones[e]!),
               ),
             )
             .toList(),

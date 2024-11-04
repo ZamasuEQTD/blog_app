@@ -1,6 +1,10 @@
 import 'package:blog_app/src/lib/features/auth/presentation/screens/registro_screen.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/screens/banear_usuario_screen.dart';
+import 'package:blog_app/src/lib/features/media/presentation/screens/agregar_enlace_screen.dart';
+import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../features/hilo/presentation/hilo_screen.dart';
@@ -15,6 +19,8 @@ class Routes {
   static const hilo = "/hilo/:id";
   static const postear = "/postear-hilo";
   static const notificaciones = "/mis-notificaciones";
+  static const banear = "/banear-usuario";
+  static const agregarEnlace = "/agregar-enlace";
 }
 
 GoRouter routes = GoRouter(
@@ -23,7 +29,7 @@ GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: Routes.home,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const VerUsuarioPanel(usuario: ""),
     ),
     GoRoute(
       path: Routes.hilo,
@@ -44,6 +50,17 @@ GoRouter routes = GoRouter(
     GoRoute(
       path: Routes.registro,
       builder: (context, state) => const RegistroScreen(),
+    ),
+    GoRoute(
+      path: Routes.banear,
+      builder: (context, state) => const BanearUsuarioScreen(),
+    ),
+    GoRoute(
+      path: Routes.agregarEnlace,
+      builder: (context, state) => Provider<OnEnlaceAgregado>.value(
+        value: state.extra as OnEnlaceAgregado,
+        child: const AgregarEnlaceScreen(),
+      ),
     ),
   ],
 );

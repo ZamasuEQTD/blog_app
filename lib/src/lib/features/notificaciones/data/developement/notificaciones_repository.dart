@@ -4,7 +4,7 @@ import 'package:blog_app/src/lib/features/notificaciones/domain/models/notificac
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
 
-class NotificacionesRepository extends INotificacionesRepository {
+class LocalNotificacionesRepository extends INotificacionesRepository {
   @override
   Future<Either<Failure, List<Notificacion>>> getMisNotificaciones() async {
     return const Right([
@@ -19,6 +19,18 @@ class NotificacionesRepository extends INotificacionesRepository {
         ),
         titulo: "Cepita gratis",
         descripcion: "Pepitooooo",
+      ),
+      ComentarioRespondido(
+        id: "fa",
+        hiloId: "1",
+        titulo: "Cepita gratis",
+        comentario: "Hola",
+        portada: Imagen(
+          provider: NetworkProvider(
+            path:
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQVV-gF_aPDtaOzgILewOSOq-hIHJNbuQLNg&s",
+          ),
+        ),
       ),
     ]);
   }

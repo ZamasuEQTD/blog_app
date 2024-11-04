@@ -10,6 +10,7 @@ import 'package:blog_app/src/lib/features/home/presentation/screens/logic/blocs/
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
+import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late IHomePortadasHub hub = HomeLocalHub();
-  HomeController controller = Get.put(HomeController()..cargarPortadas());
+  HomeController controller = Get.put(HomeController())..cargarPortadas();
   final ScrollController scroll = ScrollController();
   @override
   void initState() {
@@ -52,7 +53,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          TextButton.icon(
+            onPressed: () => context.push(Routes.notificaciones),
+            icon: const Icon(Icons.notifications),
+            label: const Text("99+"),
+          ),
+        ],
+      ),
       body: CustomScrollView(
         controller: scroll,
         slivers: const [
@@ -209,7 +218,10 @@ class HomePortadaOpciones extends StatelessWidget {
           ),
           GrupoSeleccionable(
             seleccionables: [
-              ItemSeleccionable.text(titulo: "Ver usuario", onTap: () => {}),
+              ItemSeleccionable.text(
+                titulo: "Ver usuario",
+                onTap: () => context.push("/banear-usuario"),
+              ),
               ItemSeleccionable.text(
                 titulo: "Eliminar",
                 onTap: () => GetIt.I.get<IHilosRepository>().eliminar(
