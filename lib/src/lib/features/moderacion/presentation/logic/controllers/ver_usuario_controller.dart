@@ -25,13 +25,15 @@ class VerUsuarioController extends GetxController {
   Future<void> cargar() async {
     if (cargando.value) return;
 
+    cargando.value = true;
+
     final IModeracionRepository repository = GetIt.I.get();
 
     var response = await repository.verUsuario(usuario: id);
 
     response.fold((l) => null, (r) => usuario.value = r);
 
-    cargando.value = true;
+    cargando.value = false;
   }
 
   Future<void> cargarComentarios() async {

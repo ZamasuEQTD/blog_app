@@ -25,10 +25,8 @@ class DioHilosRepository extends IHilosRepository {
       }
 
       return const Right(unit);
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -67,10 +65,8 @@ class DioHilosRepository extends IHilosRepository {
       }
 
       return const Right(unit);
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -84,10 +80,8 @@ class DioHilosRepository extends IHilosRepository {
       }
 
       return const Right(unit);
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -121,10 +115,8 @@ class DioHilosRepository extends IHilosRepository {
       }
 
       return Right(response.data["id"]);
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -138,11 +130,19 @@ class DioHilosRepository extends IHilosRepository {
       }
 
       return const Right(unit);
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
+  }
+}
+
+extension ExceptionFailure on Exception {
+  Failure get failure {
+    if (this is DioException) {
+      return (this as DioException).failure;
+    }
+
+    return Failures.unknown;
   }
 }
 

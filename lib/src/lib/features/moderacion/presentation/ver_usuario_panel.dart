@@ -8,72 +8,139 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../domain/models/usuario.dart';
 import 'logic/controllers/ver_usuario_controller.dart';
 
-class VerUsuarioPanel extends StatefulWidget {
-  final String usuario;
-  const VerUsuarioPanel({super.key, required this.usuario});
+class VerUsuarioPanelBottomSheet extends StatelessWidget {
+  const VerUsuarioPanelBottomSheet({super.key});
 
   @override
-  State<VerUsuarioPanel> createState() => _VerUsuarioPanelState();
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      minChildSize: 0.5,
+      initialChildSize: 0.5,
+      maxChildSize: 0.7,
+      snap: true,
+      snapSizes: const [0.5, 0.7],
+      builder: (BuildContext context, ScrollController scrollController) {
+        return DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
+          ),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              _VerUsuarioPanel(usuario: "", scroll: scrollController),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
+class _VerUsuarioPanel extends StatefulWidget {
+  final ScrollController scroll;
+  final String usuario;
+  const _VerUsuarioPanel({
+    super.key,
+    required this.usuario,
+    required this.scroll,
+  });
+
+  @override
+  State<_VerUsuarioPanel> createState() => __VerUsuarioPanelState();
+}
+
+class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
   late final controller = Get.put(
     VerUsuarioController(
       id: widget.usuario,
     ),
   );
-  ScrollController scroll = ScrollController();
+
+  late final ScrollController scroll = widget.scroll;
+
+  @override
+  void dispose() {
+    Get.delete<VerUsuarioController>();
+    super.dispose();
+  }
 
   @override
   void initState() {
+    controller.cargar();
+
+    controller.historial.listen(
+      (historial) {
+        if (historial == Historial.comentarios &&
+            controller.comentarios.value.isEmpty) {
+          cargarSiguientePaginaDeHistorial();
+        }
+      },
+    );
+
     controller.usuario.listen(
       (usuario) {
+        cargarSiguientePaginaDeHistorial();
+
         if (usuario != null) {
           scroll.addListener(
             () {
               if (scroll.IsBottom) {
-                if (controller.historial.value == Historial.comentarios) {
-                  controller.cargarComentarios();
-                } else {
-                  controller.cargarHilos();
-                }
+                cargarSiguientePaginaDeHistorial();
               }
             },
           );
         }
       },
     );
-
     super.initState();
+  }
+
+  void cargarSiguientePaginaDeHistorial() {
+    if (controller.historial.value == Historial.comentarios) {
+      controller.cargarComentarios();
+    } else {
+      controller.cargarHilos();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomScrollView(
-          controller: scroll,
+    return Theme(
+      data: Theme.of(context).copyWith(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
+                padding: const WidgetStatePropertyAll(
+                  EdgeInsets.symmetric(
+                    vertical: 16,
+                  ),
+                ),
+              ),
+        ),
+      ),
+      child: SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        sliver: SliverMainAxisGroup(
           slivers: [
-            Obx(
-              () {
-                if (controller.cargando.value) {
-                  return SliverMainAxisGroup(
-                    slivers: [
-                      const UsuarioInformacion.bone(),
-                      SliverList.builder(
-                        itemBuilder: (context, index) =>
-                            const SocialInteraction.bone(),
-                      ),
-                    ],
-                  );
-                }
+            Obx(() {
+              if (controller.usuario.value == null ||
+                  controller.cargando.value) {
+                return const SliverToBoxAdapter();
+              }
 
-                return SliverMainAxisGroup(
+              return Provider.value(
+                value: controller.usuario.value,
+                child: SliverMainAxisGroup(
                   slivers: [
                     const UsuarioInformacion.cargada(),
                     ElevatedButton(
@@ -107,7 +174,7 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
                           ),
                         ),
                       ),
-                    ).sliverBox,
+                    ).marginOnly(bottom: 10).sliverBox,
                     Obx(
                       () {
                         if (controller.historial.value == Historial.hilos) {
@@ -130,25 +197,11 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
                       },
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            }),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class VerUsuarioPanelBottomSheet extends StatelessWidget {
-  const VerUsuarioPanelBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      builder: (context, controller) => RoundedBottomSheet.sliver(
-        controller: controller,
-        slivers: const [],
       ),
     );
   }
@@ -174,7 +227,7 @@ class _UsuarioInformacion extends UsuarioInformacion {
         mainAxisSize: MainAxisSize.min,
         children: children,
       ),
-    ).sliverBox;
+    ).marginSymmetric(vertical: 15).sliverBox;
   }
 }
 
@@ -232,7 +285,6 @@ class _UsuarioInformacionBone extends UsuarioInformacion {
 
 abstract class UsuarioFoto extends StatelessWidget {
   const UsuarioFoto._({super.key});
-
   const factory UsuarioFoto({required Widget child}) = _UsuarioFoto;
 
   const factory UsuarioFoto.icono() = _UsuarioFotoIcono;

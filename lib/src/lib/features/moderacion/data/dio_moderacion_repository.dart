@@ -25,9 +25,7 @@ class DioModeracionRepository extends IModeracionRepository {
         return const Left(NetworkFailures.serverError);
       }
 
-      return Right(
-        response.data.map((e) => ComentarioHistorial.fromJson(e)).toList(),
-      );
+      throw Exception();
     } on DioException catch (e) {
       return Left(e.failure);
     } catch (e) {
@@ -48,9 +46,7 @@ class DioModeracionRepository extends IModeracionRepository {
         return const Left(NetworkFailures.serverError);
       }
 
-      return Right(
-        response.data.map((e) => HiloHistorial.fromJson(e)).toList(),
-      );
+      throw Exception();
     } on DioException catch (e) {
       return Left(e.failure);
     } catch (e) {

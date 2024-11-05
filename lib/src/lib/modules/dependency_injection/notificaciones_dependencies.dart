@@ -4,9 +4,10 @@ import '../../features/notificaciones/data/developement/notificaciones_repositor
 import '../../features/notificaciones/domain/inotificaciones_repository.dart';
 
 extension NotificacionesDependencies on GetIt {
-  void addNotificaciones() {
+  GetIt addNotificaciones() {
     registerLazySingleton<INotificacionesRepository>(
       () => LocalNotificacionesRepository(),
     );
+    return this;
   }
 }

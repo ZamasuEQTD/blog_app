@@ -17,7 +17,9 @@ class LocalModeracionRepository extends IModeracionRepository {
         id: "1",
         hilo: "1",
         portada: const Imagen(
-          provider: NetworkProvider(path: "https://via.placeholder.com/150"),
+          provider: NetworkProvider(
+            path: "https://i.blogs.es/aee3d3/gawu1m5wsaafdop/375_375.webp",
+          ),
         ),
         titulo: "Pedro",
         texto: "Comentario 1",
@@ -35,7 +37,9 @@ class LocalModeracionRepository extends IModeracionRepository {
       HiloHistorial(
         hilo: "1",
         portada: const Imagen(
-          provider: NetworkProvider(path: "https://via.placeholder.com/150"),
+          provider: NetworkProvider(
+            path: "https://i.blogs.es/aee3d3/gawu1m5wsaafdop/375_375.webp",
+          ),
         ),
         descripcion: "1",
         titulo: "Pedro",

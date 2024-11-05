@@ -29,7 +29,7 @@ GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: Routes.home,
-      builder: (context, state) => const VerUsuarioPanel(usuario: ""),
+      builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
       path: Routes.hilo,

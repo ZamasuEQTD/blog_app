@@ -277,6 +277,7 @@ class _HistorialSocialInteraction extends SocialInteraction {
   @override
   Widget build(BuildContext context) {
     return SocialInteraction(
+      imagen: historial.portada.toProvider(),
       descripcion: descripcion,
       subtitulo: historial.titulo,
       titulo: titulo,

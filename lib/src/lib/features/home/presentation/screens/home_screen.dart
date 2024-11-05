@@ -6,19 +6,15 @@ import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
-import 'package:blog_app/src/lib/features/home/presentation/screens/logic/blocs/home/home_bloc.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
-import 'package:blog_app/src/lib/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
+import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
@@ -140,7 +136,7 @@ class _HomePortadasGrid extends StatelessWidget {
               HomePortada entry = controller.portadas.value[index];
 
               return GestureDetector(
-                onLongPress: () => showMaterialModalBottomSheet(
+                onLongPress: () => showModalBottomSheet(
                   context: context,
                   builder: (context) {
                     return HomePortadaOpciones(portada: entry);
@@ -220,7 +216,11 @@ class HomePortadaOpciones extends StatelessWidget {
             seleccionables: [
               ItemSeleccionable.text(
                 titulo: "Ver usuario",
-                onTap: () => context.push("/banear-usuario"),
+                onTap: () => showModalBottomSheet(
+                  isScrollControlled: true,
+                  context: context,
+                  builder: (context) => const VerUsuarioPanelBottomSheet(),
+                ),
               ),
               ItemSeleccionable.text(
                 titulo: "Eliminar",
