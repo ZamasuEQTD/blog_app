@@ -19,7 +19,7 @@ class Routes {
   static const hilo = "/hilo/:id";
   static const postear = "/postear-hilo";
   static const notificaciones = "/mis-notificaciones";
-  static const banear = "/banear-usuario";
+  static const banear = "/banear-usuario/:id";
   static const agregarEnlace = "/agregar-enlace";
 }
 

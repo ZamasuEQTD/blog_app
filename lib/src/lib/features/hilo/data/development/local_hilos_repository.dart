@@ -201,6 +201,7 @@ class LocalHilosRepository extends IHilosRepository {
     required String descripcion,
     required Spoileable<Media> portada,
     required List<String> encuesta,
+    required SubcategoriaId subcategoria,
     required bool dados,
     required bool idUnico,
   }) async {

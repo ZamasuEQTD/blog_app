@@ -2,7 +2,7 @@ import 'package:blog_app/src/lib/features/moderacion/domain/models/registro_de_h
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/imoderacion_service.dart';
+import '../../../domain/imoderacion_repository.dart';
 import '../../../domain/models/registro_de_comentario.dart';
 import '../../../domain/models/usuario.dart';
 
@@ -11,17 +11,19 @@ class VerUsuarioController extends GetxController {
 
   RxBool cargando = false.obs;
 
-  RxBool cargandoHistorial = false.obs;
-  Rx<TipoDeHistorial> historial = Rx(TipoDeHistorial.hilos);
-  Rx<List<HistorialComentario>> comentarios = Rx([]);
+  RxBool cargandoHilos = false.obs;
+  RxBool cargandoComentarios = false.obs;
+
+  Rx<Historial> historial = Rx(Historial.hilos);
+  Rx<List<ComentarioHistorial>> comentarios = Rx([]);
   Rx<List<HiloHistorial>> hilos = Rx([]);
 
   final String id;
 
   VerUsuarioController({required this.id});
 
-  void cargar() async {
-    cargando.value = true;
+  Future<void> cargar() async {
+    if (cargando.value) return;
 
     final IModeracionRepository repository = GetIt.I.get();
 
@@ -29,25 +31,39 @@ class VerUsuarioController extends GetxController {
 
     response.fold((l) => null, (r) => usuario.value = r);
 
-    cargando.value = false;
+    cargando.value = true;
   }
 
-  void cargarHistorial() async {
-    if (cargandoHistorial.value) return;
+  Future<void> cargarComentarios() async {
+    if (cargandoComentarios.value) return;
 
-    cargandoHistorial.value = true;
+    cargandoComentarios.value = true;
 
-    if (historial.value == TipoDeHistorial.comentarios) {
-      await cargarComentarios();
-    } else {
-      await cargarHilos();
-    }
+    final IModeracionRepository repository = GetIt.I.get();
 
-    cargandoHistorial.value = false;
+    var response = await repository.getComentarioHistorials(usuario: id);
+
+    response.fold(
+      (l) => null,
+      (r) => comentarios.value = [...r, ...comentarios.value],
+    );
+
+    cargandoComentarios.value = false;
   }
 
-  Future<void> cargarComentarios() async {}
-  Future<void> cargarHilos() async {}
+  Future<void> cargarHilos() async {
+    if (cargandoHilos.value) return;
+
+    cargandoHilos.value = true;
+
+    final IModeracionRepository repository = GetIt.I.get();
+
+    var response = await repository.getHistorialHilos(usuario: id);
+
+    response.fold((l) => null, (r) => hilos.value = [...r, ...hilos.value]);
+
+    cargandoHilos.value = false;
+  }
 }
 
-enum TipoDeHistorial { comentarios, hilos }
+enum Historial { comentarios, hilos }

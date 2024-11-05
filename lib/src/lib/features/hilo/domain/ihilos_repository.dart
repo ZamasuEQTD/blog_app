@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../utils/clases/failure.dart';
 import '../../app/domain/models/spoileable.dart';
+import '../../categorias/domain/models/subcategoria.dart';
 import '../../media/domain/models/media.dart';
 import 'models/hilo.dart';
 import 'models/types.dart';
@@ -12,6 +13,7 @@ abstract class IHilosRepository {
     required String titulo,
     required String descripcion,
     required Spoileable<Media> portada,
+    required SubcategoriaId subcategoria,
     required List<String> encuesta,
     required bool dados,
     required bool idUnico,

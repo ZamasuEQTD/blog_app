@@ -288,7 +288,7 @@ class _HistorialSocialInteraction extends SocialInteraction {
 
   String get descripcion => historial is HiloHistorial
       ? (historial as HiloHistorial).descripcion
-      : (historial as HistorialComentario).texto;
+      : (historial as ComentarioHistorial).texto;
 }
 
 abstract class SocialInteractionImage extends StatelessWidget {

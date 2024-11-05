@@ -11,6 +11,12 @@ class Usuario extends Equatable {
     required this.registrado,
   });
 
+  factory Usuario.fromJson(Map<String, dynamic> json) => Usuario(
+        id: json["id"],
+        nombre: json["nombre"],
+        registrado: DateTime.parse(json["registrado"]),
+      );
+
   @override
   List<Object?> get props => [id, nombre, registrado];
 }

@@ -1,9 +1,13 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/screens/notificaciones_screen.dart';
+import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../domain/models/usuario.dart';
@@ -33,7 +37,11 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
           scroll.addListener(
             () {
               if (scroll.IsBottom) {
-                controller.cargarHistorial();
+                if (controller.historial.value == Historial.comentarios) {
+                  controller.cargarComentarios();
+                } else {
+                  controller.cargarHilos();
+                }
               }
             },
           );
@@ -56,32 +64,7 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
                 if (controller.cargando.value) {
                   return SliverMainAxisGroup(
                     slivers: [
-                      const SliverToBoxAdapter(
-                        child: Center(
-                          child: Row(
-                            children: [
-                              Bone.circle(
-                                size: 70,
-                              ),
-                              SizedBox(width: 10),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Bone.text(
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                  Bone.text(
-                                    words: 10,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      const UsuarioInformacion.bone(),
                       SliverList.builder(
                         itemBuilder: (context, index) =>
                             const SocialInteraction.bone(),
@@ -92,48 +75,42 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
 
                 return SliverMainAxisGroup(
                   slivers: [
-                    _InformacionDeUsuario(
-                      usuario: Usuario(
-                        id: "id",
-                        nombre: "nombre",
-                        registrado: DateTime.now(),
+                    const UsuarioInformacion.cargada(),
+                    ElevatedButton(
+                      onPressed: () => context.pushNamed(
+                        Routes.banear,
+                        pathParameters: {
+                          "id": widget.usuario,
+                        },
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                          Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                      child: const Text("Banear usuario"),
+                    ).sliverBox,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: const ColoredBox(
+                        color: Color(0xffF5F5F5),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5,
+                            vertical: 5,
+                          ),
+                          child: Row(
+                            children: [
+                              CambiarHistorialButton.hilos(),
+                              CambiarHistorialButton.comentarios(),
+                            ],
+                          ),
+                        ),
                       ),
                     ).sliverBox,
-                    SliverToBoxAdapter(
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).colorScheme.error,
-                          ),
-                        ),
-                        child: const Text("Banear usuario"),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: const ColoredBox(
-                          color: Color(0xffF5F5F5),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 5,
-                              vertical: 5,
-                            ),
-                            child: Row(
-                              children: [
-                                SeleccionarHistorialButton.hilos(),
-                                SeleccionarHistorialButton.comentarios(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     Obx(
                       () {
-                        if (controller.historial.value ==
-                            TipoDeHistorial.hilos) {
+                        if (controller.historial.value == Historial.hilos) {
                           return SliverList.builder(
                             itemCount: controller.hilos.value.length,
                             itemBuilder: (context, index) =>
@@ -163,156 +140,213 @@ class _VerUsuarioPanelState extends State<VerUsuarioPanel> {
   }
 }
 
-class _InformacionDeUsuario extends StatelessWidget {
-  final Usuario usuario;
+class VerUsuarioPanelBottomSheet extends StatelessWidget {
+  const VerUsuarioPanelBottomSheet({super.key});
 
-  const _InformacionDeUsuario({super.key, required this.usuario});
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      builder: (context, controller) => RoundedBottomSheet.sliver(
+        controller: controller,
+        slivers: const [],
+      ),
+    );
+  }
+}
 
+abstract class UsuarioInformacion extends StatelessWidget {
+  const UsuarioInformacion._({super.key});
+
+  const factory UsuarioInformacion({required List<Widget> children}) =
+      _UsuarioInformacion;
+
+  const factory UsuarioInformacion.bone() = _UsuarioInformacionBone;
+  const factory UsuarioInformacion.cargada() = _UsuarioInformacionCargada;
+}
+
+class _UsuarioInformacion extends UsuarioInformacion {
+  final List<Widget> children;
+  const _UsuarioInformacion({required this.children}) : super._();
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          const ClipOval(
-            child: ColoredBox(
-              color: Color(0xfff5f5f5),
-              child: SizedBox.square(
-                dimension: 70,
-                child: Center(
-                  child: FaIcon(
-                    FontAwesomeIcons.user,
-                    size: 35,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                usuario.nombre,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
-              ),
-              Text(
-                "Unido desde ${usuario.registrado.day}/${usuario.registrado.month}/${usuario.registrado.year}",
-              ),
-            ],
-          ),
-        ],
+        children: children,
       ),
-    );
+    ).sliverBox;
   }
 }
 
-abstract class SeleccionarHistorialButton extends StatelessWidget {
-  const SeleccionarHistorialButton._({super.key});
-
-  const factory SeleccionarHistorialButton({
-    required void Function() onTap,
-    required bool seleccionado,
-    required Widget child,
-  }) = _SeleccionarHistorialButton;
-
-  const factory SeleccionarHistorialButton.comentarios() =
-      _SeleccionarHistorialDeComentarios;
-
-  const factory SeleccionarHistorialButton.hilos() =
-      _SeleccionarHistorialDeHilos;
-}
-
-class _SeleccionarHistorialButton extends SeleccionarHistorialButton {
-  final void Function() onTap;
-  final bool seleccionado;
-  final Widget child;
-  const _SeleccionarHistorialButton({
-    required this.onTap,
-    required this.seleccionado,
-    required this.child,
-  }) : super._();
-
+class _UsuarioInformacionCargada extends UsuarioInformacion {
+  const _UsuarioInformacionCargada() : super._();
   @override
   Widget build(BuildContext context) {
-    Widget child = Padding(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      child: this.child,
-    );
-
-    if (seleccionado) {
-      child = ColoredBox(color: Theme.of(context).scaffoldBackgroundColor);
-    }
-
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(5),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class _SeleccionarHistorialDeHilos extends SeleccionarHistorialButton {
-  const _SeleccionarHistorialDeHilos() : super._();
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<VerUsuarioController>();
-    return Obx(
-      () => SeleccionarHistorialButton(
-        onTap: () => controller.historial.value = TipoDeHistorial.hilos,
-        seleccionado: controller.historial.value == TipoDeHistorial.hilos,
-        child: const Row(
+    Usuario usuario = context.read();
+    return UsuarioInformacion(
+      children: [
+        const UsuarioFoto.icono(),
+        const SizedBox(width: 10),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            FaIcon(
-              FontAwesomeIcons.noteSticky,
-              size: 20,
-              color: Colors.black,
-            ),
-            SizedBox(width: 8),
             Text(
-              "Hilos",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              usuario.nombre,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17,
+              ),
+            ),
+            Text(
+              "Unido desde ${usuario.registrado.day}/${usuario.registrado.month}/${usuario.registrado.year}",
             ),
           ],
         ),
+      ],
+    );
+  }
+}
+
+class _UsuarioInformacionBone extends UsuarioInformacion {
+  const _UsuarioInformacionBone() : super._();
+  @override
+  Widget build(BuildContext context) {
+    return const UsuarioInformacion(
+      children: [
+        UsuarioFoto.bone(),
+        SizedBox(width: 10),
+        Bone.text(
+          words: 10,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        Bone.text(
+          words: 10,
+        ),
+      ],
+    );
+  }
+}
+
+abstract class UsuarioFoto extends StatelessWidget {
+  const UsuarioFoto._({super.key});
+
+  const factory UsuarioFoto({required Widget child}) = _UsuarioFoto;
+
+  const factory UsuarioFoto.icono() = _UsuarioFotoIcono;
+  const factory UsuarioFoto.bone() = _UsuarioFotoBone;
+}
+
+class _UsuarioFoto extends UsuarioFoto {
+  final Widget child;
+  const _UsuarioFoto({required this.child}) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return ClipOval(
+      child: SizedBox.square(
+        dimension: 70,
+        child: child,
       ),
     );
   }
 }
 
-class _SeleccionarHistorialDeComentarios extends SeleccionarHistorialButton {
-  const _SeleccionarHistorialDeComentarios() : super._();
+class _UsuarioFotoBone extends UsuarioFoto {
+  const _UsuarioFotoBone() : super._();
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<VerUsuarioController>();
+    return const _UsuarioFoto(child: Bone());
+  }
+}
 
-    return SeleccionarHistorialButton(
-      onTap: () => controller.historial.value = TipoDeHistorial.comentarios,
-      seleccionado: controller.historial.value == TipoDeHistorial.comentarios,
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          FaIcon(
-            FontAwesomeIcons.message,
-            size: 20,
-            color: Colors.black,
-          ),
-          SizedBox(width: 8),
-          Text(
-            "Comentarios",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+class _UsuarioFotoIcono extends UsuarioFoto {
+  const _UsuarioFotoIcono() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const _UsuarioFoto(
+      child: Center(
+        child: FaIcon(
+          FontAwesomeIcons.user,
+          size: 35,
+        ),
       ),
+    );
+  }
+}
+
+abstract class CambiarHistorialButton extends StatelessWidget {
+  const CambiarHistorialButton._({super.key});
+
+  const factory CambiarHistorialButton({
+    required Historial historial,
+    required Widget label,
+    required Widget icon,
+  }) = _CambiarHistorialButton;
+
+  const factory CambiarHistorialButton.hilos() = _CambiarHistorialDeHilos;
+  const factory CambiarHistorialButton.comentarios() =
+      _CambiarHistorialDeComentarios;
+}
+
+class _CambiarHistorialButton extends CambiarHistorialButton {
+  final Historial historial;
+  final Widget label;
+  final Widget icon;
+  const _CambiarHistorialButton({
+    required this.historial,
+    required this.label,
+    required this.icon,
+  }) : super._();
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => Expanded(
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            backgroundColor:
+                Get.find<VerUsuarioController>().historial.value == historial
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.surface,
+          ),
+          onPressed: _setHistorial,
+          label: label,
+          icon: icon,
+        ),
+      ),
+    );
+  }
+
+  Historial _setHistorial() =>
+      Get.find<VerUsuarioController>().historial.value = historial;
+}
+
+class _CambiarHistorialDeHilos extends CambiarHistorialButton {
+  const _CambiarHistorialDeHilos() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const CambiarHistorialButton(
+      historial: Historial.hilos,
+      label: Text("Hilos"),
+      icon: FaIcon(
+        FontAwesomeIcons.noteSticky,
+      ),
+    );
+  }
+}
+
+class _CambiarHistorialDeComentarios extends CambiarHistorialButton {
+  const _CambiarHistorialDeComentarios() : super._();
+  @override
+  Widget build(BuildContext context) {
+    return const CambiarHistorialButton(
+      historial: Historial.comentarios,
+      label: Text("Comentarios"),
+      icon: FaIcon(FontAwesomeIcons.message),
     );
   }
 }

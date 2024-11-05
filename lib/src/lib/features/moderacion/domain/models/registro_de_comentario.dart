@@ -8,25 +8,27 @@ abstract class Historial {
   final HiloId hilo;
   final String titulo;
   final Imagen portada;
-
+  final DateTime registro;
   const Historial({
     required this.hilo,
     required this.titulo,
     required this.portada,
+    required this.registro,
   });
 }
 
-class HistorialComentario extends Historial {
+class ComentarioHistorial extends Historial {
   final ComentarioId id;
   final String texto;
   final Imagen? imagen;
 
-  const HistorialComentario({
+  const ComentarioHistorial({
     required this.id,
     required this.texto,
     this.imagen,
     required super.hilo,
     required super.titulo,
     required super.portada,
+    required super.registro,
   });
 }

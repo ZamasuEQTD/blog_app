@@ -9,5 +9,6 @@ class HiloHistorial extends Historial {
     required super.hilo,
     required super.titulo,
     required super.portada,
+    required super.registro,
   });
 }

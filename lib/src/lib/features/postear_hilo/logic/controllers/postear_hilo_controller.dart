@@ -6,6 +6,8 @@ import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../categorias/domain/models/subcategoria.dart';
+
 class PostearHiloController extends GetxController {
   final IHilosRepository repository = GetIt.I.get();
 
@@ -17,6 +19,8 @@ class PostearHiloController extends GetxController {
 
   Rx<bool> idunico = Rx(false);
   Rx<bool> dados = Rx(false);
+
+  Rx<SubcategoriaId?> subcategoria = Rx(null);
 
   Rx<HiloId?> id = Rx(null);
   Rx<Spoileable<Media>?> portada = Rx(null);
@@ -32,6 +36,7 @@ class PostearHiloController extends GetxController {
       encuesta: encuesta.value,
       descripcion: descripcion.value,
       portada: portada.value!,
+      subcategoria: subcategoria.value!,
       idUnico: idunico.value,
       dados: dados.value,
     );
