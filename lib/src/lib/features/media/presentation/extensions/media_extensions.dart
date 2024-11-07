@@ -6,8 +6,10 @@ import '../../domain/models/media.dart';
 import '../reproductor_de_video/providers/video_provider.dart';
 
 extension ImagenExtensions on Imagen {
-  ImageProvider toProvider() {
-    switch (provider) {
+  ImageProvider get toProvider => _toProvider(this);
+
+  static ImageProvider _toProvider(Imagen imagen) {
+    switch (imagen.provider) {
       case NetworkProvider provider:
         return NetworkImage(provider.path);
       case FileProvider provider:
@@ -19,8 +21,10 @@ extension ImagenExtensions on Imagen {
 }
 
 extension VideoExtensions on Video {
-  VideoProvider toProvider() {
-    switch (provider) {
+  VideoProvider get toProvider => _toProvider(this);
+
+  static VideoProvider _toProvider(Video video) {
+    switch (video.provider) {
       case NetworkProvider provider:
         return NetworkVideoProvider(provider.path);
       case FileProvider provider:

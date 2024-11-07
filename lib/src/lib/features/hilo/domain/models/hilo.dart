@@ -11,7 +11,7 @@ class Hilo {
   final String titulo;
   final String descripcion;
   final DateTime creadoEn;
-  final SubcategoriaEntity categoria;
+  final Subcategoria categoria;
   final Spoileable<Media> portada;
   final EstadoDeHilo estado;
   final List<BanderasDeHilo> banderas;
@@ -36,7 +36,7 @@ class Hilo {
     String? titulo,
     String? descripcion,
     DateTime? creadoEn,
-    SubcategoriaEntity? categoria,
+    Subcategoria? categoria,
     Spoileable<Media>? portada,
     EstadoDeHilo? estado,
     List<BanderasDeHilo>? banderas,
@@ -54,6 +54,25 @@ class Hilo {
       banderas: banderas ?? this.banderas,
       comentarios: comentarios ?? this.comentarios,
       esOp: esOp ?? this.esOp,
+    );
+  }
+
+  static Hilo fromJson(Map<String, dynamic> json) {
+    return Hilo(
+      id: json["id"],
+      titulo: json["titulo"],
+      descripcion: json["descripcion"],
+      creadoEn: DateTime.parse(json["creado_en"]),
+      categoria: Subcategoria.fromJson(json["categoria"]),
+      portada: Spoileable<Media>(
+        json["portada"]["spoiler"],
+        Media.fromJson(json["portada"]),
+      ),
+      estado: EstadoDeHilo.activo,
+      banderas:
+          json["banderas"].map((e) => BanderasDeHilo.values.byName(e)).toList(),
+      comentarios: json["comentarios"],
+      esOp: json["es_op"],
     );
   }
 }

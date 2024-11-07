@@ -8,6 +8,7 @@ import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../media/presentation/multi_media.dart';
 
@@ -20,38 +21,20 @@ class PostearHiloScreen extends StatefulWidget {
 
 class _PostearHiloScreenState extends State<PostearHiloScreen> {
   final PostearHiloController controller = PostearHiloController();
+
   final Map<int, TextEditingController> respuestas = {};
+
   @override
   void initState() {
     controller.failure.listen(
       (failure) {
-        if (failure != null) {
-          context.showFlash(
-            duration: const Duration(seconds: 1),
-            builder: (context, controller) {
-              return Container();
-            },
-          );
-        }
+        if (failure != null) {}
       },
     );
+
     controller.id.listen((id) {
-      context.showFlash(
-        duration: const Duration(seconds: 1),
-        persistent: true,
-        builder: (context, controller) {
-          return FlashBar(
-            margin: const EdgeInsets.only(top: 100),
-            behavior: FlashBehavior.floating,
-            backgroundColor: const Color(0xff2e2e2e),
-            position: FlashPosition.top,
-            controller: controller,
-            content: const Text("Hilo creado"),
-          ).marginOnly(top: 100);
-        },
-      );
       if (id != null) {
-        // context.go("/hilo/$id");
+        context.replaceNamed("/hilo/$id");
       }
     });
 
@@ -68,6 +51,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
         }
       }
     });
+
     super.initState();
   }
 

@@ -61,7 +61,7 @@ class _Video extends Dimensionable {
   const _Video({super.key, required this.video}) : super._();
 
   Widget get reproductor => ReproductorDeVideo.provider(
-        provider: video.toProvider(),
+        provider: video.toProvider,
       );
 
   @override
@@ -83,7 +83,7 @@ class _Imagen extends Dimensionable {
   Widget build(BuildContext context) {
     return Dimensionable(
       child: Image(
-        image: imagen.toProvider(),
+        image: imagen.toProvider,
       ),
     );
   }

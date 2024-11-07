@@ -1,10 +1,9 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
-import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
+import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/screens/notificaciones_screen.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -72,6 +71,7 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
   @override
   void dispose() {
     Get.delete<VerUsuarioController>();
+    scroll.dispose();
     super.dispose();
   }
 
@@ -401,4 +401,69 @@ class _CambiarHistorialDeComentarios extends CambiarHistorialButton {
       icon: FaIcon(FontAwesomeIcons.message),
     );
   }
+}
+
+class HistorialInteracion {
+  final String id;
+  final String titulo;
+  final DateTime fecha;
+  final Imagen imagen;
+
+  const HistorialInteracion({
+    required this.id,
+    required this.titulo,
+    required this.fecha,
+    required this.imagen,
+  });
+}
+
+class HistorialInteraccion extends StatelessWidget {
+  final HistorialInteracion interaccion;
+  const HistorialInteraccion({super.key, required this.interaccion});
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox.square(
+                dimension: 48,
+                child: Image(image: interaccion.imagen.toProvider),
+              ),
+              Column(
+                children: [
+                  Text(interaccion.titulo),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        color: context.labelColor,
+                      ),
+                      Text(
+                        "",
+                        style: context.labelStyle,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ).paddingAll(16),
+    );
+  }
+}
+
+extension ThemeColors on BuildContext {
+  Color get labelColor => Theme.of(this).colorScheme.secondary;
+}
+
+extension TextStyles on BuildContext {
+  TextStyle get labelStyle => TextStyle(
+        color: labelColor,
+      );
 }

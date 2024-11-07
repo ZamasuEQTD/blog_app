@@ -8,6 +8,17 @@ abstract class Media extends Equatable {
     required this.tipo,
   });
 
+  static Media fromJson(Map<String, dynamic> json) {
+    switch (json["tipo"]) {
+      case "video":
+        return Video.fromJson(json);
+      case "youtube":
+        return Youtube.fromJson(json);
+      default:
+        return Imagen.fromJson(json);
+    }
+  }
+
   @override
   List<Object?> get props => [provider];
 }
@@ -18,10 +29,23 @@ class Video extends Media {
     this.previsualizacion,
     required super.provider,
   }) : super(tipo: TipoDeMedia.video);
+
+  static Video fromJson(Map<String, dynamic> portada) {
+    return Video(
+      previsualizacion: portada["previsualizacion"],
+      provider: NetworkProvider(path: portada["path"]),
+    );
+  }
 }
 
 class Imagen extends Media {
   const Imagen({required super.provider}) : super(tipo: TipoDeMedia.imagen);
+
+  static Imagen fromJson(Map<String, dynamic> portada) {
+    return Imagen(
+      provider: NetworkProvider(path: portada["path"]),
+    );
+  }
 }
 
 abstract class MediaProvider extends Equatable {
@@ -50,6 +74,12 @@ class Youtube extends Media {
   factory Youtube.fromUrl(String url) {
     return Youtube(
       provider: NetworkProvider(path: url),
+    );
+  }
+
+  static Youtube fromJson(Map<String, dynamic> json) {
+    return Youtube(
+      provider: NetworkProvider(path: json["path"]),
     );
   }
 }

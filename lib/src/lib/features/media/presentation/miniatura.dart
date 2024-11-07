@@ -28,7 +28,7 @@ class Miniatura extends StatelessWidget {
                 return const Skeletonizer.zone(child: Bone());
               }
               return Image(
-                image: (state).miniatura.toProvider(),
+                image: (state).miniatura.toProvider,
                 fit: BoxFit.cover,
               );
             },

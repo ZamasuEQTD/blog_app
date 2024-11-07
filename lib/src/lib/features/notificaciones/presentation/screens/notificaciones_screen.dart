@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
-import 'package:blog_app/src/lib/features/auth/presentation/screens/login_screen.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -67,6 +66,7 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
           ],
         ),
         body: CustomScrollView(
+          controller: scroll,
           slivers: [
             Obx(
               () => SliverList.builder(
@@ -239,7 +239,7 @@ class _NotificacionSocialInteraction extends SocialInteraction {
         titulo: titulo,
         subtitulo: notificacion.titulo,
         descripcion: descripcion,
-        imagen: notificacion.portada.toProvider(),
+        imagen: notificacion.portada.toProvider,
         actions: [
           SizedBox(
             width: 100,
@@ -277,7 +277,7 @@ class _HistorialSocialInteraction extends SocialInteraction {
   @override
   Widget build(BuildContext context) {
     return SocialInteraction(
-      imagen: historial.portada.toProvider(),
+      imagen: historial.portada.toProvider,
       descripcion: descripcion,
       subtitulo: historial.titulo,
       titulo: titulo,

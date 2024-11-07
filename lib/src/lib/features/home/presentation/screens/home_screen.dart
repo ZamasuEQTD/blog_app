@@ -2,6 +2,7 @@ import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_con
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
@@ -9,13 +10,13 @@ import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dar
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
 import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
+import 'package:blog_app/src/lib/features/usuarios/domain/models/usuario.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 
@@ -28,8 +29,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late IHomePortadasHub hub = HomeLocalHub();
+
   HomeController controller = Get.put(HomeController())..cargarPortadas();
+
   final ScrollController scroll = ScrollController();
+
   @override
   void initState() {
     scroll.addListener(
@@ -37,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scroll.IsBottom) controller.cargarPortadas();
       },
     );
+
     hub.connect();
 
     hub.onHiloPosteado.listen((portada) => controller.agregarPortada(portada));
@@ -126,11 +131,12 @@ class _HomePortadasGrid extends StatelessWidget {
       sliver: Obx(
         () {
           return SliverGrid.builder(
-            itemCount: controller.portadas.value.length,
+            itemCount: controller.portadas.value.length +
+                (controller.cargando.value ? 5 : 0),
             gridDelegate: _delegate,
             itemBuilder: (context, index) {
               if (index >= controller.portadas.value.length) {
-                return const Skeletonizer.zone(child: Portada.bone());
+                return const Portada.bone();
               }
 
               HomePortada entry = controller.portadas.value[index];
@@ -166,9 +172,7 @@ class _FiltrarPortadasPorTitulo extends StatelessWidget {
     return Flexible(
       child: TextField(
         maxLines: 1,
-        onChanged: (value) {
-          controller.titulo.value = value;
-        },
+        onChanged: (value) => controller.titulo.value = value,
         decoration: InputDecoration(
           hintText: "Buscar por titulo",
           suffixIcon: IconButton(
@@ -194,42 +198,60 @@ class HomePortadaOpciones extends StatelessWidget {
             seleccionables: [
               ItemSeleccionable.text(
                 titulo: "Seguir",
-                onTap: () =>
-                    GetIt.I.get<IHilosRepository>().seguir(id: portada.id),
+                onTap: () async {
+                  var res = await GetIt.I
+                      .get<IHilosRepository>()
+                      .seguir(id: portada.id);
+
+                  res.fold((l) => null, (r) => null);
+                },
               ),
               ItemSeleccionable.text(
                 titulo: "Poner en favoritos",
-                onTap: () => GetIt.I.get<IHilosRepository>().ponerEnFavoritos(
-                      id: portada.id,
-                    ),
+                onTap: () async {
+                  var res = await GetIt.I
+                      .get<IHilosRepository>()
+                      .ponerEnFavoritos(id: portada.id);
+
+                  res.fold((l) => null, (r) => null);
+                },
               ),
               ItemSeleccionable.text(
                 titulo: "Ocultar",
-                onTap: () => GetIt.I.get<IHilosRepository>().ocultar(
-                      id: portada.id,
-                    ),
+                onTap: () async {
+                  var res = await GetIt.I.get<IHilosRepository>().ocultar(
+                        id: portada.id,
+                      );
+
+                  res.fold((l) => null, (r) => null);
+                },
               ),
               ItemSeleccionable.text(titulo: "Denunciar", onTap: () => {}),
             ],
           ),
-          GrupoSeleccionable(
-            seleccionables: [
-              ItemSeleccionable.text(
-                titulo: "Ver usuario",
-                onTap: () => showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (context) => const VerUsuarioPanelBottomSheet(),
+          if (Get.find<AuthController>().usuario.value?.rango is Moderador)
+            GrupoSeleccionable(
+              seleccionables: [
+                ItemSeleccionable.text(
+                  titulo: "Ver usuario",
+                  onTap: () => showModalBottomSheet(
+                    isScrollControlled: true,
+                    context: context,
+                    builder: (context) => const VerUsuarioPanelBottomSheet(),
+                  ),
                 ),
-              ),
-              ItemSeleccionable.text(
-                titulo: "Eliminar",
-                onTap: () => GetIt.I.get<IHilosRepository>().eliminar(
-                      id: portada.id,
-                    ),
-              ),
-            ],
-          ),
+                ItemSeleccionable.text(
+                  titulo: "Eliminar",
+                  onTap: () async {
+                    var res = await GetIt.I.get<IHilosRepository>().eliminar(
+                          id: portada.id,
+                        );
+
+                    res.fold((l) => null, (r) => null);
+                  },
+                ),
+              ],
+            ),
         ],
       ),
     );

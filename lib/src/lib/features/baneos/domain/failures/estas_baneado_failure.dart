@@ -5,6 +5,8 @@ class EstasBaneadoFailure extends Failure {
   final Baneo baneo;
   const EstasBaneadoFailure({
     required this.baneo,
-    required super.code,
-  }) : super(descripcion: "Estas baneado!");
+  }) : super(
+          code: "baneos.baneado",
+          descripcion: "Estas baneado!",
+        );
 }

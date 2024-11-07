@@ -12,7 +12,7 @@ abstract class SubcategoriaTile extends StatelessWidget {
   const factory SubcategoriaTile({
     void Function()? onTap,
     Widget? trailing,
-    required SubcategoriaEntity subcategoria,
+    required Subcategoria subcategoria,
   }) = _Subcategorias;
 
   const factory SubcategoriaTile.bone() = _SubcategoriaCargando;
@@ -59,7 +59,7 @@ class _SubcategoriaBase extends SubcategoriaTile {
 class _Subcategorias extends SubcategoriaTile {
   final Widget? trailing;
   final void Function()? onTap;
-  final SubcategoriaEntity subcategoria;
+  final Subcategoria subcategoria;
 
   const _Subcategorias({
     this.trailing,
@@ -73,7 +73,7 @@ class _Subcategorias extends SubcategoriaTile {
       child: ItemSeleccionable(
         onTap: onTap,
         leading: ImagenSubcategoria.image(
-          image: subcategoria.imagen.toProvider(),
+          image: subcategoria.imagen.toProvider,
         ),
         titulo: Text(
           subcategoria.nombre,

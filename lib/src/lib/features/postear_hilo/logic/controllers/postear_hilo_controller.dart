@@ -23,12 +23,23 @@ class PostearHiloController extends GetxController {
   Rx<SubcategoriaId?> subcategoria = Rx(null);
 
   Rx<HiloId?> id = Rx(null);
+
   Rx<Spoileable<Media>?> portada = Rx(null);
 
   RxBool posteando = false.obs;
 
   Rx<Failure?> failure = Rx(null);
   void postear() async {
+    if (portada.value == null) {
+      failure.value = PotearHiloFailures.sinPortada;
+      return;
+    }
+
+    if (subcategoria.value == null) {
+      failure.value = PotearHiloFailures.sinSubcategoria;
+      return;
+    }
+
     posteando.value = true;
 
     var result = await repository.postear(
@@ -63,8 +74,11 @@ class PostearHiloController extends GetxController {
 
   void eliminarRespuesta(int idx) {
     respuestaEliminada.value = idx;
+
     respuestaEliminada.refresh();
+
     encuesta.value.removeAt(idx);
+
     encuesta.refresh();
   }
 
@@ -73,4 +87,16 @@ class PostearHiloController extends GetxController {
 
     encuesta.value = [...encuesta.value, ""];
   }
+}
+
+class PotearHiloFailures {
+  static const Failure sinPortada = Failure(
+    code: "sin_portada",
+    descripcion: "Debes agregar una portada",
+  );
+
+  static const Failure sinSubcategoria = Failure(
+    code: "sin_subcategoria",
+    descripcion: "Debes seleccionar una subcategoria",
+  );
 }

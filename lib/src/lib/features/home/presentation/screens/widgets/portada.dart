@@ -4,7 +4,6 @@ import 'dart:math';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../app/presentation/widgets/effects/blur/blur_effect.dart';
@@ -104,7 +103,7 @@ class _PortadaCargada extends Portada {
   Widget build(BuildContext context) {
     return Portada(
       child: ImageOverlapped.provider(
-        provider: portada.imagen.spoileable.toProvider(),
+        provider: portada.imagen.spoileable.toProvider,
         boxFit: BoxFit.cover,
         child: BlurEffect(
           blurear: portada.imagen.esSpoiler,

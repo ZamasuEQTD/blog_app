@@ -19,10 +19,10 @@ class LocalHilosRepository extends IHilosRepository {
           titulo: "Cepita",
           descripcion: "Macarena",
           creadoEn: DateTime.now(),
-          categoria: const SubcategoriaEntity(
-            "Ma ",
-            "CEPITa",
-            Imagen(
+          categoria: const Subcategoria(
+            id: "123",
+            nombre: "CEPITa",
+            imagen: Imagen(
               provider: NetworkProvider(
                 path:
                     "https://freeadultcomix.com/wp-content/uploads/2022/11/Shadbase-One-Shot-Comics-6.jpg",
@@ -53,6 +53,8 @@ class LocalHilosRepository extends IHilosRepository {
 
   @override
   Future<Either<Failure, List<HomePortada>>> getPortadas({
+    String? titulo,
+    SubcategoriaId? subcategoria,
     DateTime? ultimoBump,
   }) {
     return Future.delayed(

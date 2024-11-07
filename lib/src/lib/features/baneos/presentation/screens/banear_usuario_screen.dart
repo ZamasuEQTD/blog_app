@@ -4,9 +4,12 @@ import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/botto
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/screens/registro_screen.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
+import 'package:flash/flash.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'logic/controllers/banear_usuario.dart';
 
@@ -26,14 +29,17 @@ final HashMap<Razon, String> razones = HashMap.from({
 });
 
 class BanearUsuarioScreen extends StatefulWidget {
-  const BanearUsuarioScreen({super.key});
+  final String id;
+
+  const BanearUsuarioScreen({super.key, required this.id});
 
   @override
   State<BanearUsuarioScreen> createState() => _BanearUsuarioScreenState();
 }
 
 class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
-  final controller = Get.put(BanearUsuarioController());
+  late final controller = Get.put(BanearUsuarioController(id: widget.id));
+
   @override
   void initState() {
     controller.status.listen((status) {

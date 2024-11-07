@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
+import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
@@ -85,6 +86,12 @@ class LocalComentariosRepository extends IComentariosRepository {
     Media? media,
   }) {
     // TODO: implement enviar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> eliminar({required ComentarioId comentario}) {
+    // TODO: implement eliminar
     throw UnimplementedError();
   }
 }

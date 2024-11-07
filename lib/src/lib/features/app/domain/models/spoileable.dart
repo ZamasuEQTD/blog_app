@@ -11,4 +11,8 @@ class Spoileable<T> {
   }) {
     return Spoileable(spoiler ?? this.spoiler, spoileable ?? this.spoileable);
   }
+
+  factory Spoileable.fromJson(Map<String, dynamic> json) {
+    return Spoileable(json["spoiler"], json["spoileable"]);
+  }
 }

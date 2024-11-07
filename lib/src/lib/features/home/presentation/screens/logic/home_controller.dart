@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
 class HomeController extends GetxController {
-  Rx<SubcategoriaEntity?> subcategoria = Rx(null);
+  Rx<Subcategoria?> subcategoria = Rx(null);
   Rx<DateTime?> ultimoBump = Rx(null);
   Rx<String> titulo = Rx("");
   Rx<bool> cargando = Rx(false);
@@ -20,7 +20,11 @@ class HomeController extends GetxController {
     if (cargando.value) return;
     IHilosRepository repository = GetIt.I.get();
 
-    var response = await repository.getPortadas(ultimoBump: ultimoBump.value);
+    var response = await repository.getPortadas(
+      ultimoBump: ultimoBump.value,
+      subcategoria: subcategoria.value?.id,
+      titulo: titulo.value,
+    );
 
     response.fold(
       (l) => failure.value = l,
@@ -50,7 +54,7 @@ class HomeController extends GetxController {
     portadas.value = [portada, ...portadas.value];
   }
 
-  void cambiarCategoria(SubcategoriaEntity subcategoria) =>
+  void cambiarCategoria(Subcategoria subcategoria) =>
       this.subcategoria.value = subcategoria;
 
   bool get hayFiltrosCambiados =>

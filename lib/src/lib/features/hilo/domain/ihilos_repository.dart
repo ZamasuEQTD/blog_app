@@ -24,6 +24,8 @@ abstract class IHilosRepository {
   });
 
   Future<Either<Failure, List<HomePortada>>> getPortadas({
+    String? titulo,
+    SubcategoriaId? subcategoria,
     DateTime? ultimoBump,
   });
 

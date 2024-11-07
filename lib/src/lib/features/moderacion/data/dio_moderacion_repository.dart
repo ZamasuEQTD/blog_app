@@ -26,10 +26,8 @@ class DioModeracionRepository extends IModeracionRepository {
       }
 
       throw Exception();
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -43,14 +41,12 @@ class DioModeracionRepository extends IModeracionRepository {
           await dio.get("moderacion/historial-de-usuario/hilos/$usuario");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       throw Exception();
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
@@ -60,14 +56,12 @@ class DioModeracionRepository extends IModeracionRepository {
       Response response = await dio.get("moderacion/usuario/$usuario");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return Right(Usuario.fromJson(response.data));
-    } on DioException catch (e) {
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 }

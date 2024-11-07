@@ -53,7 +53,9 @@ GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: Routes.banear,
-      builder: (context, state) => const BanearUsuarioScreen(),
+      builder: (context, state) => BanearUsuarioScreen(
+        id: state.pathParameters["id"]!,
+      ),
     ),
     GoRoute(
       path: Routes.agregarEnlace,

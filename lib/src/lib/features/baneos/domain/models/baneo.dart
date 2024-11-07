@@ -13,6 +13,16 @@ class Baneo extends Equatable {
     required this.finaliza,
     this.mensaje,
   });
+
+  factory Baneo.fromJson(Map<String, dynamic> json) {
+    return Baneo(
+      id: json["id"],
+      moderador: json["moderador"],
+      finaliza: DateTime.parse(json["finaliza"]),
+      mensaje: json["mensaje"],
+    );
+  }
+
   @override
   List<Object?> get props => [];
 }

@@ -21,6 +21,22 @@ class HomePortada extends Equatable {
     required this.imagen,
   });
 
+  factory HomePortada.fromJson(Map<String, dynamic> json) {
+    return HomePortada(
+      id: json["id"],
+      titulo: json["titulo"],
+      categoria: json["categoria"],
+      features: HomePortadaFeatures.values
+          .where((e) => json["features"].contains(e.name))
+          .toList(),
+      ultimoBump: DateTime.parse(json["ultimo_bump"]),
+      imagen: Spoileable<Imagen>(
+        json["spoiler"],
+        Imagen.fromJson(json["media"]),
+      ),
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

@@ -4,7 +4,7 @@ import '../../../media/domain/models/media.dart';
 
 class Categoria extends Equatable {
   final String nombre;
-  final List<SubcategoriaEntity> subcategorias;
+  final List<Subcategoria> subcategorias;
 
   const Categoria(
     this.nombre,
@@ -18,15 +18,27 @@ class Categoria extends Equatable {
       ];
 }
 
-class SubcategoriaEntity extends Equatable {
+class Subcategoria extends Equatable {
   final SubcategoriaId id;
   final String nombre;
   final Imagen imagen;
 
-  const SubcategoriaEntity(this.id, this.nombre, this.imagen);
+  const Subcategoria({
+    required this.id,
+    required this.nombre,
+    required this.imagen,
+  });
 
   @override
   List<Object?> get props => [id];
+
+  factory Subcategoria.fromJson(Map<String, dynamic> json) {
+    return Subcategoria(
+      id: json["id"],
+      nombre: json["nombre"],
+      imagen: Imagen.fromJson(json["imagen"]),
+    );
+  }
 }
 
 typedef SubcategoriaId = String;

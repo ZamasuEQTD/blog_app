@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:dartz/dartz.dart';
 
@@ -15,5 +16,9 @@ abstract class IComentariosRepository {
     required HiloId hilo,
     required String comentario,
     Media? media,
+  });
+
+  Future<Either<Failure, Unit>> eliminar({
+    required ComentarioId comentario,
   });
 }

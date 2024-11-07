@@ -1,4 +1,5 @@
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
+import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
 import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
@@ -9,6 +10,8 @@ import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../baneos/domain/models/baneo.dart';
 
 class DioHilosRepository extends IHilosRepository {
   final Dio dio = GetIt.I.get();
@@ -21,7 +24,7 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.delete("hilos/$id");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return const Right(unit);
@@ -36,23 +39,39 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.get("hilos/$id");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
-      throw UnimplementedError();
-    } on DioException catch (e) {
+      return Right(Hilo.fromJson(response.data));
+    } on Exception catch (e) {
       return Left(e.failure);
-    } catch (e) {
-      return const Left(Failures.unknown);
     }
   }
 
   @override
   Future<Either<Failure, List<HomePortada>>> getPortadas({
+    String? titulo,
+    SubcategoriaId? subcategoria,
     DateTime? ultimoBump,
-  }) {
-    // TODO: implement getPortadas
-    throw UnimplementedError();
+  }) async {
+    try {
+      Response response = await dio.get(
+        "hilos/portadas",
+        queryParameters: {
+          "titulo": titulo,
+          "subcategoria": subcategoria,
+          "ultimo_bump": ultimoBump?.toIso8601String(),
+        },
+      );
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return Right(response.data.map((e) => HomePortada.fromJson(e)).toList());
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
   }
 
   @override
@@ -61,7 +80,7 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.post("hilos/$id/ocultar");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return const Right(unit);
@@ -76,7 +95,7 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.post("hilos/$id/favoritos");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return const Right(unit);
@@ -111,7 +130,7 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.post("hilos", data: data);
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return Right(response.data["id"]);
@@ -126,7 +145,7 @@ class DioHilosRepository extends IHilosRepository {
       Response response = await dio.post("hilos/$id/seguir");
 
       if (response.statusCode != 200) {
-        return const Left(NetworkFailures.serverError);
+        return Left(response.failure);
       }
 
       return const Right(unit);
@@ -146,6 +165,18 @@ extension ExceptionFailure on Exception {
   }
 }
 
+extension ResponseFailure on Response {
+  Failure get failure {
+    if (statusCode != 200) {
+      return NetworkFailures.serverError;
+    }
+
+    return EstasBaneadoFailure(baneo: Baneo.fromJson(data));
+
+    return Failures.unknown;
+  }
+}
+
 extension DioHilosRepositoryFailure on DioException {
   Failure get failure {
     switch (type) {
@@ -160,7 +191,7 @@ extension DioHilosRepositoryFailure on DioException {
 class Failures {
   static const Failure unknown = Failure(
     code: "unknown",
-    descripcion: "Error desconocido",
+    descripcion: "Ha ocurrido un error",
   );
 }
 

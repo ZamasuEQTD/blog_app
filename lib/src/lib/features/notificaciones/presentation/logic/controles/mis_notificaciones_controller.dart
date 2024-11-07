@@ -1,7 +1,5 @@
-import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/notificaciones/domain/inotificaciones_repository.dart';
 import 'package:blog_app/src/lib/features/notificaciones/domain/models/notificacion.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
@@ -26,10 +24,17 @@ class MisNotificacionesController extends GetxController {
   }
 
   void leerTodas() async {
-    await repository.leerTodas();
+    var res = await repository.leerTodas();
+
+    res.fold((l) {}, (r) => notificaciones.value.clear());
   }
 
   void leer(NotificacionId id) async {
-    await repository.leerNotificacion(id: id);
+    var res = await repository.leerNotificacion(id: id);
+
+    res.fold(
+      (l) {},
+      (r) => notificaciones.value.removeWhere((e) => e.id == id),
+    );
   }
 }
