@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     auth.authState.listen((state) {
       if (state == AuthState.authenticated) {
-        context.pop();
+        //context.pop();
       }
     });
 

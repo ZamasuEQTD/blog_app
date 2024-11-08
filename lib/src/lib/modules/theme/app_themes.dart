@@ -6,6 +6,7 @@ class AppThemes {
   const AppThemes();
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
+    dialogBackgroundColor: const Color(0xfff5f5f5),
     scaffoldBackgroundColor: AppColors.surface,
     appBarTheme:
         const AppBarTheme(backgroundColor: AppColors.surface, elevation: 0),

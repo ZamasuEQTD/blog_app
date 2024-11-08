@@ -59,7 +59,7 @@ class GrupoSeleccionable extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: color ?? Theme.of(context).colorScheme.surface,
+        color: color ?? const Color.fromARGB(255, 255, 255, 255),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

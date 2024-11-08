@@ -354,7 +354,10 @@ extension BuildContextExtensions on BuildContext {
   ThemeData get newTheme => Theme.of(this).copyWith(
         checkboxTheme: const CheckboxThemeData(),
         appBarTheme: actualTheme.appBarTheme.copyWith(
-          backgroundColor: actualTheme.colorScheme.onSurface,
+          backgroundColor: const Color(0xffF1F1F1),
+          iconTheme: const IconThemeData(
+            color: Colors.black,
+          ),
           titleTextStyle: const TextStyle(
             color: Colors.black,
             fontSize: 22,
@@ -378,7 +381,7 @@ extension BuildContextExtensions on BuildContext {
             ),
           ),
         ),
-        scaffoldBackgroundColor: actualTheme.colorScheme.onSurface,
+        scaffoldBackgroundColor: const Color(0xffF1F1F1),
         inputDecorationTheme: actualTheme.inputDecorationTheme.copyWith(
           fillColor: actualTheme.colorScheme.surface,
         ),

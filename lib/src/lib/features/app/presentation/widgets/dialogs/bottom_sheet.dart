@@ -44,7 +44,7 @@ class _BottomSheet extends RoundedBottomSheet {
     Widget child = ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       child: ColoredBox(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).dialogBackgroundColor,
         child: this.child,
       ),
     );

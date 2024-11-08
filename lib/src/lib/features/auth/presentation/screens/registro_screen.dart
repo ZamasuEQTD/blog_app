@@ -50,8 +50,23 @@ class RegistroScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
+                style: ButtonStyle(
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  backgroundColor: const WidgetStatePropertyAll(
+                    Color.fromRGBO(22, 22, 23, 1),
+                  ),
+                ),
                 onPressed: () {},
-                child: const Text("Registrarse"),
+                child: const Text(
+                  "Registrarse",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
             Center(

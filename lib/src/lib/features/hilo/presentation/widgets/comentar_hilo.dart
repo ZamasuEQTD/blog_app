@@ -152,7 +152,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                         ],
                       ),
                     ],
-                  ).paddingSymmetric(horizontal: 5, vertical: 5),
+                  ).paddingSymmetric(horizontal: 5, vertical: 10),
                 ),
               ),
             ),

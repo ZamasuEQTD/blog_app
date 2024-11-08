@@ -58,8 +58,19 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton.icon(
             onPressed: () => context.push(Routes.notificaciones),
-            icon: const Icon(Icons.notifications),
+            icon: const Icon(
+              Icons.notifications,
+              color: Colors.red,
+            ),
             label: const Text("99+"),
+          ),
+          TextButton.icon(
+            onPressed: () => Get.find<AuthController>().logout(),
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.red,
+            ),
+            label: const Text("Salir"),
           ),
         ],
       ),
@@ -253,7 +264,7 @@ class HomePortadaOpciones extends StatelessWidget {
               ],
             ),
         ],
-      ),
+      ).paddingSymmetric(horizontal: 20, vertical: 10),
     );
   }
 }
