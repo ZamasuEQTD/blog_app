@@ -46,89 +46,86 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: context.newTheme,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Iniciar sesión",
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Iniciar sesión",
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Nombre de usuario",
-              style: context.labelStyle,
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                hintText: "Usuario",
-              ),
-            ).marginOnly(
-              bottom: 24,
-              top: 8,
-            ),
-            Text(
-              "Contraseña",
-              style: context.labelStyle,
-            ),
-            GetBuilder(
-              init: PasswordController(),
-              builder: (controller) => Obx(
-                () => TextField(
-                  obscureText: controller.obscure.value,
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      splashColor: Colors.transparent,
-                      onPressed: () =>
-                          controller.obscure.value = !controller.obscure.value,
-                      icon: Icon(
-                        !controller.obscure.value
-                            ? Icons.visibility_off
-                            : Icons.visibility,
-                      ),
-                    ),
-                    hintText: "Contraseña",
-                  ),
-                ),
-              ),
-            ).marginOnly(
-              bottom: 24,
-              top: 8,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => controller.login(),
-                child: const Text("Iniciar sesión"),
-              ),
-            ),
-            Center(
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  text: "¿Aun no tienes una cuenta? ",
-                  children: [
-                    TextSpan(
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () => context.push("/registro"),
-                      text: "Registrate",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(73, 80, 87, 1),
-                      ),
-                    ),
-                  ],
-                  style: const TextStyle(
-                    color: Color.fromRGBO(108, 117, 125, 1),
-                  ),
-                ),
-              ).marginOnly(top: 24),
-            ),
-          ],
-        ).paddingSymmetric(horizontal: 24),
       ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Nombre de usuario",
+            style: context.labelStyle,
+          ),
+          const TextField(
+            decoration: InputDecoration(
+              hintText: "Usuario",
+            ),
+          ).marginOnly(
+            bottom: 24,
+            top: 8,
+          ),
+          Text(
+            "Contraseña",
+            style: context.labelStyle,
+          ),
+          GetBuilder(
+            init: PasswordController(),
+            builder: (controller) => Obx(
+              () => TextField(
+                obscureText: controller.obscure.value,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    splashColor: Colors.transparent,
+                    onPressed: () =>
+                        controller.obscure.value = !controller.obscure.value,
+                    icon: Icon(
+                      !controller.obscure.value
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                    ),
+                  ),
+                  hintText: "Contraseña",
+                ),
+              ),
+            ),
+          ).marginOnly(
+            bottom: 24,
+            top: 8,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => controller.login(),
+              child: const Text("Iniciar sesión"),
+            ),
+          ),
+          Center(
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                text: "¿Aun no tienes una cuenta? ",
+                children: [
+                  TextSpan(
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => context.push("/registro"),
+                    text: "Registrate",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Color.fromRGBO(73, 80, 87, 1),
+                    ),
+                  ),
+                ],
+                style: const TextStyle(
+                  color: Color.fromRGBO(108, 117, 125, 1),
+                ),
+              ),
+            ).marginOnly(top: 24),
+          ),
+        ],
+      ).paddingSymmetric(horizontal: 24),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/baneos/domain/ibaneos_repository.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/screens/notificaciones_screen.dart';
@@ -6,10 +7,12 @@ import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import '../../baneos/domain/models/baneo.dart';
 import '../domain/models/usuario.dart';
 import 'logic/controllers/ver_usuario_controller.dart';
 
@@ -19,40 +22,47 @@ class VerUsuarioPanelBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      expand: false,
-      minChildSize: 0.5,
       initialChildSize: 0.5,
       maxChildSize: 0.7,
       snap: true,
       snapSizes: const [0.5, 0.7],
       builder: (BuildContext context, ScrollController scrollController) {
-        return DecoratedBox(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
+        return ChangeNotifierProvider.value(
+          value: scrollController,
+          builder: (context, child) => DecoratedBox(
+            decoration: const BoxDecoration(
+              color: Color(0xffF1F1F1),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
             ),
-          ),
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              _VerUsuarioPanel(usuario: "", scroll: scrollController),
-            ],
+            child: CustomScrollView(
+              controller: scrollController,
+              slivers: const [
+                _VerUsuarioPanel(usuario: "ds"),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
+  static void show(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => const VerUsuarioPanelBottomSheet(),
+    );
+  }
 }
 
 class _VerUsuarioPanel extends StatefulWidget {
-  final ScrollController scroll;
   final String usuario;
   const _VerUsuarioPanel({
     super.key,
     required this.usuario,
-    required this.scroll,
   });
 
   @override
@@ -66,12 +76,11 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
     ),
   );
 
-  late final ScrollController scroll = widget.scroll;
+  late final ScrollController scroll = context.read();
 
   @override
   void dispose() {
     Get.delete<VerUsuarioController>();
-    scroll.dispose();
     super.dispose();
   }
 
@@ -93,17 +102,17 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
         cargarSiguientePaginaDeHistorial();
 
         if (usuario != null) {
-          scroll.addListener(
-            () {
-              if (scroll.IsBottom) {
-                cargarSiguientePaginaDeHistorial();
-              }
-            },
-          );
+          scroll.addListener(cargarMasHistorial);
         }
       },
     );
     super.initState();
+  }
+
+  void cargarMasHistorial() {
+    if (scroll.IsBottom) {
+      cargarSiguientePaginaDeHistorial();
+    }
   }
 
   void cargarSiguientePaginaDeHistorial() {
@@ -143,9 +152,13 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
                 child: SliverMainAxisGroup(
                   slivers: [
                     const UsuarioInformacion.cargada(),
+                    if (controller.usuario.value!.ultimoBaneo != null)
+                      UltimoBaneoInformacion(
+                        baneo: controller.usuario.value!.ultimoBaneo!,
+                      ).sliverBox,
                     ElevatedButton(
                       onPressed: () => context.pushNamed(
-                        Routes.banear,
+                        "banear-usuario",
                         pathParameters: {
                           "id": widget.usuario,
                         },
@@ -156,7 +169,7 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
                         ),
                       ),
                       child: const Text("Banear usuario"),
-                    ).sliverBox,
+                    ).marginOnly(bottom: 10).sliverBox,
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: const ColoredBox(
@@ -466,4 +479,36 @@ extension TextStyles on BuildContext {
   TextStyle get labelStyle => TextStyle(
         color: labelColor,
       );
+}
+
+class UltimoBaneoInformacion extends StatelessWidget {
+  final Baneo baneo;
+  const UltimoBaneoInformacion({super.key, required this.baneo});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Ultimo baneo"),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  IBaneosRepository repository = GetIt.I.get();
+
+                  repository.desbanear(id: "");
+                },
+                child: const Text("Desbanear"),
+              ),
+            ),
+          ],
+        ).paddingAll(16),
+      ),
+    ).marginOnly(bottom: 16);
+  }
 }

@@ -153,6 +153,12 @@ class DioHilosRepository extends IHilosRepository {
       return Left(e.failure);
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> desactivarNotificaciones({required String id}) {
+    // TODO: implement desactivarNotificaciones
+    throw UnimplementedError();
+  }
 }
 
 extension ExceptionFailure on Exception {

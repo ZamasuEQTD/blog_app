@@ -1,8 +1,20 @@
+import 'package:blog_app/src/lib/features/app/presentation/logic/extensions.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/presentation/enlaces/abrir_enlace_externo_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
+import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
+import 'package:blog_app/src/lib/features/usuarios/domain/models/usuario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -58,38 +70,42 @@ class _ComentarioCardEntity extends ComentarioCard {
   Widget build(BuildContext context) {
     return Provider.value(
       value: comentario,
-      child: ComentarioCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const ComentarioInfoRow(),
-            const SizedBox(
-              height: 10,
-            ),
-            Wrap(
-              runSpacing: 2,
-              spacing: 5,
-              children: comentario.tags
-                  .map(
-                    (tag) => GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                        ">>$tag",
-                        style: const TextStyle(
-                          color: CupertinoColors.link,
+      builder: (context, child) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onLongPress: () => ComentarioOpcionesBottomSheet.show(context),
+        child: ComentarioCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ComentarioInfoRow(),
+              const SizedBox(
+                height: 10,
+              ),
+              Wrap(
+                runSpacing: 2,
+                spacing: 5,
+                children: comentario.tags
+                    .map(
+                      (tag) => GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          ">>$tag",
+                          style: const TextStyle(
+                            color: CupertinoColors.link,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                  .toList(),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            if (comentario.media != null)
-              MultiMedia(media: comentario.media!.spoileable),
-            const _Texto(),
-          ],
+                    )
+                    .toList(),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              if (comentario.media != null)
+                MultiMedia(media: comentario.media!.spoileable),
+              const _Texto(),
+            ],
+          ),
         ),
       ),
     );
@@ -230,3 +246,68 @@ class ComentarioInfoRow extends StatelessWidget {
 }
 
 typedef Maker = TextSpan Function(BuildContext context, Match match);
+
+class ComentarioOpcionesBottomSheet extends StatelessWidget {
+  const ComentarioOpcionesBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final Comentario comentario = context.read();
+    return RoundedBottomSheet.normal(
+      child: Column(
+        children: [
+          ...[
+            const GrupoSeleccionable(
+              seleccionables: [
+                ItemSeleccionable.text(titulo: "Ocultar"),
+                ItemSeleccionable.text(titulo: "Denunciar"),
+              ],
+            ),
+            if (true || (Get.find<HiloController>().hilo.value?.esOp ?? false))
+              const GrupoSeleccionable(
+                seleccionables: [
+                  ItemSeleccionable.text(
+                    titulo: "Destacar",
+                    leading: FaIcon(
+                      FontAwesomeIcons.thumbtack,
+                      size: 14,
+                    ),
+                  ),
+                ],
+              ),
+            if (true ||
+                Get.find<AuthController>().usuario.value?.rango is Moderador)
+              GrupoSeleccionable(
+                seleccionables: [
+                  ItemSeleccionable.text(
+                    onTap: () {
+                      IComentariosRepository repository = GetIt.I.get();
+
+                      repository.eliminar(id: comentario.id);
+                    },
+                    titulo: "Eliminar",
+                  ),
+                  ItemSeleccionable.text(
+                    onTap: () {
+                      VerUsuarioPanelBottomSheet.show(context);
+                    },
+                    titulo: "Ver usuario",
+                  ),
+                ],
+              ),
+          ].addPadding(),
+        ],
+      ).paddingSymmetric(horizontal: 20, vertical: 10),
+    );
+  }
+
+  static void show(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) => Provider.value(
+        value: context.read<Comentario>(),
+        child: const ComentarioOpcionesBottomSheet(),
+      ),
+    );
+  }
+}

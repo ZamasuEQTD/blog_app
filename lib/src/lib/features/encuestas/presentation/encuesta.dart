@@ -27,6 +27,8 @@ class _EncuestaViewState extends State<EncuestaView> {
   @override
   void dispose() {
     hub.disconnect();
+
+    Get.delete<EncuestaController>();
     super.dispose();
   }
 
@@ -48,37 +50,49 @@ class _EncuestaViewState extends State<EncuestaView> {
   @override
   Widget build(BuildContext context) {
     return Obx(
-      () => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ...controller.encuesta.value.respuestas.map(
-            (r) => Obx(
-              () => MultiProvider(
-                providers: [
-                  Provider.value(value: controller.encuesta.value),
-                  Provider.value(
-                    value: r,
+      () => ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: ColoredBox(
+          color: Colors.white,
+          child: Column(
+            children: [
+              ...controller.encuesta.value.respuestas.map(
+                (r) => Obx(
+                  () => MultiProvider(
+                    providers: [
+                      Provider.value(value: r),
+                      Provider.value(value: controller.encuesta.value),
+                    ],
+                    child: const RespuestaView(),
+                  ),
+                ).marginOnly(bottom: 15),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Votos: ${controller.encuesta.value.votos}"),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      textStyle: const WidgetStatePropertyAll(
+                        TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    onPressed: () => controller.votar(),
+                    child: const Text("Votar"),
                   ),
                 ],
-                child: const RespuestaView(),
-              ),
-            ).marginOnly(bottom: 10),
-          ),
-          Row(
-            children: [
-              Obx(
-                () => Text("Votos ${controller.encuesta.value.votos}"),
               ),
             ],
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => controller.votar(),
-              child: const Text("Votar"),
-            ),
-          ),
-        ],
+          ).paddingAll(16),
+        ),
       ),
     );
   }
@@ -92,103 +106,101 @@ class RespuestaView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Respuesta respuesta = context.watch<Respuesta>();
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: GestureDetector(
-        onTap: () => Get.find<EncuestaController>().seleccionar(respuesta.id),
-        child: ColoredBox(
-          color: Colors.white,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ColoredBox(
-                          color: Colors.grey.withOpacity(0.2),
+
+    return GestureDetector(
+      onTap: () => Get.find<EncuestaController>().seleccionar(respuesta.id),
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: ColoredBox(
+                        color: const Color.fromRGBO(229, 231, 235, 1),
+                        child: AnimatedSize(
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
                           child: SizedBox(
                             height: constraints.maxHeight,
                             width: constraints.maxWidth *
                                 (respuesta.porcentaje(
-                                      context.read<Encuesta>().votos,
+                                      context.watch<Encuesta>().votos,
                                     ) /
                                     100),
                           ),
                         ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        respuesta.toString(),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "${respuesta.porcentaje(
-                                context.read<Encuesta>().votos,
-                              ).toInt()}%",
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Obx(() {
-                          if (Get.find<EncuestaController>()
-                                      .seleccionada
-                                      .value ==
-                                  respuesta.id ||
-                              Get.find<EncuestaController>()
-                                      .encuesta
-                                      .value
-                                      .respuesta ==
-                                  respuesta.id) {
-                            return ClipOval(
-                              child: ColoredBox(
-                                color: Colors.green.withOpacity(0.7),
-                                child: SizedBox.square(
-                                  dimension: 18,
-                                  child: FittedBox(
-                                    child: const FaIcon(
-                                      FontAwesomeIcons.check,
-                                      color: Colors.white,
-                                    ).paddingAll(5),
-                                  ),
-                                ),
-                              ),
-                            )
-                                .animate()
-                                .scale(
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.bounceOut,
-                                )
-                                .marginOnly(left: 5);
-                          }
-                          return const SizedBox();
-                        }),
-                      ],
-                    ),
                   ],
+                );
+              },
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: Text(
+                  respuesta.respuesta,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Color.fromRGBO(55, 65, 81, 1),
+                  ),
                 ),
               ),
+              Row(
+                children: [
+                  Text(
+                    "${respuesta.votos} Votos",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromRGBO(17, 24, 39, 1),
+                    ),
+                  ),
+                  Obx(() {
+                    if (Get.find<EncuestaController>().seleccionada.value ==
+                            respuesta.id ||
+                        Get.find<EncuestaController>()
+                                .encuesta
+                                .value
+                                .respuesta ==
+                            respuesta.id) {
+                      return ClipOval(
+                        child: ColoredBox(
+                          color: Colors.green.withOpacity(0.7),
+                          child: SizedBox.square(
+                            dimension: 18,
+                            child: FittedBox(
+                              child: const FaIcon(
+                                FontAwesomeIcons.check,
+                                color: Colors.white,
+                              ).paddingAll(5),
+                            ),
+                          ),
+                        ),
+                      )
+                          .animate()
+                          .scale(
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.bounceOut,
+                          )
+                          .marginOnly(left: 5);
+                    }
+                    return const SizedBox();
+                  }),
+                ],
+              ),
             ],
-          ),
-        ),
+          ).paddingSymmetric(horizontal: 10, vertical: 16),
+        ],
       ),
     );
   }

@@ -59,10 +59,10 @@ class DioComentariosRepository extends IComentariosRepository {
 
   @override
   Future<Either<Failure, Unit>> eliminar({
-    required ComentarioId comentario,
+    required ComentarioId id,
   }) async {
     try {
-      Response response = await dio.post("comentarios/eliminar/$comentario");
+      Response response = await dio.post("comentarios/eliminar/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -72,5 +72,17 @@ class DioComentariosRepository extends IComentariosRepository {
     } on Exception catch (e) {
       return Left(e.failure);
     }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> ocultar({required ComentarioId id}) {
+    // TODO: implement ocultar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> denunciar({required ComentarioId id}) {
+    // TODO: implement denunciar
+    throw UnimplementedError();
   }
 }

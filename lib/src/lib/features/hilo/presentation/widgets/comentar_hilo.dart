@@ -3,6 +3,9 @@ import 'dart:developer';
 
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
+import 'package:blog_app/src/lib/features/baneos/domain/models/baneo.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/screens/logic/controllers/banear_usuario.dart';
 import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/services/tag_service.dart';
@@ -121,7 +124,11 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                           ),
                           Flexible(
                             child: TextField(
+                              onTapOutside: (event) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
                               decoration: InputDecoration(
+                                hintText: "Escribe un comentario...",
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 10,
                                   vertical: 11,

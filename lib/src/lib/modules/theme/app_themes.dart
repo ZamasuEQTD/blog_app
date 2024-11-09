@@ -6,7 +6,10 @@ class AppThemes {
   const AppThemes();
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
-    dialogBackgroundColor: const Color(0xfff5f5f5),
+    dialogBackgroundColor: AppColors.surface,
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: AppColors.surface,
+    ),
     scaffoldBackgroundColor: AppColors.surface,
     appBarTheme:
         const AppBarTheme(backgroundColor: AppColors.surface, elevation: 0),
@@ -25,11 +28,6 @@ class AppThemes {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        backgroundColor: AppColors.primary,
-        textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
       ),
     ),
     inputDecorationTheme: const InputDecorationTheme(

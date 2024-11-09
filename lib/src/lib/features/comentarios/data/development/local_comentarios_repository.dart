@@ -90,8 +90,20 @@ class LocalComentariosRepository extends IComentariosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> eliminar({required ComentarioId comentario}) {
+  Future<Either<Failure, Unit>> eliminar({required ComentarioId id}) {
     // TODO: implement eliminar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> ocultar({required ComentarioId id}) {
+    // TODO: implement ocultar
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> denunciar({required ComentarioId id}) {
+    // TODO: implement denunciar
     throw UnimplementedError();
   }
 }

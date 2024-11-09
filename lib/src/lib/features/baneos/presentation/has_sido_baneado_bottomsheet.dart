@@ -84,7 +84,9 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
                   width: 10,
                 ),
                 Text(
-                  "Finaliza en :${HorarioService.diferencia(utcNow: DateTime.now().toUtc(), time: baneo.finaliza)}",
+                  baneo.finaliza == null
+                      ? "Permanente"
+                      : "Finaliza en :${HorarioService.diferencia(utcNow: DateTime.now().toUtc(), time: baneo.finaliza!)}",
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color.fromRGBO(108, 117, 125, 1),
@@ -98,7 +100,8 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: ColoredBox(
-                    color: const Color.fromRGBO(233, 236, 239, 1),
+                    color: Colors.white,
+                    // color: const Color.fromRGBO(233, 236, 239, 1),
                     child: SizedBox(
                       width: double.infinity,
                       child: Padding(
@@ -117,11 +120,12 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            DialogButton.normal(
-              onPressed: () {
-                context.pop();
-              },
-              text: "Aceptar",
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => context.pop(),
+                child: const Text("Aceptar"),
+              ),
             ),
           ],
         ),

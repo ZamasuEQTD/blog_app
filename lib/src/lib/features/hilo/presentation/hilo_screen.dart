@@ -60,6 +60,7 @@ class _HiloScreenState extends State<HiloScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomSheet: Obx(
         () {
           if (controller.hilo.value != null) {
@@ -107,11 +108,11 @@ class InformacionDeHilo extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.all(7),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(15),
           ),
-          color: Theme.of(context).colorScheme.onSurface,
+          color: Color(0xffF1F1F1),
         ),
         child: SafeArea(
           child: Padding(

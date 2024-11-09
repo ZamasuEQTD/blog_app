@@ -68,6 +68,7 @@ class LocalHilosRepository extends IHilosRepository {
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
           ],
+          esOp: true,
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
             false,
@@ -83,6 +84,7 @@ class LocalHilosRepository extends IHilosRepository {
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
+          esOp: true,
           features: const [
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
@@ -106,6 +108,7 @@ class LocalHilosRepository extends IHilosRepository {
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
           ],
+          esOp: true,
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
             true,
@@ -125,6 +128,7 @@ class LocalHilosRepository extends IHilosRepository {
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
           ],
+          esOp: true,
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
             true,
@@ -144,6 +148,7 @@ class LocalHilosRepository extends IHilosRepository {
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
           ],
+          esOp: true,
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
             false,
@@ -163,6 +168,7 @@ class LocalHilosRepository extends IHilosRepository {
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
           ],
+          esOp: true,
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
             false,
@@ -178,6 +184,7 @@ class LocalHilosRepository extends IHilosRepository {
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
+          esOp: true,
           features: const [
             HomePortadaFeatures.dados,
             HomePortadaFeatures.sticky,
@@ -231,6 +238,12 @@ class LocalHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> seguir({required String id}) {
     // TODO: implement seguir
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> desactivarNotificaciones({required String id}) {
+    // TODO: implement desactivarNotificaciones
     throw UnimplementedError();
   }
 }

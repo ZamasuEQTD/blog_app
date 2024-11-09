@@ -8,6 +8,7 @@ class HomePortada extends Equatable {
   final HiloId id;
   final String titulo;
   final String categoria;
+  final bool esOp;
   final List<HomePortadaFeatures> features;
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
@@ -16,6 +17,7 @@ class HomePortada extends Equatable {
     required this.id,
     required this.titulo,
     required this.categoria,
+    required this.esOp,
     required this.features,
     required this.ultimoBump,
     required this.imagen,
@@ -26,6 +28,7 @@ class HomePortada extends Equatable {
       id: json["id"],
       titulo: json["titulo"],
       categoria: json["categoria"],
+      esOp: json["esOp"],
       features: HomePortadaFeatures.values
           .where((e) => json["features"].contains(e.name))
           .toList(),

@@ -44,4 +44,8 @@ abstract class IHilosRepository {
   Future<Either<Failure, Unit>> ocultar({
     required String id,
   });
+
+  Future<Either<Failure, Unit>> desactivarNotificaciones({
+    required String id,
+  });
 }

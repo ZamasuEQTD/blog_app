@@ -2,6 +2,8 @@
 import 'dart:developer';
 
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/screens/login_screen.dart';
+import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,27 +17,44 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RoundedBottomSheet.normal(
-      titulo: DialogTitulo.text(titulo: "Iniciar Sesión Requerido"),
+    return RoundedBottomSheet.normal(
+      titulo: const DialogTitulo.text(titulo: "Iniciar Sesión Requerido"),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           children: [
-            Text(
+            const Text(
               "Para acceder a esta función, necesitas iniciar sesión o registrarte si aún no tienes una cuenta.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Color.fromRGBO(108, 117, 125, 1),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            SesionRequeridaButton.login(),
             SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.push(Routes.login);
+                },
+                child: const Text("Iniciar Sesión"),
+              ),
+            ),
+            const SizedBox(
               height: 10,
             ),
-            SesionRequeridaButton.registrarse(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: const ButtonStyle(),
+                onPressed: () {
+                  context.push(Routes.registro);
+                },
+                child: const Text("Registrarse"),
+              ).withSecondaryStyle(context),
+            ),
           ],
         ),
       ),
@@ -53,84 +72,14 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
   }
 }
 
-abstract class SesionRequeridaButton extends StatelessWidget {
-  const SesionRequeridaButton._({super.key});
-
-  const factory SesionRequeridaButton({
-    required Color color,
-    required String text,
-    TextStyle? style,
-    required void Function() onPressed,
-  }) = _SesionRequeridaButton;
-
-  const factory SesionRequeridaButton.login() = _IniciarSesionButton;
-  const factory SesionRequeridaButton.registrarse() = _RegistrarseButton;
-}
-
-class _SesionRequeridaButton extends SesionRequeridaButton {
-  final String text;
-  final Color color;
-  final TextStyle? style;
-  final void Function() onPressed;
-  const _SesionRequeridaButton({
-    required this.text,
-    required this.color,
-    required this.onPressed,
-    this.style,
-  }) : super._();
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          elevation: const WidgetStatePropertyAll(0.01),
-          backgroundColor: WidgetStatePropertyAll(color),
+extension ElevatedButtonExtension on ElevatedButton {
+  Widget withSecondaryStyle(BuildContext context) => ElevatedButtonTheme(
+        data: ElevatedButtonThemeData(
+          style: context.actualTheme.elevatedButtonTheme.style?.copyWith(
+            backgroundColor: const WidgetStatePropertyAll(Colors.white),
+            foregroundColor: const WidgetStatePropertyAll(Colors.black),
+          ),
         ),
-        onPressed: () {
-          context.pop();
-
-          onPressed();
-        },
-        child: Text(
-          text,
-          style: const TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ).merge(style),
-        ),
-      ),
-    );
-  }
-}
-
-class _IniciarSesionButton extends SesionRequeridaButton {
-  const _IniciarSesionButton({super.key}) : super._();
-
-  @override
-  Widget build(BuildContext context) {
-    return SesionRequeridaButton(
-      color: const Color(0xff495057),
-      text: "Iniciar sesion",
-      style: const TextStyle(
-        color: Colors.white,
-      ),
-      onPressed: () => context.push(Routes.login),
-    );
-  }
-}
-
-class _RegistrarseButton extends SesionRequeridaButton {
-  const _RegistrarseButton({super.key}) : super._();
-
-  @override
-  Widget build(BuildContext context) {
-    return SesionRequeridaButton(
-      color: Colors.white,
-      text: "Registrarse",
-      onPressed: () => context.push(Routes.registro),
-    );
-  }
+        child: this,
+      );
 }

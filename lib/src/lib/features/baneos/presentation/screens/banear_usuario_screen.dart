@@ -181,7 +181,10 @@ class SeleccionarRazon extends StatelessWidget {
         children: Razon.values
             .map(
               (e) => GestureDetector(
-                onTap: () => onRazonSeleccionada(e),
+                onTap: () {
+                  onRazonSeleccionada(e);
+                  context.pop();
+                },
                 child: ItemSeleccionable.text(titulo: razones[e]!),
               ),
             )

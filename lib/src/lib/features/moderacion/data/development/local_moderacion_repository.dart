@@ -1,3 +1,5 @@
+import 'package:blog_app/src/lib/features/baneos/domain/models/baneo.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/screens/logic/controllers/banear_usuario.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/features/moderacion/domain/imoderacion_repository.dart';
 import 'package:blog_app/src/lib/features/moderacion/domain/models/registro_de_comentario.dart';
@@ -54,6 +56,13 @@ class LocalModeracionRepository extends IModeracionRepository {
       Usuario(
         id: "1",
         nombre: "Pedro",
+        ultimoBaneo: const Baneo(
+          id: "good",
+          moderador: "codubii",
+          razon: Razon.otros,
+          finaliza: null,
+          mensaje: "Es un mogolico",
+        ),
         registrado: DateTime.now(),
       ),
     );

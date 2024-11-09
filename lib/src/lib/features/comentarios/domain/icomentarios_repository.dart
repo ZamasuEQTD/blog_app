@@ -19,6 +19,14 @@ abstract class IComentariosRepository {
   });
 
   Future<Either<Failure, Unit>> eliminar({
-    required ComentarioId comentario,
+    required ComentarioId id,
+  });
+
+  Future<Either<Failure, Unit>> ocultar({
+    required ComentarioId id,
+  });
+
+  Future<Either<Failure, Unit>> denunciar({
+    required ComentarioId id,
   });
 }

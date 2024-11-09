@@ -45,6 +45,7 @@ class HomeLocalHub extends IHomePortadasHub {
             id: id,
             titulo: "Pepito",
             categoria: "NSFW",
+            esOp: random.nextBool(),
             features: const [HomePortadaFeatures.sticky],
             ultimoBump: DateTime.now(),
             imagen: Spoileable(

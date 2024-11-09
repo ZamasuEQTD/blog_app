@@ -48,6 +48,19 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.notoSansTextTheme(),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+            ),
+            textStyle: WidgetStatePropertyAll(
+              TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            padding: WidgetStatePropertyAll(
+              EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+            ),
             elevation: WidgetStatePropertyAll(0),
           ),
         ),

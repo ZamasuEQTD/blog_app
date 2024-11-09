@@ -1,4 +1,5 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
+import 'package:blog_app/src/lib/features/app/presentation/logic/extensions.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
@@ -205,64 +206,72 @@ class HomePortadaOpciones extends StatelessWidget {
     return RoundedBottomSheet.normal(
       child: Column(
         children: [
-          GrupoSeleccionable(
-            seleccionables: [
-              ItemSeleccionable.text(
-                titulo: "Seguir",
-                onTap: () async {
-                  var res = await GetIt.I
-                      .get<IHilosRepository>()
-                      .seguir(id: portada.id);
-
-                  res.fold((l) => null, (r) => null);
-                },
-              ),
-              ItemSeleccionable.text(
-                titulo: "Poner en favoritos",
-                onTap: () async {
-                  var res = await GetIt.I
-                      .get<IHilosRepository>()
-                      .ponerEnFavoritos(id: portada.id);
-
-                  res.fold((l) => null, (r) => null);
-                },
-              ),
-              ItemSeleccionable.text(
-                titulo: "Ocultar",
-                onTap: () async {
-                  var res = await GetIt.I.get<IHilosRepository>().ocultar(
-                        id: portada.id,
-                      );
-
-                  res.fold((l) => null, (r) => null);
-                },
-              ),
-              ItemSeleccionable.text(titulo: "Denunciar", onTap: () => {}),
-            ],
-          ),
-          if (Get.find<AuthController>().usuario.value?.rango is Moderador)
+          ...[
             GrupoSeleccionable(
               seleccionables: [
                 ItemSeleccionable.text(
-                  titulo: "Ver usuario",
-                  onTap: () => showModalBottomSheet(
-                    isScrollControlled: true,
-                    context: context,
-                    builder: (context) => const VerUsuarioPanelBottomSheet(),
-                  ),
+                  titulo: "Seguir",
+                  onTap: () async {
+                    var res = await GetIt.I
+                        .get<IHilosRepository>()
+                        .seguir(id: portada.id);
+
+                    res.fold((l) => null, (r) => null);
+                  },
                 ),
                 ItemSeleccionable.text(
-                  titulo: "Eliminar",
+                  titulo: "Poner en favoritos",
                   onTap: () async {
-                    var res = await GetIt.I.get<IHilosRepository>().eliminar(
+                    var res = await GetIt.I
+                        .get<IHilosRepository>()
+                        .ponerEnFavoritos(id: portada.id);
+
+                    res.fold((l) => null, (r) => null);
+                  },
+                ),
+                ItemSeleccionable.text(
+                  titulo: "Ocultar",
+                  onTap: () async {
+                    var res = await GetIt.I.get<IHilosRepository>().ocultar(
                           id: portada.id,
                         );
 
                     res.fold((l) => null, (r) => null);
                   },
                 ),
+                ItemSeleccionable.text(titulo: "Denunciar", onTap: () => {}),
               ],
             ),
+            if (portada.esOp)
+              const GrupoSeleccionable(
+                seleccionables: [
+                  ItemSeleccionable.text(titulo: "Desactivar notificaciones"),
+                ],
+              ),
+            if (Get.find<AuthController>().usuario.value?.rango is! Moderador)
+              GrupoSeleccionable(
+                seleccionables: [
+                  ItemSeleccionable.text(
+                    titulo: "Ver usuario",
+                    onTap: () => showModalBottomSheet(
+                      isScrollControlled: true,
+                      context: context,
+                      builder: (context) => const VerUsuarioPanelBottomSheet(),
+                    ),
+                  ),
+                  ItemSeleccionable.text(
+                    titulo: "Eliminar",
+                    onTap: () async {
+                      var res = await GetIt.I.get<IHilosRepository>().eliminar(
+                            id: portada.id,
+                          );
+
+                      res.fold((l) => null, (r) => null);
+                    },
+                  ),
+                ],
+              ),
+          ].addPadding(),
         ],
       ).paddingSymmetric(horizontal: 20, vertical: 10),
     );

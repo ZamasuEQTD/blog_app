@@ -52,6 +52,7 @@ GoRouter routes = GoRouter(
       builder: (context, state) => const RegistroScreen(),
     ),
     GoRoute(
+      name: "banear-usuario",
       path: Routes.banear,
       builder: (context, state) => BanearUsuarioScreen(
         id: state.pathParameters["id"]!,

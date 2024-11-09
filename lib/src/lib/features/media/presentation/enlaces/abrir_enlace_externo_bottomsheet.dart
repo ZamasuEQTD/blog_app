@@ -1,7 +1,10 @@
+import 'package:blog_app/main.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/button.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/widgets/titulo.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AbrirEnlaceExternoBottomSheet extends StatelessWidget {
@@ -29,7 +32,8 @@ class AbrirEnlaceExternoBottomSheet extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: ColoredBox(
-                color: const Color(0xffE9ECEF),
+                color: Colors.white,
+                // color: const Color(0xffE9ECEF),
                 child: SizedBox(
                   width: double.infinity,
                   child: Padding(
@@ -57,18 +61,22 @@ class AbrirEnlaceExternoBottomSheet extends StatelessWidget {
             const SizedBox(
               height: 16,
             ),
-            DialogButton.normal(
-              onPressed: () async {
-                if (!await launchUrl(Uri.parse(url))) {
-                  throw Exception('Could not launch $url');
-                }
-              },
-              text: "Continuar al sitio externo",
-            ),
-            const SizedBox(
-              height: 24,
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (!await launchUrl(Uri.parse(url))) {
+                    throw Exception('Could not launch $url');
+                  }
+
+                  if (context.mounted) context.pop();
+                },
+                child: const Text("Continuar"),
+              ),
             ),
           ],
+        ).paddingOnly(
+          bottom: 10,
         ),
       ),
     );
