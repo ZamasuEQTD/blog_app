@@ -9,6 +9,7 @@ import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
 
 import 'package:blog_app/src/lib/modules/theme/app_colors.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,31 +22,72 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const TextStyle defaultTitleTextStyle = TextStyle(
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle largeTitleTextStyle = defaultTitleTextStyle.merge(
+    const TextStyle(
+      fontSize: 20,
+    ),
+  );
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = AppThemes.light;
+
     return GetMaterialApp.router(
       routeInformationParser: routes.routeInformationParser,
       routeInformationProvider: routes.routeInformationProvider,
       routerDelegate: routes.routerDelegate,
       backButtonDispatcher: routes.backButtonDispatcher,
       title: 'Flutter Demo',
-      theme: AppThemes.light.copyWith(
-        appBarTheme: const AppBarTheme(
+      theme: theme.copyWith(
+        appBarTheme: theme.appBarTheme.copyWith(
           elevation: 0,
           backgroundColor: AppColors.surface,
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.black,
+          titleTextStyle: theme.textTheme.titleLarge?.merge(
+            defaultTitleTextStyle,
           ),
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),
-        textTheme: GoogleFonts.notoSansTextTheme(),
+        textTheme:
+            GoogleFonts.notoSansTextTheme().merge(theme.textTheme).copyWith(
+                  displayLarge: theme.textTheme.displayLarge?.copyWith(
+                    fontSize: 16,
+                  ),
+                  displayMedium: theme.textTheme.displayMedium?.copyWith(
+                    fontSize: 14,
+                  ),
+                  displaySmall: theme.textTheme.displaySmall?.copyWith(
+                    fontSize: 12,
+                  ),
+                  labelLarge: theme.textTheme.labelLarge?.copyWith(
+                    fontSize: 16,
+                  ),
+                  labelMedium: theme.textTheme.labelMedium?.copyWith(
+                    fontSize: 14,
+                  ),
+                  labelSmall: theme.textTheme.labelSmall?.copyWith(
+                    fontSize: 12,
+                  ),
+                  titleSmall: theme.textTheme.titleSmall?.merge(
+                    defaultTitleTextStyle.copyWith(
+                      fontSize: 14,
+                    ),
+                  ),
+                  titleMedium: theme.textTheme.titleMedium?.merge(
+                    defaultTitleTextStyle.copyWith(
+                      fontSize: 16,
+                    ),
+                  ),
+                  titleLarge: theme.textTheme.titleLarge?.merge(
+                    largeTitleTextStyle,
+                  ),
+                ),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(
@@ -56,7 +98,10 @@ class MyApp extends StatelessWidget {
               ),
             ),
             textStyle: WidgetStatePropertyAll(
-              TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
             ),
             padding: WidgetStatePropertyAll(
               EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -79,6 +124,11 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      builder: (context, child) {
+        return Skeletonizer(
+          child: child!,
+        );
+      },
     );
   }
 }

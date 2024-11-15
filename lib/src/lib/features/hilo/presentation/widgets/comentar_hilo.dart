@@ -1,18 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
-
+import 'package:blog_app/src/lib/features/app/presentation/widgets/measured_sized.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
-import 'package:blog_app/src/lib/features/baneos/domain/models/baneo.dart';
-import 'package:blog_app/src/lib/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
-import 'package:blog_app/src/lib/features/baneos/presentation/screens/logic/controllers/banear_usuario.dart';
-import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
-import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/services/tag_service.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
-import 'package:blog_app/src/lib/features/media/presentation/screens/agregar_enlace_screen.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +18,7 @@ import 'package:go_router/go_router.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app/presentation/controllers/altura_controller.dart';
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
 import '../../../app/presentation/widgets/grupo_seleccionable.dart';
@@ -65,110 +58,133 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            if (!Get.find<AuthController>().sesionIniciada) {
-              SesionRequeridaBottomSheet.show(context);
-            }
+    return GetBuilder<AlturaController>(
+      global: false,
+      init: context.read<AlturaController>(),
+      builder: (controller) {
+        return AlturaNotifier(
+          onSizeChange: (size) {
+            controller.altura.value = size.height;
           },
-          child: Obx(
-            () => IgnorePointer(
-              ignoring: !Get.find<AuthController>().sesionIniciada,
-              child: ColoredBox(
-                color: Theme.of(context).colorScheme.surface,
-                child: DecoratedBox(
-                  decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: Color(0xffe1e1e1))),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Obx(
-                        () => Get.find<HiloController>().media.value != null
-                            ? Row(
-                                children: <Media>[
-                                  Get.find<HiloController>()
-                                      .media
-                                      .value!
-                                      .spoileable,
-                                ]
-                                    .map(
-                                      (x) => GestureDetector(
-                                        onTap: () {
-                                          _showMediaBottomSheet(context, x);
-                                        },
-                                        child: Miniatura(
-                                          key: UniqueKey(),
-                                          media: x,
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              if (!Get.find<AuthController>().sesionIniciada) {
+                SesionRequeridaBottomSheet.show(context);
+              }
+            },
+            child: Obx(
+              () => IgnorePointer(
+                ignoring: !Get.find<AuthController>().sesionIniciada,
+                child: ColoredBox(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: DecoratedBox(
+                    decoration: const BoxDecoration(
+                      border: Border(top: BorderSide(color: Color(0xffe1e1e1))),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(
+                          () => Get.find<HiloController>().media.value != null
+                              ? Row(
+                                  children: <Media>[
+                                    Get.find<HiloController>()
+                                        .media
+                                        .value!
+                                        .spoileable,
+                                  ]
+                                      .map(
+                                        (x) => GestureDetector(
+                                          onTap: () {
+                                            _showMediaBottomSheet(context, x);
+                                          },
+                                          child: Stack(
+                                            children: [
+                                              Miniatura(
+                                                media: x,
+                                              ),
+                                              Positioned.fill(
+                                                child: Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: ColoredIconButton(
+                                                    onPressed: () => Get.find<
+                                                            HiloController>()
+                                                        .eliminarMedia(),
+                                                    icon: const Icon(
+                                                      CupertinoIcons.xmark,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ).paddingAll(8),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                    .toList(),
-                              ).marginOnly(bottom: 5)
-                            : const SizedBox(),
-                      ),
-                      Row(
-                        children: [
-                          ColoredIconButton(
-                            onPressed: () => showMaterialModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return const ComentarHiloOpcionesItems();
-                              },
-                            ),
-                            icon: const Icon(Icons.three_k_rounded),
-                          ),
-                          Flexible(
-                            child: TextField(
-                              onTapOutside: (event) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Escribe un comentario...",
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 11,
-                                ),
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                    width: 0,
-                                    style: BorderStyle.none,
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
+                                      )
+                                      .toList(),
+                                ).marginOnly(bottom: 5)
+                              : const SizedBox(),
+                        ),
+                        Row(
+                          children: [
+                            ColoredIconButton(
+                              onPressed: () => showMaterialModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return const ComentarHiloOpcionesItems();
+                                },
                               ),
-                              controller: comentario,
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: 4,
-                            ).marginSymmetric(horizontal: 5),
-                          ),
-                          ColoredIconButton(
-                            background: const Color.fromRGBO(22, 22, 23, 1),
-                            onPressed: () =>
-                                Get.find<HiloController>().enviarComentario,
-                            icon: const Icon(
-                              CupertinoIcons.paperplane_fill,
-                              color: Colors.white,
+                              icon: const Icon(Icons.three_k_rounded),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ).paddingSymmetric(horizontal: 5, vertical: 10),
+                            Flexible(
+                              child: TextField(
+                                onTapOutside: (event) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Escribe un comentario...",
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 11,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                      width: 0,
+                                      style: BorderStyle.none,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                controller: comentario,
+                                keyboardType: TextInputType.multiline,
+                                minLines: 1,
+                                maxLines: 4,
+                              ).marginSymmetric(horizontal: 5),
+                            ),
+                            ColoredIconButton(
+                              background: const Color.fromRGBO(22, 22, 23, 1),
+                              onPressed: () =>
+                                  Get.find<HiloController>().enviarComentario,
+                              icon: const Icon(
+                                CupertinoIcons.paperplane_fill,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ).paddingSymmetric(horizontal: 5, vertical: 10),
+                  ),
                 ),
               ),
             ),
-          ),
-        ).animate().moveY(
-              curve: Curves.easeInOut,
-              begin: 300,
-              duration: const Duration(milliseconds: 500),
-            );
+          ).animate().moveY(
+                curve: Curves.easeInOut,
+                begin: 300,
+                duration: const Duration(milliseconds: 500),
+              ),
+        );
       },
     );
   }

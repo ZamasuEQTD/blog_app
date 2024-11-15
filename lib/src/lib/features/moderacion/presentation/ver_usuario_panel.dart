@@ -1,5 +1,7 @@
+import 'package:blog_app/src/lib/features/app/domain/services/horario_service.dart';
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/ibaneos_repository.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/screens/banear_usuario_screen.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/notificaciones/presentation/screens/notificaciones_screen.dart';
@@ -172,20 +174,14 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
                     ).marginOnly(bottom: 10).sliverBox,
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
-                      child: const ColoredBox(
-                        color: Color(0xffF5F5F5),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5,
-                            vertical: 5,
-                          ),
-                          child: Row(
-                            children: [
-                              CambiarHistorialButton.hilos(),
-                              CambiarHistorialButton.comentarios(),
-                            ],
-                          ),
-                        ),
+                      child: ColoredBox(
+                        color: const Color(0xffF5F5F5),
+                        child: const Row(
+                          children: [
+                            CambiarHistorialButton.hilos(),
+                            CambiarHistorialButton.comentarios(),
+                          ],
+                        ).paddingAll(5),
                       ),
                     ).marginOnly(bottom: 10).sliverBox,
                     Obx(
@@ -374,8 +370,14 @@ class _CambiarHistorialButton extends CambiarHistorialButton {
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             backgroundColor:
                 Get.find<VerUsuarioController>().historial.value == historial
-                    ? Theme.of(context).colorScheme.primary
+                    ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.surface,
+            textStyle: TextStyle(
+              color:
+                  Get.find<VerUsuarioController>().historial.value == historial
+                      ? Theme.of(context).colorScheme.primary
+                      : Theme.of(context).colorScheme.onSurface,
+            ),
           ),
           onPressed: _setHistorial,
           label: label,
@@ -416,7 +418,7 @@ class _CambiarHistorialDeComentarios extends CambiarHistorialButton {
   }
 }
 
-class HistorialInteracion {
+abstract class HistorialInteracion {
   final String id;
   final String titulo;
   final DateTime fecha;
@@ -430,45 +432,93 @@ class HistorialInteracion {
   });
 }
 
+class HistorialInteraccionComentario extends HistorialInteracion {
+  final String comentario;
+  final Imagen? media;
+  const HistorialInteraccionComentario({
+    required super.id,
+    required super.titulo,
+    required super.fecha,
+    required super.imagen,
+    required this.comentario,
+    this.media,
+  });
+}
+
+class HistorialInteraccionHiloPosteado extends HistorialInteracion {
+  final String descripcion;
+  const HistorialInteraccionHiloPosteado({
+    required super.id,
+    required super.titulo,
+    required super.fecha,
+    required super.imagen,
+    required this.descripcion,
+  });
+}
+
 class HistorialInteraccion extends StatelessWidget {
   final HistorialInteracion interaccion;
   const HistorialInteraccion({super.key, required this.interaccion});
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox.square(
-                dimension: 48,
-                child: Image(image: interaccion.imagen.toProvider),
-              ),
-              Column(
-                children: [
-                  Text(interaccion.titulo),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month,
-                        color: context.labelColor,
-                      ),
-                      Text(
-                        "",
-                        style: context.labelStyle,
-                      ),
-                    ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox.square(
+                  dimension: 48,
+                  child: Image(image: interaccion.imagen.toProvider),
+                ),
+                Column(
+                  children: [
+                    Text(interaccion.titulo),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_month,
+                          color: context.labelColor,
+                        ),
+                        Text(
+                          "${interaccion.fecha.day}-${interaccion.fecha.month}-${interaccion.fecha.year}",
+                          style: context.labelStyle,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                if (mostrarImagen)
+                  SizedBox.square(
+                    dimension: 70,
+                    child: Image(
+                      image: (interaccion as HistorialInteraccionComentario)
+                          .media!
+                          .toProvider,
+                    ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ).paddingAll(16),
+                Text(
+                  descripcion,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ],
+            ),
+          ],
+        ).paddingAll(16),
+      ),
     );
   }
+
+  bool get mostrarImagen =>
+      interaccion is HistorialInteraccionComentario &&
+      (interaccion as HistorialInteraccionComentario).media != null;
+
+  String get descripcion => interaccion is HistorialInteraccionComentario
+      ? (interaccion as HistorialInteraccionComentario).comentario
+      : (interaccion as HistorialInteraccionHiloPosteado).descripcion;
 }
 
 extension ThemeColors on BuildContext {
@@ -495,6 +545,17 @@ class UltimoBaneoInformacion extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text("Ultimo baneo"),
+            Text("Moderador: ${baneo.moderador}"),
+            Text("Razon: ${razones[baneo.razon]!}"),
+            Text(
+              baneo.finaliza == null
+                  ? "Permanente"
+                  : "Finaliza en :${HorarioService.diferencia(
+                      utcNow: DateTime.now().toUtc(),
+                      time: baneo.finaliza!,
+                    )}",
+            ),
+            if (baneo.mensaje != null) Text(baneo.mensaje!),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

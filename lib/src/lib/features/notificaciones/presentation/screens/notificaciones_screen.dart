@@ -47,37 +47,34 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: context.newTheme,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: BackButton(
-            color: Colors.black,
-            onPressed: () => context.pop(),
-          ),
-          title: const Text(
-            "Mis notificaciones",
-          ),
-          actions: [
-            TextButton(
-              onPressed: controller.leerTodas,
-              child: const Text("Leer todas"),
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(
+          color: Colors.black,
+          onPressed: () => context.pop(),
         ),
-        body: CustomScrollView(
-          controller: scroll,
-          slivers: [
-            Obx(
-              () => SliverList.builder(
-                itemCount: controller.notificaciones.value.length,
-                itemBuilder: (context, index) => SocialInteraction.notificacion(
-                  notificacion: controller.notificaciones.value[index],
-                ),
+        title: const Text(
+          "Mis notificaciones",
+        ),
+        actions: [
+          TextButton(
+            onPressed: controller.leerTodas,
+            child: const Text("Leer todas"),
+          ),
+        ],
+      ),
+      body: CustomScrollView(
+        controller: scroll,
+        slivers: [
+          Obx(
+            () => SliverList.builder(
+              itemCount: controller.notificaciones.value.length,
+              itemBuilder: (context, index) => SocialInteraction.notificacion(
+                notificacion: controller.notificaciones.value[index],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

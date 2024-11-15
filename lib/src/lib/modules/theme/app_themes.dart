@@ -4,15 +4,34 @@ import 'app_colors.dart';
 
 class AppThemes {
   const AppThemes();
+
+  static const TextStyle defaultLabelTextStyle = TextStyle(
+    color: AppColors.label,
+  );
+
+  static const TextStyle defaultDisplayTextStyle = TextStyle(
+    color: AppColors.display,
+  );
+
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
+    drawerTheme: const DrawerThemeData(backgroundColor: AppColors.surface),
     dialogBackgroundColor: AppColors.surface,
     bottomSheetTheme: const BottomSheetThemeData(
       backgroundColor: AppColors.surface,
     ),
     scaffoldBackgroundColor: AppColors.surface,
-    appBarTheme:
-        const AppBarTheme(backgroundColor: AppColors.surface, elevation: 0),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: AppColors.surface,
+    ),
+    textTheme: const TextTheme(
+      displayMedium: defaultDisplayTextStyle,
+      displaySmall: defaultDisplayTextStyle,
+      displayLarge: defaultDisplayTextStyle,
+      labelLarge: defaultLabelTextStyle,
+      labelMedium: defaultLabelTextStyle,
+      labelSmall: defaultLabelTextStyle,
+    ),
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       primary: AppColors.primary,
@@ -25,11 +44,6 @@ class AppThemes {
       onSurface: AppColors.onSurface,
     ),
     primaryColor: AppColors.primary,
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
-    ),
     inputDecorationTheme: const InputDecorationTheme(
       fillColor: AppColors.onSurface,
     ),

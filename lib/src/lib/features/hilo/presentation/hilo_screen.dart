@@ -16,6 +16,7 @@ import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
+import '../../app/presentation/controllers/altura_controller.dart';
 import '../../comentarios/presentation/widgets/comentario.dart';
 import '../../media/presentation/multi_media.dart';
 import '../domain/models/hilo.dart';
@@ -36,6 +37,8 @@ class _HiloScreenState extends State<HiloScreen> {
     HiloController(id: widget.id),
   )..cargar(widget.id);
 
+  final AlturaController alturaController = AlturaController();
+
   @override
   void initState() {
     scroll.addListener(
@@ -54,6 +57,10 @@ class _HiloScreenState extends State<HiloScreen> {
       }
     });
 
+    alturaController.altura.listen((altura) {
+      controller.bottom.value = altura;
+    });
+
     super.initState();
   }
 
@@ -64,7 +71,10 @@ class _HiloScreenState extends State<HiloScreen> {
       bottomSheet: Obx(
         () {
           if (controller.hilo.value != null) {
-            return const ComentarHiloBottomSheet();
+            return Provider.value(
+              value: alturaController,
+              child: const ComentarHiloBottomSheet(),
+            );
           }
           return const SizedBox();
         },
@@ -74,12 +84,13 @@ class _HiloScreenState extends State<HiloScreen> {
             ? Provider.value(
                 value: controller.hilo.value,
                 child: Container(
-                  margin: const EdgeInsets.only(
-                    bottom: 20,
+                  margin: EdgeInsets.only(
+                    bottom: controller.bottom.value,
                   ),
                   child: CustomScrollView(
                     controller: scroll,
                     slivers: const [
+                      HiloScreenAppBar(),
                       InformacionDeHilo(),
                       ComentariosEnHilo(),
                     ],
@@ -251,15 +262,6 @@ class TituloStyle extends TextStyle {
   const TituloStyle() : super(fontSize: 29, fontWeight: FontWeight.w900);
 }
 
-class AlturaController extends ChangeNotifier {
-  double altura = 0;
-
-  void cambiar(double altura) {
-    this.altura = altura;
-    notifyListeners();
-  }
-}
-
 class HiloScreenCargando extends StatelessWidget {
   const HiloScreenCargando({super.key});
 
@@ -311,4 +313,18 @@ class HiloOpciones extends StatelessWidget {
       ],
     );
   }
+}
+
+class HiloScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const HiloScreenAppBar({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      title: Text(Get.find<HiloController>().hilo.value!.titulo),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

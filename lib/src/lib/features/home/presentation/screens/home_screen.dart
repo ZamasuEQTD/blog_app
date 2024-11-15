@@ -55,23 +55,49 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: Drawer(
+        child: Obx(() {
+          if (Get.find<AuthController>().usuario.value == null) {
+            return const Column(
+              children: [],
+            );
+          }
+
+          return Column(
+            children: [
+              Text(
+                "Bienvenido, ${Get.find<AuthController>().usuario.value!.usuario}",
+                style: context.textTheme.titleMedium,
+              ),
+              const ItemSeleccionable.text(
+                titulo: "Mis hilos",
+              ),
+              const ItemSeleccionable.text(
+                titulo: "Hilos favoritos",
+              ),
+              const ItemSeleccionable.text(
+                titulo: "Palabras bloqueadas",
+              ),
+              ItemSeleccionable.text(
+                titulo: "Cerrar sesion",
+                onTap: () => Get.find<AuthController>().logout(),
+              ),
+            ],
+          );
+        }),
+      ),
       appBar: AppBar(
         actions: [
           TextButton.icon(
             onPressed: () => context.push(Routes.notificaciones),
             icon: const Icon(
               Icons.notifications,
-              color: Colors.red,
             ),
-            label: const Text("99+"),
+            label: const Text("991+"),
           ),
-          TextButton.icon(
-            onPressed: () => Get.find<AuthController>().logout(),
-            icon: const Icon(
-              Icons.logout,
-              color: Colors.red,
-            ),
-            label: const Text("Salir"),
+          IconButton(
+            onPressed: () => Scaffold.of(context).openEndDrawer(),
+            icon: const FaIcon(FontAwesomeIcons.bars),
           ),
         ],
       ),

@@ -30,6 +30,7 @@ class HiloController extends GetxController {
   Rx<String?> taggueo = Rx(null);
 
   Rx<bool> cargandoComentarios = false.obs;
+
   Rx<List<Comentario>> comentarios = Rx([]);
 
   final ultimoComentarioAgregadoStream = StreamController<Comentario>();
@@ -38,6 +39,8 @@ class HiloController extends GetxController {
   Rx<String> comentario = "".obs;
   Rx<Spoileable<Media>?> media = Rx(null);
   List<String> taggueos = [];
+
+  Rx<double> bottom = 0.0.obs;
 
   HiloController({required this.id});
 

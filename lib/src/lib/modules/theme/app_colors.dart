@@ -56,4 +56,10 @@ class AppColors {
   static const Color secondary = Color.fromRGBO(233, 236, 239, 1);
 
   static const Color onSecondary = Color.fromRGBO(73, 80, 87, 1);
+
+  //static const Color label = Color(0xff7b7b7b);
+
+  static const Color label = Color.fromRGBO(108, 117, 125, 1);
+
+  static const Color display = Color.fromRGBO(73, 80, 87, 1);
 }

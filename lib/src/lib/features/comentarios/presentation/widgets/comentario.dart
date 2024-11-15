@@ -12,6 +12,7 @@ import 'package:blog_app/src/lib/features/usuarios/domain/models/usuario.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -238,7 +239,7 @@ class ComentarioInfoRow extends StatelessWidget {
             utcNow: DateTime.now().toUtc(),
             time: comentario.creado_en,
           ).toString(),
-          style: const TextStyle(fontSize: 12),
+          style: Theme.of(context).textTheme.labelSmall,
         ),
       ],
     );
@@ -257,6 +258,20 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
       child: Column(
         children: [
           ...[
+            GrupoSeleccionable(
+              seleccionables: [
+                ItemSeleccionable.text(
+                  titulo: "Copiar",
+                  onTap: () async {
+                    await Clipboard.setData(
+                      ClipboardData(
+                        text: comentario.texto,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
             const GrupoSeleccionable(
               seleccionables: [
                 ItemSeleccionable.text(titulo: "Ocultar"),
