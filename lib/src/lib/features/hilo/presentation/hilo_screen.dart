@@ -71,7 +71,7 @@ class _HiloScreenState extends State<HiloScreen> {
       bottomSheet: Obx(
         () {
           if (controller.hilo.value != null) {
-            return Provider.value(
+            return ListenableProvider.value(
               value: alturaController,
               child: const ComentarHiloBottomSheet(),
             );
@@ -90,7 +90,7 @@ class _HiloScreenState extends State<HiloScreen> {
                   child: CustomScrollView(
                     controller: scroll,
                     slivers: const [
-                      HiloScreenAppBar(),
+                      //HiloScreenAppBar(),
                       InformacionDeHilo(),
                       ComentariosEnHilo(),
                     ],
@@ -243,14 +243,17 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
               ),
             ).marginSymmetric(vertical: 10, horizontal: 5),
           ),
-          SliverList.builder(
-            itemCount: controller.comentarios.value.length,
-            itemBuilder: (context, index) {
-              return ComentarioCard.comentario(
-                key: keys[controller.comentarios.value[index].id],
-                comentario: controller.comentarios.value[index],
-              );
-            },
+          SliverPadding(
+            padding: const EdgeInsets.only(bottom: 10),
+            sliver: SliverList.builder(
+              itemCount: controller.comentarios.value.length,
+              itemBuilder: (context, index) {
+                return ComentarioCard.comentario(
+                  key: keys[controller.comentarios.value[index].id],
+                  comentario: controller.comentarios.value[index],
+                );
+              },
+            ),
           ),
         ],
       ),

@@ -31,6 +31,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late IHomePortadasHub hub = HomeLocalHub();
 
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   HomeController controller = Get.put(HomeController())..cargarPortadas();
 
   final ScrollController scroll = ScrollController();
@@ -55,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       endDrawer: Drawer(
         child: Obx(() {
           if (Get.find<AuthController>().usuario.value == null) {
@@ -96,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             label: const Text("991+"),
           ),
           IconButton(
-            onPressed: () => Scaffold.of(context).openEndDrawer(),
+            onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
             icon: const FaIcon(FontAwesomeIcons.bars),
           ),
         ],

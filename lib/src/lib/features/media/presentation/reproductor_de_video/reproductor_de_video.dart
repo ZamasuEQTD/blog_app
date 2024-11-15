@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:blog_app/src/lib/features/app/presentation/extensions/video_player_controller.dart';
 import 'package:blog_app/src/lib/features/media/presentation/logic/reproductor_de_video_controller.dart';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
@@ -75,7 +76,7 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
 
   @override
   void initState() {
-    _controller = ReproductorDeVideoController();
+    _controller = ReproductorDeVideoController(widget.controller);
 
     chewie = ChewieController(
       videoPlayerController: widget.controller,
@@ -84,12 +85,14 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
         builder: (context, child) {
           return ChangeNotifierProvider.value(
             value: chewie,
-            child: const ControlesDeReproductorDeVideo(),
+            child: ListenableProvider.value(
+              value: _controller,
+              child: const ControlesDeReproductorDeVideo(),
+            ),
           );
         },
       ),
     );
-
     if (!hayPrevisualizacion) {
       iniciar();
     }
@@ -99,7 +102,22 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
     });
 
     widget.controller.addListener(() {
-      _controller.buffering.value = widget.controller.value.isBuffering;
+      if (widget.controller.value.isPlaying) {
+        _controller.reproduccion.value = EstadoDeReproduccion.reproduciendo;
+      }
+      if (!widget.controller.value.isPlaying) {
+        _controller.reproduccion.value = EstadoDeReproduccion.pausado;
+      }
+
+      _controller.volumen.value = widget.controller.value.volume;
+
+      if (widget.controller.haFinalizado) {
+        _controller.reproduccion.value = EstadoDeReproduccion.finalizado;
+      }
+
+      if (widget.controller.value.isBuffering) {
+        _controller.reproduccion.value = EstadoDeReproduccion.buffering;
+      }
     });
 
     super.initState();
@@ -110,6 +128,7 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder(
+      global: false,
       init: _controller,
       builder: (controller) {
         return Obx(() {

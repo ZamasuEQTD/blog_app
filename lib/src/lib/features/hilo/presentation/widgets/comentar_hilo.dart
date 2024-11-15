@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/measured_sized.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
@@ -8,7 +9,7 @@ import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_animate/flutter_animate.dart' hide BlurEffect;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
@@ -108,16 +109,21 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                                               Positioned.fill(
                                                 child: Align(
                                                   alignment: Alignment.topRight,
-                                                  child: ColoredIconButton(
-                                                    onPressed: () => Get.find<
-                                                            HiloController>()
-                                                        .eliminarMedia(),
-                                                    icon: const Icon(
-                                                      CupertinoIcons.xmark,
+                                                  child: SizedBox.square(
+                                                    dimension: 30,
+                                                    child: ColoredIconButton(
+                                                      onPressed: () => Get.find<
+                                                              HiloController>()
+                                                          .eliminarMedia(),
+                                                      icon: const FittedBox(
+                                                        child: Icon(
+                                                          CupertinoIcons.xmark,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ).paddingAll(8),
+                                                ).paddingAll(4),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -211,7 +217,22 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                           borderRadius: BorderRadius.circular(
                             10,
                           ),
-                          child: dimensionable,
+                          child: Stack(
+                            children: [
+                              dimensionable,
+                              Obx(
+                                () => Positioned.fill(
+                                  child: BlurEffect(
+                                    blurear: Get.find<HiloController>()
+                                            .media
+                                            .value
+                                            ?.spoiler ??
+                                        false,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -268,10 +289,17 @@ class _MarcarComoSpoiler extends VerMediaOpcion {
   const _MarcarComoSpoiler({super.key}) : super._();
   @override
   Widget build(BuildContext context) {
-    return ItemSeleccionable.checkbox(
-      onChange: (value) {},
-      titulo: "Marcar como spoiler",
-      value: true,
+    final controller = Get.find<HiloController>();
+    return Obx(
+      () => ItemSeleccionable.checkbox(
+        onChange: (value) {
+          controller.media.value = controller.media.value!.copyWith(
+            spoiler: value,
+          );
+        },
+        titulo: "Marcar como spoiler",
+        value: controller.media.value?.spoiler ?? false,
+      ),
     );
   }
 }

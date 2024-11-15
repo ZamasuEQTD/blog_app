@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.transparent,
         ),
         textTheme:
-            GoogleFonts.notoSansTextTheme().merge(theme.textTheme).copyWith(
+            GoogleFonts.poppinsTextTheme().merge(theme.textTheme).copyWith(
                   displayLarge: theme.textTheme.displayLarge?.copyWith(
                     fontSize: 16,
                   ),
@@ -111,6 +111,9 @@ class MyApp extends StatelessWidget {
         ),
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
+          hintStyle: TextStyle(
+            fontWeight: FontWeight.w400,
+          ),
           fillColor: AppColors.onSurface,
           contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
           border: OutlineInputBorder(
@@ -124,11 +127,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      builder: (context, child) {
-        return Skeletonizer(
-          child: child!,
-        );
-      },
     );
   }
 }
