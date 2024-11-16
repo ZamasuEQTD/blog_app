@@ -1,17 +1,11 @@
+import 'package:blog_app/src/lib/features/hilo/domain/icolecciones_repository.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
-import 'package:dartz/dartz.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../../../logic/classes/coleccion_de_hilo.dart';
-
-abstract class IColeccionesHilosRepository {
-  Future<Either<Failure, List<Portada>>> creados();
-  Future<Either<Failure, List<Portada>>> favoritos();
-  Future<Either<Failure, List<Portada>>> seguidos();
-}
 
 abstract class IHiloColeccionController extends GetxController {
   final IColeccionesHilosRepository repository = GetIt.I.get();
