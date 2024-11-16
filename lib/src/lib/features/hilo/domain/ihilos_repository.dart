@@ -23,7 +23,7 @@ abstract class IHilosRepository {
     required String id,
   });
 
-  Future<Either<Failure, List<HomePortada>>> getPortadas({
+  Future<Either<Failure, List<Portada>>> getPortadas({
     String? titulo,
     SubcategoriaId? subcategoria,
     DateTime? ultimoBump,

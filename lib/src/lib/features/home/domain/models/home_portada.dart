@@ -4,16 +4,16 @@ import 'package:equatable/equatable.dart';
 import '../../../app/domain/models/spoileable.dart';
 import '../../../media/domain/models/media.dart';
 
-class HomePortada extends Equatable {
+class Portada extends Equatable {
   final HiloId id;
   final String titulo;
   final String categoria;
   final bool esOp;
-  final List<HomePortadaFeatures> features;
+  final List<PortadaFeatures> features;
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
 
-  const HomePortada({
+  const Portada({
     required this.id,
     required this.titulo,
     required this.categoria,
@@ -23,13 +23,13 @@ class HomePortada extends Equatable {
     required this.imagen,
   });
 
-  factory HomePortada.fromJson(Map<String, dynamic> json) {
-    return HomePortada(
+  factory Portada.fromJson(Map<String, dynamic> json) {
+    return Portada(
       id: json["id"],
       titulo: json["titulo"],
       categoria: json["categoria"],
       esOp: json["esOp"],
-      features: HomePortadaFeatures.values
+      features: PortadaFeatures.values
           .where((e) => json["features"].contains(e.name))
           .toList(),
       ultimoBump: DateTime.parse(json["ultimo_bump"]),
@@ -51,9 +51,9 @@ class HomePortada extends Equatable {
       ];
 }
 
-typedef HomePortadaId = String;
+typedef PortadaId = String;
 
-enum HomePortadaFeatures {
+enum PortadaFeatures {
   nuevo,
   youtube,
   sticky,

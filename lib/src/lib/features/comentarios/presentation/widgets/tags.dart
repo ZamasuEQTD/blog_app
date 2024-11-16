@@ -1,4 +1,4 @@
-import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/logic/controllers/ver_hilo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';

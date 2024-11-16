@@ -3,9 +3,9 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../app/presentation/widgets/outlined_icon_button.dart';
-import '../../domain/models/hilo.dart';
-import './iconos.dart';
+import '../../../../../app/presentation/widgets/outlined_icon_button.dart';
+import '../../../../domain/models/hilo.dart';
+import 'iconos.dart';
 
 class BanderasDeHiloRow extends StatelessWidget {
   static final HashMap<BanderasDeHilo, Widget> _banderas = HashMap.from({

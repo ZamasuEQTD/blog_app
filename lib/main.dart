@@ -9,7 +9,6 @@ import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/modules/theme/app_themes.dart';
 
 import 'package:blog_app/src/lib/modules/theme/app_colors.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

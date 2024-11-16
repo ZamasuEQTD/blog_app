@@ -18,7 +18,7 @@ class GrupoSeleccionableSliver extends StatelessWidget {
     return DecoratedSliver(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: color ?? Theme.of(context).colorScheme.surface,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
       ),
       sliver: SliverMainAxisGroup(
         slivers: [

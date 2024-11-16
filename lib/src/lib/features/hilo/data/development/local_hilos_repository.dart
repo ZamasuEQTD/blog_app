@@ -52,7 +52,7 @@ class LocalHilosRepository extends IHilosRepository {
   }
 
   @override
-  Future<Either<Failure, List<HomePortada>>> getPortadas({
+  Future<Either<Failure, List<Portada>>> getPortadas({
     String? titulo,
     SubcategoriaId? subcategoria,
     DateTime? ultimoBump,
@@ -60,13 +60,13 @@ class LocalHilosRepository extends IHilosRepository {
     return Future.delayed(
       const Duration(seconds: 5),
       () => Right([
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           esOp: true,
           ultimoBump: DateTime.now(),
@@ -80,14 +80,14 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           esOp: true,
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(
@@ -100,13 +100,13 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           esOp: true,
           ultimoBump: DateTime.now(),
@@ -120,13 +120,13 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           esOp: true,
           ultimoBump: DateTime.now(),
@@ -140,13 +140,13 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           esOp: true,
           ultimoBump: DateTime.now(),
@@ -160,13 +160,13 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           esOp: true,
           ultimoBump: DateTime.now(),
@@ -180,14 +180,14 @@ class LocalHilosRepository extends IHilosRepository {
             ),
           ),
         ),
-        HomePortada(
+        Portada(
           id: "123",
           titulo: "Holanda",
           categoria: "CP",
           esOp: true,
           features: const [
-            HomePortadaFeatures.dados,
-            HomePortadaFeatures.sticky,
+            PortadaFeatures.dados,
+            PortadaFeatures.sticky,
           ],
           ultimoBump: DateTime.now(),
           imagen: const Spoileable(

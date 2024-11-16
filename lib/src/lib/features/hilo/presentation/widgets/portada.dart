@@ -1,16 +1,15 @@
 import 'dart:collection';
 import 'dart:math';
 
+import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/blur_effect.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/gradient/gradient_effect.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/image_overlapped.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/tag.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/widgets/iconos.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-import '../../../../app/presentation/widgets/effects/blur/blur_effect.dart';
-import '../../../../app/presentation/widgets/effects/gradient/gradient_effect.dart';
-import '../../../../app/presentation/widgets/image_overlapped.dart';
-import '../../../../app/presentation/widgets/tag.dart';
-import '../../../../hilo/presentation/screens/hilo/widgets/iconos.dart';
 
 abstract class PortadaView extends StatelessWidget {
   const PortadaView._({super.key});
@@ -120,7 +119,7 @@ class _PortadaViewCargada extends PortadaView {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _PortadaViewFeatures(
+                      _PortadaFeatures(
                         portada: portada,
                       ),
                       Text(
@@ -140,7 +139,7 @@ class _PortadaViewCargada extends PortadaView {
   }
 }
 
-class _PortadaViewFeatures extends StatelessWidget {
+class _PortadaFeatures extends StatelessWidget {
   static final HashMap<PortadaFeatures, Widget> _features = HashMap.from({
     PortadaFeatures.nuevo: const PortadaViewCardTag.nuevo(),
     PortadaFeatures.sticky: const PortadaViewCardTag.destacado(),
@@ -150,7 +149,7 @@ class _PortadaViewFeatures extends StatelessWidget {
 
   final Portada portada;
 
-  const _PortadaViewFeatures({super.key, required this.portada});
+  const _PortadaFeatures({super.key, required this.portada});
 
   @override
   Widget build(BuildContext context) {
@@ -168,13 +167,13 @@ class _PortadaViewFeatures extends StatelessWidget {
     );
   }
 
-  static List<Widget> generar(Portada portada) {
+  static List<Widget> generar(Portada portadaView) {
     List<Widget> tags = [
-      PortadaViewCardTag.categoria(categoria: portada.categoria),
+      PortadaViewCardTag.categoria(categoria: portadaView.categoria),
     ];
 
-    for (var i = 0; i < portada.features.length; i++) {
-      Widget child = _features[portada.features[i]]!;
+    for (var i = 0; i < portadaView.features.length; i++) {
+      Widget child = _features[portadaView.features[i]]!;
 
       tags.add(child);
     }

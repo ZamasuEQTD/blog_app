@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/models/hilo.dart';
+import '../../../../../domain/models/hilo.dart';
 
 class HiloController extends GetxController {
   final String id;

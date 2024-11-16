@@ -2,9 +2,9 @@ import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../app/domain/services/horario_service.dart';
-import '../../../app/presentation/widgets/tag.dart';
-import '../../domain/models/hilo.dart';
+import '../../../../../app/domain/services/horario_service.dart';
+import '../../../../../app/presentation/widgets/tag.dart';
+import '../../../../domain/models/hilo.dart';
 
 class HiloAccionesRow extends StatelessWidget {
   const HiloAccionesRow({

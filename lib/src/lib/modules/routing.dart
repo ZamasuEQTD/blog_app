@@ -1,5 +1,6 @@
 import 'package:blog_app/src/lib/features/auth/presentation/screens/registro_screen.dart';
 import 'package:blog_app/src/lib/features/baneos/presentation/screens/banear_usuario_screen.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/colecciones/screens/mis_hilos/mis_hilos_screen.dart';
 import 'package:blog_app/src/lib/features/media/presentation/screens/agregar_enlace_screen.dart';
 import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:get/get.dart';
@@ -7,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../features/auth/presentation/screens/login_screen.dart';
-import '../features/hilo/presentation/hilo_screen.dart';
+import '../features/hilo/presentation/screens/hilo/hilo_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../features/notificaciones/presentation/screens/notificaciones_screen.dart';
 import '../features/postear_hilo/presentation/postear_hilo_screen.dart';
@@ -21,6 +22,7 @@ class Routes {
   static const notificaciones = "/mis-notificaciones";
   static const banear = "/banear-usuario/:id";
   static const agregarEnlace = "/agregar-enlace";
+  static const misHilos = "/mis-hilos";
 }
 
 GoRouter routes = GoRouter(
@@ -64,6 +66,10 @@ GoRouter routes = GoRouter(
         value: state.extra as OnEnlaceAgregado,
         child: const AgregarEnlaceScreen(),
       ),
+    ),
+    GoRoute(
+      path: Routes.misHilos,
+      builder: (context, state) => const MisHilosScreen(),
     ),
   ],
 );

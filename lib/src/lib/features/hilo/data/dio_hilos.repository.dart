@@ -49,7 +49,7 @@ class DioHilosRepository extends IHilosRepository {
   }
 
   @override
-  Future<Either<Failure, List<HomePortada>>> getPortadas({
+  Future<Either<Failure, List<Portada>>> getPortadas({
     String? titulo,
     SubcategoriaId? subcategoria,
     DateTime? ultimoBump,
@@ -68,7 +68,7 @@ class DioHilosRepository extends IHilosRepository {
         return Left(response.failure);
       }
 
-      return Right(response.data.map((e) => HomePortada.fromJson(e)).toList());
+      return Right(response.data.map((e) => Portada.fromJson(e)).toList());
     } on Exception catch (e) {
       return Left(e.failure);
     }

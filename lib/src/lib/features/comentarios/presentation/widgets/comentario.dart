@@ -4,7 +4,7 @@ import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_selecci
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
-import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/logic/controllers/ver_hilo_controller.dart';
 import 'package:blog_app/src/lib/features/media/presentation/enlaces/abrir_enlace_externo_bottomsheet.dart';
 import 'package:blog_app/src/lib/features/media/presentation/multi_media.dart';
 import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
@@ -52,7 +52,10 @@ class _ComentarioCard extends ComentarioCard {
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-          child: child,
+          child: ColoredBox(
+            color: Theme.of(context).colorScheme.surface,
+            child: child,
+          ),
         ),
       ),
     );
@@ -115,7 +118,9 @@ class _ComentarioCardEntity extends ComentarioCard {
 
 class _Texto extends StatelessWidget {
   static final RegExp _tag = RegExp(">>[A-Z0-9]{7}");
+
   static final RegExp _greenText = RegExp("dasdassadas");
+
   static final RegExp _url = RegExp(
     r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?',
   );

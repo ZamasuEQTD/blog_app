@@ -9,17 +9,17 @@ import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_t
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/encuestas/domain/models/encuesta.dart';
 import 'package:blog_app/src/lib/features/encuestas/presentation/encuesta.dart';
-import 'package:blog_app/src/lib/features/hilo/presentation/logic/controllers/ver_hilo_controller.dart';
-import 'package:blog_app/src/lib/features/hilo/presentation/widgets/banderas.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/logic/controllers/ver_hilo_controller.dart';
+import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/widgets/banderas.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
-import '../../app/presentation/controllers/altura_controller.dart';
-import '../../comentarios/presentation/widgets/comentario.dart';
-import '../../media/presentation/multi_media.dart';
-import '../domain/models/hilo.dart';
+import '../../../../app/presentation/controllers/altura_controller.dart';
+import '../../../../comentarios/presentation/widgets/comentario.dart';
+import '../../../../media/presentation/multi_media.dart';
+import '../../../domain/models/hilo.dart';
 import 'widgets/acciones.dart';
 import 'widgets/comentar_hilo.dart';
 

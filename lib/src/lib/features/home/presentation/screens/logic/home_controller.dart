@@ -1,6 +1,7 @@
 import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
+import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +15,23 @@ class HomeController extends GetxController {
   Rx<bool> cargando = Rx(false);
 
   Rx<Failure?> failure = Rx(null);
+
   Rx<List<HomePortada>> portadas = Rx([]);
 
   void cargarPortadas() async {
     if (cargando.value) return;
     IHilosRepository repository = GetIt.I.get();
+
+    cargando.value = true;
+
+    List<HomePortada> portadas = [
+      ...this.portadas.value,
+    ];
+
+    this.portadas.value = [
+      ...this.portadas.value,
+      ...List.generate(15, (index) => const HomePortadaBone()),
+    ];
 
     var response = await repository.getPortadas(
       ultimoBump: ultimoBump.value,
@@ -31,7 +44,12 @@ class HomeController extends GetxController {
       (r) {
         ultimoBump.value = r.lastOrNull?.ultimoBump;
 
-        portadas.value = [...portadas.value, ...r];
+        this.portadas.value = [
+          ...portadas,
+          ...r.map(
+            (e) => HomePortadaLoaded(portada: e),
+          ),
+        ];
       },
     );
   }
@@ -42,13 +60,13 @@ class HomeController extends GetxController {
     cargarPortadas();
   }
 
-  void eliminar(HomePortadaId id) => portadas.value = portadas.value
+  void eliminar(PortadaId id) => portadas.value = portadas.value
       .where(
-        (element) => element.id != id,
+        (element) => element is HomePortadaLoaded && element.portada.id != id,
       )
       .toList();
 
-  void agregarPortada(HomePortada portada) {
+  void agregarPortada(HomePortadaLoaded portada) {
     if (hayFiltrosCambiados) return;
 
     portadas.value = [portada, ...portadas.value];

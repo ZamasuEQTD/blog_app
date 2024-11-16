@@ -4,11 +4,13 @@ import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/botto
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
+import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
 import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:blog_app/src/lib/features/usuarios/domain/models/usuario.dart';
@@ -20,6 +22,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
+import '../../../hilo/presentation/widgets/delegates/portadas_delegate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,7 +32,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late IHomePortadasHub hub = HomeLocalHub();
+  late IPortadasHub hub = HomeLocalHub();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,7 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     hub.connect();
 
-    hub.onHiloPosteado.listen((portada) => controller.agregarPortada(portada));
+    hub.onHiloPosteado.listen(
+      (portada) => controller.agregarPortada(
+        HomePortadaLoaded(portada: portada),
+      ),
+    );
 
     hub.onHiloEliminado.listen((id) => controller.eliminar(id));
 
@@ -59,35 +66,62 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       key: scaffoldKey,
       endDrawer: Drawer(
-        child: Obx(() {
-          if (Get.find<AuthController>().usuario.value == null) {
-            return const Column(
-              children: [],
+        child: SafeArea(
+          child: Obx(() {
+            if (Get.find<AuthController>().usuario.value == null) {
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.push(Routes.login);
+                        },
+                        child: const Text("Iniciar Sesión"),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.push(Routes.registro);
+                        },
+                        child: const Text("Registrarse"),
+                      ).withSecondaryStyle(context),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Column(
+              children: [
+                Text(
+                  "Bienvenido, ${Get.find<AuthController>().usuario.value!.usuario}",
+                  style: context.textTheme.titleMedium,
+                ),
+                ItemSeleccionable.text(
+                  onTap: () => context.push(Routes.misHilos),
+                  titulo: "Mis hilos",
+                ),
+                const ItemSeleccionable.text(
+                  titulo: "Hilos favoritos",
+                ),
+                const ItemSeleccionable.text(
+                  titulo: "Palabras bloqueadas",
+                ),
+                ItemSeleccionable.text(
+                  titulo: "Cerrar sesion",
+                  onTap: () => Get.find<AuthController>().logout(),
+                ),
+              ],
             );
-          }
-
-          return Column(
-            children: [
-              Text(
-                "Bienvenido, ${Get.find<AuthController>().usuario.value!.usuario}",
-                style: context.textTheme.titleMedium,
-              ),
-              const ItemSeleccionable.text(
-                titulo: "Mis hilos",
-              ),
-              const ItemSeleccionable.text(
-                titulo: "Hilos favoritos",
-              ),
-              const ItemSeleccionable.text(
-                titulo: "Palabras bloqueadas",
-              ),
-              ItemSeleccionable.text(
-                titulo: "Cerrar sesion",
-                onTap: () => Get.find<AuthController>().logout(),
-              ),
-            ],
-          );
-        }),
+          }),
+        ),
       ),
       appBar: AppBar(
         actions: [
@@ -107,8 +141,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: CustomScrollView(
         controller: scroll,
         slivers: const [
-          _HomePortadasFiltros(),
-          _HomePortadasGrid(),
+          _PortadasFiltros(),
+          _PortadasGrid(),
         ],
       ),
       floatingActionButton: ColoredIconButton(
@@ -125,8 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class _HomePortadasFiltros extends StatelessWidget {
-  const _HomePortadasFiltros({super.key});
+class _PortadasFiltros extends StatelessWidget {
+  const _PortadasFiltros({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -152,16 +186,8 @@ class _HomePortadasFiltros extends StatelessWidget {
   }
 }
 
-class _HomePortadasGrid extends StatelessWidget {
-  static const SliverGridDelegate _delegate =
-      SliverGridDelegateWithFixedCrossAxisCount(
-    mainAxisExtent: 200,
-    crossAxisSpacing: 5,
-    mainAxisSpacing: 5,
-    crossAxisCount: 2,
-  );
-
-  const _HomePortadasGrid({super.key});
+class _PortadasGrid extends StatelessWidget {
+  const _PortadasGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -170,33 +196,11 @@ class _HomePortadasGrid extends StatelessWidget {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       sliver: Obx(
-        () {
-          return SliverGrid.builder(
-            itemCount: controller.portadas.value.length +
-                (controller.cargando.value ? 5 : 0),
-            gridDelegate: _delegate,
-            itemBuilder: (context, index) {
-              if (index >= controller.portadas.value.length) {
-                return const Portada.bone();
-              }
-
-              HomePortada entry = controller.portadas.value[index];
-
-              return GestureDetector(
-                onLongPress: () => showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return HomePortadaOpciones(portada: entry);
-                  },
-                ),
-                onTap: () => context.push("/hilo/${entry.id}"),
-                child: Portada.portada(
-                  portada: entry,
-                ),
-              );
-            },
-          );
-        },
+        () => SliverGrid.builder(
+          itemCount: controller.portadas.value.length,
+          gridDelegate: portadasDelegate,
+          itemBuilder: (context, index) => controller.portadas.value[index],
+        ),
       ),
     );
   }
@@ -222,87 +226,6 @@ class _FiltrarPortadasPorTitulo extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class HomePortadaOpciones extends StatelessWidget {
-  final HomePortada portada;
-  const HomePortadaOpciones({super.key, required this.portada});
-
-  @override
-  Widget build(BuildContext context) {
-    return RoundedBottomSheet.normal(
-      child: Column(
-        children: [
-          ...[
-            GrupoSeleccionable(
-              seleccionables: [
-                ItemSeleccionable.text(
-                  titulo: "Seguir",
-                  onTap: () async {
-                    var res = await GetIt.I
-                        .get<IHilosRepository>()
-                        .seguir(id: portada.id);
-
-                    res.fold((l) => null, (r) => null);
-                  },
-                ),
-                ItemSeleccionable.text(
-                  titulo: "Poner en favoritos",
-                  onTap: () async {
-                    var res = await GetIt.I
-                        .get<IHilosRepository>()
-                        .ponerEnFavoritos(id: portada.id);
-
-                    res.fold((l) => null, (r) => null);
-                  },
-                ),
-                ItemSeleccionable.text(
-                  titulo: "Ocultar",
-                  onTap: () async {
-                    var res = await GetIt.I.get<IHilosRepository>().ocultar(
-                          id: portada.id,
-                        );
-
-                    res.fold((l) => null, (r) => null);
-                  },
-                ),
-                ItemSeleccionable.text(titulo: "Denunciar", onTap: () => {}),
-              ],
-            ),
-            if (portada.esOp)
-              const GrupoSeleccionable(
-                seleccionables: [
-                  ItemSeleccionable.text(titulo: "Desactivar notificaciones"),
-                ],
-              ),
-            if (Get.find<AuthController>().usuario.value?.rango is! Moderador)
-              GrupoSeleccionable(
-                seleccionables: [
-                  ItemSeleccionable.text(
-                    titulo: "Ver usuario",
-                    onTap: () => showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (context) => const VerUsuarioPanelBottomSheet(),
-                    ),
-                  ),
-                  ItemSeleccionable.text(
-                    titulo: "Eliminar",
-                    onTap: () async {
-                      var res = await GetIt.I.get<IHilosRepository>().eliminar(
-                            id: portada.id,
-                          );
-
-                      res.fold((l) => null, (r) => null);
-                    },
-                  ),
-                ],
-              ),
-          ].addPadding(),
-        ],
-      ).paddingSymmetric(horizontal: 20, vertical: 10),
     );
   }
 }

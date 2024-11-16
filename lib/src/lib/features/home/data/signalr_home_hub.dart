@@ -9,14 +9,14 @@ class HubRoutes {
   static const String hilo = "hilo/";
 }
 
-class SignalrHomeHub extends IHomePortadasHub {
+class SignalrHomeHub extends IPortadasHub {
   late final HubConnection hub;
 
   final HubConnectionBuilder connection = HubConnectionBuilder();
 
   final onHiloEliminadoController = StreamController<String>.broadcast();
 
-  final onHiloPosteadoController = StreamController<HomePortada>.broadcast();
+  final onHiloPosteadoController = StreamController<Portada>.broadcast();
   @override
   void connect() {
     hub = connection.build();
@@ -29,7 +29,7 @@ class SignalrHomeHub extends IHomePortadasHub {
 
     hub.on("HiloPosteado", (data) {
       onHiloPosteadoController.add(
-        HomePortada.fromJson(data![0] as Map<String, dynamic>),
+        Portada.fromJson(data![0] as Map<String, dynamic>),
       );
     });
   }
@@ -46,5 +46,5 @@ class SignalrHomeHub extends IHomePortadasHub {
   Stream<String> get onHiloEliminado => onHiloEliminadoController.stream;
 
   @override
-  Stream<HomePortada> get onHiloPosteado => onHiloPosteadoController.stream;
+  Stream<Portada> get onHiloPosteado => onHiloPosteadoController.stream;
 }

@@ -9,16 +9,16 @@ import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
-class HomeLocalHub extends IHomePortadasHub {
+class HomeLocalHub extends IPortadasHub {
   final HashSet<String> portadas = HashSet();
   static Random random = Random();
   static const uuid = Uuid();
 
-  final _newPortadaController = StreamController<HomePortada>.broadcast();
+  final _newPortadaController = StreamController<Portada>.broadcast();
   final _portadaDeletedController = StreamController<String>.broadcast();
 
   @override
-  Stream<HomePortada> get onHiloPosteado => _newPortadaController.stream;
+  Stream<Portada> get onHiloPosteado => _newPortadaController.stream;
 
   @override
   Stream<String> get onHiloEliminado => _portadaDeletedController.stream;
@@ -41,12 +41,12 @@ class HomeLocalHub extends IHomePortadasHub {
         final id = uuid.v4();
         portadas.add(id);
         _newPortadaController.add(
-          HomePortada(
+          Portada(
             id: id,
             titulo: "Pepito",
             categoria: "NSFW",
             esOp: random.nextBool(),
-            features: const [HomePortadaFeatures.sticky],
+            features: const [PortadaFeatures.sticky],
             ultimoBump: DateTime.now(),
             imagen: Spoileable(
               random.nextBool(),
