@@ -31,6 +31,7 @@ class HomePortadaLoaded extends HomePortada {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => context.push("/hilo/${portada.id}"),
+      onLongPress: () => HomePortadaOpciones.show(context, portada: portada),
       child: PortadaView.portada(portada: portada),
     );
   }

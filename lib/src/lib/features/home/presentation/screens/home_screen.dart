@@ -1,25 +1,22 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
-import 'package:blog_app/src/lib/features/app/presentation/logic/extensions.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/login_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
-import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
-import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
-import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada.dart';
-import 'package:blog_app/src/lib/features/moderacion/presentation/ver_usuario_panel.dart';
-import 'package:blog_app/src/lib/features/usuarios/domain/models/usuario.dart';
+import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
+import 'package:blog_app/src/lib/utils/clases/failure.dart';
+import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../hilo/presentation/widgets/delegates/portadas_delegate.dart';
@@ -47,6 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
         if (scroll.IsBottom) controller.cargarPortadas();
       },
     );
+
+    controller.failure.listen((l) {
+      if (l is Failure) {
+        context.showFlash(
+          builder: (context, controller) => Provider.value(
+            value: controller,
+            child: FailureSnackbar(failure: l),
+          ),
+        );
+      }
+    });
 
     hub.connect();
 

@@ -7,6 +7,7 @@ import '../../../media/domain/models/media.dart';
 class Portada extends Equatable {
   final HiloId id;
   final String titulo;
+  final String? autor;
   final String categoria;
   final bool esOp;
   final List<PortadaFeatures> features;
@@ -16,6 +17,7 @@ class Portada extends Equatable {
   const Portada({
     required this.id,
     required this.titulo,
+    this.autor,
     required this.categoria,
     required this.esOp,
     required this.features,
@@ -27,15 +29,21 @@ class Portada extends Equatable {
     return Portada(
       id: json["id"],
       titulo: json["titulo"],
-      categoria: json["categoria"],
-      esOp: json["esOp"],
-      features: PortadaFeatures.values
-          .where((e) => json["features"].contains(e.name))
-          .toList(),
+      autor: json["autor"],
+      categoria: json["subcategoria"]["nombre"],
+      esOp: json["es_op"],
+      features: [
+        if (json["es_nuevo"]) PortadaFeatures.nuevo,
+        if (json["banderas"]["dados"]) PortadaFeatures.dados,
+        if (json["banderas"]["id_unico"]) PortadaFeatures.idUnico,
+        if (json["banderas"]["encuesta"]) PortadaFeatures.encuesta,
+      ],
       ultimoBump: DateTime.parse(json["ultimo_bump"]),
       imagen: Spoileable<Imagen>(
         json["spoiler"],
-        Imagen.fromJson(json["media"]),
+        Imagen.fromJson({
+          "path": json["miniatura"],
+        }),
       ),
     );
   }
@@ -59,6 +67,7 @@ enum PortadaFeatures {
   sticky,
   dados,
   idUnico,
+  encuesta,
 }
 
 enum HomeRequest { owner }

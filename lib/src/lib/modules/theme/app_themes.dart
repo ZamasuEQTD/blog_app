@@ -22,6 +22,7 @@ class AppThemes {
     ),
     scaffoldBackgroundColor: AppColors.surface,
     appBarTheme: const AppBarTheme(
+      iconTheme: IconThemeData(color: AppColors.primary),
       backgroundColor: AppColors.surface,
     ),
     textTheme: const TextTheme(

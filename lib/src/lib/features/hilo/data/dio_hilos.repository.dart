@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/app/api_config.dart';
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
 import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
@@ -55,12 +56,12 @@ class DioHilosRepository extends IHilosRepository {
     DateTime? ultimoBump,
   }) async {
     try {
-      Response response = await dio.get(
-        "hilos/portadas",
+      Response<Map<String, dynamic>> response = await dio.get(
+        "${ApiConfig.api}/hilos/portadas",
         queryParameters: {
           "titulo": titulo,
           "subcategoria": subcategoria,
-          "ultimo_bump": ultimoBump?.toIso8601String(),
+          "ultimo_bump": ultimoBump,
         },
       );
 
@@ -68,7 +69,18 @@ class DioHilosRepository extends IHilosRepository {
         return Left(response.failure);
       }
 
-      return Right(response.data.map((e) => Portada.fromJson(e)).toList());
+      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
+
+      var portadas = value
+          .map(
+            (e) => Portada.fromJson({
+              ...e,
+              "miniatura": ApiConfig.api + e["miniatura"],
+            }),
+          )
+          .toList();
+
+      return Right(portadas);
     } on Exception catch (e) {
       return Left(e.failure);
     }

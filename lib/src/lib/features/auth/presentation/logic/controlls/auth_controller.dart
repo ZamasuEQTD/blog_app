@@ -14,8 +14,11 @@ class AuthController extends GetxController {
   final ITokenStorage _tokenStorage = GetIt.I.get();
 
   var iniciando = false.obs;
+
   final usuario = Rx<Usuario?>(null);
+
   final token = Rx<String?>(null);
+
   final authState = Rx<AuthState>(AuthState.initial);
 
   Future<void> login(String token) async {

@@ -175,15 +175,18 @@ class __VerUsuarioPanelState extends State<_VerUsuarioPanel> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(5),
                       child: ColoredBox(
-                        color: const Color(0xffF5F5F5),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                         child: const Row(
                           children: [
                             CambiarHistorialButton.hilos(),
                             CambiarHistorialButton.comentarios(),
                           ],
-                        ).paddingAll(5),
+                        ).paddingSymmetric(horizontal: 10, vertical: 5),
                       ),
-                    ).marginOnly(bottom: 10).sliverBox,
+                    )
+                        .paddingSymmetric(horizontal: 10)
+                        .marginOnly(bottom: 10)
+                        .sliverBox,
                     Obx(
                       () {
                         if (controller.historial.value == Historial.hilos) {
@@ -367,17 +370,24 @@ class _CambiarHistorialButton extends CambiarHistorialButton {
       () => Expanded(
         child: ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-            backgroundColor:
-                Get.find<VerUsuarioController>().historial.value == historial
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.surface,
-            textStyle: TextStyle(
-              color:
-                  Get.find<VerUsuarioController>().historial.value == historial
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.onSurface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
             ),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ).merge(
+            Get.find<VerUsuarioController>().historial.value != historial
+                ? const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                      Colors.white,
+                    ),
+                    iconColor: WidgetStatePropertyAll(
+                      Colors.black,
+                    ),
+                    foregroundColor: WidgetStatePropertyAll(
+                      Colors.black,
+                    ),
+                  )
+                : null,
           ),
           onPressed: _setHistorial,
           label: label,

@@ -18,7 +18,7 @@ class HomeController extends GetxController {
 
   Rx<List<HomePortada>> portadas = Rx([]);
 
-  void cargarPortadas() async {
+  Future cargarPortadas() async {
     if (cargando.value) return;
     IHilosRepository repository = GetIt.I.get();
 

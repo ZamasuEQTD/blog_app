@@ -12,6 +12,13 @@ import 'package:get_it/get_it.dart';
 
 extension InitDependencies on GetIt {
   GetIt addDepedencies() {
+    addStrategyContext()
+        .addMedia()
+        .addHilos()
+        .addComentarios()
+        .addAuth()
+        .addNotificaciones()
+        .addModeracion();
     registerLazySingleton<Dio>(
       () => Dio(
         BaseOptions(
@@ -22,13 +29,7 @@ extension InitDependencies on GetIt {
         ),
       ),
     );
-    addStrategyContext()
-        .addMedia()
-        .addHilos()
-        .addComentarios()
-        .addAuth()
-        .addNotificaciones()
-        .addModeracion();
+
     return this;
   }
 

@@ -15,7 +15,7 @@ void main() {
 
   GetIt.I.addDepedencies();
 
-  Get.put(AuthController()).restaurarSesion();
+  Get.put(GetIt.I.get<AuthController>()).restaurarSesion();
 
   runApp(const MyApp());
 }

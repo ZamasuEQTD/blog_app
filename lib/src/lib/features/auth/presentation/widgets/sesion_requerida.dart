@@ -78,4 +78,13 @@ extension ElevatedButtonExtension on ElevatedButton {
         ),
         child: this,
       );
+
+  Widget withDestructiveStyle(BuildContext context) => ElevatedButtonTheme(
+        data: ElevatedButtonThemeData(
+          style: context.actualTheme.elevatedButtonTheme.style?.copyWith(
+            backgroundColor: const WidgetStatePropertyAll(Colors.red),
+          ),
+        ),
+        child: this,
+      );
 }
