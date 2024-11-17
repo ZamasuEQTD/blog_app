@@ -5,14 +5,22 @@ import 'package:blog_app/src/lib/features/app/presentation/widgets/effects/blur/
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
+import 'package:blog_app/src/lib/features/baneos/presentation/screens/banear_usuario_screen.dart';
+import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
+import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
+import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:flash/flash.dart';
 import 'package:flash/flash_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../media/presentation/multi_media.dart';
 
@@ -32,13 +40,33 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
   void initState() {
     controller.failure.listen(
       (failure) {
-        if (failure != null) {}
+        if (failure != null) {
+          context.showFlash(
+            duration: const Duration(seconds: 3),
+            builder: (context, controller) => Provider.value(
+              value: controller,
+              child: FailureSnackbar(
+                failure: failure,
+              ),
+            ),
+          );
+        }
       },
     );
 
     controller.id.listen((id) {
       if (id != null) {
-        context.replaceNamed("/hilo/$id");
+        context.showFlash(
+          duration: const Duration(seconds: 3),
+          builder: (context, controller) => Provider.value(
+            value: controller,
+            child: const SuccessSnackbar(
+              message: "Hilo creado",
+            ),
+          ),
+        );
+
+        context.replace("/hilo/$id");
       }
     });
 
@@ -98,6 +126,44 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                       hintText: "Descripción",
                     ),
                   ).marginOnly(bottom: 24, top: 8),
+                  const PostearHiloLabelSection(label: "Subcategoria"),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ColoredBox(
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Obx(
+                            () {
+                              if (controller.subcategoria.value == null) {
+                                return const Text(
+                                  "Selecciona una subcategoria",
+                                );
+                              }
+                              return Row(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: SizedBox.square(
+                                      dimension: 25,
+                                      child: Image(
+                                        image: controller.subcategoria.value!
+                                            .imagen.toProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ).marginOnly(right: 10),
+                                  Text(controller.subcategoria.value!.nombre),
+                                ],
+                              );
+                            },
+                          ),
+                          const Icon(CupertinoIcons.chevron_right),
+                        ],
+                      ).paddingSymmetric(horizontal: 10, vertical: 15),
+                    ),
+                  ).marginOnly(bottom: 24, top: 8),
                   const PostearHiloLabelSection(label: "Portada"),
                   Obx(
                     () {
@@ -106,78 +172,20 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             onPressed: () async {
-                              context.showFlash(
-                                duration: const Duration(seconds: 5),
-                                builder: (context, controller) {
-                                  return FlashBar(
-                                    behavior: FlashBehavior.floating,
-                                    backgroundColor: const Color(0xff2e2e2e),
-                                    position: FlashPosition.top,
-                                    controller: controller,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 15,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    icon: Center(
-                                      child: const ClipOval(
-                                        child: Center(
-                                          child: SizedBox.square(
-                                            dimension: 25,
-                                            child: ColoredBox(
-                                              color: Colors.white,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(5),
-                                                child: FittedBox(
-                                                  child: FaIcon(
-                                                    FontAwesomeIcons.check,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ).animate(
-                                        onComplete: (controller) {
-                                          log("completado");
-                                        },
-                                      ).scale(
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
-                                        curve: Curves.bounceOut,
-                                      ),
-                                    ),
-                                    content: const Text(
-                                      "Hilo creado",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ).paddingSymmetric(
-                                    horizontal: 10,
-                                    vertical: 10,
-                                  );
+                              IGalleryService service = GetIt.I.get();
+
+                              var response = await service.pickFile(
+                                extensions: [],
+                              );
+
+                              response.fold(
+                                (l) {},
+                                (r) {
+                                  if (r != null) {
+                                    controller.agregarPortada(r);
+                                  }
                                 },
                               );
-                              //IGalleryService service = GetIt.I.get();
-                              //
-                              //var response = await service.pickFile(
-                              //  extensions: [],
-                              //);
-                              //
-                              //response.fold(
-                              //  (l) {},
-                              //  (r) {
-                              //    if (r != null) {
-                              //      controller.agregarPortada(r);
-                              //    }
-                              //  },
-                              //);
                             },
                             label: const Text(
                               "Agregar portada ",
@@ -293,10 +301,10 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => controller.postear(),
                       child: const Text("Postear hilo"),
                     ),
-                  ),
+                  ).paddingSymmetric(horizontal: 25),
                 ],
               ),
             ),
@@ -386,4 +394,98 @@ extension BuildContextExtensions on BuildContext {
         ),
         inputDecorationTheme: actualTheme.inputDecorationTheme.copyWith(),
       );
+}
+
+abstract class MySnackbar extends StatelessWidget {
+  const MySnackbar({super.key});
+}
+
+class _MySnackbar extends MySnackbar {
+  final Widget child;
+  const _MySnackbar({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return FlashBar(
+      controller: context.read(),
+      behavior: FlashBehavior.floating,
+      backgroundColor: const Color(0xff2e2e2e),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      position: FlashPosition.top,
+      content: const SizedBox(),
+      builder: (context, _) => child.paddingSymmetric(
+        horizontal: 15,
+        vertical: 15,
+      ),
+    );
+  }
+}
+
+class SuccessSnackbar extends MySnackbar {
+  final String message;
+  const SuccessSnackbar({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return _MySnackbar(
+      child: Row(
+        children: [
+          const ClipOval(
+            child: SizedBox.square(
+              dimension: 25,
+              child: ColoredBox(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: FittedBox(
+                    child: FaIcon(
+                      FontAwesomeIcons.check,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+              .animate()
+              .scale(
+                duration: const Duration(
+                  milliseconds: 500,
+                ),
+                curve: Curves.bounceOut,
+              )
+              .marginOnly(right: 10),
+          const Text(
+            "Hilo creado",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FailureSnackbar extends MySnackbar {
+  final Failure failure;
+  const FailureSnackbar({super.key, required this.failure});
+
+  @override
+  Widget build(BuildContext context) {
+    return _MySnackbar(
+      child: Text(
+        failure.descripcion ?? failure.code,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+  }
 }

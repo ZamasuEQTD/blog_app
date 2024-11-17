@@ -20,7 +20,7 @@ class PostearHiloController extends GetxController {
   Rx<bool> idunico = Rx(false);
   Rx<bool> dados = Rx(false);
 
-  Rx<SubcategoriaId?> subcategoria = Rx(null);
+  Rx<Subcategoria?> subcategoria = Rx(null);
 
   Rx<HiloId?> id = Rx(null);
 
@@ -30,6 +30,7 @@ class PostearHiloController extends GetxController {
 
   Rx<Failure?> failure = Rx(null);
   void postear() async {
+    failure.value = null;
     if (portada.value == null) {
       failure.value = PotearHiloFailures.sinPortada;
       return;
@@ -47,7 +48,7 @@ class PostearHiloController extends GetxController {
       encuesta: encuesta.value,
       descripcion: descripcion.value,
       portada: portada.value!,
-      subcategoria: subcategoria.value!,
+      subcategoria: subcategoria.value!.id,
       idUnico: idunico.value,
       dados: dados.value,
     );

@@ -19,8 +19,6 @@ abstract class SubcategoriaTile extends StatelessWidget {
 
   const factory SubcategoriaTile.base({required Widget child}) =
       _SubcategoriaBase;
-
-  const factory SubcategoriaTile.seleccionar() = _SeleccionarSubcategoria;
 }
 
 class _SubcategoriaCargando extends SubcategoriaTile {
@@ -84,18 +82,6 @@ class _Subcategorias extends SubcategoriaTile {
         ),
         trailing: trailing,
       ),
-    );
-  }
-}
-
-class _SeleccionarSubcategoria extends SubcategoriaTile {
-  const _SeleccionarSubcategoria() : super._();
-
-  @override
-  Widget build(Object context) {
-    return const ItemSeleccionable.text(
-      titulo: "Seleccionar categoria",
-      trailing: Icon(Icons.chevron_right),
     );
   }
 }

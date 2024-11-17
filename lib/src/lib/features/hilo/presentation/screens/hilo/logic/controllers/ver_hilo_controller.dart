@@ -138,5 +138,7 @@ class HiloController extends GetxController {
 
   void eliminarMedia() {
     media.value = null;
+
+    media.refresh();
   }
 }

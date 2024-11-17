@@ -47,34 +47,36 @@ class _PortadaViewBone extends PortadaView {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: const Color(0xfff5f5f5),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Bone(
-                  height: 20,
-                  width: 60,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                ...List.generate(
-                  1 + _random.nextInt(3),
-                  (index) => Bone.square(
-                    size: 20,
+    return Skeletonizer(
+      child: ColoredBox(
+        color: const Color(0xfff5f5f5),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Bone(
+                    height: 20,
+                    width: 60,
                     borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-              ],
-            ),
-            const Bone.text(
-              words: 1,
-              fontSize: 24,
-            ),
-          ],
+                  ...List.generate(
+                    1 + _random.nextInt(3),
+                    (index) => Bone.square(
+                      size: 20,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ],
+              ),
+              const Bone.text(
+                words: 1,
+                fontSize: 24,
+              ),
+            ],
+          ),
         ),
       ),
     );

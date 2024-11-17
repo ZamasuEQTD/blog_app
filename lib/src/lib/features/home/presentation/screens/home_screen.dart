@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
                     SizedBox(
                       width: double.infinity,
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-              );
+              ).paddingSymmetric(horizontal: 20);
             }
             return Column(
               children: [

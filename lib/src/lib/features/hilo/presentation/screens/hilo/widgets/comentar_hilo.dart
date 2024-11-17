@@ -103,6 +103,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                                         child: Stack(
                                           children: [
                                             Miniatura(
+                                              key: UniqueKey(),
                                               media: x,
                                             ),
                                             Positioned.fill(
@@ -209,11 +210,17 @@ class ComentarHiloOpcionesItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return const RoundedBottomSheet.sliver(
       slivers: [
-        GrupoSeleccionableSliver(
-          seleccionables: [
-            OpcionDeComentario.agregarEnlace(),
-            OpcionDeComentario.agregarMedia(),
-          ],
+        SliverPadding(
+          padding: EdgeInsets.symmetric(
+            vertical: 20,
+            horizontal: 25,
+          ),
+          sliver: GrupoSeleccionableSliver(
+            seleccionables: [
+              OpcionDeComentario.agregarEnlace(),
+              OpcionDeComentario.agregarMedia(),
+            ],
+          ),
         ),
       ],
     );

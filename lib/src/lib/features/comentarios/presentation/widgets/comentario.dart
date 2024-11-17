@@ -47,13 +47,14 @@ class _ComentarioCard extends ComentarioCard {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 5,
+        vertical: 5,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
-          child: ColoredBox(
-            color: Theme.of(context).colorScheme.surface,
+        child: ColoredBox(
+          color: Theme.of(context).colorScheme.surface,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
             child: child,
           ),
         ),

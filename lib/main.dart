@@ -46,47 +46,47 @@ class MyApp extends StatelessWidget {
         appBarTheme: theme.appBarTheme.copyWith(
           elevation: 0,
           backgroundColor: AppColors.surface,
-          titleTextStyle: theme.textTheme.titleLarge?.merge(
-            defaultTitleTextStyle,
+          titleTextStyle: (theme.textTheme.titleLarge)?.copyWith(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),
-        textTheme:
-            GoogleFonts.poppinsTextTheme().merge(theme.textTheme).copyWith(
-                  displayLarge: theme.textTheme.displayLarge?.copyWith(
-                    fontSize: 16,
-                  ),
-                  displayMedium: theme.textTheme.displayMedium?.copyWith(
-                    fontSize: 14,
-                  ),
-                  displaySmall: theme.textTheme.displaySmall?.copyWith(
-                    fontSize: 12,
-                  ),
-                  labelLarge: theme.textTheme.labelLarge?.copyWith(
-                    fontSize: 16,
-                  ),
-                  labelMedium: theme.textTheme.labelMedium?.copyWith(
-                    fontSize: 14,
-                  ),
-                  labelSmall: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 12,
-                  ),
-                  titleSmall: theme.textTheme.titleSmall?.merge(
-                    defaultTitleTextStyle.copyWith(
-                      fontSize: 14,
-                    ),
-                  ),
-                  titleMedium: theme.textTheme.titleMedium?.merge(
-                    defaultTitleTextStyle.copyWith(
-                      fontSize: 16,
-                    ),
-                  ),
-                  titleLarge: theme.textTheme.titleLarge?.merge(
-                    largeTitleTextStyle,
-                  ),
-                ),
+        textTheme: GoogleFonts.poppinsTextTheme(theme.textTheme).copyWith(
+          displayLarge: theme.textTheme.displayLarge?.copyWith(
+            fontSize: 16,
+          ),
+          displayMedium: theme.textTheme.displayMedium?.copyWith(
+            fontSize: 14,
+          ),
+          displaySmall: theme.textTheme.displaySmall?.copyWith(
+            fontSize: 12,
+          ),
+          labelLarge: theme.textTheme.labelLarge?.copyWith(
+            fontSize: 16,
+          ),
+          labelMedium: theme.textTheme.labelMedium?.copyWith(
+            fontSize: 14,
+          ),
+          labelSmall: theme.textTheme.labelSmall?.copyWith(
+            fontSize: 12,
+          ),
+          titleSmall: theme.textTheme.titleSmall?.merge(
+            defaultTitleTextStyle.copyWith(
+              fontSize: 14,
+            ),
+          ),
+          titleMedium: theme.textTheme.titleMedium?.merge(
+            defaultTitleTextStyle.copyWith(
+              fontSize: 16,
+            ),
+          ),
+          titleLarge: theme.textTheme.titleLarge?.merge(
+            largeTitleTextStyle,
+          ),
+        ),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(
