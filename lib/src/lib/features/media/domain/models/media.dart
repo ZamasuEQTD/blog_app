@@ -33,7 +33,7 @@ class Video extends Media {
   static Video fromJson(Map<String, dynamic> portada) {
     return Video(
       previsualizacion: portada["previsualizacion"],
-      provider: NetworkProvider(path: portada["path"]),
+      provider: NetworkProvider(path: portada["url"]),
     );
   }
 }
@@ -41,9 +41,9 @@ class Video extends Media {
 class Imagen extends Media {
   const Imagen({required super.provider}) : super(tipo: TipoDeMedia.imagen);
 
-  static Imagen fromJson(Map<String, dynamic> portada) {
+  static Imagen fromJson(Map<String, dynamic> json) {
     return Imagen(
-      provider: NetworkProvider(path: portada["path"]),
+      provider: NetworkProvider(path: json["path"]),
     );
   }
 }

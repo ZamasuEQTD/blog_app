@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/app/api_config.dart';
 import 'package:blog_app/src/lib/features/app/domain/abstractions/istrategy_context.dart';
 import 'package:blog_app/src/lib/features/app/domain/strategy_context.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
@@ -22,6 +23,7 @@ extension InitDependencies on GetIt {
     registerLazySingleton<Dio>(
       () => Dio(
         BaseOptions(
+          baseUrl: ApiConfig.api,
           headers: {
             "Authorization":
                 "Bearer ${GetIt.I.get<AuthController>().token.value}",

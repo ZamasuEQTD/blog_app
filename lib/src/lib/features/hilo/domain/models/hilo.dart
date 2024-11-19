@@ -63,16 +63,24 @@ class Hilo {
       titulo: json["titulo"],
       descripcion: json["descripcion"],
       creadoEn: DateTime.parse(json["creado_en"]),
-      categoria: Subcategoria.fromJson(json["categoria"]),
       portada: Spoileable<Media>(
         json["portada"]["spoiler"],
-        Media.fromJson(json["portada"]),
+        Media.fromJson(
+          Map<String, dynamic>.from(json["portada"]["media"] as Map),
+        ),
       ),
       estado: EstadoDeHilo.activo,
-      banderas:
-          json["banderas"].map((e) => BanderasDeHilo.values.byName(e)).toList(),
-      comentarios: json["comentarios"],
+      banderas: [
+        if (json["encuesta"] != null) BanderasDeHilo.encuesta,
+        if (json["sticky"] != null) BanderasDeHilo.sticky,
+        if (json["banderas"]["id_unico"] != null) BanderasDeHilo.idUnico,
+        if (json["banderas"]["dados"] != null) BanderasDeHilo.dados,
+      ],
+      comentarios: json["cantidad_de_comentarios"],
       esOp: json["es_op"],
+      categoria: Subcategoria.fromJson(
+        Map<String, dynamic>.from(json["subcategoria"] as Map),
+      ),
     );
   }
 }

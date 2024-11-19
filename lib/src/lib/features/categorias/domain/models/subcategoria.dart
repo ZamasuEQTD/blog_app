@@ -36,7 +36,9 @@ class Subcategoria extends Equatable {
     return Subcategoria(
       id: json["id"],
       nombre: json["nombre"],
-      imagen: Imagen.fromJson(json["imagen"]),
+      imagen: Imagen.fromJson({
+        "path": json["imagen"],
+      }),
     );
   }
 }

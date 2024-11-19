@@ -37,13 +37,30 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Hilo>> getHilo({required String id}) async {
     try {
-      Response response = await dio.get("hilos/$id");
+      Response response = await dio.get("/hilos/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
-      return Right(Hilo.fromJson(response.data));
+      Map<String, dynamic> value = response.data["value"];
+
+      return Right(
+        Hilo.fromJson({
+          ...value,
+          "portada": {
+            ...value["portada"],
+            "media": {
+              ...value["portada"]["media"],
+              "path": ApiConfig.api + value["portada"]["media"]["url"],
+            },
+          },
+          "subcategoria": {
+            ...value["subcategoria"],
+            "imagen": ApiConfig.api + value["subcategoria"]["imagen"],
+          },
+        }),
+      );
     } on Exception catch (e) {
       return Left(e.failure);
     }
@@ -57,7 +74,7 @@ class DioHilosRepository extends IHilosRepository {
   }) async {
     try {
       Response<Map<String, dynamic>> response = await dio.get(
-        "${ApiConfig.api}/hilos/portadas",
+        "/hilos/portadas",
         queryParameters: {
           "titulo": titulo,
           "subcategoria": subcategoria,
