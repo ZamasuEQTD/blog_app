@@ -12,12 +12,12 @@ class Usuario extends Equatable {
   factory Usuario.formJson(Map<String, dynamic> json) {
     late final Rango rango;
     String tipo = json["rango"];
-    if (tipo == "anonimo") {
+    if (tipo.toLowerCase() == "anonimo") {
       rango = const Anonimo();
     } else {
       rango = Moderador(nombre: json["moderador"]);
     }
-    return Usuario(usuario: json["usuario"], rango: rango);
+    return Usuario(usuario: json["name"], rango: rango);
   }
   @override
   List<Object?> get props => throw UnimplementedError();

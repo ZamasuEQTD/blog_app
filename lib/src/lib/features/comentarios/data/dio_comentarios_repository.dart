@@ -44,7 +44,12 @@ class DioComentariosRepository extends IComentariosRepository {
     DateTime? ultimoComentario,
   }) async {
     try {
-      Response response = await dio.get("comentarios/$hilo/$ultimoComentario");
+      Response response = await dio.get(
+        "comentarios/$hilo",
+        queryParameters: {
+          "ultimo_comentario": ultimoComentario,
+        },
+      );
 
       if (response.statusCode != 200) {
         return Left(response.failure);

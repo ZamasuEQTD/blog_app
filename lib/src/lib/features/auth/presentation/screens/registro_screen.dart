@@ -1,4 +1,5 @@
 import 'package:blog_app/main.dart';
+import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
 import 'package:flutter/gestures.dart';
@@ -6,8 +7,41 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-class RegistroScreen extends StatelessWidget {
+import '../logic/controlls/registro_controller.dart';
+
+class RegistroScreen extends StatefulWidget {
   const RegistroScreen({super.key});
+
+  @override
+  State<RegistroScreen> createState() => _RegistroScreenState();
+}
+
+class _RegistroScreenState extends State<RegistroScreen> {
+  final RegistroController controller = Get.put(RegistroController());
+
+  @override
+  void initState() {
+    controller.token.listen((value) {
+      if (value != null) {
+        Get.find<AuthController>().login(value);
+      }
+    });
+
+    Get.find<AuthController>().authState.listen((value) {
+      if (value == AuthState.authenticated) {
+        if (mounted) {
+          context.pop();
+        }
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<RegistroController>();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +58,9 @@ class RegistroScreen extends StatelessWidget {
               "Nombre de usuario",
               style: context.labelStyle,
             ),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              onChanged: (value) => controller.usuario.value = value,
+              decoration: const InputDecoration(
                 hintText: "Usuario",
               ),
             ).marginOnly(bottom: 24, top: 8),
@@ -33,8 +68,9 @@ class RegistroScreen extends StatelessWidget {
               "Contraseña",
               style: context.labelStyle,
             ),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              onChanged: (value) => controller.password.value = value,
+              decoration: const InputDecoration(
                 hintText: "Contraseña",
               ),
             ).marginOnly(bottom: 24, top: 8),
@@ -42,8 +78,9 @@ class RegistroScreen extends StatelessWidget {
               "Confirmar contraseña",
               style: context.labelStyle,
             ),
-            const TextField(
-              decoration: InputDecoration(
+            TextField(
+              onChanged: (value) => controller.passwordRepetida.value = value,
+              decoration: const InputDecoration(
                 hintText: "Repite tu contraseña",
               ),
             ).marginOnly(bottom: 24, top: 8),
@@ -60,7 +97,7 @@ class RegistroScreen extends StatelessWidget {
                     Color.fromRGBO(22, 22, 23, 1),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => controller.registrarse(),
                 child: const Text(
                   "Registrarse",
                   style: TextStyle(

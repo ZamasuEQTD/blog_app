@@ -1,4 +1,5 @@
 import 'package:blog_app/src/lib/features/auth/data/development/local_auth_repository.dart';
+import 'package:blog_app/src/lib/features/auth/data/dio_auth_repository.dart';
 import 'package:blog_app/src/lib/features/auth/domain/iauth_repository.dart';
 import 'package:blog_app/src/lib/features/auth/domain/itoken_decode.dart';
 import 'package:blog_app/src/lib/features/auth/domain/itoken_storage.dart';
@@ -15,13 +16,13 @@ extension AuthDependencies on GetIt {
     registerFactory(() => const FlutterSecureStorage());
 
     registerFactory<IAuthRepository>(
-      () => LocalAuthRepository(),
+      () => DioAuthRepository(),
     );
 
     registerFactory<AuthController>(() => AuthController());
 
-    registerFactory<ITokenDecode>(() => LocalTokenDecode());
-    //registerFactory<ITokenDecode>(() => TokenDecode());
+    //registerFactory<ITokenDecode>(() => LocalTokenDecode());
+    registerFactory<ITokenDecode>(() => TokenDecode());
 
     registerFactory<ITokenStorage>(() => TokenSecureStorage());
     return this;

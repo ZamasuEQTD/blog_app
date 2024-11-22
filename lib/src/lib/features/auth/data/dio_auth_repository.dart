@@ -1,3 +1,4 @@
+import 'package:blog_app/src/lib/features/app/api_config.dart';
 import 'package:blog_app/src/lib/features/hilo/data/dio_hilos.repository.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -16,9 +17,9 @@ class DioAuthRepository implements IAuthRepository {
   }) async {
     try {
       Response response = await dio.post(
-        "auth/login",
+        "/api/auth/login",
         data: {
-          "usuario": usuario,
+          "username": usuario,
           "password": password,
         },
       );
@@ -40,9 +41,9 @@ class DioAuthRepository implements IAuthRepository {
   }) async {
     try {
       Response response = await dio.post(
-        "auth/registro",
+        "/api/auth/registro",
         data: {
-          "usuario": usuario,
+          "username": usuario,
           "password": password,
         },
       );
@@ -51,7 +52,7 @@ class DioAuthRepository implements IAuthRepository {
         return Left(response.failure);
       }
 
-      return Right(response.data["token"]);
+      return Right(response.data["value"]);
     } on Exception catch (e) {
       return Left(e.failure);
     }

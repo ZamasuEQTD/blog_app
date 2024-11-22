@@ -27,7 +27,7 @@ class RegistroController extends GetxController {
 
     result.fold(
       (l) => failure.value = l,
-      (r) => Get.find<AuthController>().login(r),
+      (r) => token.value = r,
     );
 
     enviando.value = false;
