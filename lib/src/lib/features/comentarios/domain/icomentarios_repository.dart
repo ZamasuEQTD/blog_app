@@ -29,4 +29,8 @@ abstract class IComentariosRepository {
   Future<Either<Failure, Unit>> denunciar({
     required ComentarioId id,
   });
+
+  Future<Either<Failure, Unit>> destacar({
+    required ComentarioId id,
+  });
 }

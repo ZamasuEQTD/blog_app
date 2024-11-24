@@ -101,6 +101,18 @@ class HomePortadaOpciones extends StatelessWidget {
               GrupoSeleccionable(
                 seleccionables: [
                   ItemSeleccionable.text(
+                    titulo: "Establecer como sticky",
+                    onTap: () async {
+                      var res = await GetIt.I
+                          .get<IHilosRepository>()
+                          .establecerSticky(
+                            id: portada.id,
+                          );
+
+                      res.fold((l) => null, (r) => null);
+                    },
+                  ),
+                  ItemSeleccionable.text(
                     titulo: "Ver usuario",
                     onTap: () => showModalBottomSheet(
                       isScrollControlled: true,

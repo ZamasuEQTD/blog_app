@@ -3,6 +3,6 @@ import 'package:dartz/dartz.dart';
 import '../../../utils/clases/failure.dart';
 import 'models/subcategoria.dart';
 
-abstract class ISubcategoriasRepository {
-  Future<Either<Failure, List<Subcategoria>>> getSubcategorias();
+abstract class ICategoriasRepository {
+  Future<Either<Failure, List<Categoria>>> getCategorias();
 }

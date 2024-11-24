@@ -3,7 +3,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../utils/clases/failure.dart';
 import '../../app/domain/models/spoileable.dart';
-import '../../categorias/domain/models/subcategoria.dart';
+import '../../categorias/domain/models/categoria.dart';
 import '../../media/domain/models/media.dart';
 import 'models/hilo.dart';
 import 'models/types.dart';
@@ -46,6 +46,10 @@ abstract class IHilosRepository {
   });
 
   Future<Either<Failure, Unit>> desactivarNotificaciones({
+    required String id,
+  });
+
+  Future<Either<Failure, Unit>> establecerSticky({
     required String id,
   });
 }

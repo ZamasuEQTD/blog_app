@@ -16,6 +16,17 @@ class Categoria extends Equatable {
         nombre,
         subcategorias,
       ];
+
+  factory Categoria.fromJson(Map<String, dynamic> json) {
+    return Categoria(
+      json["nombre"],
+      List<Subcategoria>.from(
+        json["subcategorias"].map(
+          (e) => Subcategoria.fromJson(e),
+        ),
+      ),
+    );
+  }
 }
 
 class Subcategoria extends Equatable {

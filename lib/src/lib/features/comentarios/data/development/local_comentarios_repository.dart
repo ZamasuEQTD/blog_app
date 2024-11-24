@@ -106,4 +106,10 @@ class LocalComentariosRepository extends IComentariosRepository {
     // TODO: implement denunciar
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<Failure, Unit>> destacar({required ComentarioId id}) {
+    // TODO: implement destacar
+    throw UnimplementedError();
+  }
 }

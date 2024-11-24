@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import '../../../app/domain/models/spoileable.dart';
 import '../../../media/domain/models/media.dart';
 import 'typedef.dart';
@@ -32,6 +34,19 @@ class Comentario {
     required this.tags,
     required this.taggueos,
   });
+  factory Comentario.fromJson(Map<String, dynamic> json) => Comentario(
+        id: json['id'],
+        texto: json['texto'],
+        creado_en: DateTime.parse(json['creado_en']),
+        color: ColoresDeComentario.values.byName(json['color']),
+        op: OpData.fromJson(json['op']),
+        tag: json['tag'],
+        tags: List<String>.from(json['tags']),
+        taggueos: List<String>.from(json['taggueos']),
+        autor: json['autor'],
+        dados: json['dados'],
+        tagUnico: json['tag_unico'],
+      );
 }
 
 enum ColoresDeComentario { rojo, amarillo, multi, invertido }
@@ -45,4 +60,10 @@ class OpData {
     required this.rango,
     required this.rangoCorto,
   });
+
+  factory OpData.fromJson(Map<String, dynamic> json) => OpData(
+        nombre: json['nombre'],
+        rango: json['rango'],
+        rangoCorto: json['rangoCorto'],
+      );
 }

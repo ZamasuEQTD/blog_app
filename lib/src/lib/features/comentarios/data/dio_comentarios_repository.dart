@@ -55,7 +55,17 @@ class DioComentariosRepository extends IComentariosRepository {
         return Left(response.failure);
       }
 
-      return Right(response.data);
+      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
+
+      var comentarios = value
+          .map(
+            (e) => Comentario.fromJson({
+              ...e,
+            }),
+          )
+          .toList();
+
+      return Right(comentarios);
     } on Exception catch (e) {
       return Left(e.failure);
     }
@@ -79,14 +89,38 @@ class DioComentariosRepository extends IComentariosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> ocultar({required ComentarioId id}) {
-    // TODO: implement ocultar
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> ocultar({required ComentarioId id}) async {
+    try {
+      Response response = await dio.post("comentarios/ocultar/$id");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
   }
 
   @override
   Future<Either<Failure, Unit>> denunciar({required ComentarioId id}) {
     // TODO: implement denunciar
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, Unit>> destacar({required ComentarioId id}) async {
+    try {
+      Response response = await dio.post("comentarios/destacar/$id");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
   }
 }

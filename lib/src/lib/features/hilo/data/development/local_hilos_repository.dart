@@ -246,4 +246,9 @@ class LocalHilosRepository extends IHilosRepository {
     // TODO: implement desactivarNotificaciones
     throw UnimplementedError();
   }
+
+  @override
+  Future<Either<Failure, Unit>> establecerSticky({required String id}) {
+    throw UnimplementedError();
+  }
 }

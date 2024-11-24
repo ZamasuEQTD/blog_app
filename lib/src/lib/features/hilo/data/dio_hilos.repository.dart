@@ -1,7 +1,7 @@
 import 'package:blog_app/src/lib/features/app/api_config.dart';
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
-import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
+import 'package:blog_app/src/lib/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
@@ -90,9 +90,9 @@ class DioHilosRepository extends IHilosRepository {
 
       var portadas = value
           .map(
-            (e) => Portada.fromJson({
-              ...e,
-              "miniatura": ApiConfig.api + e["miniatura"],
+            (p) => Portada.fromJson({
+              ...p,
+              "miniatura": ApiConfig.api + p["miniatura"],
             }),
           )
           .toList();
@@ -121,7 +121,7 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> ponerEnFavoritos({required String id}) async {
     try {
-      Response response = await dio.post("hilos/$id/favoritos");
+      Response response = await dio.post("hilos/$id/poner-en-favoritos");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -184,9 +184,35 @@ class DioHilosRepository extends IHilosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> desactivarNotificaciones({required String id}) {
-    // TODO: implement desactivarNotificaciones
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> desactivarNotificaciones({
+    required String id,
+  }) async {
+    try {
+      Response response = await dio.post("hilos/$id/desactivar-notificaciones");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> establecerSticky({required String id}) async {
+    try {
+      Response response = await dio.post("hilos/$id/establecer-sticky");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
   }
 }
 
