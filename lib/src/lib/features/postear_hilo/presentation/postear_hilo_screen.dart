@@ -2,6 +2,7 @@ import 'package:blog_app/src/lib/features/app/presentation/widgets/colored_icon_
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
+import 'package:blog_app/src/lib/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
@@ -104,8 +105,9 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     height: 10,
                   ),
                   const PostearHiloLabelSection(label: "Titulo"),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    onChanged: (value) => controller.titulo.value = value,
+                    decoration: const InputDecoration(
                       hintText: "Titulo",
                     ),
                   ).marginOnly(bottom: 24, top: 8),
@@ -113,48 +115,56 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     height: 10,
                   ),
                   const PostearHiloLabelSection(label: "Descripción"),
-                  const TextField(
+                  TextField(
+                    onChanged: (value) => controller.descripcion.value = value,
                     maxLines: 5,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "Descripción",
                     ),
                   ).marginOnly(bottom: 24, top: 8),
                   const PostearHiloLabelSection(label: "Subcategoria"),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: ColoredBox(
-                      color: Colors.white,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(
-                            () {
-                              if (controller.subcategoria.value == null) {
-                                return const Text(
-                                  "Selecciona una subcategoria",
-                                );
-                              }
-                              return Row(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: SizedBox.square(
-                                      dimension: 25,
-                                      child: Image(
-                                        image: controller.subcategoria.value!
-                                            .imagen.toProvider,
-                                        fit: BoxFit.cover,
+                    child: GestureDetector(
+                      onTap: () => SeleccionarSubcategoriaBottomSheet.show(
+                        context,
+                        (subcategoria) =>
+                            controller.subcategoria.value = subcategoria,
+                      ),
+                      child: ColoredBox(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Obx(
+                              () {
+                                if (controller.subcategoria.value == null) {
+                                  return const Text(
+                                    "Selecciona una subcategoria",
+                                  );
+                                }
+                                return Row(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: SizedBox.square(
+                                        dimension: 25,
+                                        child: Image(
+                                          image: controller.subcategoria.value!
+                                              .imagen.toProvider,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                  ).marginOnly(right: 10),
-                                  Text(controller.subcategoria.value!.nombre),
-                                ],
-                              );
-                            },
-                          ),
-                          const Icon(CupertinoIcons.chevron_right),
-                        ],
-                      ).paddingSymmetric(horizontal: 10, vertical: 15),
+                                    ).marginOnly(right: 10),
+                                    Text(controller.subcategoria.value!.nombre),
+                                  ],
+                                );
+                              },
+                            ),
+                            const Icon(CupertinoIcons.chevron_right),
+                          ],
+                        ).paddingSymmetric(horizontal: 10, vertical: 15),
+                      ),
                     ),
                   ).marginOnly(bottom: 24, top: 8),
                   const PostearHiloLabelSection(label: "Portada"),
@@ -297,7 +307,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                       onPressed: () => controller.postear(),
                       child: const Text("Postear hilo"),
                     ),
-                  ).paddingSymmetric(horizontal: 25),
+                  ).paddingSymmetric(horizontal: 25).marginOnly(bottom: 24),
                 ],
               ),
             ),

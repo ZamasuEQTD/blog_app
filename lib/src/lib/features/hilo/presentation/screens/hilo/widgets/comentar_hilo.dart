@@ -171,7 +171,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                           ColoredIconButton(
                             background: const Color.fromRGBO(22, 22, 23, 1),
                             onPressed: () =>
-                                Get.find<HiloController>().enviarComentario,
+                                Get.find<HiloController>().enviarComentario(),
                             icon: const Icon(
                               CupertinoIcons.paperplane_fill,
                               color: Colors.white,

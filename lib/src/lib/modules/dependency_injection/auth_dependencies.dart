@@ -19,7 +19,7 @@ extension AuthDependencies on GetIt {
       () => DioAuthRepository(),
     );
 
-    registerFactory<AuthController>(() => AuthController());
+    registerLazySingleton<AuthController>(() => AuthController());
 
     //registerFactory<ITokenDecode>(() => LocalTokenDecode());
     registerFactory<ITokenDecode>(() => TokenDecode());

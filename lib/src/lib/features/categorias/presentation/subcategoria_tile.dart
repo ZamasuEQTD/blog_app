@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../app/presentation/widgets/item_seleccionable.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../domain/models/subcategoria.dart';
+import '../domain/models/categoria.dart';
 
 abstract class SubcategoriaTile extends StatelessWidget {
   const SubcategoriaTile._({super.key});

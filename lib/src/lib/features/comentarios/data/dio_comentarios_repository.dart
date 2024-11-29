@@ -1,8 +1,10 @@
+import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/src/lib/features/hilo/data/dio_hilos.repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
+import 'package:blog_app/src/lib/features/media/data/file_picker_gallery_service.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -16,16 +18,28 @@ class DioComentariosRepository extends IComentariosRepository {
   Future<Either<Failure, Unit>> enviar({
     required HiloId hilo,
     required String comentario,
-    Media? media,
+    Spoileable<Media>? media,
   }) async {
     try {
       Response response = await dio.post(
-        "comentarios/enviar",
-        data: {
-          "hilo": hilo,
-          "comentario": comentario,
-          "media": media,
-        },
+        "/comentarios/comentar-hilo/$hilo",
+        data: FormData.fromMap({
+          "texto": comentario,
+          if (media != null) ...{
+            "es_spoiler": true,
+            "media": await MultipartFile.fromFile(
+              media.spoileable.provider.path,
+              contentType: DioMediaType(
+                MimeService.getMime(media.spoileable.provider.path)
+                    .split("/")
+                    .first,
+                MimeService.getMime(media.spoileable.provider.path)
+                    .split("/")
+                    .last,
+              ),
+            ),
+          },
+        }),
       );
 
       if (response.statusCode != 200) {
@@ -45,7 +59,7 @@ class DioComentariosRepository extends IComentariosRepository {
   }) async {
     try {
       Response response = await dio.get(
-        "comentarios/$hilo",
+        "/comentarios/hilo/$hilo",
         queryParameters: {
           "ultimo_comentario": ultimoComentario,
         },

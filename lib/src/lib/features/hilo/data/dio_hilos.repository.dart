@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:blog_app/src/lib/features/app/api_config.dart';
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/baneos/domain/failures/estas_baneado_failure.dart';
@@ -6,6 +8,7 @@ import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
+import 'package:blog_app/src/lib/features/media/data/file_picker_gallery_service.dart';
 import 'package:blog_app/src/lib/features/media/domain/models/media.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -148,21 +151,29 @@ class DioHilosRepository extends IHilosRepository {
         "titulo": titulo,
         "descripcion": descripcion,
         "encuesta": encuesta,
-        "categoria": subcategoria,
+        "subcategoria": subcategoria,
         "dados": dados,
         "id_unico": idUnico,
-        "portada": await MultipartFile.fromFile(
+        "file": await MultipartFile.fromFile(
           portada.spoileable.provider.path,
+          contentType: DioMediaType(
+            MimeService.getMime(portada.spoileable.provider.path)
+                .split("/")
+                .first,
+            MimeService.getMime(portada.spoileable.provider.path)
+                .split("/")
+                .last,
+          ),
         ),
       });
 
-      Response response = await dio.post("hilos", data: data);
+      Response response = await dio.post("/hilos/postear", data: data);
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
-      return Right(response.data["id"]);
+      return Right(response.data["value"]);
     } on Exception catch (e) {
       return Left(e.failure);
     }

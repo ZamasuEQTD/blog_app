@@ -226,6 +226,9 @@ class _FiltrarPortadasPorTitulo extends StatelessWidget {
     return Flexible(
       child: TextField(
         maxLines: 1,
+        onTapOutside: (event) {
+          FocusScope.of(context).unfocus();
+        },
         onChanged: (value) => controller.titulo.value = value,
         decoration: InputDecoration(
           hintText: "Buscar por titulo",

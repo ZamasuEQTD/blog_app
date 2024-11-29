@@ -54,39 +54,7 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: const BottomSheetThemeData(
           backgroundColor: Colors.transparent,
         ),
-        textTheme: GoogleFonts.poppinsTextTheme(theme.textTheme).copyWith(
-          displayLarge: theme.textTheme.displayLarge?.copyWith(
-            fontSize: 16,
-          ),
-          displayMedium: theme.textTheme.displayMedium?.copyWith(
-            fontSize: 14,
-          ),
-          displaySmall: theme.textTheme.displaySmall?.copyWith(
-            fontSize: 12,
-          ),
-          labelLarge: theme.textTheme.labelLarge?.copyWith(
-            fontSize: 16,
-          ),
-          labelMedium: theme.textTheme.labelMedium?.copyWith(
-            fontSize: 14,
-          ),
-          labelSmall: theme.textTheme.labelSmall?.copyWith(
-            fontSize: 12,
-          ),
-          titleSmall: theme.textTheme.titleSmall?.merge(
-            defaultTitleTextStyle.copyWith(
-              fontSize: 14,
-            ),
-          ),
-          titleMedium: theme.textTheme.titleMedium?.merge(
-            defaultTitleTextStyle.copyWith(
-              fontSize: 16,
-            ),
-          ),
-          titleLarge: theme.textTheme.titleLarge?.merge(
-            largeTitleTextStyle,
-          ),
-        ),
+        textTheme: GoogleFonts.poppinsTextTheme(theme.textTheme).copyWith(),
         elevatedButtonTheme: const ElevatedButtonThemeData(
           style: ButtonStyle(
             shape: WidgetStatePropertyAll(
@@ -110,8 +78,9 @@ class MyApp extends StatelessWidget {
         ),
         inputDecorationTheme: const InputDecorationTheme(
           filled: true,
-          hintStyle: TextStyle(
+          labelStyle: TextStyle(
             fontWeight: FontWeight.w400,
+            fontSize: 20,
           ),
           fillColor: AppColors.onSurface,
           contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),

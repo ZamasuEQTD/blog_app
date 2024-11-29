@@ -1,5 +1,5 @@
 import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
-import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
+import 'package:blog_app/src/lib/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/hilo.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/models/types.dart';

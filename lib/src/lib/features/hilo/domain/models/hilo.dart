@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:blog_app/src/lib/features/categorias/domain/models/categoria.dart';
+
 import '../../../app/domain/models/spoileable.dart';
-import '../../../categorias/domain/models/subcategoria.dart';
 import '../../../media/domain/models/media.dart';
 import 'types.dart';
 

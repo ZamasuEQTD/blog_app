@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:blog_app/src/lib/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/models/typedef.dart';
@@ -83,7 +84,7 @@ class LocalComentariosRepository extends IComentariosRepository {
   Future<Either<Failure, Unit>> enviar({
     required HiloId hilo,
     required String comentario,
-    Media? media,
+    Spoileable<Media>? media,
   }) {
     // TODO: implement enviar
     throw UnimplementedError();

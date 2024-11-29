@@ -34,6 +34,7 @@ class Portada extends Equatable {
       esOp: json["es_op"],
       features: [
         if (json["es_nuevo"]) PortadaFeatures.nuevo,
+        if (json["es_sticky"]) PortadaFeatures.sticky,
         if (json["banderas"]["dados"]) PortadaFeatures.dados,
         if (json["banderas"]["id_unico"]) PortadaFeatures.idUnico,
         if (json["banderas"]["encuesta"]) PortadaFeatures.encuesta,

@@ -1,9 +1,8 @@
-import 'package:blog_app/src/lib/features/categorias/domain/models/subcategoria.dart';
+import 'package:blog_app/src/lib/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
-import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';

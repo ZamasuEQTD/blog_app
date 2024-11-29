@@ -3,6 +3,7 @@ import 'package:blog_app/src/lib/features/app/domain/abstractions/istrategy_cont
 import 'package:blog_app/src/lib/features/app/domain/strategy_context.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/auth_dependencies.dart';
+import 'package:blog_app/src/lib/modules/dependency_injection/categorias_dependencies.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/comentarios_dependencies.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/hilos_dependencies.dart';
 import 'package:blog_app/src/lib/modules/dependency_injection/media_dependencies.dart';
@@ -19,8 +20,9 @@ extension InitDependencies on GetIt {
         .addComentarios()
         .addAuth()
         .addNotificaciones()
-        .addModeracion();
-    registerLazySingleton<Dio>(
+        .addModeracion()
+        .addCategorias();
+    registerFactory<Dio>(
       () => Dio(
         BaseOptions(
           baseUrl: ApiConfig.api,

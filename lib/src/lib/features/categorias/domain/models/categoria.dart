@@ -22,7 +22,7 @@ class Categoria extends Equatable {
       json["nombre"],
       List<Subcategoria>.from(
         json["subcategorias"].map(
-          (e) => Subcategoria.fromJson(e),
+          (e) => Subcategoria.fromJson(Map<String, dynamic>.from(e as Map)),
         ),
       ),
     );
