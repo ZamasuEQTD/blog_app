@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import '../../../app/domain/models/spoileable.dart';
 import '../../../media/domain/models/media.dart';
 import 'typedef.dart';
@@ -10,11 +7,11 @@ class Comentario {
   final String texto;
   final DateTime creado_en;
   final ColoresDeComentario color;
-  final OpData op;
+  final Autor autor;
   final Spoileable<Media>? media;
-  final bool destacado = true;
+  final bool destacado;
   final String tag;
-  final String? autor;
+  final String? autorId;
   final String? tagUnico;
   final String? dados;
   final List<String> tags;
@@ -25,10 +22,11 @@ class Comentario {
     required this.texto,
     required this.creado_en,
     required this.color,
-    required this.op,
+    required this.autor,
     required this.tag,
+    required this.destacado,
     this.media,
-    this.autor,
+    this.autorId,
     this.tagUnico,
     this.dados,
     required this.tags,
@@ -37,33 +35,36 @@ class Comentario {
   factory Comentario.fromJson(Map<String, dynamic> json) => Comentario(
         id: json['id'],
         texto: json['texto'],
-        creado_en: DateTime.parse(json['creado_en']),
-        color: ColoresDeComentario.values.byName(json['color']),
-        op: OpData.fromJson(json['op']),
+        creado_en: DateTime.parse(json['created_at']),
+        color: ColoresDeComentario.values.byName(
+          (json['color'] as String).toLowerCase(),
+        ),
+        destacado: json['destacado'],
+        autor: Autor.fromJson(json['autor']),
         tag: json['tag'],
         tags: List<String>.from(json['tags']),
         taggueos: List<String>.from(json['taggueos']),
-        autor: json['autor'],
+        autorId: json['autor_id'],
         dados: json['dados'],
         tagUnico: json['tag_unico'],
       );
 }
 
-enum ColoresDeComentario { rojo, amarillo, multi, invertido }
+enum ColoresDeComentario { rojo, amarillo, multi, invertido, azul }
 
-class OpData {
+class Autor {
   final String rango;
   final String rangoCorto;
   final String nombre;
-  const OpData({
+  const Autor({
     required this.nombre,
     required this.rango,
     required this.rangoCorto,
   });
 
-  factory OpData.fromJson(Map<String, dynamic> json) => OpData(
+  factory Autor.fromJson(Map<String, dynamic> json) => Autor(
         nombre: json['nombre'],
         rango: json['rango'],
-        rangoCorto: json['rangoCorto'],
+        rangoCorto: json['rango_corto'],
       );
 }

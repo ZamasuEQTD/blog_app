@@ -55,6 +55,9 @@ class DioHilosRepository extends IHilosRepository {
             ...value["portada"],
             "media": {
               ...value["portada"]["media"],
+              if (value["portada"]["media"]["previsualizacion"] != null)
+                "previsualizacion": ApiConfig.api +
+                    value["portada"]["media"]["previsualizacion"],
               "path": ApiConfig.api + value["portada"]["media"]["url"],
             },
           },

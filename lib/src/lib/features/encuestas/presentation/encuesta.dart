@@ -115,103 +115,106 @@ class RespuestaView extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: radius,
           border: Border.all(
-            color: Colors.blueAccent,
+            color: const Color.fromRGBO(51, 51, 51, 1),
             strokeAlign: 0.5,
           ),
         ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: radius,
-                        child: ColoredBox(
-                          color: const Color.fromRGBO(229, 231, 235, 1),
-                          child: AnimatedSize(
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeInOut,
-                            child: ClipRect(
-                              child: SizedBox(
-                                height: constraints.maxHeight,
-                                width: constraints.maxWidth *
-                                    (respuesta.porcentaje(
-                                          context.watch<Encuesta>().votos,
-                                        ) /
-                                        100),
+        child: ClipRRect(
+          borderRadius: radius,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ClipRRect(
+                          borderRadius: radius,
+                          child: ColoredBox(
+                            color: const Color.fromRGBO(229, 231, 235, 1),
+                            child: AnimatedSize(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                              child: ClipRect(
+                                child: SizedBox(
+                                  height: constraints.maxHeight,
+                                  width: constraints.maxWidth *
+                                      (respuesta.porcentaje(
+                                            context.watch<Encuesta>().votos,
+                                          ) /
+                                          100),
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Flexible(
-                  child: Text(
-                    respuesta.respuesta,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Color.fromRGBO(55, 65, 81, 1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    child: Text(
+                      respuesta.respuesta,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Color.fromRGBO(55, 65, 81, 1),
+                      ),
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "${respuesta.votos} Votos",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(17, 24, 39, 1),
+                  Row(
+                    children: [
+                      Text(
+                        "${respuesta.votos} Votos",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(17, 24, 39, 1),
+                        ),
                       ),
-                    ),
-                    Obx(() {
-                      if (Get.find<EncuestaController>().seleccionada.value ==
-                              respuesta.id ||
-                          Get.find<EncuestaController>()
-                                  .encuesta
-                                  .value
-                                  .respuesta ==
-                              respuesta.id) {
-                        return ClipOval(
-                          child: ColoredBox(
-                            color: Colors.green.withOpacity(0.7),
-                            child: SizedBox.square(
-                              dimension: 16,
-                              child: FittedBox(
-                                child: const FaIcon(
-                                  FontAwesomeIcons.check,
-                                  color: Colors.white,
-                                ).paddingAll(5),
+                      Obx(() {
+                        if (Get.find<EncuestaController>().seleccionada.value ==
+                                respuesta.id ||
+                            Get.find<EncuestaController>()
+                                    .encuesta
+                                    .value
+                                    .respuesta ==
+                                respuesta.id) {
+                          return ClipOval(
+                            child: ColoredBox(
+                              color: Colors.green.withOpacity(0.7),
+                              child: SizedBox.square(
+                                dimension: 16,
+                                child: FittedBox(
+                                  child: const FaIcon(
+                                    FontAwesomeIcons.check,
+                                    color: Colors.white,
+                                  ).paddingAll(5),
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                            .animate()
-                            .scale(
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.bounceOut,
-                            )
-                            .marginOnly(left: 5);
-                      }
-                      return const SizedBox();
-                    }),
-                  ],
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 10, vertical: 16),
-          ],
+                          )
+                              .animate()
+                              .scale(
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.bounceOut,
+                              )
+                              .marginOnly(left: 5);
+                        }
+                        return const SizedBox();
+                      }),
+                    ],
+                  ),
+                ],
+              ).paddingSymmetric(horizontal: 10, vertical: 16),
+            ],
+          ),
         ),
       ),
     );

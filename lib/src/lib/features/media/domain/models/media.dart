@@ -33,7 +33,7 @@ class Video extends Media {
   static Video fromJson(Map<String, dynamic> portada) {
     return Video(
       previsualizacion: portada["previsualizacion"],
-      provider: NetworkProvider(path: portada["url"]),
+      provider: NetworkProvider(path: portada["path"]),
     );
   }
 }

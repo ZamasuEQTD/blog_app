@@ -35,7 +35,7 @@ class _HiloScreenState extends State<HiloScreen> {
   final ScrollController scroll = ScrollController();
   late final HiloController controller = Get.put(
     HiloController(id: widget.id),
-  )..cargar(widget.id);
+  )..cargar();
 
   final AlturaController alturaController = AlturaController();
 
@@ -220,9 +220,12 @@ class _ComentariosEnHiloState extends State<ComentariosEnHilo> {
 
   @override
   void initState() {
-    controller.ultimoComentarioAgregadoStream.stream.listen(
+    controller.ultimoComentarioAgregado.listen(
       (comentario) {
-        keys[comentario.id] = GlobalKey();
+        if (comentario != null) {
+          keys[comentario.id + (comentario.destacado ? "destacado" : "")] =
+              GlobalKey();
+        }
       },
     );
 

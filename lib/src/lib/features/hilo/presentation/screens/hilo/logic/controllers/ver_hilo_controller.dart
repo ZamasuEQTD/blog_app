@@ -31,11 +31,13 @@ class HiloController extends GetxController {
 
   Rx<bool> cargandoComentarios = false.obs;
 
+  Rx<HashMap<String, List<String>>> taggueosComentarios = Rx(HashMap());
+
   Rx<List<Comentario>> comentarios = Rx([]);
 
-  final ultimoComentarioAgregadoStream = StreamController<Comentario>();
+  Rx<Comentario?> ultimoComentarioAgregado = Rx(null);
 
-  Rx<bool> enviando = false.obs;
+  Rx<EnvioComentarioState> envioComentario = EnvioComentarioState.initial.obs;
   Rx<String> comentario = "".obs;
   Rx<Spoileable<Media>?> media = Rx(null);
   List<String> taggueos = [];
@@ -44,17 +46,7 @@ class HiloController extends GetxController {
 
   HiloController({required this.id});
 
-  @override
-  void onReady() {
-    cargar(id);
-  }
-
-  @override
-  void onClose() {
-    ultimoComentarioAgregadoStream.close();
-  }
-
-  Future<void> cargar(String id) async {
+  Future<void> cargar() async {
     cargando.value = true;
 
     IHilosRepository repository = GetIt.I.get();
@@ -87,12 +79,12 @@ class HiloController extends GetxController {
       },
       (r) {
         for (var c in r) {
-          if (!ultimoComentarioAgregadoStream.isClosed) {
-            ultimoComentarioAgregadoStream.sink.add(c);
-          }
+          ultimoComentarioAgregado.value = c;
         }
 
-        ultimoComentario = r.lastOrNull?.creado_en;
+        if (r.isNotEmpty) {
+          ultimoComentario = r.last.creado_en;
+        }
 
         comentarios.value = [...comentarios.value, ...r];
       },
@@ -100,8 +92,9 @@ class HiloController extends GetxController {
   }
 
   Future<void> enviarComentario() async {
-    enviando.value = true;
+    if (envioComentario.value == EnvioComentarioState.enviando) return;
 
+    envioComentario.value = EnvioComentarioState.enviando;
     IComentariosRepository repository = GetIt.I.get();
 
     var result = await repository.enviar(
@@ -113,10 +106,12 @@ class HiloController extends GetxController {
       (l) {
         failure.value = l;
       },
-      (r) {},
+      (r) {
+        envioComentario.value = EnvioComentarioState.enviado;
+      },
     );
 
-    enviando.value = false;
+    envioComentario.value = EnvioComentarioState.initial;
   }
 
   void tagguear(String tag) {
@@ -141,4 +136,11 @@ class HiloController extends GetxController {
 
     media.refresh();
   }
+}
+
+enum EnvioComentarioState {
+  initial,
+  enviando,
+  enviado,
+  error,
 }

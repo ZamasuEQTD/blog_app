@@ -18,34 +18,118 @@ abstract class SnackbarCustom extends StatelessWidget {
   ) {
     context.showFlash(
       duration: const Duration(seconds: 3),
-      builder: (context, controller) => _SnackbarCustom(
-        controller: controller,
-        builder: (context, _) => Provider.value(
-          value: controller,
-          child: child,
-        ),
+      builder: (context, controller) => Provider.value(
+        value: controller,
+        child: child,
+      ),
+    );
+  }
+
+  static void failure(BuildContext context, Failure failure) =>
+      show(context, MySnackbar.failure(failure: failure));
+
+  static void success(BuildContext context, String message) =>
+      show(context, MySnackbar.success(message: message));
+}
+
+abstract class MySnackbar extends StatelessWidget {
+  const MySnackbar._({super.key});
+
+  const factory MySnackbar({required Widget child}) = _MySnackbar;
+
+  const factory MySnackbar.failure({required Failure failure}) =
+      _FailureSnackbar;
+
+  const factory MySnackbar.success({required String message}) =
+      _SuccessSnackbar;
+}
+
+class _MySnackbar extends MySnackbar {
+  final Widget child;
+  const _MySnackbar({required this.child}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return FlashBar(
+      controller: context.read(),
+      behavior: FlashBehavior.floating,
+      backgroundColor: const Color(0xff2e2e2e),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+      position: FlashPosition.top,
+      content: const SizedBox(),
+      builder: (context, _) => child.paddingSymmetric(
+        horizontal: 15,
+        vertical: 15,
       ),
     );
   }
 }
 
-class _SnackbarCustom extends SnackbarCustom {
-  final FlashController controller;
-  final SnackbarBuilder builder;
-  const _SnackbarCustom({
-    super.key,
-    required this.controller,
-    required this.builder,
-  }) : super._();
+class _SuccessSnackbar extends MySnackbar {
+  final String message;
+  const _SuccessSnackbar({super.key, required this.message}) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return FlashBar(
-      content: const Text("data"),
-      controller: controller,
-      backgroundColor: const Color(0xff2e2e2e),
-      position: FlashPosition.top,
-      builder: builder,
+    return _MySnackbar(
+      child: Row(
+        children: [
+          const ClipOval(
+            child: SizedBox.square(
+              dimension: 25,
+              child: ColoredBox(
+                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(5),
+                  child: FittedBox(
+                    child: FaIcon(
+                      FontAwesomeIcons.check,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+              .animate()
+              .scale(
+                duration: const Duration(
+                  milliseconds: 500,
+                ),
+                curve: Curves.bounceOut,
+              )
+              .marginOnly(right: 10),
+          Text(
+            message,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _FailureSnackbar extends MySnackbar {
+  final Failure failure;
+  const _FailureSnackbar({super.key, required this.failure}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return _MySnackbar(
+      child: Text(
+        failure.descripcion ?? failure.code,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
     );
   }
 }
@@ -85,98 +169,4 @@ extension BuildContextExtensions on BuildContext {
         ),
         inputDecorationTheme: actualTheme.inputDecorationTheme.copyWith(),
       );
-}
-
-abstract class MySnackbar extends StatelessWidget {
-  const MySnackbar({super.key});
-}
-
-class _MySnackbar extends MySnackbar {
-  final Widget child;
-  const _MySnackbar({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return FlashBar(
-      controller: context.read(),
-      behavior: FlashBehavior.floating,
-      backgroundColor: const Color(0xff2e2e2e),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-      position: FlashPosition.top,
-      content: const SizedBox(),
-      builder: (context, _) => child.paddingSymmetric(
-        horizontal: 15,
-        vertical: 15,
-      ),
-    );
-  }
-}
-
-class SuccessSnackbar extends MySnackbar {
-  final String message;
-  const SuccessSnackbar({super.key, required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return _MySnackbar(
-      child: Row(
-        children: [
-          const ClipOval(
-            child: SizedBox.square(
-              dimension: 25,
-              child: ColoredBox(
-                color: Colors.white,
-                child: Padding(
-                  padding: EdgeInsets.all(5),
-                  child: FittedBox(
-                    child: FaIcon(
-                      FontAwesomeIcons.check,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          )
-              .animate()
-              .scale(
-                duration: const Duration(
-                  milliseconds: 500,
-                ),
-                curve: Curves.bounceOut,
-              )
-              .marginOnly(right: 10),
-          const Text(
-            "Hilo creado",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class FailureSnackbar extends MySnackbar {
-  final Failure failure;
-  const FailureSnackbar({super.key, required this.failure});
-
-  @override
-  Widget build(BuildContext context) {
-    return _MySnackbar(
-      child: Text(
-        failure.descripcion ?? failure.code,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
-  }
 }

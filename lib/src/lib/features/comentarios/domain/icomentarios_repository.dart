@@ -32,6 +32,7 @@ abstract class IComentariosRepository {
   });
 
   Future<Either<Failure, Unit>> destacar({
-    required ComentarioId id,
+    required HiloId hilo,
+    required ComentarioId comentario,
   });
 }

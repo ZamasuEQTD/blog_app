@@ -124,9 +124,13 @@ class DioComentariosRepository extends IComentariosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> destacar({required ComentarioId id}) async {
+  Future<Either<Failure, Unit>> destacar({
+    required HiloId hilo,
+    required ComentarioId comentario,
+  }) async {
     try {
-      Response response = await dio.post("comentarios/destacar/$id");
+      Response response =
+          await dio.post("/comentarios/hilo/$hilo/destacar/$comentario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);

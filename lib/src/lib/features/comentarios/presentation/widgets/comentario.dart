@@ -2,6 +2,7 @@ import 'package:blog_app/src/lib/features/app/presentation/logic/extensions.dart
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/logic/controllers/ver_hilo_controller.dart';
@@ -230,7 +231,7 @@ class ComentarioInfoRow extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  comentario.op.nombre,
+                  comentario.autor.nombre,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
@@ -285,14 +286,25 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
               ],
             ),
             if (true || (Get.find<HiloController>().hilo.value?.esOp ?? false))
-              const GrupoSeleccionable(
+              GrupoSeleccionable(
                 seleccionables: [
                   ItemSeleccionable.text(
+                    onTap: () async {
+                      var result =
+                          await GetIt.I.get<IComentariosRepository>().destacar(
+                                hilo: Get.find<HiloController>().id,
+                                comentario: comentario.id,
+                              );
+
+                      result.fold(
+                        (l) => SnackbarCustom.failure(context, l),
+                        (r) => SnackbarCustom.success(
+                          context,
+                          "El comentario ha sido destacado",
+                        ),
+                      );
+                    },
                     titulo: "Destacar",
-                    leading: FaIcon(
-                      FontAwesomeIcons.thumbtack,
-                      size: 14,
-                    ),
                   ),
                 ],
               ),

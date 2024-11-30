@@ -47,14 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     controller.failure.listen((l) {
-      if (l is Failure) {
-        context.showFlash(
-          builder: (context, controller) => Provider.value(
-            value: controller,
-            child: FailureSnackbar(failure: l),
-          ),
-        );
-      }
+      if (l is Failure) {}
     });
 
     hub.connect();

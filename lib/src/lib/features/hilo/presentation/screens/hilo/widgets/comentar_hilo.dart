@@ -42,6 +42,16 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
   void initState() {
     final HiloController controller = Get.find();
 
+    comentario.addListener(() {
+      controller.comentario.value = comentario.text;
+    });
+
+    controller.envioComentario.listen((state) {
+      if (state == EnvioComentarioState.enviado) {
+        comentario.clear();
+      }
+    });
+
     comentario.addListener(
       () {
         controller.taggueos = TagService.getTags(comentario.text);
@@ -172,9 +182,19 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
                             background: const Color.fromRGBO(22, 22, 23, 1),
                             onPressed: () =>
                                 Get.find<HiloController>().enviarComentario(),
-                            icon: const Icon(
-                              CupertinoIcons.paperplane_fill,
-                              color: Colors.white,
+                            icon: Obx(
+                              () => Get.find<HiloController>()
+                                          .envioComentario
+                                          .value ==
+                                      EnvioComentarioState.enviando
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ).paddingAll(4)
+                                  : const Icon(
+                                      CupertinoIcons.paperplane_fill,
+                                      color: Colors.white,
+                                    ),
                             ),
                           ),
                         ],

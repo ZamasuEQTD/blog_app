@@ -17,7 +17,7 @@ class TagsDeComentarios extends StatelessWidget {
     return Row(
       children: [
         if (comentario.destacado) const TagDeComentario.destacado(),
-        TagDeComentario.rango(rango: comentario.op.rangoCorto.toLowerCase()),
+        TagDeComentario.rango(rango: comentario.autor.rangoCorto.toLowerCase()),
         TagDeComentario.tag(tag: comentario.tag),
         if (comentario.tagUnico != null)
           TagDeComentario.unico(tag: comentario.tagUnico!),

@@ -12,6 +12,7 @@ class ColorDeComentario extends StatelessWidget {
     ColoresDeComentario.multi: const MultiColor(),
     ColoresDeComentario.invertido: const MultiInvertido(),
     ColoresDeComentario.rojo: const ColoredBox(color: Colors.red),
+    ColoresDeComentario.azul: const ColoredBox(color: Colors.blue),
   });
 
   const ColorDeComentario({super.key});
@@ -32,7 +33,7 @@ class ColorDeComentario extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 3),
                 child: FittedBox(
                   child: Text(
-                    comentario.dados ?? comentario.op.rangoCorto,
+                    comentario.dados ?? comentario.autor.rangoCorto,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Colors.white,

@@ -34,32 +34,12 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
   void initState() {
     controller.failure.listen(
       (failure) {
-        if (failure != null) {
-          context.showFlash(
-            duration: const Duration(seconds: 3),
-            builder: (context, controller) => Provider.value(
-              value: controller,
-              child: FailureSnackbar(
-                failure: failure,
-              ),
-            ),
-          );
-        }
+        if (failure != null) {}
       },
     );
 
     controller.id.listen((id) {
       if (id != null) {
-        context.showFlash(
-          duration: const Duration(seconds: 3),
-          builder: (context, controller) => Provider.value(
-            value: controller,
-            child: const SuccessSnackbar(
-              message: "Hilo creado",
-            ),
-          ),
-        );
-
         context.replace("/hilo/$id");
       }
     });

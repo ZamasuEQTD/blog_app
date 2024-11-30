@@ -29,7 +29,7 @@ class Portada extends Equatable {
     return Portada(
       id: json["id"],
       titulo: json["titulo"],
-      autor: json["autor"],
+      autor: json["autor_id"],
       categoria: json["subcategoria"]["nombre"],
       esOp: json["es_op"],
       features: [
