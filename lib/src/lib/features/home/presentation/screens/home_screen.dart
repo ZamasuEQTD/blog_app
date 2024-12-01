@@ -175,35 +175,41 @@ class SubcategoriaSeleccionadaHome extends StatelessWidget {
     return SliverToBoxAdapter(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 5,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Image(
-                    image: controller.subcategoria.value!.imagen.toProvider,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    controller.subcategoria.value!.nombre,
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () => controller.subcategoria.value = null,
-                icon: const Icon(Icons.close),
-              ),
-            ],
+        child: ColoredBox(
+          color: Theme.of(context).colorScheme.onSurface,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 5,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    SizedBox.square(
+                      dimension: 30,
+                      child: Image(
+                        image: controller.subcategoria.value!.imagen.toProvider,
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      controller.subcategoria.value!.nombre,
+                    ),
+                  ],
+                ),
+                IconButton(
+                  onPressed: () => controller.subcategoria.value = null,
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ).marginOnly(bottom: 10),
     );
   }
 }

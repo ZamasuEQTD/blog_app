@@ -57,6 +57,8 @@ class _HiloScreenState extends State<HiloScreen> {
           HasSidoBaneadoBottomsheet.show(context, baneo: failure.baneo);
         }
         Snackbars.showFailure(context, failure);
+
+        controller.failure.value = null;
       }
     });
 
@@ -357,23 +359,27 @@ class SubcategoriaDeHiloTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 12,
-          horizontal: 10,
-        ),
-        child: Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: SizedBox.square(
-                dimension: 30,
-                child: Image(image: subcategoria.imagen.toProvider),
+      borderRadius: BorderRadius.circular(10),
+      child: ColoredBox(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 10,
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: SizedBox.square(
+                  dimension: 30,
+                  child: Image(image: subcategoria.imagen.toProvider),
+                ),
               ),
-            ),
-            Text(subcategoria.nombre),
-          ],
+              const SizedBox(width: 10),
+              Text(subcategoria.nombre),
+            ],
+          ),
         ),
       ),
     );

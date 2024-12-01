@@ -114,6 +114,10 @@ class HiloController extends GetxController {
       return;
     }
     if (taggueos.length > 5) {
+      failure.value = const Failure(
+        code: "tag_limit",
+        descripcion: "No puedes tagguear más de 5 tags",
+      );
       return;
     }
 

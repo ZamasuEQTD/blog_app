@@ -36,23 +36,26 @@ class _SliverGrupoSeleccionable extends GrupoItemSeleccionable {
           color: Theme.of(context).colorScheme.onSurface,
           borderRadius: BorderRadius.circular(15),
         ),
-        sliver: SliverMainAxisGroup(
-          slivers: [
-            if (titulo != null)
-              SliverToBoxAdapter(
-                child: Text(
-                  titulo!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w900,
+        sliver: SliverPadding(
+          padding: const EdgeInsets.all(10),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              if (titulo != null)
+                SliverToBoxAdapter(
+                  child: Text(
+                    titulo!,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ),
+              SliverList.builder(
+                itemCount: seleccionables.length,
+                itemBuilder: builder,
               ),
-            SliverList.builder(
-              itemCount: seleccionables.length,
-              itemBuilder: builder,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -62,26 +65,31 @@ class _SliverGrupoSeleccionable extends GrupoItemSeleccionable {
 class _GrupoSeleccionable extends GrupoItemSeleccionable {
   final String? titulo;
   final List<Widget> seleccionables;
-  const _GrupoSeleccionable(
-      {super.key, this.titulo, required this.seleccionables})
-      : super._();
+  const _GrupoSeleccionable({
+    super.key,
+    this.titulo,
+    required this.seleccionables,
+  }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Column(
-        children: [
-          if (titulo != null)
-            Text(
-              titulo!,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w900,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.onSurface,
+        child: Column(
+          children: [
+            if (titulo != null)
+              Text(
+                titulo!,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
-            ),
-          ...seleccionables,
-        ],
+            ...seleccionables,
+          ],
+        ),
       ),
     );
   }
