@@ -1,10 +1,9 @@
+import 'package:blog_app/src/lib/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../widgets/grupo_seleccionable.dart';
-
-extension GruposSeleccionablesSlivers on List<GrupoSeleccionableSliver> {
-  List<Widget> addPadding() {
+extension GruposSeleccionablesSlivers on List<GrupoItemSeleccionable> {
+  List<Widget> get addSliverPadding {
     List<Widget> slivers = [];
 
     for (var i = 0; i < length; i++) {
@@ -24,8 +23,8 @@ extension GruposSeleccionablesSlivers on List<GrupoSeleccionableSliver> {
   }
 }
 
-extension GruposSeleccionables on List<GrupoSeleccionable> {
-  List<Widget> addPadding() {
+extension GruposSeleccionables on List<GrupoItemSeleccionable> {
+  List<Widget> get addPadding {
     List<Widget> slivers = [];
 
     for (var i = 0; i < length; i++) {

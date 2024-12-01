@@ -1,7 +1,7 @@
 import 'package:blog_app/src/lib/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/src/lib/features/hilo/domain/ihilos_repository.dart';
 import 'package:blog_app/src/lib/features/home/domain/models/home_portada.dart';
-import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
+import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada_home.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
 
 import 'package:get/get.dart';
@@ -15,7 +15,7 @@ class HomeController extends GetxController {
 
   Rx<Failure?> failure = Rx(null);
 
-  Rx<List<HomePortada>> portadas = Rx([]);
+  Rx<List<PortadaHomeWidget>> portadas = Rx([]);
 
   Future cargarPortadas() async {
     if (cargando.value) return;
@@ -23,13 +23,13 @@ class HomeController extends GetxController {
 
     cargando.value = true;
 
-    List<HomePortada> portadas = [
+    List<PortadaHomeWidget> portadas = [
       ...this.portadas.value,
     ];
 
     this.portadas.value = [
       ...this.portadas.value,
-      ...List.generate(15, (index) => const HomePortadaBone()),
+      ...List.generate(15, (index) => const PortadaHomeBone()),
     ];
 
     var response = await repository.getPortadas(
@@ -46,7 +46,7 @@ class HomeController extends GetxController {
         this.portadas.value = [
           ...portadas,
           ...r.map(
-            (e) => HomePortadaLoaded(portada: e),
+            (e) => PortadaHome(portada: e),
           ),
         ];
       },
@@ -61,11 +61,11 @@ class HomeController extends GetxController {
 
   void eliminar(PortadaId id) => portadas.value = portadas.value
       .where(
-        (element) => element is HomePortadaLoaded && element.portada.id != id,
+        (element) => element is PortadaHome && element.portada.id != id,
       )
       .toList();
 
-  void agregarPortada(HomePortadaLoaded portada) {
+  void agregarPortada(PortadaHome portada) {
     if (hayFiltrosCambiados) return;
 
     portadas.value = [portada, ...portadas.value];

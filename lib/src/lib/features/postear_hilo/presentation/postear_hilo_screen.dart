@@ -1,21 +1,19 @@
 import 'package:blog_app/src/lib/features/app/presentation/widgets/colored_icon_button.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/media/domain/igallery_service.dart';
 import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-import '../../app/presentation/widgets/snackbar.dart';
 import '../../media/presentation/multi_media.dart';
 
 class PostearHiloScreen extends StatefulWidget {
@@ -34,7 +32,9 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
   void initState() {
     controller.failure.listen(
       (failure) {
-        if (failure != null) {}
+        if (failure != null) {
+          Snackbars.showFailure(context, failure);
+        }
       },
     );
 
@@ -108,7 +108,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     child: GestureDetector(
                       onTap: () => SeleccionarSubcategoriaBottomSheet.show(
                         context,
-                        (subcategoria) =>
+                        onSubcategoriaSeleccionada: (subcategoria) =>
                             controller.subcategoria.value = subcategoria,
                       ),
                       child: ColoredBox(
@@ -202,7 +202,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                             child: controller.portada.value!.spoileable.widget
                                 .marginOnly(bottom: 10),
                           ),
-                          GrupoSeleccionable(
+                          GrupoItemSeleccionable(
                             seleccionables: [
                               ItemSeleccionable.checkbox(
                                 onChange: (value) => controller.censurar(),
@@ -267,7 +267,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                     );
                   }).marginOnly(bottom: 24, top: 8),
                   const PostearHiloLabelSection(label: "Opciones"),
-                  GrupoSeleccionable(
+                  GrupoItemSeleccionable(
                     seleccionables: [
                       ItemSeleccionable.checkbox(
                         onChange: (value) => controller.dados.value = value!,

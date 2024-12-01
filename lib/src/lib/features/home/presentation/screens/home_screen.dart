@@ -1,23 +1,19 @@
 import 'package:blog_app/src/lib/features/app/presentation/extensions/scroll_controller_extensions.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
-import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/login_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
+import 'package:blog_app/src/lib/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/src/lib/features/home/data/development/home_local_hub.dart';
 import 'package:blog_app/src/lib/features/home/domain/hub/ihome_portadas_hub.dart';
 import 'package:blog_app/src/lib/features/home/presentation/screens/logic/home_controller.dart';
-import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/home_portada.dart';
-import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
+import 'package:blog_app/src/lib/features/home/presentation/screens/widgets/portada_home.dart';
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:blog_app/src/lib/utils/clases/failure.dart';
-import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 import '../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../hilo/presentation/widgets/delegates/portadas_delegate.dart';
@@ -46,6 +42,12 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
+    controller.subcategoria.listen((subcategoria) {
+      if (subcategoria != null) {
+        controller.cargarPortadas();
+      }
+    });
+
     controller.failure.listen((l) {
       if (l is Failure) {}
     });
@@ -53,9 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
     hub.connect();
 
     hub.onHiloPosteado.listen(
-      (portada) => controller.agregarPortada(
-        HomePortadaLoaded(portada: portada),
-      ),
+      (portada) => controller.agregarPortada(PortadaHome(portada: portada)),
     );
 
     hub.onHiloEliminado.listen((id) => controller.eliminar(id));
@@ -67,64 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
-      endDrawer: Drawer(
-        child: SafeArea(
-          child: Obx(() {
-            if (Get.find<AuthController>().usuario.value == null) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.push(Routes.login);
-                        },
-                        child: const Text("Iniciar Sesión"),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.push(Routes.registro);
-                        },
-                        child: const Text("Registrarse"),
-                      ).withSecondaryStyle(context),
-                    ),
-                  ],
-                ),
-              ).paddingSymmetric(horizontal: 20);
-            }
-            return Column(
-              children: [
-                Text(
-                  "Bienvenido, ${Get.find<AuthController>().usuario.value!.usuario}",
-                  style: context.textTheme.titleMedium,
-                ),
-                ItemSeleccionable.text(
-                  onTap: () => context.push(Routes.misHilos),
-                  titulo: "Mis hilos",
-                ),
-                const ItemSeleccionable.text(
-                  titulo: "Hilos favoritos",
-                ),
-                const ItemSeleccionable.text(
-                  titulo: "Palabras bloqueadas",
-                ),
-                ItemSeleccionable.text(
-                  titulo: "Cerrar sesion",
-                  onTap: () => Get.find<AuthController>().logout(),
-                ),
-              ],
-            );
-          }),
-        ),
-      ),
+      endDrawer: const HomeMenu(),
       appBar: AppBar(
         actions: [
           TextButton.icon(
@@ -149,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: ColoredIconButton(
         border: BorderRadius.circular(10),
-        background: const Color(0xffF5F5F5),
+        background: Colors.white,
         onPressed: () => context.push("/postear-hilo"),
         icon: const Icon(
           Icons.abc,
@@ -178,7 +121,12 @@ class _PortadasFiltros extends StatelessWidget {
             ),
             ColoredIconButton(
               background: const Color(0xffF5F5F5),
-              onPressed: () {},
+              onPressed: () => SeleccionarSubcategoriaBottomSheet.show(
+                context,
+                onSubcategoriaSeleccionada: (subcategoria) =>
+                    Get.find<HomeController>().subcategoria.value =
+                        subcategoria,
+              ),
               icon: const FaIcon(FontAwesomeIcons.box),
             ),
           ],
@@ -195,41 +143,166 @@ class _PortadasGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeController controller = Get.find();
 
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      sliver: Obx(
-        () => SliverGrid.builder(
-          itemCount: controller.portadas.value.length,
-          gridDelegate: portadasDelegate,
-          itemBuilder: (context, index) => controller.portadas.value[index],
+    return Obx(
+      () => SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        sliver: SliverMainAxisGroup(
+          slivers: [
+            if (controller.subcategoria.value != null)
+              SubcategoriaSeleccionadaHome(controller: controller),
+            SliverGrid.builder(
+              itemCount: controller.portadas.value.length,
+              gridDelegate: portadasDelegate,
+              itemBuilder: (context, index) => controller.portadas.value[index],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _FiltrarPortadasPorTitulo extends StatelessWidget {
+class SubcategoriaSeleccionadaHome extends StatelessWidget {
+  final HomeController controller;
+
+  const SubcategoriaSeleccionadaHome({
+    super.key,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 5,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Image(
+                    image: controller.subcategoria.value!.imagen.toProvider,
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    controller.subcategoria.value!.nombre,
+                  ),
+                ],
+              ),
+              IconButton(
+                onPressed: () => controller.subcategoria.value = null,
+                icon: const Icon(Icons.close),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FiltrarPortadasPorTitulo extends StatefulWidget {
   const _FiltrarPortadasPorTitulo({
     super.key,
   });
+
+  @override
+  State<_FiltrarPortadasPorTitulo> createState() =>
+      _FiltrarPortadasPorTituloState();
+}
+
+class _FiltrarPortadasPorTituloState extends State<_FiltrarPortadasPorTitulo> {
+  final TextEditingController titulo = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     HomeController controller = Get.find();
     return Flexible(
       child: TextField(
-        maxLines: 1,
-        onTapOutside: (event) {
-          FocusScope.of(context).unfocus();
-        },
-        onChanged: (value) => controller.titulo.value = value,
+        controller: titulo,
         decoration: InputDecoration(
           hintText: "Buscar por titulo",
           suffixIcon: IconButton(
-            onPressed: () => controller.filtrar,
-            icon: const Icon(Icons.search_outlined),
+            onPressed: () => controller.titulo.value = titulo.text,
+            icon: const Icon(
+              Icons.search_outlined,
+              color: Colors.black,
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomeMenu extends StatelessWidget {
+  const HomeMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SafeArea(
+        child: Obx(() {
+          if (Get.find<AuthController>().usuario.value == null) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.push(Routes.login);
+                      },
+                      child: const Text("Iniciar Sesión"),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.push(Routes.registro);
+                      },
+                      child: const Text("Registrarse"),
+                    ).withSecondaryStyle(context),
+                  ),
+                ],
+              ),
+            ).paddingSymmetric(horizontal: 20);
+          }
+          return Column(
+            children: [
+              Text(
+                "Bienvenido, ${Get.find<AuthController>().usuario.value!.usuario}",
+                style: context.textTheme.titleMedium,
+              ),
+              ItemSeleccionable.text(
+                onTap: () => context.push(Routes.misHilos),
+                titulo: "Mis hilos",
+              ),
+              const ItemSeleccionable.text(
+                titulo: "Hilos favoritos",
+              ),
+              const ItemSeleccionable.text(
+                titulo: "Palabras bloqueadas",
+              ),
+              ItemSeleccionable.text(
+                titulo: "Cerrar sesion",
+                onTap: () => Get.find<AuthController>().logout(),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

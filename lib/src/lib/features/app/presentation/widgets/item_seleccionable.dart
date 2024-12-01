@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 abstract class ItemSeleccionable extends StatelessWidget {
-  const ItemSeleccionable.base({super.key});
-
   const ItemSeleccionable._({super.key});
 
   const factory ItemSeleccionable({

@@ -12,26 +12,26 @@ import '../../../../app/presentation/widgets/image_overlapped.dart';
 import '../../../../app/presentation/widgets/tag.dart';
 import '../../../../hilo/presentation/screens/hilo/widgets/iconos.dart';
 
-abstract class PortadaView extends StatelessWidget {
-  const PortadaView._({super.key});
+abstract class PortadaWidget extends StatelessWidget {
+  const PortadaWidget._({super.key});
 
-  const factory PortadaView({
+  const factory PortadaWidget({
     Key? key,
     required Widget child,
-  }) = _PortadaView;
+  }) = _PortadaWidget;
 
-  const factory PortadaView.bone() = _PortadaViewBone;
+  const factory PortadaWidget.bone() = _PortadaWidgetBone;
 
-  const factory PortadaView.portada({
+  const factory PortadaWidget.portada({
     Key? key,
     required Portada portada,
-  }) = _PortadaViewCargada;
+  }) = _PortadaWidgetCargada;
 }
 
-class _PortadaView extends PortadaView {
+class _PortadaWidget extends PortadaWidget {
   final Widget child;
 
-  const _PortadaView({super.key, required this.child}) : super._();
+  const _PortadaWidget({super.key, required this.child}) : super._();
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -41,10 +41,10 @@ class _PortadaView extends PortadaView {
   }
 }
 
-class _PortadaViewBone extends PortadaView {
+class _PortadaWidgetBone extends PortadaWidget {
   static final _random = Random();
 
-  const _PortadaViewBone({super.key}) : super._();
+  const _PortadaWidgetBone({super.key}) : super._();
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _PortadaViewBone extends PortadaView {
   }
 }
 
-class _PortadaViewCargada extends PortadaView {
+class _PortadaWidgetCargada extends PortadaWidget {
   static const _gradient = [
     Colors.black45,
     Colors.transparent,
@@ -94,14 +94,14 @@ class _PortadaViewCargada extends PortadaView {
 
   final Portada portada;
 
-  const _PortadaViewCargada({
+  const _PortadaWidgetCargada({
     super.key,
     required this.portada,
   }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return PortadaView(
+    return PortadaWidget(
       child: ImageOverlapped.provider(
         provider: portada.imagen.spoileable.toProvider,
         boxFit: BoxFit.cover,
@@ -120,13 +120,13 @@ class _PortadaViewCargada extends PortadaView {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _PortadaViewFeatures(
+                      _PortadaWidgetFeatures(
                         portada: portada,
                       ),
                       Text(
                         portada.titulo,
                         maxLines: 2,
-                        style: const TituloDePortadaViewTextStyle(),
+                        style: const TituloDePortadaWidgetTextStyle(),
                       ),
                     ],
                   ),
@@ -140,17 +140,17 @@ class _PortadaViewCargada extends PortadaView {
   }
 }
 
-class _PortadaViewFeatures extends StatelessWidget {
+class _PortadaWidgetFeatures extends StatelessWidget {
   static final HashMap<PortadaFeatures, Widget> _features = HashMap.from({
-    PortadaFeatures.nuevo: const PortadaViewCardTag.nuevo(),
-    PortadaFeatures.sticky: const PortadaViewCardTag.destacado(),
-    PortadaFeatures.dados: const PortadaViewCardTag.dados(),
-    PortadaFeatures.idUnico: const PortadaViewCardTag.idUnico(),
+    PortadaFeatures.nuevo: const PortadaWidgetCardTag.nuevo(),
+    PortadaFeatures.sticky: const PortadaWidgetCardTag.destacado(),
+    PortadaFeatures.dados: const PortadaWidgetCardTag.dados(),
+    PortadaFeatures.idUnico: const PortadaWidgetCardTag.idUnico(),
   });
 
   final Portada portada;
 
-  const _PortadaViewFeatures({super.key, required this.portada});
+  const _PortadaWidgetFeatures({super.key, required this.portada});
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +170,7 @@ class _PortadaViewFeatures extends StatelessWidget {
 
   static List<Widget> generar(Portada portada) {
     List<Widget> tags = [
-      PortadaViewCardTag.categoria(categoria: portada.categoria),
+      PortadaWidgetCardTag.categoria(categoria: portada.categoria),
     ];
 
     for (var i = 0; i < portada.features.length; i++) {
@@ -183,8 +183,8 @@ class _PortadaViewFeatures extends StatelessWidget {
   }
 }
 
-class TituloDePortadaViewTextStyle extends TextStyle {
-  const TituloDePortadaViewTextStyle()
+class TituloDePortadaWidgetTextStyle extends TextStyle {
+  const TituloDePortadaWidgetTextStyle()
       : super(
           fontWeight: FontWeight.w600,
           fontSize: 20,
@@ -193,51 +193,51 @@ class TituloDePortadaViewTextStyle extends TextStyle {
         );
 }
 
-abstract class PortadaViewCardTag extends StatelessWidget {
-  const PortadaViewCardTag._({super.key});
+abstract class PortadaWidgetCardTag extends StatelessWidget {
+  const PortadaWidgetCardTag._({super.key});
 
-  const factory PortadaViewCardTag({
+  const factory PortadaWidgetCardTag({
     Key? key,
     required Color background,
     required EdgeInsets padding,
     required Widget child,
-  }) = _PortadaViewCardTag;
+  }) = _PortadaWidgetCardTag;
 
-  const factory PortadaViewCardTag.text({
+  const factory PortadaWidgetCardTag.text({
     required Color background,
     required String tag,
-  }) = _TextPortadaViewCardTag;
+  }) = _TextPortadaWidgetCardTag;
 
-  const factory PortadaViewCardTag.categoria({required String categoria}) =
-      _CategoriaPortadaViewCardTag;
+  const factory PortadaWidgetCardTag.categoria({required String categoria}) =
+      _CategoriaPortadaWidgetCardTag;
 
-  const factory PortadaViewCardTag.nuevo() = _EsNuevoPortadaViewCardTag;
+  const factory PortadaWidgetCardTag.nuevo() = _EsNuevoPortadaWidgetCardTag;
 
-  const factory PortadaViewCardTag.icon({
+  const factory PortadaWidgetCardTag.icon({
     Color? background,
     required Widget child,
-  }) = _PortadaViewCardIconTag;
+  }) = _PortadaWidgetCardIconTag;
 
-  const factory PortadaViewCardTag.destacado({Key? key}) =
-      _PortadaViewCardDestacadoIconTag;
+  const factory PortadaWidgetCardTag.destacado({Key? key}) =
+      _PortadaWidgetCardDestacadoIconTag;
 
-  const factory PortadaViewCardTag.encuesta({Key? key}) =
-      _PortadaViewCardEncuestaIconTag;
+  const factory PortadaWidgetCardTag.encuesta({Key? key}) =
+      _PortadaWidgetCardEncuestaIconTag;
 
-  const factory PortadaViewCardTag.dados({Key? key}) =
-      _PortadaViewCardDadosIconTag;
+  const factory PortadaWidgetCardTag.dados({Key? key}) =
+      _PortadaWidgetCardDadosIconTag;
 
-  const factory PortadaViewCardTag.idUnico({Key? key}) =
-      _PortadaViewCardIdunicoIconTag;
+  const factory PortadaWidgetCardTag.idUnico({Key? key}) =
+      _PortadaWidgetCardIdunicoIconTag;
 }
 
-class _PortadaViewCardTag extends PortadaViewCardTag {
+class _PortadaWidgetCardTag extends PortadaWidgetCardTag {
   static const double height = 22;
 
   final Color background;
   final EdgeInsets padding;
   final Widget child;
-  const _PortadaViewCardTag({
+  const _PortadaWidgetCardTag({
     super.key,
     required this.background,
     required this.padding,
@@ -255,20 +255,20 @@ class _PortadaViewCardTag extends PortadaViewCardTag {
   }
 }
 
-class _TextPortadaViewCardTag extends PortadaViewCardTag {
+class _TextPortadaWidgetCardTag extends PortadaWidgetCardTag {
   static const EdgeInsets _padding =
       EdgeInsets.symmetric(horizontal: 5, vertical: 2);
   final Color background;
   final String tag;
 
-  const _TextPortadaViewCardTag({
+  const _TextPortadaWidgetCardTag({
     required this.background,
     required this.tag,
   }) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return PortadaViewCardTag(
+    return PortadaWidgetCardTag(
       background: background,
       padding: _padding,
       child: Text(
@@ -281,38 +281,38 @@ class _TextPortadaViewCardTag extends PortadaViewCardTag {
   }
 }
 
-class _CategoriaPortadaViewCardTag extends PortadaViewCardTag {
+class _CategoriaPortadaWidgetCardTag extends PortadaWidgetCardTag {
   final String categoria;
-  const _CategoriaPortadaViewCardTag({
+  const _CategoriaPortadaWidgetCardTag({
     required this.categoria,
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return PortadaViewCardTag.text(
+    return PortadaWidgetCardTag.text(
       background: const Color.fromRGBO(187, 247, 208, 1),
       tag: categoria,
     );
   }
 }
 
-class _EsNuevoPortadaViewCardTag extends PortadaViewCardTag {
-  const _EsNuevoPortadaViewCardTag({super.key}) : super._();
+class _EsNuevoPortadaWidgetCardTag extends PortadaWidgetCardTag {
+  const _EsNuevoPortadaWidgetCardTag({super.key}) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaViewCardTag.text(
+    return const PortadaWidgetCardTag.text(
       background: Color.fromRGBO(199, 210, 254, 1),
       tag: "Nuevo",
     );
   }
 }
 
-class _PortadaViewCardIconTag extends PortadaViewCardTag {
+class _PortadaWidgetCardIconTag extends PortadaWidgetCardTag {
   static EdgeInsets padding = const EdgeInsets.all(2);
 
   final Color? background;
   final Widget child;
 
-  const _PortadaViewCardIconTag({
+  const _PortadaWidgetCardIconTag({
     this.background,
     required this.child,
   }) : super._();
@@ -321,7 +321,7 @@ class _PortadaViewCardIconTag extends PortadaViewCardTag {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 22,
-      child: PortadaViewCardTag(
+      child: PortadaWidgetCardTag(
         background: background ?? const Color.fromRGBO(191, 219, 254, 1),
         padding: padding,
         child: Padding(
@@ -335,13 +335,13 @@ class _PortadaViewCardIconTag extends PortadaViewCardTag {
   }
 }
 
-class _PortadaViewCardDestacadoIconTag extends PortadaViewCardTag {
-  const _PortadaViewCardDestacadoIconTag({
+class _PortadaWidgetCardDestacadoIconTag extends PortadaWidgetCardTag {
+  const _PortadaWidgetCardDestacadoIconTag({
     super.key,
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaViewCardTag.icon(
+    return const PortadaWidgetCardTag.icon(
       background: Color.fromRGBO(254, 240, 138, 1),
       child: HiloIcon.destacado(
         color: Color.fromRGBO(31, 41, 55, 1),
@@ -350,37 +350,37 @@ class _PortadaViewCardDestacadoIconTag extends PortadaViewCardTag {
   }
 }
 
-class _PortadaViewCardEncuestaIconTag extends PortadaViewCardTag {
-  const _PortadaViewCardEncuestaIconTag({
+class _PortadaWidgetCardEncuestaIconTag extends PortadaWidgetCardTag {
+  const _PortadaWidgetCardEncuestaIconTag({
     super.key,
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaViewCardTag.icon(
+    return const PortadaWidgetCardTag.icon(
       child: HiloIcon.encuesta(),
     );
   }
 }
 
-class _PortadaViewCardDadosIconTag extends PortadaViewCardTag {
-  const _PortadaViewCardDadosIconTag({
+class _PortadaWidgetCardDadosIconTag extends PortadaWidgetCardTag {
+  const _PortadaWidgetCardDadosIconTag({
     super.key,
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaViewCardTag.icon(
+    return const PortadaWidgetCardTag.icon(
       child: HiloIcon.dados(),
     );
   }
 }
 
-class _PortadaViewCardIdunicoIconTag extends PortadaViewCardTag {
-  const _PortadaViewCardIdunicoIconTag({
+class _PortadaWidgetCardIdunicoIconTag extends PortadaWidgetCardTag {
+  const _PortadaWidgetCardIdunicoIconTag({
     super.key,
   }) : super._();
   @override
   Widget build(BuildContext context) {
-    return const PortadaViewCardTag.icon(
+    return const PortadaWidgetCardTag.icon(
       child: HiloIcon.idUnico(),
     );
   }

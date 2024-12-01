@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:blog_app/main.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
+import 'package:blog_app/src/lib/features/auth/domain/failures/auth_failures.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/login_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/password_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/screens/registro_screen.dart';
-import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
-import 'package:blog_app/src/lib/modules/routing.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,12 +25,16 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     auth.authState.listen((state) {
       if (state == AuthState.authenticated) {
-        //context.pop();
+        context.pop();
       }
     });
 
     controller.failure.listen(
-      (failure) => log(failure.toString()),
+      (failure) {
+        if (failure != null) {
+          Snackbars.showFailure(context, failure);
+        }
+      },
     );
 
     controller.token.listen(

@@ -1,8 +1,6 @@
-import 'package:blog_app/src/lib/features/app/presentation/logic/extensions.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/src/lib/features/hilo/presentation/screens/hilo/logic/controllers/ver_hilo_controller.dart';
@@ -14,11 +12,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../app/presentation/logic/horarios_service.dart';
 import '../../domain/models/comentario.dart';
@@ -37,6 +35,10 @@ abstract class ComentarioCard extends StatelessWidget {
     Key? key,
     required Comentario comentario,
   }) = _ComentarioCardEntity;
+
+  const factory ComentarioCard.bone({
+    Key? key,
+  }) = _ComentarioBone;
 }
 
 class _ComentarioCard extends ComentarioCard {
@@ -265,7 +267,7 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
       child: Column(
         children: [
           ...[
-            GrupoSeleccionable(
+            GrupoItemSeleccionable.sliver(
               seleccionables: [
                 ItemSeleccionable.text(
                   titulo: "Copiar",
@@ -279,14 +281,14 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
                 ),
               ],
             ),
-            const GrupoSeleccionable(
+            const GrupoItemSeleccionable(
               seleccionables: [
                 ItemSeleccionable.text(titulo: "Ocultar"),
                 ItemSeleccionable.text(titulo: "Denunciar"),
               ],
             ),
             if (true || (Get.find<HiloController>().hilo.value?.esOp ?? false))
-              GrupoSeleccionable(
+              GrupoItemSeleccionable(
                 seleccionables: [
                   ItemSeleccionable.text(
                     onTap: () async {
@@ -295,14 +297,6 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
                                 hilo: Get.find<HiloController>().id,
                                 comentario: comentario.id,
                               );
-
-                      result.fold(
-                        (l) => SnackbarCustom.failure(context, l),
-                        (r) => SnackbarCustom.success(
-                          context,
-                          "El comentario ha sido destacado",
-                        ),
-                      );
                     },
                     titulo: "Destacar",
                   ),
@@ -310,7 +304,7 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
               ),
             if (true ||
                 Get.find<AuthController>().usuario.value?.rango is Moderador)
-              GrupoSeleccionable(
+              GrupoItemSeleccionable(
                 seleccionables: [
                   ItemSeleccionable.text(
                     onTap: () {
@@ -328,7 +322,7 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
                   ),
                 ],
               ),
-          ].addPadding(),
+          ],
         ],
       ).paddingSymmetric(horizontal: 20, vertical: 10),
     );
@@ -340,6 +334,33 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
       builder: (_) => Provider.value(
         value: context.read<Comentario>(),
         child: const ComentarioOpcionesBottomSheet(),
+      ),
+    );
+  }
+}
+
+class _ComentarioBone extends ComentarioCard {
+  const _ComentarioBone({super.key}) : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    return const ComentarioCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Bone.square(size: 50),
+              Bone.text(
+                width: 50,
+              ),
+              Bone.text(
+                width: 100,
+              ),
+            ],
+          ),
+          Bone.multiText(lines: 3),
+        ],
       ),
     );
   }

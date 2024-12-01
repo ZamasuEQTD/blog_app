@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:blog_app/src/lib/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart' hide BlurEffect;
@@ -23,7 +25,6 @@ import 'package:blog_app/src/lib/modules/routing.dart';
 import '../../../../../app/presentation/controllers/altura_controller.dart';
 import '../../../../../app/presentation/widgets/colored_icon_button.dart';
 import '../../../../../app/presentation/widgets/dialogs/bottom_sheet.dart';
-import '../../../../../app/presentation/widgets/grupo_seleccionable.dart';
 import '../../../../../media/domain/models/media.dart';
 import '../../../../../media/presentation/miniatura.dart';
 
@@ -48,6 +49,7 @@ class _ComentarHiloBottomSheetState extends State<ComentarHiloBottomSheet> {
 
     controller.envioComentario.listen((state) {
       if (state == EnvioComentarioState.enviado) {
+        Snackbars.showSuccess(context, "Comentario enviado");
         comentario.clear();
       }
     });
@@ -235,7 +237,7 @@ class ComentarHiloOpcionesItems extends StatelessWidget {
             vertical: 20,
             horizontal: 25,
           ),
-          sliver: GrupoSeleccionableSliver(
+          sliver: GrupoItemSeleccionable.sliver(
             seleccionables: [
               OpcionDeComentario.agregarEnlace(),
               OpcionDeComentario.agregarMedia(),
@@ -426,7 +428,7 @@ class VerMediaBottomSheet extends StatelessWidget {
             vertical: 5,
             horizontal: 10,
           ),
-          sliver: GrupoSeleccionableSliver(
+          sliver: GrupoItemSeleccionable.sliver(
             seleccionables: [
               VerMediaOpcion.spoiler(),
               VerMediaOpcion.eliminar(),

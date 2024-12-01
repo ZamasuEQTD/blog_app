@@ -7,50 +7,43 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-typedef SnackbarBuilder = Widget Function(BuildContext context, Widget? child);
+abstract class Snackbars extends StatelessWidget {
+  const Snackbars._({super.key});
 
-abstract class SnackbarCustom extends StatelessWidget {
-  const SnackbarCustom._({super.key});
+  const factory Snackbars({required Widget child}) = _Snackbar;
 
-  static void show(
-    BuildContext context,
-    Widget child,
-  ) {
-    context.showFlash(
-      duration: const Duration(seconds: 3),
-      builder: (context, controller) => Provider.value(
-        value: controller,
-        child: child,
-      ),
-    );
-  }
-
-  static void failure(BuildContext context, Failure failure) =>
-      show(context, MySnackbar.failure(failure: failure));
-
-  static void success(BuildContext context, String message) =>
-      show(context, MySnackbar.success(message: message));
-}
-
-abstract class MySnackbar extends StatelessWidget {
-  const MySnackbar._({super.key});
-
-  const factory MySnackbar({required Widget child}) = _MySnackbar;
-
-  const factory MySnackbar.failure({required Failure failure}) =
+  const factory Snackbars.failure({required Failure failure}) =
       _FailureSnackbar;
 
-  const factory MySnackbar.success({required String message}) =
-      _SuccessSnackbar;
+  const factory Snackbars.success({required String message}) = _SuccessSnackbar;
+
+  static void show(BuildContext context, Widget child) => context.showFlash(
+        duration: const Duration(seconds: 3),
+        builder: (context, controller) => Provider.value(
+          value: controller,
+          child: child,
+        ),
+      );
+
+  static void showFailure(BuildContext context, Failure failure) => show(
+        context,
+        Snackbars.failure(failure: failure),
+      );
+
+  static void showSuccess(BuildContext context, String message) => show(
+        context,
+        Snackbars.success(message: message),
+      );
 }
 
-class _MySnackbar extends MySnackbar {
+class _Snackbar extends Snackbars {
   final Widget child;
-  const _MySnackbar({required this.child}) : super._();
+  const _Snackbar({required this.child}) : super._();
 
   @override
   Widget build(BuildContext context) {
     return FlashBar(
+      dismissDirections: const [],
       controller: context.read(),
       behavior: FlashBehavior.floating,
       backgroundColor: const Color(0xff2e2e2e),
@@ -62,19 +55,19 @@ class _MySnackbar extends MySnackbar {
       content: const SizedBox(),
       builder: (context, _) => child.paddingSymmetric(
         horizontal: 15,
-        vertical: 15,
+        vertical: 12,
       ),
     );
   }
 }
 
-class _SuccessSnackbar extends MySnackbar {
+class _SuccessSnackbar extends Snackbars {
   final String message;
   const _SuccessSnackbar({super.key, required this.message}) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return _MySnackbar(
+    return _Snackbar(
       child: Row(
         children: [
           const ClipOval(
@@ -115,13 +108,13 @@ class _SuccessSnackbar extends MySnackbar {
   }
 }
 
-class _FailureSnackbar extends MySnackbar {
+class _FailureSnackbar extends Snackbars {
   final Failure failure;
   const _FailureSnackbar({super.key, required this.failure}) : super._();
 
   @override
   Widget build(BuildContext context) {
-    return _MySnackbar(
+    return _Snackbar(
       child: Text(
         failure.descripcion ?? failure.code,
         style: const TextStyle(

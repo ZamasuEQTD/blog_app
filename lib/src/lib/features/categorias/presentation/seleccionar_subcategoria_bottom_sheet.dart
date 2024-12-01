@@ -1,10 +1,9 @@
 import 'package:blog_app/src/lib/features/app/presentation/widgets/dialogs/bottom_sheet.dart';
-import 'package:blog_app/src/lib/features/app/presentation/widgets/grupo_seleccionable.dart';
-import 'package:blog_app/src/lib/features/categorias/presentation/subcategoria_tile.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/item_seleccionable.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
+import 'package:blog_app/src/lib/features/media/presentation/extensions/media_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:go_router/go_router.dart';
 
 import '../domain/models/categoria.dart';
 import 'controller/categorias_controller.dart';
@@ -29,15 +28,14 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
           slivers: [
             if (!controller.cargando.value) ...[
               ...controller.categorias.value.map(
-                (c) => GrupoSeleccionableSliver(
+                (c) => GrupoItemSeleccionable.sliver(
+                  titulo: c.nombre,
                   seleccionables: c.subcategorias
                       .map(
-                        (s) => SubcategoriaTile(
+                        (s) => SeleccionarSubcategoriaTile(
                           subcategoria: s,
-                          onTap: () {
-                            onSubcategoriaSeleccionada(s);
-                            context.pop();
-                          },
+                          onSubcategoriaSeleccionada:
+                              onSubcategoriaSeleccionada,
                         ),
                       )
                       .toList(),
@@ -51,15 +49,38 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
   }
 
   static void show(
-    BuildContext context,
-    OnSubcategoriaSeleccionada onSubcategoriaSeleccionada,
-  ) {
+    BuildContext context, {
+    required OnSubcategoriaSeleccionada onSubcategoriaSeleccionada,
+  }) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) => SeleccionarSubcategoriaBottomSheet(
         onSubcategoriaSeleccionada: onSubcategoriaSeleccionada,
       ),
+    );
+  }
+}
+
+class SeleccionarSubcategoriaTile extends StatelessWidget {
+  final Subcategoria subcategoria;
+  final OnSubcategoriaSeleccionada onSubcategoriaSeleccionada;
+
+  const SeleccionarSubcategoriaTile({
+    super.key,
+    required this.subcategoria,
+    required this.onSubcategoriaSeleccionada,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ItemSeleccionable.text(
+      titulo: subcategoria.nombre,
+      leading: SizedBox.square(
+        dimension: 35,
+        child: Image(image: subcategoria.imagen.toProvider),
+      ),
+      onTap: () => onSubcategoriaSeleccionada(subcategoria),
     );
   }
 }

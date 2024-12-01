@@ -1,4 +1,5 @@
 import 'package:blog_app/main.dart';
+import 'package:blog_app/src/lib/features/app/presentation/widgets/snackbar.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/logic/controlls/auth_controller.dart';
 import 'package:blog_app/src/lib/features/auth/presentation/widgets/sesion_requerida.dart';
 import 'package:blog_app/src/lib/features/postear_hilo/presentation/postear_hilo_screen.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/failures/auth_failures.dart';
 import '../logic/controlls/registro_controller.dart';
 
 class RegistroScreen extends StatefulWidget {
@@ -19,11 +21,37 @@ class RegistroScreen extends StatefulWidget {
 class _RegistroScreenState extends State<RegistroScreen> {
   final RegistroController controller = Get.put(RegistroController());
 
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
+
+  final usernameController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  final passwordRepetidaController = TextEditingController();
+
   @override
   void initState() {
     controller.token.listen((value) {
       if (value != null) {
         Get.find<AuthController>().login(value);
+      }
+    });
+
+    usernameController.addListener(() {
+      controller.form.value = controller.form.value.copyWith(
+        username: Username.dirty(value: usernameController.text),
+      );
+    });
+
+    passwordController.addListener(() {
+      controller.form.value = controller.form.value.copyWith(
+        password: Password.dirty(value: passwordController.text),
+      );
+    });
+
+    controller.failure.listen((value) {
+      if (value != null) {
+        Snackbars.showFailure(context, value);
       }
     });
 
@@ -47,95 +75,106 @@ class _RegistroScreenState extends State<RegistroScreen> {
   Widget build(BuildContext context) {
     return Obx(
       () => PopScope(
-        canPop: !controller.enviando.value,
+        canPop: controller.form.value.status != RegistroState.loading,
         child: Stack(
           children: [
             Scaffold(
               appBar: AppBar(
                 title: const Text("Registro"),
               ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Nombre de usuario",
-                    style: context.labelStyle,
-                  ),
-                  TextField(
-                    onChanged: (value) => controller.usuario.value = value,
-                    decoration: const InputDecoration(
-                      hintText: "Usuario",
+              body: Form(
+                key: key,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Nombre de usuario",
+                      style: context.labelStyle,
                     ),
-                  ).marginOnly(bottom: 24, top: 8),
-                  Text(
-                    "Contraseña",
-                    style: context.labelStyle,
-                  ),
-                  TextField(
-                    onChanged: (value) => controller.password.value = value,
-                    decoration: const InputDecoration(
-                      hintText: "Contraseña",
-                    ),
-                  ).marginOnly(bottom: 24, top: 8),
-                  Text(
-                    "Confirmar contraseña",
-                    style: context.labelStyle,
-                  ),
-                  TextField(
-                    onChanged: (value) =>
-                        controller.passwordRepetida.value = value,
-                    decoration: const InputDecoration(
-                      hintText: "Repite tu contraseña",
-                    ),
-                  ).marginOnly(bottom: 24, top: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        backgroundColor: const WidgetStatePropertyAll(
-                          Color.fromRGBO(22, 22, 23, 1),
-                        ),
+                    TextFormField(
+                      key: const Key("username"),
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        hintText: "Usuario",
                       ),
-                      onPressed: () => controller.registrarse(),
-                      child: const Text(
-                        "Registrarse",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
+                      validator: (value) => controller.form.value.username
+                          .validator(value ?? '')
+                          ?.descripcion,
+                    ).marginOnly(bottom: 24, top: 8),
+                    Text(
+                      "Contraseña",
+                      style: context.labelStyle,
                     ),
-                  ),
-                  Center(
-                    child: RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: "¿Ya tienes una cuenta? ",
-                        children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => context.push("/login"),
-                            text: "Iniciar sesión",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Color.fromRGBO(73, 80, 87, 1),
+                    TextFormField(
+                      key: const Key("password"),
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                        hintText: "Contraseña",
+                      ),
+                      validator: (value) => controller.form.value.password
+                          .validator(value ?? '')
+                          ?.descripcion,
+                    ).marginOnly(bottom: 24, top: 8),
+                    Text(
+                      "Confirmar contraseña",
+                      style: context.labelStyle,
+                    ),
+                    TextFormField(
+                      key: const Key("password_repetida"),
+                      controller: passwordRepetidaController,
+                      decoration: const InputDecoration(
+                        hintText: "Repite tu contraseña",
+                      ),
+                    ).marginOnly(bottom: 24, top: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        ],
-                        style: const TextStyle(
-                          color: Color.fromRGBO(108, 117, 125, 1),
+                          backgroundColor: const WidgetStatePropertyAll(
+                            Color.fromRGBO(22, 22, 23, 1),
+                          ),
+                        ),
+                        onPressed: () => controller.registrarse(),
+                        child: const Text(
+                          "Registrarse",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ).marginOnly(top: 24),
-                  ),
-                ],
-              ).paddingSymmetric(horizontal: 16),
+                    ),
+                    Center(
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          text: "¿Ya tienes una cuenta? ",
+                          children: [
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => context.push("/login"),
+                              text: "Iniciar sesión",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromRGBO(73, 80, 87, 1),
+                              ),
+                            ),
+                          ],
+                          style: const TextStyle(
+                            color: Color.fromRGBO(108, 117, 125, 1),
+                          ),
+                        ),
+                      ).marginOnly(top: 24),
+                    ),
+                  ],
+                ).paddingSymmetric(horizontal: 16),
+              ),
             ),
-            if (controller.enviando.value)
+            if (controller.form.value.status == RegistroState.loading)
               const Positioned.fill(
                 child: ColoredBox(
                   color: Colors.black54,
