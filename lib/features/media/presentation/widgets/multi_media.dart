@@ -61,6 +61,7 @@ class _Video extends Dimensionable {
 
   Widget get reproductor => ReproductorDeVideo.provider(
         provider: video.toProvider,
+        previsualizacion: NetworkImage(video.previsualizacion!),
       );
 
   @override

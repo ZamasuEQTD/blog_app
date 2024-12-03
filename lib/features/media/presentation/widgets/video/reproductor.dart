@@ -62,6 +62,10 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   late final ChewieController chewie;
   late final VideoController _controller;
 
+  bool get _previsualizacionVisible =>
+      widget.previsualizacion != null &&
+      _controller.reproductorStatus.value != ReproductorStatus.iniciado;
+
   @override
   void initState() {
     _controller = VideoController();
@@ -82,26 +86,48 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
       ),
     );
 
+    if (widget.previsualizacion == null) {
+      widget.controller.initialize();
+    }
+
+    void listener() {
+      if (widget.controller.value.isInitialized) {
+        _controller.aspectRatio.value = widget.controller.value.aspectRatio;
+
+        _controller.reproductorStatus.value = ReproductorStatus.iniciado;
+
+        widget.controller.removeListener(listener);
+      }
+    }
+
+    widget.controller.addListener(listener);
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder(
-      global: false,
-      init: _controller,
-      builder: (controller) {
-        return Obx(() {
-          if (false) {
-            return Previsualizacion(previsualizacion: widget.previsualizacion!);
-          }
+    return ListenableProvider.value(
+      value: _controller,
+      child: GetBuilder(
+        global: false,
+        init: _controller,
+        builder: (controller) {
+          return Obx(() {
+            if (_previsualizacionVisible) {
+              return Previsualizacion(
+                controller: widget.controller,
+                previsualizacion: widget.previsualizacion!,
+              );
+            }
 
-          return AspectRatio(
-            aspectRatio: _controller.aspectRatio.value ?? 1,
-            child: Chewie(controller: chewie),
-          );
-        });
-      },
+            return AspectRatio(
+              aspectRatio: _controller.aspectRatio.value ?? 1,
+              child: Chewie(controller: chewie),
+            );
+          });
+        },
+      ),
     );
   }
 }

@@ -129,67 +129,65 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Comentario comentario = context.read();
-    return RoundedBottomSheet.normal(
-      child: Column(
-        children: [
-          ...[
+    return RoundedBottomSheet.sliver(
+      slivers: [
+        ...[
+          GrupoItemSeleccionable.sliver(
+            seleccionables: [
+              ItemSeleccionable.text(
+                titulo: "Copiar",
+                onTap: () async {
+                  await Clipboard.setData(
+                    ClipboardData(
+                      text: comentario.texto,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          const GrupoItemSeleccionable.sliver(
+            seleccionables: [
+              ItemSeleccionable.text(titulo: "Ocultar"),
+              ItemSeleccionable.text(titulo: "Denunciar"),
+            ],
+          ),
+          if (Get.find<HiloController>().hilo.value?.esOp ?? false)
             GrupoItemSeleccionable.sliver(
               seleccionables: [
                 ItemSeleccionable.text(
-                  titulo: "Copiar",
                   onTap: () async {
-                    await Clipboard.setData(
-                      ClipboardData(
-                        text: comentario.texto,
-                      ),
-                    );
+                    var result =
+                        await GetIt.I.get<IComentariosRepository>().destacar(
+                              hilo: Get.find<HiloController>().id,
+                              comentario: comentario.id,
+                            );
                   },
+                  titulo: "Destacar",
                 ),
               ],
             ),
-            const GrupoItemSeleccionable(
+          if (Get.find<AuthController>().usuario.value?.rango is Moderador)
+            GrupoItemSeleccionable.sliver(
               seleccionables: [
-                ItemSeleccionable.text(titulo: "Ocultar"),
-                ItemSeleccionable.text(titulo: "Denunciar"),
+                ItemSeleccionable.text(
+                  onTap: () {
+                    IComentariosRepository repository = GetIt.I.get();
+
+                    repository.eliminar(id: comentario.id);
+                  },
+                  titulo: "Eliminar",
+                ),
+                ItemSeleccionable.text(
+                  onTap: () {
+                    VerUsuarioPanelBottomSheet.show(context);
+                  },
+                  titulo: "Ver usuario",
+                ),
               ],
             ),
-            if (Get.find<HiloController>().hilo.value?.esOp ?? false)
-              GrupoItemSeleccionable(
-                seleccionables: [
-                  ItemSeleccionable.text(
-                    onTap: () async {
-                      var result =
-                          await GetIt.I.get<IComentariosRepository>().destacar(
-                                hilo: Get.find<HiloController>().id,
-                                comentario: comentario.id,
-                              );
-                    },
-                    titulo: "Destacar",
-                  ),
-                ],
-              ),
-            if (Get.find<AuthController>().usuario.value?.rango is Moderador)
-              GrupoItemSeleccionable(
-                seleccionables: [
-                  ItemSeleccionable.text(
-                    onTap: () {
-                      IComentariosRepository repository = GetIt.I.get();
-
-                      repository.eliminar(id: comentario.id);
-                    },
-                    titulo: "Eliminar",
-                  ),
-                  ItemSeleccionable.text(
-                    onTap: () {
-                      VerUsuarioPanelBottomSheet.show(context);
-                    },
-                    titulo: "Ver usuario",
-                  ),
-                ],
-              ),
-          ],
         ],
-      ).paddingSymmetric(horizontal: 20, vertical: 10),
+      ],
     );
   }
 

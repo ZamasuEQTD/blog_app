@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late IPortadasHub hub = GetIt.I.get();
+  //late IPortadasHub hub = GetIt.I.get();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -47,13 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
       if (l != null) {}
     });
 
-    hub.connect();
+    //hub.connect();
 
-    hub.onHiloPosteado.listen(
-      (portada) => controller.agregarPortada(portada),
-    );
+    //hub.onHiloPosteado.listen(
+    //  (portada) => controller.agregarPortada(portada),
+    //);
 
-    hub.onHiloEliminado.listen((id) => controller.eliminarPortada(id));
+    //hub.onHiloEliminado.listen((id) => controller.eliminarPortada(id));
 
     super.initState();
   }

@@ -7,6 +7,8 @@ import 'package:blog_app/features/hilos/domain/models/types.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:dartz/dartz.dart';
 
+import '../presentation/widgets/denunciar_hilo/denunciar_hilo.dart';
+
 abstract class IHilosRepository {
   Future<Either<Failure, HiloId>> postear({
     required String titulo,
@@ -50,5 +52,10 @@ abstract class IHilosRepository {
 
   Future<Either<Failure, Unit>> establecerSticky({
     required String id,
+  });
+
+  Future<Either<Failure, Unit>> denunciar({
+    required String id,
+    required HiloRazonDenuncia denuncia,
   });
 }

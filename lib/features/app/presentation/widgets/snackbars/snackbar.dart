@@ -72,11 +72,11 @@ class _SuccessSnackbar extends Snackbars {
         children: [
           const ClipOval(
             child: SizedBox.square(
-              dimension: 25,
+              dimension: 20,
               child: ColoredBox(
                 color: Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(4),
                   child: FittedBox(
                     child: FaIcon(
                       FontAwesomeIcons.check,
@@ -99,7 +99,7 @@ class _SuccessSnackbar extends Snackbars {
             style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],

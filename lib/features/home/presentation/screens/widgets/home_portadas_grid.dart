@@ -1,10 +1,15 @@
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
+import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/widgets/opciones_de_hilo.dart';
 import 'package:blog_app/features/hilos/presentation/widgets/portadas/portada/delegate/portadas_delegate.dart';
 import 'package:blog_app/features/hilos/presentation/widgets/portadas/portada/portada.dart';
 import 'package:blog_app/features/home/presentation/logic/home_controller.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+
+import '../../../../../modules/routing.dart';
 
 class HomePortadasGrid extends StatelessWidget {
   const HomePortadasGrid({super.key});
@@ -33,7 +38,14 @@ class HomePortadasGrid extends StatelessWidget {
 
                 PortadaHilo portada = controller.portadas.value[index];
 
-                return PortadaWidget(portada: portada);
+                return GestureDetector(
+                  onLongPress: () => showMaterialModalBottomSheet(
+                    context: context,
+                    builder: (context) => const HiloOpciones(),
+                  ),
+                  onTap: () => context.push("/hilo/${portada.id}"),
+                  child: PortadaWidget(portada: portada),
+                );
               },
             ),
           ],

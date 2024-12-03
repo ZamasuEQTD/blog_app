@@ -7,6 +7,7 @@ import 'package:blog_app/features/hilos/domain/models/hilo.dart';
 import 'package:blog_app/features/hilos/domain/models/types.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../../../../comentarios/domain/icomentarios_repository.dart';
 import '../../../../../../comentarios/domain/models/comentario.dart';
@@ -47,7 +48,7 @@ mixin HiloMixin {
 
     hiloStatus.value = HiloStatus.cargando;
 
-    final IHilosRepository repository = Get.find<IHilosRepository>();
+    final IHilosRepository repository = GetIt.I.get<IHilosRepository>();
 
     var res = await repository.getHilo(id: id);
 
@@ -95,7 +96,7 @@ mixin ComentariosHiloMixin {
     comentariosStatus.value = HiloComentariosStatus.cargando;
 
     final IComentariosRepository repository =
-        Get.find<IComentariosRepository>();
+        GetIt.I.get<IComentariosRepository>();
 
     var res = await repository.getComentarios(
       hilo: id,

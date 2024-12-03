@@ -1,4 +1,6 @@
+import 'package:blog_app/features/app/presentation/logic/controller/altura_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 abstract class RoundedBottomSheet extends StatelessWidget {
   const RoundedBottomSheet._({super.key});
@@ -103,7 +105,10 @@ class _SliverBottomSheet extends RoundedBottomSheet {
       child: CustomScrollView(
         shrinkWrap: true,
         controller: controller,
-        slivers: slivers,
+        slivers: [
+          if (titulo != null) titulo!.marginSymmetric(horizontal: 10).sliverBox,
+          ...slivers,
+        ],
       ),
     );
   }

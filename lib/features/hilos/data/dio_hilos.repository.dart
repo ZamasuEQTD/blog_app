@@ -4,6 +4,7 @@ import 'package:blog_app/features/app/presentation/logic/extensions/failure_exte
 import 'package:blog_app/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/features/hilos/domain/models/hilo.dart';
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
+import 'package:blog_app/features/hilos/presentation/widgets/denunciar_hilo/denunciar_hilo.dart';
 import 'package:blog_app/features/media/data/file_picker_gallery_service.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/modules/config/api_config.dart';
@@ -215,6 +216,29 @@ class DioHilosRepository extends IHilosRepository {
   Future<Either<Failure, Unit>> establecerSticky({required String id}) async {
     try {
       Response response = await dio.post("hilos/$id/establecer-sticky");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> denunciar({
+    required String id,
+    required HiloRazonDenuncia denuncia,
+  }) async {
+    try {
+      Response response = await dio.post(
+        "hilos/$id/denunciar",
+        data: {
+          "denuncia": denuncia,
+        },
+      );
 
       if (response.statusCode != 200) {
         return Left(response.failure);

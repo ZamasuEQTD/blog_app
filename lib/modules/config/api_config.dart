@@ -1,5 +1,5 @@
 class ApiConfig {
   const ApiConfig._();
 
-  static const String api = "http://192.168.0.106:5179";
+  static const String api = "http://192.168.2.104:5179";
 }
