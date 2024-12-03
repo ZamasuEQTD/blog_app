@@ -1,4 +1,4 @@
-import 'package:blog_app/src/lib/features/media/presentation/miniatura.dart';
+import 'package:blog_app/features/media/presentation/widgets/miniatura/miniatura.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

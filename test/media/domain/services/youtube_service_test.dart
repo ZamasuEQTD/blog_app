@@ -1,4 +1,4 @@
-import 'package:blog_app/src/lib/features/media/domain/youtube_service.dart';
+import 'package:blog_app/features/media/domain/services/youtube_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

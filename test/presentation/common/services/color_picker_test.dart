@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:blog_app/src/lib/features/app/presentation/logic/color_picker.dart';
+import 'package:blog_app/features/app/presentation/logic/helpers/color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
