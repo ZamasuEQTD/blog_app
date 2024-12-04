@@ -169,32 +169,66 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                           Obx(
                             () {
                               if (controller.portada.value == null) {
-                                return SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () async {
-                                      IGalleryService service = GetIt.I.get();
+                                return Row(
+                                  children: [
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          IGalleryService service =
+                                              GetIt.I.get();
 
-                                      var response = await service.pickFile(
-                                        extensions: [],
-                                      );
+                                          var response = await service.pickFile(
+                                            extensions: [],
+                                          );
 
-                                      response.fold(
-                                        (l) {},
-                                        (r) {
-                                          if (r != null) {
-                                            controller.agregarPortada(r);
-                                          }
+                                          response.fold(
+                                            (l) {},
+                                            (r) {
+                                              if (r != null) {
+                                                controller.agregarPortada(r);
+                                              }
+                                            },
+                                          );
                                         },
-                                      );
-                                    },
-                                    label: const Text(
-                                      "Agregar portada ",
+                                        label: const Text(
+                                          "Agregar portada ",
+                                        ),
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.image,
+                                        ),
+                                      ).withSecondaryStyle(context),
                                     ),
-                                    icon: const FaIcon(
-                                      FontAwesomeIcons.image,
+                                    const SizedBox(
+                                      width: 10,
                                     ),
-                                  ).withSecondaryStyle(context),
+                                    Expanded(
+                                      child: ElevatedButton.icon(
+                                        onPressed: () async {
+                                          IGalleryService service =
+                                              GetIt.I.get();
+
+                                          var response = await service.pickFile(
+                                            extensions: [],
+                                          );
+
+                                          response.fold(
+                                            (l) {},
+                                            (r) {
+                                              if (r != null) {
+                                                controller.agregarPortada(r);
+                                              }
+                                            },
+                                          );
+                                        },
+                                        label: const Text(
+                                          "Agregar enlace",
+                                        ),
+                                        icon: const FaIcon(
+                                          FontAwesomeIcons.link,
+                                        ),
+                                      ).withSecondaryStyle(context),
+                                    ),
+                                  ],
                                 );
                               }
                               return Column(
@@ -269,16 +303,13 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                                           suffixIcon: Padding(
                                             padding:
                                                 const EdgeInsets.only(right: 1),
-                                            child: ColoredIconButton(
+                                            child: IconButton(
                                               onPressed: () {
                                                 controller
                                                     .eliminarRespuesta(e.key);
                                               },
-                                              icon: const FittedBox(
-                                                child: FaIcon(
-                                                  FontAwesomeIcons.x,
-                                                  color: Colors.white,
-                                                ),
+                                              icon: const Icon(
+                                                Icons.delete,
                                               ),
                                             ),
                                           ),

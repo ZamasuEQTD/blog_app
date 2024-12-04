@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../app_colors.dart';
+
+class ButtonStyles {
+  static const ButtonStyle disabledButtonStyle = ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll(AppColors.tertiary),
+    foregroundColor: WidgetStatePropertyAll(AppColors.onTertiary),
+  );
+}
+
 const ButtonStyle whiteButtonStyle = ButtonStyle(
   backgroundColor: WidgetStatePropertyAll(Colors.white),
   foregroundColor: WidgetStatePropertyAll(Colors.black),

@@ -27,3 +27,11 @@ class ColoredIconButton extends IconButton {
     );
   }
 }
+
+class ColoredIconButtonStyle extends ButtonStyle {
+  ColoredIconButtonStyle({
+    required Color background,
+  }) : super(
+          backgroundColor: WidgetStatePropertyAll(background),
+        );
+}

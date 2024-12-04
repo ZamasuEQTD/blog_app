@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
+      backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
       endDrawer: const HomeMenu(),
       appBar: AppBar(
         actions: [
@@ -87,12 +88,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: ColoredIconButton(
         border: BorderRadius.circular(10),
-        background: Colors.white,
+        background: const Color.fromRGBO(227, 227, 227, 1),
         onPressed: () => context.push("/postear-hilo"),
         icon: const Icon(
-          Icons.abc,
-          size: 30,
-          color: Colors.black,
+          FontAwesomeIcons.plus,
+          size: 20,
+          color: Color.fromRGBO(115, 115, 115, 1),
         ),
       ),
     );

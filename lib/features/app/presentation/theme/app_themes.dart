@@ -13,6 +13,11 @@ class AppThemes {
     color: AppColors.display,
   );
 
+  static const ButtonStyle tertiaryButtonStyle = ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll(AppColors.tertiary),
+    foregroundColor: WidgetStatePropertyAll(AppColors.onTertiary),
+  );
+
   static ThemeData light = ThemeData(
     brightness: Brightness.light,
     drawerTheme: const DrawerThemeData(backgroundColor: AppColors.surface),

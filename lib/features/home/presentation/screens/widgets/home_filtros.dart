@@ -21,14 +21,18 @@ class HomeFiltros extends StatelessWidget {
               width: 10,
             ),
             ColoredIconButton(
-              background: const Color(0xffF5F5F5),
+              background: const Color.fromRGBO(227, 227, 227, 1),
               onPressed: () => SeleccionarSubcategoriaBottomSheet.show(
                 context,
                 onSubcategoriaSeleccionada: (subcategoria) =>
                     Get.find<HomeController>().subcategoria.value =
                         subcategoria,
               ),
-              icon: const FaIcon(FontAwesomeIcons.box),
+              icon: const FaIcon(
+                FontAwesomeIcons.box,
+                size: 20,
+                color: Color.fromRGBO(115, 115, 115, 1),
+              ),
             ),
           ],
         ),

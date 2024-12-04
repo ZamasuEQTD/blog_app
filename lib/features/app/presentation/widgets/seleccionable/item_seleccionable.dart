@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../theme/app_colors.dart';
+
 abstract class ItemSeleccionable extends StatelessWidget {
   const ItemSeleccionable._({super.key});
 
@@ -135,7 +137,9 @@ class _CheckboxItem extends ItemSeleccionable {
         child: SwitchTheme(
           data: const SwitchThemeData(),
           child: Checkbox(
-            fillColor: const WidgetStatePropertyAll(Colors.black),
+            hoverColor: AppColors.tertiary,
+            fillColor: const WidgetStatePropertyAll(AppColors.tertiary),
+            checkColor: AppColors.onTertiary,
             value: value,
             onChanged: onChange,
           ),
