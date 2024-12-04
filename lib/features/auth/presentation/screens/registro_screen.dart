@@ -1,7 +1,7 @@
+import 'package:blog_app/features/app/presentation/theme/styles/labels.dart';
 import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/registro_controller.dart';
-import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -88,7 +88,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
                   children: [
                     Text(
                       "Nombre de usuario",
-                      style: context.labelStyle,
+                      style: labelStyle,
                     ),
                     TextFormField(
                       key: const Key("username"),
@@ -102,7 +102,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
                     ).marginOnly(bottom: 24, top: 8),
                     Text(
                       "Contraseña",
-                      style: context.labelStyle,
+                      style: labelStyle,
                     ),
                     TextFormField(
                       key: const Key("password"),
@@ -116,7 +116,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
                     ).marginOnly(bottom: 24, top: 8),
                     Text(
                       "Confirmar contraseña",
-                      style: context.labelStyle,
+                      style: labelStyle,
                     ),
                     TextFormField(
                       key: const Key("password_repetida"),

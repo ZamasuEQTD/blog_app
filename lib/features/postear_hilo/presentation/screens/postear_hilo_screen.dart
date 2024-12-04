@@ -4,8 +4,6 @@ import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
-import 'package:blog_app/features/auth/presentation/screens/registro_screen.dart';
-import 'package:blog_app/features/auth/presentation/widgets/bottom_sheet/sesion_requerida.dart';
 import 'package:blog_app/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/features/media/domain/abstractions/igallery_service.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';

@@ -1,5 +1,5 @@
+import 'package:blog_app/features/app/presentation/theme/styles/labels.dart';
 import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
-import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Text(
             "Nombre de usuario",
-            style: context.labelStyle,
+            style: labelStyle,
           ),
           const TextField(
             decoration: InputDecoration(
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Text(
             "Contraseña",
-            style: context.labelStyle,
+            style: labelStyle,
           ),
           GetBuilder(
             init: PasswordController(),

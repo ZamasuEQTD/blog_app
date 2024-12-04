@@ -23,8 +23,7 @@ class ControlesDeReproductorLayout extends StatelessWidget {
                 children: [
                   Positioned.fill(
                     child: GestureDetector(
-                      onTap: () => controller.mostrarControles.value =
-                          !controller.mostrarControles.value,
+                      onTap: controller.toggleControles,
                     ),
                   ),
                   if (controller.mostrarControles.value)

@@ -1,9 +1,7 @@
 import 'package:blog_app/features/app/clases/failure.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/failure_extension.dart';
 import 'package:blog_app/features/moderacion/domain/imoderacion_repository.dart';
-import 'package:blog_app/features/moderacion/domain/models/registro_de_comentario.dart';
-import 'package:blog_app/features/moderacion/domain/models/registro_de_hilo.dart';
-import 'package:blog_app/features/moderacion/domain/models/usuario.dart';
+import 'package:blog_app/features/moderacion/domain/models/registro_usuario.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -13,53 +11,60 @@ class DioModeracionRepository extends IModeracionRepository {
   DioModeracionRepository();
 
   @override
-  Future<Either<Failure, List<ComentarioHistorial>>> getComentarioHistorials({
+  Future<Either<Failure, List<HiloComentadoRegistro>>> getComentarioHistorials({
     required String usuario,
     DateTime? ultimo,
   }) async {
     try {
-      Response response =
-          await dio.get("moderacion/historial-de-usuario/comentarios/$usuario");
+      Response response = await dio
+          .get("moderacion/historial-de-usuario/comentarios/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return const Left(NetworkFailures.serverError);
       }
 
-      throw Exception();
+      return Right(
+        response.data.map((e) => HiloComentadoRegistro.fromJson(e)).toList(),
+      );
     } on Exception catch (e) {
       return Left(e.failure);
     }
   }
 
   @override
-  Future<Either<Failure, List<HiloHistorial>>> getHistorialHilos({
+  Future<Either<Failure, List<HiloPosteadoRegistro>>> getHistorialHilos({
     required String usuario,
     DateTime? ultimo,
   }) async {
     try {
-      Response response =
-          await dio.get("moderacion/historial-de-usuario/hilos/$usuario");
+      Response response = await dio
+          .get("moderacion/historial-de-usuario/hilos/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
-      throw Exception();
+      return Right(
+        response.data.map((e) => HiloPosteadoRegistro.fromJson(e)).toList(),
+      );
     } on Exception catch (e) {
       return Left(e.failure);
     }
   }
 
   @override
-  Future<Either<Failure, Usuario>> verUsuario({required String usuario}) async {
+  Future<Either<Failure, RegistroUsuario>> verUsuario({
+    required String usuario,
+  }) async {
     try {
-      Response response = await dio.get("moderacion/usuario/$usuario");
+      Response response =
+          await dio.get("moderacion/registro-usuario/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
-      return Right(Usuario.fromJson(response.data));
+      return Right(RegistroUsuario.fromJson(response.data));
     } on Exception catch (e) {
       return Left(e.failure);
     }

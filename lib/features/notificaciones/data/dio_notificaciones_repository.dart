@@ -10,8 +10,20 @@ class DioNotificacionesRepository extends INotificacionesRepository {
   final Dio dio = GetIt.I.get();
 
   @override
-  Future<Either<Failure, List<Notificacion>>> getMisNotificaciones() {
-    throw UnimplementedError();
+  Future<Either<Failure, List<Notificacion>>> getMisNotificaciones() async {
+    try {
+      Response response = await dio.get("notificaciones/mis-notificaciones");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return Right(
+        response.data.map((e) => NotificacionMapper.fromJson(e)).toList(),
+      );
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
   }
 
   @override
@@ -43,6 +55,21 @@ class DioNotificacionesRepository extends INotificacionesRepository {
       return const Right(unit);
     } on Exception catch (e) {
       return Left(e.failure);
+    }
+  }
+}
+
+class NotificacionMapper {
+  static Notificacion fromJson(Map<String, dynamic> json) {
+    switch (json["tipo"]) {
+      case "hilo-comentado":
+        return HiloComentado.fromJson(json);
+      case "hilo-seguido-comentado":
+        return HiloSeguidoComentado.fromJson(json);
+      case "comentario-respondido":
+        return ComentarioRespondido.fromJson(json);
+      default:
+        throw Exception("Tipo de notificacion no soportado");
     }
   }
 }

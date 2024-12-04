@@ -1,21 +1,19 @@
 import 'package:blog_app/features/app/clases/failure.dart';
-import 'package:blog_app/features/moderacion/domain/models/usuario.dart';
 import 'package:dartz/dartz.dart';
 
-import 'models/registro_de_comentario.dart';
-import 'models/registro_de_hilo.dart';
+import 'models/registro_usuario.dart';
 
 abstract class IModeracionRepository {
-  Future<Either<Failure, Usuario>> verUsuario({
+  Future<Either<Failure, RegistroUsuario>> verUsuario({
     required String usuario,
   });
 
-  Future<Either<Failure, List<ComentarioHistorial>>> getComentarioHistorials({
+  Future<Either<Failure, List<HiloComentadoRegistro>>> getComentarioHistorials({
     required String usuario,
     DateTime? ultimo,
   });
 
-  Future<Either<Failure, List<HiloHistorial>>> getHistorialHilos({
+  Future<Either<Failure, List<HiloPosteadoRegistro>>> getHistorialHilos({
     required String usuario,
     DateTime? ultimo,
   });

@@ -2,7 +2,6 @@ import 'dart:collection';
 
 import 'package:blog_app/features/baneos/presentation/screens/widgets/bottom_sheet/seleccionar_duracion.dart';
 import 'package:blog_app/features/baneos/presentation/screens/widgets/bottom_sheet/seleccionar_razon.dart';
-import 'package:blog_app/features/moderacion/presentation/ver_usuario_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -57,9 +56,8 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               "Mensaje",
-              style: context.labelStyle,
             ),
             const TextField(
               maxLines: 4,
@@ -67,7 +65,7 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
                 hintText: "Mensaje",
               ),
             ).withMarginSection,
-            Text("Razon", style: context.labelStyle),
+            const Text("Razon"),
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: GestureDetector(
@@ -102,7 +100,7 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
                 ),
               ),
             ).withMarginSection,
-            Text("Duracion", style: context.labelStyle),
+            const Text("Duracion"),
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: GestureDetector(

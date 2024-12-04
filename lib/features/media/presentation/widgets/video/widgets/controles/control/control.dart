@@ -17,15 +17,13 @@ class ReproductorIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: size,
-      width: size,
+    return SizedBox.square(
+      dimension: size,
       child: ColoredIconButton(
         background: Colors.black.withOpacity(0.3),
         onPressed: onTap,
-        icon: SizedBox(
-          height: size,
-          width: size,
+        icon: SizedBox.square(
+          dimension: size,
           child: FittedBox(
             child: child,
           ),
@@ -51,7 +49,7 @@ abstract class IconButtonReproductor extends StatelessWidget {
 
   const factory IconButtonReproductor.volumen() = _VolumenButton;
 
-  const factory IconButtonReproductor.inicializar() = _VolumenButton;
+  const factory IconButtonReproductor.inicializar() = _IniciarButton;
 }
 
 class _IconButtonReproductor extends IconButtonReproductor {
@@ -94,17 +92,17 @@ class _PlayButton extends IconButtonReproductor {
   }
 
   Widget _buildIcon(BuildContext context) {
-    if (context.read<VideoController>().finalizado) {
+    if (context.read<VideoController>().isFinalizado) {
       return const Icon(
         Icons.replay,
       );
     }
 
-    if (context.read<VideoController>().buffering) {
+    if (context.read<VideoController>().isBuffering) {
       return const CircularProgressIndicator();
     }
 
-    if (context.read<VideoController>().reproduciendo) {
+    if (context.read<VideoController>().isReproduciendo) {
       return const Icon(Icons.pause);
     }
 
@@ -120,7 +118,7 @@ class _FullscreenButton extends IconButtonReproductor {
     return Obx(
       () => IconButtonReproductor(
         size: 45,
-        icon: context.read<VideoController>().pantallaCompleta.value
+        icon: context.read<VideoController>().isPantallaCompleta
             ? const Icon(
                 Icons.fullscreen,
               )
@@ -138,24 +136,45 @@ class _VolumenButton extends IconButtonReproductor {
 
   @override
   Widget build(BuildContext context) {
+    VideoController controller = context.read<VideoController>();
+
     return Obx(
       () => IconButtonReproductor(
         size: 45,
         onPressed: () {
-          VideoController controller = context.read<VideoController>();
-          if (controller.volumen.value == 0) {
+          if (controller.isMute) {
             controller.volumen.value = 1;
           } else {
             controller.volumen.value = 0;
           }
         },
         icon: Icon(
-          context.read<VideoController>().volumen.value != -1
-              ? (context.read<VideoController>().volumen.value == 0
-                  ? Icons.volume_mute
-                  : Icons.volume_up)
+          !controller.isVolumenHabilitado
+              ? (controller.isMute ? Icons.volume_mute : Icons.volume_up)
               : Icons.volume_off,
         ),
+      ),
+    );
+  }
+}
+
+class _IniciarButton extends IconButtonReproductor {
+  const _IniciarButton() : super._();
+
+  @override
+  Widget build(BuildContext context) {
+    VideoController controller = context.read<VideoController>();
+
+    return Obx(
+      () => IconButtonReproductor(
+        size: 60,
+        onPressed: controller.init,
+        icon: !controller.isIniciado
+            ? const CircularProgressIndicator()
+            : const Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+              ),
       ),
     );
   }

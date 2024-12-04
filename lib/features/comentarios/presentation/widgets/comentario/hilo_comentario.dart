@@ -1,10 +1,12 @@
 import 'package:blog_app/features/app/presentation/widgets/dialog/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
+import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
 import 'package:blog_app/features/auth/domain/models/usuario.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
 import 'package:blog_app/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/widgets/comentario_texto.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
+import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/usuario_panel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +17,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import '../../../../media/presentation/widgets/multi_media.dart';
-import '../../../../moderacion/presentation/ver_usuario_panel.dart';
 import '../../../domain/models/comentario.dart';
 import 'widgets/comentario_color.dart';
 import 'widgets/comentario_tags.dart';
@@ -146,10 +147,22 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
               ),
             ],
           ),
-          const GrupoItemSeleccionable.sliver(
+          GrupoItemSeleccionable.sliver(
             seleccionables: [
-              ItemSeleccionable.text(titulo: "Ocultar"),
-              ItemSeleccionable.text(titulo: "Denunciar"),
+              ItemSeleccionable.text(
+                titulo: "Ocultar",
+                onTap: () async {
+                  IComentariosRepository repository = GetIt.I.get();
+
+                  var result = await repository.ocultar(id: comentario.id);
+
+                  result.fold(
+                    (l) => Snackbars.showFailure(context, l),
+                    (r) => Snackbars.showSuccess(context, "Ocultado"),
+                  );
+                },
+              ),
+              const ItemSeleccionable.text(titulo: "Denunciar"),
             ],
           ),
           if (Get.find<HiloController>().hilo.value?.esOp ?? false)
@@ -157,11 +170,17 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
               seleccionables: [
                 ItemSeleccionable.text(
                   onTap: () async {
-                    var result =
-                        await GetIt.I.get<IComentariosRepository>().destacar(
-                              hilo: Get.find<HiloController>().id,
-                              comentario: comentario.id,
-                            );
+                    var repository = GetIt.I.get<IComentariosRepository>();
+
+                    var result = await repository.destacar(
+                      hilo: Get.find<HiloController>().id,
+                      comentario: comentario.id,
+                    );
+
+                    result.fold(
+                      (l) => Snackbars.showFailure(context, l),
+                      (r) => Snackbars.showSuccess(context, "Destacado"),
+                    );
                   },
                   titulo: "Destacar",
                 ),
@@ -171,16 +190,24 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
             GrupoItemSeleccionable.sliver(
               seleccionables: [
                 ItemSeleccionable.text(
-                  onTap: () {
+                  onTap: () async {
                     IComentariosRepository repository = GetIt.I.get();
 
-                    repository.eliminar(id: comentario.id);
+                    var result = await repository.eliminar(id: comentario.id);
+
+                    result.fold(
+                      (l) => Snackbars.showFailure(context, l),
+                      (r) => Snackbars.showSuccess(
+                        context,
+                        "Comentario eliminado",
+                      ),
+                    );
                   },
                   titulo: "Eliminar",
                 ),
                 ItemSeleccionable.text(
                   onTap: () {
-                    VerUsuarioPanelBottomSheet.show(context);
+                    UsuarioPanelBottomSheet.show(context);
                   },
                   titulo: "Ver usuario",
                 ),

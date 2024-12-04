@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/widgets/video/logic/controller/video_controller.dart';
 import 'package:blog_app/features/media/presentation/widgets/video/widgets/controles/controles_de_reproductor.dart';
 import 'package:chewie/chewie.dart';
@@ -63,12 +62,11 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
   late final VideoController _controller;
 
   bool get _previsualizacionVisible =>
-      widget.previsualizacion != null &&
-      _controller.reproductorStatus.value != ReproductorStatus.iniciado;
+      widget.previsualizacion != null && !_controller.isIniciado;
 
   @override
   void initState() {
-    _controller = VideoController();
+    _controller = VideoController(chewie);
 
     chewie = ChewieController(
       videoPlayerController: widget.controller,
@@ -87,20 +85,16 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
     );
 
     if (widget.previsualizacion == null) {
-      widget.controller.initialize();
+      _controller.init();
     }
 
-    void listener() {
-      if (widget.controller.value.isInitialized) {
-        _controller.aspectRatio.value = widget.controller.value.aspectRatio;
+    _controller.addListener(() {
+      _controller.position.value = widget.controller.value.position;
 
-        _controller.reproductorStatus.value = ReproductorStatus.iniciado;
-
-        widget.controller.removeListener(listener);
+      if (widget.controller.value.isCompleted) {
+        _controller.finalizado.value = widget.controller.value.isCompleted;
       }
-    }
-
-    widget.controller.addListener(listener);
+    });
 
     super.initState();
   }
@@ -116,7 +110,6 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
           return Obx(() {
             if (_previsualizacionVisible) {
               return Previsualizacion(
-                controller: widget.controller,
                 previsualizacion: widget.previsualizacion!,
               );
             }

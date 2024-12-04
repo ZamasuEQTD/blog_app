@@ -15,19 +15,12 @@ class ComentarioTags extends StatelessWidget {
 
     return Row(
       children: [
-        if (comentario.destacado) const TagDeComentario.destacado(),
         TagDeComentario.rango(rango: comentario.autor.rangoCorto.toLowerCase()),
         TagDeComentario.tag(tag: comentario.tag),
+        if (comentario.destacado) const TagDeComentario.destacado(),
         if (comentario.tagUnico != null)
           TagDeComentario.unico(tag: comentario.tagUnico!),
-      ]
-          .map(
-            (x) => Container(
-              margin: const EdgeInsets.symmetric(horizontal: 2),
-              child: x,
-            ),
-          )
-          .toList(),
+      ].map((x) => x.marginSymmetric(horizontal: 2)).toList(),
     );
   }
 }
@@ -147,10 +140,10 @@ class _RangoTag extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return const TagDeComentario(
+    return TagDeComentario(
       background: Colors.white,
-      tag: "anon",
-      style: TextStyle(fontWeight: FontWeight.bold),
+      tag: rango,
+      style: const TextStyle(fontWeight: FontWeight.bold),
     );
   }
 }

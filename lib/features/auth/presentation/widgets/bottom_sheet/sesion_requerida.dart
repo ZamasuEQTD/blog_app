@@ -1,4 +1,5 @@
 import 'package:blog_app/features/app/presentation/theme/styles/button_styles.dart';
+import 'package:blog_app/features/app/presentation/theme/styles/labels.dart';
 import 'package:blog_app/features/app/presentation/widgets/dialog/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/features/app/presentation/widgets/dialog/widgets/titulo.dart';
 import 'package:blog_app/modules/routing.dart';
@@ -17,12 +18,10 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         child: Column(
           children: [
-            const Text(
+            Text(
               "Para acceder a esta función, necesitas iniciar sesión o registrarte si aún no tienes una cuenta.",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color.fromRGBO(108, 117, 125, 1),
-              ),
+              style: labelStyle,
             ),
             const SizedBox(
               height: 20,
@@ -30,6 +29,7 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
+                style: whiteButtonStyle,
                 onPressed: () {
                   context.push(Routes.login);
                 },
@@ -46,7 +46,7 @@ class SesionRequeridaBottomSheet extends StatelessWidget {
                   context.push(Routes.registro);
                 },
                 child: const Text("Registrarse"),
-              ).withSecondaryStyle(context),
+              ),
             ),
           ],
         ),

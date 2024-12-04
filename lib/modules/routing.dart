@@ -5,7 +5,7 @@ import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/hilo_sc
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:blog_app/features/media/presentation/screens/agregar_enlace_screen.dart';
 import 'package:blog_app/features/notificaciones/presentation/screens/notificaciones_screen.dart';
-import 'package:blog_app/features/postear_hilo/presentation/postear_hilo_screen.dart';
+import 'package:blog_app/features/postear_hilo/presentation/screens/postear_hilo_screen.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

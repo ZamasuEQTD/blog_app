@@ -1,40 +1,97 @@
+import 'package:blog_app/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/features/hilos/domain/models/types.dart';
 import 'package:blog_app/features/media/domain/models/media.dart';
 
+typedef NotificacionId = String;
+
 abstract class Notificacion {
   final NotificacionId id;
-  final HiloId hiloId;
-  final Imagen portada;
-  final String titulo;
-
+  final ComentarioId comentario;
+  final String content;
+  final DateTime fecha;
+  final NotificacionHilo hilo;
   const Notificacion({
     required this.id,
-    required this.hiloId,
-    required this.portada,
-    required this.titulo,
+    required this.comentario,
+    required this.content,
+    required this.fecha,
+    required this.hilo,
   });
+}
+
+class NotificacionHilo {
+  final HiloId id;
+  final String titulo;
+  final Imagen portada;
+  const NotificacionHilo({
+    required this.id,
+    required this.titulo,
+    required this.portada,
+  });
+
+  factory NotificacionHilo.fromJson(Map<String, dynamic> json) =>
+      NotificacionHilo(
+        id: json["id"],
+        titulo: json["titulo"],
+        portada: Imagen.fromJson(json["portada"]),
+      );
 }
 
 class HiloComentado extends Notificacion {
-  final String descripcion;
   const HiloComentado({
     required super.id,
-    required super.hiloId,
-    required super.portada,
-    required super.titulo,
-    required this.descripcion,
+    required super.hilo,
+    required super.comentario,
+    required super.content,
+    required super.fecha,
   });
+
+  factory HiloComentado.fromJson(Map<String, dynamic> json) => HiloComentado(
+        id: json["id"],
+        hilo: NotificacionHilo.fromJson(json["hilo"]),
+        comentario: json["comentario"],
+        content: json["contenido"],
+        fecha: DateTime.parse(json["fecha"]),
+      );
+}
+
+class HiloSeguidoComentado extends HiloComentado {
+  const HiloSeguidoComentado({
+    required super.id,
+    required super.hilo,
+    required super.comentario,
+    required super.content,
+    required super.fecha,
+  });
+
+  factory HiloSeguidoComentado.fromJson(Map<String, dynamic> json) =>
+      HiloSeguidoComentado(
+        id: json["id"],
+        hilo: NotificacionHilo.fromJson(json["hilo"]),
+        comentario: json["comentario"],
+        content: json["contenido"],
+        fecha: DateTime.parse(json["fecha"]),
+      );
 }
 
 class ComentarioRespondido extends Notificacion {
-  final String comentario;
+  final String respondido;
   const ComentarioRespondido({
     required super.id,
-    required super.hiloId,
-    required super.portada,
-    required super.titulo,
-    required this.comentario,
+    required super.hilo,
+    required super.comentario,
+    required super.content,
+    required super.fecha,
+    required this.respondido,
   });
-}
 
-typedef NotificacionId = String;
+  factory ComentarioRespondido.fromJson(Map<String, dynamic> json) =>
+      ComentarioRespondido(
+        id: json["id"],
+        hilo: NotificacionHilo.fromJson(json["hilo"]),
+        comentario: json["comentario"],
+        content: json["contenido"],
+        fecha: DateTime.parse(json["fecha"]),
+        respondido: json["respondido"],
+      );
+}
