@@ -8,12 +8,12 @@ import '../../../baneos/domain/models/baneo.dart';
 class RegistroUsuario extends Equatable {
   final String id;
   final String nombre;
-  final DateTime registrado;
+  final DateTime registradoEn;
   final Baneo? ultimoBaneo;
   const RegistroUsuario({
     required this.id,
     required this.nombre,
-    required this.registrado,
+    required this.registradoEn,
     this.ultimoBaneo,
   });
 
@@ -21,25 +21,23 @@ class RegistroUsuario extends Equatable {
       RegistroUsuario(
         id: json["id"],
         nombre: json["nombre"],
-        registrado: DateTime.parse(json["registrado"]),
-        ultimoBaneo: json["ultimoBaneo"] != null
-            ? Baneo.fromJson(json["ultimoBaneo"])
+        registradoEn: DateTime.parse(json["registrado_en"]),
+        ultimoBaneo: json["ultimo_baneo"] != null
+            ? Baneo.fromJson(json["ultimo_baneo"])
             : null,
       );
 
   @override
-  List<Object?> get props => [id, nombre, registrado];
+  List<Object?> get props => [id, nombre, registradoEn];
 }
 
 typedef RegistroId = String;
 
 abstract class Registro {
-  final RegistroId id;
   final HiloRegistro hilo;
   final DateTime fecha;
   final String contenido;
   const Registro({
-    required this.id,
     required this.hilo,
     required this.fecha,
     required this.contenido,
@@ -48,7 +46,6 @@ abstract class Registro {
 
 class HiloPosteadoRegistro extends Registro {
   const HiloPosteadoRegistro({
-    required super.id,
     required super.hilo,
     required super.fecha,
     required super.contenido,
@@ -56,7 +53,6 @@ class HiloPosteadoRegistro extends Registro {
 
   factory HiloPosteadoRegistro.fromJson(Map<String, dynamic> json) =>
       HiloPosteadoRegistro(
-        id: json["id"],
         hilo: HiloRegistro.fromJson(json["hilo"]),
         fecha: DateTime.parse(json["fecha"]),
         contenido: json["contenido"],
@@ -67,7 +63,6 @@ class HiloComentadoRegistro extends Registro {
   final ComentarioId comentario;
   final Imagen? imagen;
   const HiloComentadoRegistro({
-    required super.id,
     required super.hilo,
     required super.fecha,
     required super.contenido,
@@ -77,10 +72,9 @@ class HiloComentadoRegistro extends Registro {
 
   factory HiloComentadoRegistro.fromJson(Map<String, dynamic> json) =>
       HiloComentadoRegistro(
-        id: json["id"],
-        hilo: HiloRegistro.fromJson(json["hilo"]),
         fecha: DateTime.parse(json["fecha"]),
         contenido: json["contenido"],
+        hilo: HiloRegistro.fromJson(json["hilo"]),
         comentario: json["comentario"],
         imagen: json["imagen"] != null ? Imagen.fromJson(json["imagen"]) : null,
       );

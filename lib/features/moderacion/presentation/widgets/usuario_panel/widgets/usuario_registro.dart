@@ -34,7 +34,7 @@ class UsuarioRegistro extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Unido desde ${usuario.registrado.day}/${usuario.registrado.month}/${usuario.registrado.year}",
+                    "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
                   ),
                 ],
               ),

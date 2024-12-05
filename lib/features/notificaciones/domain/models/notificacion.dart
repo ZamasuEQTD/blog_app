@@ -6,9 +6,9 @@ typedef NotificacionId = String;
 
 abstract class Notificacion {
   final NotificacionId id;
-  final ComentarioId comentario;
   final String content;
   final DateTime fecha;
+  final ComentarioId comentario;
   final NotificacionHilo hilo;
   const Notificacion({
     required this.id,
