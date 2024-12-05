@@ -206,9 +206,7 @@ class ComentarioOpcionesBottomSheet extends StatelessWidget {
                   titulo: "Eliminar",
                 ),
                 ItemSeleccionable.text(
-                  onTap: () {
-                    UsuarioPanelBottomSheet.show(context);
-                  },
+                  onTap: () {},
                   titulo: "Ver usuario",
                 ),
               ],

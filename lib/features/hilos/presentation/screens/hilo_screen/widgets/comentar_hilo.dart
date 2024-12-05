@@ -84,7 +84,7 @@ class _ComentarHiloState extends State<ComentarHilo> {
             () => IgnorePointer(
               ignoring: !Get.find<AuthController>().sesionIniciada,
               child: ColoredBox(
-                color: Theme.of(context).colorScheme.surface,
+                color: Colors.white,
                 child: DecoratedBox(
                   decoration: const BoxDecoration(
                     border: Border(top: BorderSide(color: Color(0xffe1e1e1))),
@@ -178,8 +178,8 @@ class _ComentarHiloState extends State<ComentarHilo> {
                           ),
                           ColoredIconButton(
                             background: const Color.fromRGBO(22, 22, 23, 1),
-                            onPressed: () =>
-                                Get.find<HiloController>().enviarComentario(),
+                            onPressed: () => Get.find<HiloController>()
+                                .enviarComentario(comentario.text),
                             icon: Obx(
                               () => Get.find<HiloController>()
                                           .comentarHiloStatus

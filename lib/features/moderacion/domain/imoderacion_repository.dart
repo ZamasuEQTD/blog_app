@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'models/registro_usuario.dart';
 
 abstract class IModeracionRepository {
-  Future<Either<Failure, RegistroUsuario>> verUsuario({
+  Future<Either<Failure, RegistroUsuario>> getUsuarioRegistro({
     required String usuario,
   });
 

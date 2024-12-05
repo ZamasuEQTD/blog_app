@@ -30,7 +30,7 @@ class DioCategoriasRepository implements ICategoriasRepository {
                 "subcategorias": e["subcategorias"].map(
                   (e) => {
                     ...e,
-                    "imagen": ApiConfig.api + e["imagen"],
+                    "imagen": ApiConfig.media + e["imagen"],
                   },
                 ),
               }),

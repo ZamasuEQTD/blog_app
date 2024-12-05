@@ -29,7 +29,7 @@ class PostearHiloController extends GetxController {
 
   Rx<Failure?> failure = Rx(null);
   void postear() async {
-    failure.value = null;
+    if (posteando.value) return;
     if (portada.value == null) {
       failure.value = PotearHiloFailures.sinPortada;
       return;

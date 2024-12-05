@@ -38,7 +38,7 @@ class DioModeracionRepository extends IModeracionRepository {
   }) async {
     try {
       Response response = await dio
-          .get("moderacion/historial-de-usuario/hilos/usuario/$usuario");
+          .get("/moderacion/historial-de-usuario/hilos/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -53,18 +53,18 @@ class DioModeracionRepository extends IModeracionRepository {
   }
 
   @override
-  Future<Either<Failure, RegistroUsuario>> verUsuario({
+  Future<Either<Failure, RegistroUsuario>> getUsuarioRegistro({
     required String usuario,
   }) async {
     try {
       Response response =
-          await dio.get("moderacion/registro-usuario/usuario/$usuario");
+          await dio.get("/moderacion/registro/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
-      return Right(RegistroUsuario.fromJson(response.data));
+      return Right(RegistroUsuario.fromJson(response.data["value"]));
     } on Exception catch (e) {
       return Left(e.failure);
     }

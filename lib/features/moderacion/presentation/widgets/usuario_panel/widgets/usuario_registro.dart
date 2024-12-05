@@ -17,6 +17,7 @@ class UsuarioRegistro extends StatelessWidget {
   Widget build(BuildContext context) {
     RegistroUsuario usuario = context.read();
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Center(
           child: Row(
@@ -25,6 +26,7 @@ class UsuarioRegistro extends StatelessWidget {
               const UsuarioFoto.bone(),
               const SizedBox(width: 10),
               Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     usuario.nombre,
@@ -56,9 +58,9 @@ class UsuarioRegistro extends StatelessWidget {
             ),
           ),
           child: const Text("Banear usuario"),
-        ).marginOnly(bottom: 10).sliverBox,
+        ).marginOnly(bottom: 10),
       ],
-    );
+    ).sliverBox;
   }
 }
 
@@ -85,7 +87,7 @@ class UsuarioRegistroSkeleton extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ).sliverBox;
   }
 }
 

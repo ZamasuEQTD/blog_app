@@ -157,7 +157,7 @@ mixin ComentarHiloMixin {
 
   Rx<Spoileable<Media>?> media = Rx(null);
 
-  Future<void> enviarComentario() async {
+  Future<void> enviarComentario(String comentario) async {
     if (comentarHiloStatus.value == ComentarHiloStatus.enviando) {
       return;
     }
@@ -165,9 +165,12 @@ mixin ComentarHiloMixin {
     comentarHiloStatus.value = ComentarHiloStatus.enviando;
 
     final IComentariosRepository repository =
-        Get.find<IComentariosRepository>();
+        GetIt.I.get<IComentariosRepository>();
 
-    var res = await repository.enviar(hilo: "hilo", comentario: "contenido");
+    var res = await repository.enviar(
+      hilo: id,
+      comentario: comentario,
+    );
 
     res.fold((l) {
       failure.value = l;

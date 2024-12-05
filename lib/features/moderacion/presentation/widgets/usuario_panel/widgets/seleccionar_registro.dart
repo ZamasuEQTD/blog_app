@@ -81,7 +81,7 @@ class SeleccionarRegistro extends StatelessWidget {
             ],
           ).paddingSymmetric(horizontal: 10, vertical: 5),
         ),
-      ),
+      ).sliverBox,
     );
   }
 }

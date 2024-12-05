@@ -4,47 +4,52 @@ import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'widgets/registros.dart';
 import 'widgets/usuario_registro.dart';
 
 class UsuarioPanelBottomSheet extends StatelessWidget {
-  const UsuarioPanelBottomSheet({super.key});
+  final String usuario;
+
+  const UsuarioPanelBottomSheet({
+    required this.usuario,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        DraggableScrollableSheet(
-          initialChildSize: 0.5,
-          maxChildSize: 0.7,
-          snap: true,
-          snapSizes: const [0.5, 0.7],
-          builder: (BuildContext context, ScrollController scrollController) {
-            return ChangeNotifierProvider.value(
-              value: scrollController,
-              child: const DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Color(0xffF1F1F1),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12),
-                  ),
-                ),
-                child: UsuarioPanel(),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.5,
+      maxChildSize: 0.7,
+      snap: true,
+      snapSizes: const [0.5, 0.7],
+      builder: (BuildContext context, ScrollController scrollController) {
+        return ChangeNotifierProvider.value(
+          value: scrollController,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
               ),
-            );
-          },
-        ),
-      ],
+            ),
+            child: Provider.value(
+              value: usuario,
+              child: const UsuarioPanel(),
+            ),
+          ),
+        );
+      },
     );
   }
 
-  static void show(BuildContext context) {
+  static void show(BuildContext context, {required String usuario}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => const UsuarioPanelBottomSheet(),
+      builder: (context) => UsuarioPanelBottomSheet(usuario: usuario),
     );
   }
 }
@@ -57,7 +62,11 @@ class UsuarioPanel extends StatefulWidget {
 }
 
 class _UsuarioPanelState extends State<UsuarioPanel> {
-  final controller = Get.put(RegistroDeUsuarioController(id: ''));
+  late final controller = Get.put(
+    RegistroDeUsuarioController(
+      id: context.read(),
+    ),
+  );
 
   late final ScrollController scroll = context.read();
 
@@ -97,15 +106,15 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
           else
             Provider.value(
               value: controller.usuario.value!,
-              child: SliverMainAxisGroup(
+              child: const SliverMainAxisGroup(
                 slivers: [
-                  const UsuarioRegistro(),
-                  const SeleccionarRegistro(),
-                  if (controller.registro.value == RegistroSeleccionado.hilo)
-                    const RegistrosHilos(),
-                  if (controller.registro.value ==
-                      RegistroSeleccionado.comentario)
-                    const RegistrosComentarios(),
+                  UsuarioRegistro(),
+                  SeleccionarRegistro(),
+                  //if (controller.registro.value == RegistroSeleccionado.hilo)
+                  //  const RegistrosHilos(),
+                  //if (controller.registro.value ==
+                  //    RegistroSeleccionado.comentario)
+                  //  const RegistrosComentarios(),
                 ],
               ),
             ),
@@ -120,14 +129,16 @@ class UsuarioPanelSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverMainAxisGroup(
-      slivers: [
-        const UsuarioRegistroSkeleton(),
-        SliverList.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) => const RegistroItemSkeleton(),
-        ),
-      ],
+    return Skeletonizer.sliver(
+      child: SliverMainAxisGroup(
+        slivers: [
+          const UsuarioRegistroSkeleton(),
+          SliverList.builder(
+            itemCount: 10,
+            itemBuilder: (context, index) => const RegistroItemSkeleton(),
+          ),
+        ],
+      ),
     );
   }
 }

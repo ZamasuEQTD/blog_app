@@ -3,6 +3,7 @@ import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_s
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
 import 'package:blog_app/features/hilos/presentation/widgets/denunciar_hilo/denunciar_hilo.dart';
+import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/usuario_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -35,12 +36,9 @@ class HiloOpciones extends StatelessWidget {
             ItemSeleccionable.text(
               titulo: "Ver usuario",
               onTap: () {
-                showMaterialModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    //return const VerUsuarioPanel(usuario: "");
-                    return const SizedBox();
-                  },
+                UsuarioPanelBottomSheet.show(
+                  context,
+                  usuario: "21cf8b34-8f3c-4b5a-9d85-70ab12427ef9",
                 );
               },
             ),

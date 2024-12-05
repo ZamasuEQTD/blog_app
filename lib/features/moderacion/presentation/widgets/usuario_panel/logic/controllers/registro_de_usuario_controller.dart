@@ -46,18 +46,16 @@ mixin RegistroDeUsuarioControllerMixin on GetxController {
 
     final repository = GetIt.I.get<IModeracionRepository>();
 
-    final res = await repository.verUsuario(usuario: id);
+    final res = await repository.getUsuarioRegistro(usuario: id);
 
     res.fold(
       (l) => status.value = RegistroDeUsuarioStatus.failure,
       (r) {
         usuario.value = r;
+
         status.value = RegistroDeUsuarioStatus.cargado;
-        return;
       },
     );
-
-    status.value = RegistroDeUsuarioStatus.initial;
   }
 }
 
