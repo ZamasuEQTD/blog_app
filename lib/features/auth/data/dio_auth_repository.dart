@@ -16,7 +16,7 @@ class DioAuthRepository implements IAuthRepository {
   }) async {
     try {
       Response response = await dio.post(
-        "/api/auth/login",
+        "/auth/login",
         data: {
           "username": usuario,
           "password": password,
@@ -40,7 +40,7 @@ class DioAuthRepository implements IAuthRepository {
   }) async {
     try {
       Response response = await dio.post(
-        "/api/auth/registro",
+        "/auth/registro",
         data: {
           "username": usuario,
           "password": password,

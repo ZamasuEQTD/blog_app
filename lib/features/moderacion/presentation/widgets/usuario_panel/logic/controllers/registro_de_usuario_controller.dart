@@ -105,9 +105,8 @@ mixin RegistroHiloPosteadoMixin on GetxController {
       hiloPosteadoStatus.value == RegistroHiloPosteadoStatus.cargado;
 
   void cargarRegistrosHiloPosteado() async {
-    if (hiloPosteadoStatus.value == RegistroHiloPosteadoStatus.cargando) {
-      return;
-    }
+    if (hiloPosteadoStatus.value == RegistroHiloPosteadoStatus.cargando) return;
+
     hiloPosteadoStatus.value = RegistroHiloPosteadoStatus.cargando;
 
     final repository = GetIt.I.get<IModeracionRepository>();

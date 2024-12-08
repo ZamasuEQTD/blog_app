@@ -43,7 +43,7 @@ class Imagen extends Media {
 
   static Imagen fromJson(Map<String, dynamic> json) {
     return Imagen(
-      provider: NetworkProvider(path: json["path"]),
+      provider: NetworkProvider(path: json["url"]),
     );
   }
 }

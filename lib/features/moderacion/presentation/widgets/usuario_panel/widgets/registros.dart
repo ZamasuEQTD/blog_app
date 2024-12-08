@@ -60,38 +60,46 @@ class RegistroItem extends StatelessWidget {
       child: ColoredBox(
         color: Colors.white,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                SizedBox.square(
-                  dimension: 48,
-                  child: Image(image: registro.hilo.portada.toProvider),
-                ),
-                Column(
-                  children: [
-                    Text(registro.hilo.titulo),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.calendar_month,
-                        ),
-                        Text(
-                          "${registro.fecha.day}-${registro.fecha.month}-${registro.fecha.year}",
-                        ),
-                      ],
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox.square(
+                    dimension: 70,
+                    child: Image(
+                      image: registro.hilo.portada.toProvider,
+                      fit: BoxFit.cover,
                     ),
-                  ],
+                  ),
                 ),
-                Text(
-                  registro.contenido,
-                  style: Theme.of(context).textTheme.labelMedium,
+                Flexible(
+                  child: Text(
+                    registro.hilo.titulo,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ).marginOnly(left: 10),
                 ),
               ],
+            ),
+            Text(
+              "hace 1h",
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            Text(
+              registro.contenido,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ).paddingAll(16),
       ),
-    );
+    ).marginOnly(bottom: 10);
   }
 }
 

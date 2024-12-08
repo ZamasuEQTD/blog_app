@@ -53,7 +53,7 @@ class HiloPosteadoRegistro extends Registro {
 
   factory HiloPosteadoRegistro.fromJson(Map<String, dynamic> json) =>
       HiloPosteadoRegistro(
-        hilo: HiloRegistro.fromJson(json["hilo"]),
+        hilo: HiloRegistro.fromJson(Map<String, dynamic>.from(json["hilo"])),
         fecha: DateTime.parse(json["fecha"]),
         contenido: json["contenido"],
       );
@@ -93,6 +93,8 @@ class HiloRegistro {
   factory HiloRegistro.fromJson(Map<String, dynamic> json) => HiloRegistro(
         id: json["id"],
         titulo: json["titulo"],
-        portada: Imagen.fromJson(json["portada"]),
+        portada: Imagen.fromJson({
+          "url": json["miniatura"],
+        }),
       );
 }

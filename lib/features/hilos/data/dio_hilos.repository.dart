@@ -49,15 +49,12 @@ class DioHilosRepository extends IHilosRepository {
       return Right(
         Hilo.fromJson({
           ...value,
-          "portada": {
-            ...value["portada"],
-            "media": {
-              ...value["portada"]["media"],
-              if (value["portada"]["media"]["previsualizacion"] != null)
-                "previsualizacion": ApiConfig.media +
-                    value["portada"]["media"]["previsualizacion"],
-              "path": ApiConfig.media + value["portada"]["media"]["url"],
-            },
+          "media": {
+            ...value["media"],
+            if (value["media"]["previsualizacion"] != null)
+              "previsualizacion":
+                  ApiConfig.media + value["media"]["previsualizacion"],
+            "url": ApiConfig.media + value["media"]["url"],
           },
           "subcategoria": {
             ...value["subcategoria"],
@@ -96,7 +93,10 @@ class DioHilosRepository extends IHilosRepository {
           .map(
             (p) => PortadaHilo.fromJson({
               ...p,
-              "miniatura": ApiConfig.media + p["miniatura"],
+              "miniatura": {
+                ...p["miniatura"],
+                "url": ApiConfig.media + p["miniatura"]["url"],
+              },
             }),
           )
           .toList();

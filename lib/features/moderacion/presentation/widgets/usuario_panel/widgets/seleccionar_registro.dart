@@ -1,3 +1,4 @@
+import 'package:blog_app/features/app/presentation/theme/styles/button_styles.dart';
 import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/logic/controllers/registro_de_usuario_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,26 +18,12 @@ class SeleccionarRegistroButtonStyle extends ButtonStyle {
         );
 }
 
-class SeleccionarRegistroActivoButtonStyle extends ButtonStyle {
-  const SeleccionarRegistroActivoButtonStyle()
-      : super(
-          backgroundColor: const WidgetStatePropertyAll(
-            Colors.white,
-          ),
-          iconColor: const WidgetStatePropertyAll(
-            Colors.black,
-          ),
-          foregroundColor: const WidgetStatePropertyAll(
-            Colors.black,
-          ),
-        );
-}
-
 class SeleccionarRegistro extends StatelessWidget {
   const SeleccionarRegistro({super.key});
 
   @override
   Widget build(BuildContext context) {
+    RegistroDeUsuarioController controller = Get.find();
     return Obx(
       () => ClipRRect(
         borderRadius: BorderRadius.circular(5),
@@ -47,10 +34,9 @@ class SeleccionarRegistro extends StatelessWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   style: SeleccionarRegistroButtonStyle().merge(
-                    Get.find<RegistroDeUsuarioController>().registro.value ==
-                            RegistroSeleccionado.hilo
-                        ? const SeleccionarRegistroActivoButtonStyle()
-                        : null,
+                    controller.registro.value == RegistroSeleccionado.hilo
+                        ? ButtonStyles.disabledButtonStyle
+                        : ButtonStyles.whiteButtonStyle,
                   ),
                   onPressed: () {
                     RegistroDeUsuarioController controller = Get.find();
@@ -64,10 +50,9 @@ class SeleccionarRegistro extends StatelessWidget {
               Expanded(
                 child: ElevatedButton.icon(
                   style: SeleccionarRegistroButtonStyle().merge(
-                    Get.find<RegistroDeUsuarioController>().registro.value ==
-                            RegistroSeleccionado.comentario
-                        ? const SeleccionarRegistroActivoButtonStyle()
-                        : null,
+                    controller.registro.value == RegistroSeleccionado.comentario
+                        ? ButtonStyles.disabledButtonStyle
+                        : ButtonStyles.whiteButtonStyle,
                   ),
                   onPressed: () {
                     RegistroDeUsuarioController controller = Get.find();
@@ -81,7 +66,7 @@ class SeleccionarRegistro extends StatelessWidget {
             ],
           ).paddingSymmetric(horizontal: 10, vertical: 5),
         ),
-      ).sliverBox,
+      ).paddingSymmetric(horizontal: 15).sliverBox,
     );
   }
 }

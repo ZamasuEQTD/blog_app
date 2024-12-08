@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/app/presentation/logic/controller/altura_controller.dart';
+import 'package:blog_app/features/app/presentation/theme/app_colors.dart';
 import 'package:blog_app/features/app/presentation/widgets/altura_notifier.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/features/app/presentation/widgets/dialog/bottom_sheet/bottom_sheet.dart';
@@ -157,6 +158,7 @@ class _ComentarHiloState extends State<ComentarHilo> {
                                 FocusManager.instance.primaryFocus?.unfocus();
                               },
                               decoration: InputDecoration(
+                                fillColor: AppColors.tertiary,
                                 hintText: "Escribe un comentario...",
                                 contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 10,

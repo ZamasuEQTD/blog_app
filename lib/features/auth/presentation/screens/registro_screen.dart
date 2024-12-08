@@ -1,6 +1,7 @@
 import 'package:blog_app/features/app/presentation/theme/styles/labels.dart';
 import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
+import 'package:blog_app/features/auth/presentation/logic/controllers/password_controller.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/registro_controller.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -104,25 +105,52 @@ class _RegistroScreenState extends State<RegistroScreen> {
                       "Contraseña",
                       style: labelStyle,
                     ),
-                    TextFormField(
-                      key: const Key("password"),
-                      controller: passwordController,
-                      decoration: const InputDecoration(
-                        hintText: "Contraseña",
+                    GetBuilder(
+                      init: PasswordController(),
+                      builder: (controller) => Obx(
+                        () => TextField(
+                          controller: passwordController,
+                          obscureText: controller.obscure.value,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              splashColor: Colors.transparent,
+                              onPressed: () => controller.obscure.value =
+                                  !controller.obscure.value,
+                              icon: Icon(
+                                !controller.obscure.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                            ),
+                            hintText: "Contraseña",
+                          ),
+                        ),
                       ),
-                      validator: (value) => controller.form.value.password
-                          .validator(value ?? '')
-                          ?.descripcion,
                     ).marginOnly(bottom: 24, top: 8),
                     Text(
                       "Confirmar contraseña",
                       style: labelStyle,
                     ),
-                    TextFormField(
-                      key: const Key("password_repetida"),
-                      controller: passwordRepetidaController,
-                      decoration: const InputDecoration(
-                        hintText: "Repite tu contraseña",
+                    GetBuilder(
+                      init: PasswordController(),
+                      builder: (controller) => Obx(
+                        () => TextField(
+                          controller: passwordRepetidaController,
+                          obscureText: controller.obscure.value,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              splashColor: Colors.transparent,
+                              onPressed: () => controller.obscure.value =
+                                  !controller.obscure.value,
+                              icon: Icon(
+                                !controller.obscure.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                            ),
+                            hintText: "Repite tu contraseña",
+                          ),
+                        ),
                       ),
                     ).marginOnly(bottom: 24, top: 8),
                     SizedBox(

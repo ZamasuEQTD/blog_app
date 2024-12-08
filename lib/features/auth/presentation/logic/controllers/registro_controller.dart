@@ -26,6 +26,8 @@ class RegistroController extends GetxController {
         failure.value = l;
 
         form.value = form.value.copyWith(status: RegistroState.failure);
+
+        form.value = form.value.copyWith(status: RegistroState.initial);
       },
       (r) {
         token.value = r;
@@ -33,7 +35,5 @@ class RegistroController extends GetxController {
         form.value = form.value.copyWith(status: RegistroState.success);
       },
     );
-
-    form.value = form.value.copyWith(status: RegistroState.initial);
   }
 }

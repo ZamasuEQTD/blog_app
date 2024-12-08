@@ -19,46 +19,64 @@ class UsuarioRegistro extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const UsuarioFoto.bone(),
-              const SizedBox(width: 10),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    usuario.nombre,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: ColoredBox(
+                color: Colors.white,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const UsuarioFoto.icono(),
+                        const SizedBox(width: 10),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              usuario.nombre,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                              ),
+                            ),
+                            Text(
+                              "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
+                            ),
+                          ],
+                        ),
+                      ],
+                    ).paddingSymmetric(vertical: 20),
                   ),
-                  Text(
-                    "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
-                  ),
-                ],
+                ),
               ),
-            ],
-          ),
-        ).marginSymmetric(vertical: 15),
+            ),
+          ).marginSymmetric(vertical: 15),
+        ),
         if (usuario.ultimoBaneo != null)
           RegistroUltimoBaneo(baneo: usuario.ultimoBaneo!),
-        ElevatedButton(
-          onPressed: () => context.pushNamed(
-            "banear-usuario",
-            pathParameters: {
-              "id": usuario.id,
-            },
-          ),
-          style: ButtonStyle(
-            backgroundColor: WidgetStatePropertyAll(
-              Theme.of(context).colorScheme.error,
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: () => context.pushNamed(
+              "banear-usuario",
+              pathParameters: {
+                "id": usuario.id,
+              },
             ),
-          ),
-          child: const Text("Banear usuario"),
-        ).marginOnly(bottom: 10),
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.error,
+              ),
+            ),
+            child: const Text("Banear usuario"),
+          ).paddingSymmetric(horizontal: 10).marginOnly(bottom: 10),
+        ),
       ],
     ).sliverBox;
   }

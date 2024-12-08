@@ -74,6 +74,12 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
   void initState() {
     controller.cargarUsuario();
 
+    controller.usuario.listen((usuario) {
+      if (usuario != null) {
+        controller.cargarRegistros();
+      }
+    });
+
     controller.status.listen(
       (status) {
         if (status == RegistroDeUsuarioStatus.cargando) {
@@ -106,15 +112,27 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
           else
             Provider.value(
               value: controller.usuario.value!,
-              child: const SliverMainAxisGroup(
+              child: SliverMainAxisGroup(
                 slivers: [
-                  UsuarioRegistro(),
-                  SeleccionarRegistro(),
-                  //if (controller.registro.value == RegistroSeleccionado.hilo)
-                  //  const RegistrosHilos(),
-                  //if (controller.registro.value ==
-                  //    RegistroSeleccionado.comentario)
-                  //  const RegistrosComentarios(),
+                  const UsuarioRegistro(),
+                  const SeleccionarRegistro(),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 10),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    sliver: Obx(
+                      () {
+                        if (controller.registro.value ==
+                            RegistroSeleccionado.hilo)
+                          return const RegistrosHilos();
+                        if (controller.registro.value ==
+                            RegistroSeleccionado.comentario)
+                          return const RegistrosComentarios();
+                        return const SliverToBoxAdapter();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

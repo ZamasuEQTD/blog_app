@@ -2,6 +2,7 @@ import 'package:blog_app/features/app/clases/failure.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/failure_extension.dart';
 import 'package:blog_app/features/moderacion/domain/imoderacion_repository.dart';
 import 'package:blog_app/features/moderacion/domain/models/registro_usuario.dart';
+import 'package:blog_app/modules/config/api_config.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
@@ -16,15 +17,29 @@ class DioModeracionRepository extends IModeracionRepository {
     DateTime? ultimo,
   }) async {
     try {
-      Response response = await dio
-          .get("moderacion/historial-de-usuario/comentarios/usuario/$usuario");
+      Response response =
+          await dio.get("/moderacion/registro/comentarios/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return const Left(NetworkFailures.serverError);
       }
 
+      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
+
       return Right(
-        response.data.map((e) => HiloComentadoRegistro.fromJson(e)).toList(),
+        value
+            .map(
+              (e) => HiloComentadoRegistro.fromJson(
+                Map<String, dynamic>.from({
+                  ...e,
+                  "hilo": {
+                    ...e["hilo"],
+                    "miniatura": ApiConfig.media + e["hilo"]["miniatura"],
+                  },
+                }),
+              ),
+            )
+            .toList(),
       );
     } on Exception catch (e) {
       return Left(e.failure);
@@ -37,15 +52,29 @@ class DioModeracionRepository extends IModeracionRepository {
     DateTime? ultimo,
   }) async {
     try {
-      Response response = await dio
-          .get("/moderacion/historial-de-usuario/hilos/usuario/$usuario");
+      Response response =
+          await dio.get("/moderacion/registro/hilos/usuario/$usuario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
+      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
+
       return Right(
-        response.data.map((e) => HiloPosteadoRegistro.fromJson(e)).toList(),
+        value
+            .map(
+              (e) => HiloPosteadoRegistro.fromJson(
+                Map<String, dynamic>.from({
+                  ...e,
+                  "hilo": {
+                    ...e["hilo"],
+                    "miniatura": ApiConfig.media + e["hilo"]["miniatura"],
+                  },
+                }),
+              ),
+            )
+            .toList(),
       );
     } on Exception catch (e) {
       return Left(e.failure);

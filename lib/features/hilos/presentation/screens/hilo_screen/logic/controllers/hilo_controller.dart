@@ -54,13 +54,13 @@ mixin HiloMixin {
 
     res.fold((l) {
       failure.value = l;
+
+      hiloStatus.value = HiloStatus.initial;
     }, (r) {
       hilo.value = r;
 
       hiloStatus.value = HiloStatus.cargado;
     });
-
-    hiloStatus.value = HiloStatus.initial;
   }
 }
 

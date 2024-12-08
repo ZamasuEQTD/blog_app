@@ -28,20 +28,20 @@ class PortadaHilo {
       id: json["id"],
       titulo: json["titulo"],
       autor: json["autor_id"],
-      categoria: json["subcategoria"]["nombre"],
+      categoria: json["subcategoria"],
       esOp: json["es_op"],
       features: [
         if (json["es_nuevo"]) PortadaFeatures.nuevo,
         if (json["es_sticky"]) PortadaFeatures.sticky,
-        if (json["banderas"]["dados"]) PortadaFeatures.dados,
-        if (json["banderas"]["id_unico"]) PortadaFeatures.idUnico,
-        if (json["banderas"]["encuesta"]) PortadaFeatures.encuesta,
+        if (json["banderas"]["dados_activados"]) PortadaFeatures.dados,
+        if (json["banderas"]["id_unico_activado"]) PortadaFeatures.idUnico,
+        if (json["banderas"]["tiene_encuesta"]) PortadaFeatures.encuesta,
       ],
       ultimoBump: DateTime.parse(json["ultimo_bump"]),
       imagen: Spoileable<Imagen>(
-        json["spoiler"],
+        json["miniatura"]["es_spoiler"],
         Imagen.fromJson({
-          "path": json["miniatura"],
+          "url": json["miniatura"]["url"],
         }),
       ),
     );

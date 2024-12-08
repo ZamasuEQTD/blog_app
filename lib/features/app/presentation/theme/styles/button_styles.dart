@@ -8,6 +8,11 @@ class ButtonStyles {
     backgroundColor: WidgetStatePropertyAll(AppColors.tertiary),
     foregroundColor: WidgetStatePropertyAll(AppColors.onTertiary),
   );
+
+  static const ButtonStyle whiteButtonStyle = ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll(Colors.white),
+    foregroundColor: WidgetStatePropertyAll(Colors.black),
+  );
 }
 
 const ButtonStyle whiteButtonStyle = ButtonStyle(

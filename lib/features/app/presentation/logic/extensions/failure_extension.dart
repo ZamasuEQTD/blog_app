@@ -3,10 +3,6 @@ import 'package:dio/dio.dart';
 
 extension ExceptionFailure on Exception {
   Failure get failure {
-    if (this is DioException) {
-      return (this as DioException).failure;
-    }
-
     return Failures.unknown;
   }
 }
