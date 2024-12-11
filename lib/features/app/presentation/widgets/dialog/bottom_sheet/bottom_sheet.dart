@@ -125,6 +125,7 @@ class _DraggableSliverBottomSheet extends RoundedBottomSheet {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
+      maxChildSize: 0.6,
       builder: (context, controller) => RoundedBottomSheet.sliver(
         controller: controller,
         slivers: slivers,

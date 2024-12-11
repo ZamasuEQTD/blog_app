@@ -30,7 +30,7 @@ class _SliverGrupoSeleccionable extends GrupoItemSeleccionable {
     Widget? builder(BuildContext context, int index) => seleccionables[index];
 
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       sliver: DecoratedSliver(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onSurface,

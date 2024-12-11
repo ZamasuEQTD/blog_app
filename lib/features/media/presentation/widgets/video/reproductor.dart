@@ -66,8 +66,6 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
 
   @override
   void initState() {
-    _controller = VideoController(chewie);
-
     chewie = ChewieController(
       videoPlayerController: widget.controller,
       customControls: ChangeNotifierProvider.value(
@@ -83,6 +81,8 @@ class _ReproductorDeVideoState extends State<ReproductorDeVideo> {
         },
       ),
     );
+
+    _controller = VideoController(chewie);
 
     if (widget.previsualizacion == null) {
       _controller.init();

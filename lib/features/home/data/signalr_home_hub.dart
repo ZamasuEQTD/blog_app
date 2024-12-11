@@ -1,13 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
 import 'package:blog_app/features/home/domain/hub/ihome_portadas_hub.dart';
+import 'package:blog_app/modules/config/api_config.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
 class SignalrHomeHub extends IPortadasHub {
   late final HubConnection hub;
 
-  final HubConnectionBuilder connection = HubConnectionBuilder();
+  final HubConnectionBuilder connection =
+      HubConnectionBuilder().withUrl("${ApiConfig.baseUrl}/hilos-hub");
 
   final onHiloEliminadoController = StreamController<String>.broadcast();
 
@@ -16,13 +19,24 @@ class SignalrHomeHub extends IPortadasHub {
   void connect() {
     hub = connection.build();
 
-    hub.start();
+    hub.start()!.then(
+      (value) {
+        log("Hub conectado");
+      },
+      onError: (error, stackTrace) {
+        log("Hub no conectado: $error");
+      },
+    );
 
-    hub.on("HiloEliminado", (data) {
+    hub.on("OnHiloEliminado", (data) {
       onHiloEliminadoController.add(data![0] as String);
     });
 
-    hub.on("HiloPosteado", (data) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      onHiloEliminadoController.add("hghjjja");
+    });
+
+    hub.on("OnHiloPosteado", (data) {
       onHiloPosteadoController.add(
         PortadaHilo.fromJson(data![0] as Map<String, dynamic>),
       );

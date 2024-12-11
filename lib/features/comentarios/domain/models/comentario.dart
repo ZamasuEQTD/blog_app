@@ -5,15 +5,14 @@ import 'typedef.dart';
 class Comentario {
   final ComentarioId id;
   final String texto;
+  final DetallesDeComentario detalles;
   final DateTime creado_en;
   final ColoresDeComentario color;
   final Autor autor;
   final Spoileable<Media>? media;
+  final bool EsOp;
   final bool destacado;
-  final String tag;
   final String? autorId;
-  final String? tagUnico;
-  final String? dados;
   final List<String> tags;
   final List<String> taggueos;
 
@@ -23,12 +22,11 @@ class Comentario {
     required this.creado_en,
     required this.color,
     required this.autor,
-    required this.tag,
     required this.destacado,
+    required this.EsOp,
     this.media,
     this.autorId,
-    this.tagUnico,
-    this.dados,
+    required this.detalles,
     required this.tags,
     required this.taggueos,
   });
@@ -39,12 +37,28 @@ class Comentario {
         color: ColoresDeComentario.values.byName(
           (json['color'] as String).toLowerCase(),
         ),
+        EsOp: json['es_op'],
         destacado: json['destacado'],
         autor: Autor.fromJson(json['autor']),
-        tag: json['tag'],
+        detalles: DetallesDeComentario.fromJson(json['detalles']),
         tags: List<String>.from(json['tags']),
         taggueos: List<String>.from(json['taggueos']),
-        autorId: json['autor_id'],
+      );
+}
+
+class DetallesDeComentario {
+  final String tag;
+  final String? dados;
+  final String? tagUnico;
+  const DetallesDeComentario({
+    required this.tag,
+    this.dados,
+    this.tagUnico,
+  });
+
+  factory DetallesDeComentario.fromJson(Map<String, dynamic> json) =>
+      DetallesDeComentario(
+        tag: json['tag'],
         dados: json['dados'],
         tagUnico: json['tag_unico'],
       );
@@ -54,17 +68,14 @@ enum ColoresDeComentario { rojo, amarillo, multi, invertido, azul }
 
 class Autor {
   final String rango;
-  final String rangoCorto;
   final String nombre;
   const Autor({
     required this.nombre,
     required this.rango,
-    required this.rangoCorto,
   });
 
   factory Autor.fromJson(Map<String, dynamic> json) => Autor(
         nombre: json['nombre'],
         rango: json['rango'],
-        rangoCorto: json['rango_corto'],
       );
 }

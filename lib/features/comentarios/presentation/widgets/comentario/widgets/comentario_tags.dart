@@ -13,13 +13,13 @@ class ComentarioTags extends StatelessWidget {
   Widget build(BuildContext context) {
     final Comentario comentario = context.read();
 
-    return Row(
+    return Wrap(
       children: [
-        TagDeComentario.rango(rango: comentario.autor.rangoCorto.toLowerCase()),
-        TagDeComentario.tag(tag: comentario.tag),
+        TagDeComentario.rango(rango: comentario.autor.rango.toLowerCase()),
+        TagDeComentario.tag(tag: comentario.detalles.tag),
         if (comentario.destacado) const TagDeComentario.destacado(),
-        if (comentario.tagUnico != null)
-          TagDeComentario.unico(tag: comentario.tagUnico!),
+        if (comentario.detalles.tagUnico != null)
+          TagDeComentario.unico(tag: comentario.detalles.tagUnico!),
       ].map((x) => x.marginSymmetric(horizontal: 2)).toList(),
     );
   }

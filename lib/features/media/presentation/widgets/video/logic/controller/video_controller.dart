@@ -104,6 +104,14 @@ mixin ReproduccionStatusMixin on GetxController {
   bool get isBuffering =>
       reproduccionStatus.value == ReproduccionStatus.buffering;
 
+  void playPause() {
+    if (isPausado) {
+      play();
+    } else {
+      pause();
+    }
+  }
+
   void play() async {
     await controller.play();
 

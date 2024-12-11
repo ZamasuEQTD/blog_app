@@ -11,7 +11,7 @@ class Usuario extends Equatable {
 
   factory Usuario.formJson(Map<String, dynamic> json) {
     late final Rango rango;
-    String tipo = json["rango"];
+    String tipo = "anonimo";
     if (tipo.toLowerCase() == "anonimo") {
       rango = const Anonimo();
     } else {

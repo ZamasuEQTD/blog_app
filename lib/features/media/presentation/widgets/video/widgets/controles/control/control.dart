@@ -69,7 +69,7 @@ class _IconButtonReproductor extends IconButtonReproductor {
     return SizedBox.square(
       dimension: size,
       child: ColoredIconButton(
-        background: Colors.black.withOpacity(0.3),
+        background: Colors.black.withOpacity(0.5),
         onPressed: onPressed,
         icon: icon,
       ),
@@ -84,7 +84,7 @@ class _PlayButton extends IconButtonReproductor {
   Widget build(BuildContext context) {
     return Obx(
       () => IconButtonReproductor(
-        onPressed: () => context.read<VideoController>().play(),
+        onPressed: () => context.read<VideoController>().playPause(),
         size: 60,
         icon: _buildIcon(context),
       ),

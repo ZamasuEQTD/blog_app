@@ -130,7 +130,7 @@ class _SeguirHilo extends HiloAccionDeUsuario {
   Widget build(BuildContext context) {
     return HiloAccionDeUsuario(
       onTap: () {},
-      child: const Icon(Icons.flag_outlined),
+      child: const Icon(Icons.star_border_outlined),
     );
   }
 }
@@ -142,7 +142,7 @@ class _OcultarHilo extends HiloAccionDeUsuario {
   Widget build(BuildContext context) {
     return HiloAccionDeUsuario(
       onTap: () {},
-      child: const Icon(Icons.remove_red_eye),
+      child: const Icon(Icons.remove_red_eye_outlined),
     );
   }
 }

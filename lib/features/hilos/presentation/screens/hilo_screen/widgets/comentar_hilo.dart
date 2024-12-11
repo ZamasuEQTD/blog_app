@@ -144,13 +144,17 @@ class _ComentarHiloState extends State<ComentarHilo> {
                       Row(
                         children: [
                           ColoredIconButton(
+                            background: AppColors.tertiary,
                             onPressed: () => showMaterialModalBottomSheet(
                               context: context,
                               builder: (context) {
                                 return const ComentarHiloOpcionesItems();
                               },
                             ),
-                            icon: const Icon(Icons.three_k_rounded),
+                            icon: const Icon(
+                              Icons.three_k_rounded,
+                              color: AppColors.onTertiary,
+                            ),
                           ),
                           Flexible(
                             child: TextField(

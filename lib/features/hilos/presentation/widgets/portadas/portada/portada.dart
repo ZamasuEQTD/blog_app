@@ -265,7 +265,7 @@ class _CategoriaPortadaWidgetCardTag extends PortadaWidgetCardTag {
   Widget build(BuildContext context) {
     return PortadaWidgetCardTag.text(
       background: const Color.fromRGBO(187, 247, 208, 1),
-      tag: categoria,
+      tag: categoria.toUpperCase(),
     );
   }
 }

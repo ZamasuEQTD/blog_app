@@ -59,15 +59,15 @@ class _Video extends Dimensionable {
   final Video video;
   const _Video({super.key, required this.video}) : super._();
 
-  Widget get reproductor => ReproductorDeVideo.provider(
-        provider: video.toProvider,
-        previsualizacion: NetworkImage(video.previsualizacion!),
-      );
-
   @override
   Widget build(BuildContext context) {
     return Dimensionable(
-      child: reproductor,
+      child: ReproductorDeVideo.provider(
+        provider: video.toProvider,
+        previsualizacion: video.previsualizacion != null
+            ? NetworkImage(video.previsualizacion!)
+            : null,
+      ),
     );
   }
 }

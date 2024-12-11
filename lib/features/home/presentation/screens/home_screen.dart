@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/features/home/domain/hub/ihome_portadas_hub.dart';
@@ -21,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  //late IPortadasHub hub = GetIt.I.get();
+  late IPortadasHub hub = GetIt.I.get();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -31,6 +33,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    hub.connect();
+
+    hub.onHiloPosteado.listen((portada) {
+      controller.portadas.value = [portada, ...controller.portadas.value];
+    });
+
+    hub.onHiloEliminado.listen((id) {
+      log("OnHiloEliminado: $id");
+    });
+
     scroll.addListener(
       () {
         if (scroll.IsBottom) controller.cargarPortadas();

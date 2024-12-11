@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../logic/controller/video_controller.dart';
+import 'control/control.dart';
 
 class ControlesDeReproductorLayout extends StatelessWidget {
   const ControlesDeReproductorLayout({super.key});
@@ -43,6 +44,26 @@ class ControlesDeReproductor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
+      child: Stack(
+        children: [
+          Center(
+            child: IconButtonReproductor.play(),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Row(
+              children: [
+                IconButtonReproductor.fullscreen(),
+                SizedBox(width: 8),
+                IconButtonReproductor.volumen(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

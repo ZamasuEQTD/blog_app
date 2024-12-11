@@ -4,6 +4,7 @@ import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_se
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../domain/models/categoria.dart';
 import 'controller/categorias_controller.dart';
@@ -24,7 +25,7 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
       global: false,
       init: CategoriasController()..cargar(),
       builder: (controller) => Obx(
-        () => RoundedBottomSheet.sliver(
+        () => RoundedBottomSheet.draggable(
           slivers: [
             if (!controller.cargando.value) ...[
               ...controller.categorias.value.map(
@@ -34,8 +35,10 @@ class SeleccionarSubcategoriaBottomSheet extends StatelessWidget {
                       .map(
                         (s) => SeleccionarSubcategoriaTile(
                           subcategoria: s,
-                          onSubcategoriaSeleccionada:
-                              onSubcategoriaSeleccionada,
+                          onSubcategoriaSeleccionada: (subcategoria) {
+                            onSubcategoriaSeleccionada(subcategoria);
+                            context.pop();
+                          },
                         ),
                       )
                       .toList(),
@@ -76,9 +79,12 @@ class SeleccionarSubcategoriaTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ItemSeleccionable.text(
       titulo: subcategoria.nombre,
-      leading: SizedBox.square(
-        dimension: 35,
-        child: Image(image: subcategoria.imagen.toProvider),
+      leading: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: SizedBox.square(
+          dimension: 35,
+          child: Image(image: subcategoria.imagen.toProvider),
+        ),
       ),
       onTap: () => onSubcategoriaSeleccionada(subcategoria),
     );
