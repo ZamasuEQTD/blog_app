@@ -11,28 +11,23 @@ extension MediaDependencies on GetIt {
     registerLazySingleton<IMiniaturaVideoGenerador>(
       () => VideoCompressMiniaturaGenerador(),
     );
+    registerFactory<IMiniaturaFactory>(() => GetItMiniaturaFactory());
 
-    registerLazySingleton<IMiniaturaStrategy>(
-      () => VideoMiniaturaStrategy(get()),
-      instanceName: "video",
+    registerLazySingleton(
+      () => VideoMiniaturaService(get()),
     );
-    registerLazySingleton<IMiniaturaStrategy>(
-      () => YoutubeMiniaturaStrategy(),
-      instanceName: "youtube",
+    registerLazySingleton(
+      () => YoutubeMiniaturaService(),
     );
-    registerLazySingleton<IMiniaturaStrategy>(
-      () => ImagenMiniaturaStrategy(),
-      instanceName: "imagen",
+    registerLazySingleton(
+      () => ImagenMiniaturaService(),
     );
 
-    registerLazySingleton<IMediaFromFileStrategy>(
-      () => VideoStrategy(),
-      instanceName: "video",
-    );
-    registerLazySingleton<IMediaFromFileStrategy>(
-      () => ImagenStrategy(),
-      instanceName: "image",
-    );
+    registerFactory<IMediaServiceFactory>(() => GetItMediaServiceFactory());
+
+    registerFactory(() => VideoFactory());
+    registerFactory(() => ImagenFactory());
+
     return this;
   }
 }

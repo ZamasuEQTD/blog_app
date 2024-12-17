@@ -87,23 +87,29 @@ class UsuarioRegistroSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          UsuarioFoto.bone(),
-          SizedBox(width: 10),
-          Bone.text(
-            words: 10,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: const ColoredBox(
+            color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                UsuarioFoto.bone(),
+                SizedBox(width: 10),
+                Bone.text(
+                  words: 4,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                  ),
+                ),
+              ],
             ),
           ),
-          Bone.text(
-            words: 10,
-          ),
-        ],
+        ),
       ),
     ).sliverBox;
   }

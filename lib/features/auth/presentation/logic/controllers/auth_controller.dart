@@ -21,6 +21,8 @@ class AuthController extends GetxController {
 
   final authState = Rx<AuthState>(AuthState.initial);
 
+  bool get isAuthenticated => authState.value == AuthState.authenticated;
+
   Future<void> login(String token) async {
     iniciando.value = true;
 

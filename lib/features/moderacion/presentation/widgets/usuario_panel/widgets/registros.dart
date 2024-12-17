@@ -110,28 +110,37 @@ class RegistroItemSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
-      child: const ColoredBox(
+      child: ColoredBox(
         color: Colors.white,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Bone.square(
-                  size: 48,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: const Bone.square(
+                    size: 70,
+                  ),
                 ),
-                Column(
-                  children: [
-                    Bone.text(words: 3),
-                    Row(
-                      children: [
-                        Icon(Icons.calendar_month),
-                        Bone.text(words: 2),
-                      ],
+                Flexible(
+                  child: const Bone.multiText(
+                    lines: 2,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
+                  ).marginOnly(left: 10),
                 ),
-                Bone.text(words: 1),
               ],
+            ),
+            Bone.text(
+              words: 3,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+            Bone.multiText(
+              lines: 2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),

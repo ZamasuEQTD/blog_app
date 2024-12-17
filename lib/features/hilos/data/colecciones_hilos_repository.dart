@@ -13,23 +13,6 @@ class DioColeccionesHilosRepository implements IColeccionesHilosRepository {
   DioColeccionesHilosRepository({required this.dio});
 
   @override
-  Future<Either<Failure, List<PortadaHilo>>> creados() async {
-    try {
-      Response response = await dio.get("colecciones/creados");
-
-      if (response.statusCode != 200) {
-        return Left(response.failure);
-      }
-
-      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
-
-      return Right(HilosMapper.fromJsonList(value));
-    } on Exception catch (e) {
-      return Left(e.failure);
-    }
-  }
-
-  @override
   Future<Either<Failure, List<PortadaHilo>>> favoritos() async {
     try {
       Response response = await dio.get("colecciones/favoritos");
@@ -50,6 +33,23 @@ class DioColeccionesHilosRepository implements IColeccionesHilosRepository {
   Future<Either<Failure, List<PortadaHilo>>> seguidos() async {
     try {
       Response response = await dio.get("colecciones/seguidos");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      List<Map<String, dynamic>> value = List.from(response.data!["value"]);
+
+      return Right(HilosMapper.fromJsonList(value));
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<PortadaHilo>>> ocultos() async {
+    try {
+      Response response = await dio.get("colecciones/ocultos");
 
       if (response.statusCode != 200) {
         return Left(response.failure);

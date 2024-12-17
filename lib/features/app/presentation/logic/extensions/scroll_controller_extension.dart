@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
 
 extension ScrollControllerExtensions on ScrollController {
-  bool get IsBottom => position.pixels == position.maxScrollExtent;
+  bool get isBottom => position.pixels == position.maxScrollExtent;
 }

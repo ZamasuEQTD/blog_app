@@ -1,5 +1,6 @@
 import 'package:blog_app/features/app/presentation/theme/styles/button_styles.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
+import 'package:blog_app/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
@@ -240,14 +241,19 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                                       return Stack(
                                         children: [
                                           dimensionable,
-                                          // Obx(
-                                          //   () => Positioned.fill(
-                                          //     child: BlurEffect(
-                                          //       blurear:
-                                          //           controller.portada.value!.esSpoiler,
-                                          //     ),
-                                          //   ),
-                                          // ),
+                                          Obx(
+                                            () => Stack(
+                                              children: [
+                                                dimensionable,
+                                                Positioned.fill(
+                                                  child: BlurEffect(
+                                                    blurear: controller.portada
+                                                        .value!.esSpoiler,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         ],
                                       );
                                     },
@@ -337,7 +343,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                                 value: controller.dados.value,
                               ),
                               ItemSeleccionable.checkbox(
-                                titulo: "Eliminar",
+                                titulo: "Id unico",
                                 onChange: (value) =>
                                     controller.idunico.value = value!,
                                 value: controller.idunico.value,

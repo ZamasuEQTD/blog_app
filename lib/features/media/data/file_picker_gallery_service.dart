@@ -1,5 +1,4 @@
 import 'package:blog_app/features/app/clases/failure.dart';
-import 'package:blog_app/features/app/domain/abstractions/istrategy_context.dart';
 import 'package:dartz/dartz.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:get_it/get_it.dart';
@@ -9,7 +8,8 @@ import '../domain/abstractions/igallery_service.dart';
 import '../domain/models/media.dart';
 
 class FilePickerGalleryService extends IGalleryService {
-  final IStrategyContext context = GetIt.I.get();
+  final IMediaServiceFactory _factory = GetIt.I.get();
+
   @override
   Future<Either<Failure, Media?>> pickFile({
     required List<String> extensions,
@@ -46,10 +46,7 @@ class FilePickerGalleryService extends IGalleryService {
       IFilePicked file = FilePicked(pick);
 
       medias.add(
-        await context.execute<String, Media, IMediaFromFileStrategy>(
-          file.mime,
-          file.path,
-        ),
+        await _factory.create(file.mime).fromFile(file.path),
       );
     }
 
@@ -78,18 +75,38 @@ class FilePicked extends IFilePicked {
   String get path => file.path!;
 }
 
-abstract class IMediaFromFileStrategy extends IStrategy<String, Media> {}
+abstract class IMediaServiceFactory {
+  IMediaService create(String mime);
+}
 
-class VideoStrategy extends IMediaFromFileStrategy {
+abstract class IMediaService {
+  Future<Media> fromFile(String path);
+}
+
+class GetItMediaServiceFactory implements IMediaServiceFactory {
   @override
-  Future<Media> execute(String input) {
-    return Future.value(Video(provider: FileProvider(path: input)));
+  IMediaService create(String mime) {
+    switch (mime) {
+      case "video":
+        return GetIt.I.get<VideoFactory>();
+      case "image":
+        return GetIt.I.get<ImagenFactory>();
+    }
+
+    throw Exception("Tipo de media no soportado");
   }
 }
 
-class ImagenStrategy extends IMediaFromFileStrategy {
+class VideoFactory extends IMediaService {
   @override
-  Future<Media> execute(String input) {
-    return Future.value(Imagen(provider: FileProvider(path: input)));
+  Future<Media> fromFile(String path) {
+    return Future.value(Video(provider: FileProvider(path: path)));
+  }
+}
+
+class ImagenFactory extends IMediaService {
+  @override
+  Future<Media> fromFile(String path) {
+    return Future.value(Imagen(provider: FileProvider(path: path)));
   }
 }

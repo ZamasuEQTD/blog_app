@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     scroll.addListener(
       () {
-        if (scroll.IsBottom) controller.cargarPortadas();
+        if (scroll.isBottom) controller.cargarPortadas();
       },
     );
 

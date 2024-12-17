@@ -1,15 +1,20 @@
-extension DurationExtensions on Duration {
+extension DurationExtensions on DateTime {
   String get tiempoTranscurrido {
-    if (inDays > 30) return "${inDays ~/ 30} meses";
+    final now = DateTime.now();
 
-    if (inDays > 0) return "$inDays días";
+    final diferencia = now.difference(this);
 
-    if (inHours > 0) return "$inHours horas";
-
-    if (inMinutes > 0) return "$inMinutes minutos";
-
-    if (inSeconds > 30) return "$inSeconds segundos";
-
-    return "ahora";
+    if (diferencia.inMinutes < 1) {
+      return "Ahora";
+    } else if (diferencia.inHours < 1) {
+      return "${diferencia.inMinutes}m";
+    } else if (diferencia.inDays < 1) {
+      return "${diferencia.inHours}hs";
+    } else if (diferencia.inDays < 30) {
+      return "${diferencia.inDays}dias";
+    } else {
+      int meses = (diferencia.inDays / 30).floor();
+      return "${meses}meses";
+    }
   }
 }

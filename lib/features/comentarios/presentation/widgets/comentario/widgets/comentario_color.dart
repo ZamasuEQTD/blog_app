@@ -21,7 +21,7 @@ class ComentarioColor extends StatelessWidget {
     final Comentario comentario = context.read();
 
     final String rango = comentario.detalles.dados ??
-        (comentario.EsOp ? "OP" : comentario.autor.rango);
+        (comentario.esOp ? "OP" : comentario.autor.rango);
     return ClipRRect(
       borderRadius: BorderRadius.circular(5),
       child: SizedBox(

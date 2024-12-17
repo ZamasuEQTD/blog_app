@@ -93,7 +93,7 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
     });
 
     scroll.addListener(() {
-      if (scroll.IsBottom) {
+      if (scroll.isBottom) {
         controller.cargarRegistros();
       }
     });
@@ -124,11 +124,13 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
                     sliver: Obx(
                       () {
                         if (controller.registro.value ==
-                            RegistroSeleccionado.hilo)
+                            RegistroSeleccionado.hilo) {
                           return const RegistrosHilos();
+                        }
                         if (controller.registro.value ==
-                            RegistroSeleccionado.comentario)
+                            RegistroSeleccionado.comentario) {
                           return const RegistrosComentarios();
+                        }
                         return const SliverToBoxAdapter();
                       },
                     ),

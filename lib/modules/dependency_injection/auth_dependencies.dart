@@ -19,7 +19,6 @@ extension AuthDependencies on GetIt {
 
     registerLazySingleton<AuthController>(() => AuthController());
 
-    //registerFactory<ITokenDecode>(() => LocalTokenDecode());
     registerFactory<ITokenDecode>(() => TokenDecode());
 
     registerFactory<ITokenStorage>(() => TokenSecureStorage());

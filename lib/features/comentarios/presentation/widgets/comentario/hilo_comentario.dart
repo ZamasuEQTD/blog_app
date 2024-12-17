@@ -4,6 +4,7 @@ import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.da
 import 'package:blog_app/features/auth/domain/models/usuario.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
 import 'package:blog_app/features/comentarios/domain/icomentarios_repository.dart';
+import 'package:blog_app/features/comentarios/presentation/widgets/comentario/opciones_de_comentario.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/widgets/comentario_texto.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
 import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/usuario_panel.dart';
@@ -42,7 +43,10 @@ class HiloComentario extends StatelessWidget {
               value: comentario,
               builder: (context, child) => GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onLongPress: () => ComentarioOpcionesBottomSheet.show(context),
+                onLongPress: () => OpcionesDeComentarioBottomSheet.show(
+                  context,
+                  comentario: comentario,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -71,7 +75,7 @@ class HiloComentario extends StatelessWidget {
                       height: 5,
                     ),
                     if (comentario.media != null)
-                      MultiMedia(media: comentario.media!.spoileable),
+                      comentario.media!.spoileable.widget,
                     const ComentarioTexto(),
                   ],
                 ),
@@ -120,109 +124,6 @@ class ComentarioInfoRow extends StatelessWidget {
           style: Theme.of(context).textTheme.labelSmall,
         ),
       ],
-    );
-  }
-}
-
-class ComentarioOpcionesBottomSheet extends StatelessWidget {
-  const ComentarioOpcionesBottomSheet({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final Comentario comentario = context.read();
-    return RoundedBottomSheet.sliver(
-      slivers: [
-        ...[
-          GrupoItemSeleccionable.sliver(
-            seleccionables: [
-              ItemSeleccionable.text(
-                titulo: "Copiar",
-                onTap: () async {
-                  await Clipboard.setData(
-                    ClipboardData(
-                      text: comentario.texto,
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          GrupoItemSeleccionable.sliver(
-            seleccionables: [
-              ItemSeleccionable.text(
-                titulo: "Ocultar",
-                onTap: () async {
-                  IComentariosRepository repository = GetIt.I.get();
-
-                  var result = await repository.ocultar(id: comentario.id);
-
-                  result.fold(
-                    (l) => Snackbars.showFailure(context, l),
-                    (r) => Snackbars.showSuccess(context, "Ocultado"),
-                  );
-                },
-              ),
-              const ItemSeleccionable.text(titulo: "Denunciar"),
-            ],
-          ),
-          if (Get.find<HiloController>().hilo.value?.esOp ?? false)
-            GrupoItemSeleccionable.sliver(
-              seleccionables: [
-                ItemSeleccionable.text(
-                  onTap: () async {
-                    var repository = GetIt.I.get<IComentariosRepository>();
-
-                    var result = await repository.destacar(
-                      hilo: Get.find<HiloController>().id,
-                      comentario: comentario.id,
-                    );
-
-                    result.fold(
-                      (l) => Snackbars.showFailure(context, l),
-                      (r) => Snackbars.showSuccess(context, "Destacado"),
-                    );
-                  },
-                  titulo: "Destacar",
-                ),
-              ],
-            ),
-          if (Get.find<AuthController>().usuario.value?.rango is Moderador)
-            GrupoItemSeleccionable.sliver(
-              seleccionables: [
-                ItemSeleccionable.text(
-                  onTap: () async {
-                    IComentariosRepository repository = GetIt.I.get();
-
-                    var result = await repository.eliminar(id: comentario.id);
-
-                    result.fold(
-                      (l) => Snackbars.showFailure(context, l),
-                      (r) => Snackbars.showSuccess(
-                        context,
-                        "Comentario eliminado",
-                      ),
-                    );
-                  },
-                  titulo: "Eliminar",
-                ),
-                ItemSeleccionable.text(
-                  onTap: () {},
-                  titulo: "Ver usuario",
-                ),
-              ],
-            ),
-        ],
-      ],
-    );
-  }
-
-  static void show(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => Provider.value(
-        value: context.read<Comentario>(),
-        child: const ComentarioOpcionesBottomSheet(),
-      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:blog_app/features/media/presentation/widgets/video/reproductor.dart';
+import 'package:blog_app/features/media/presentation/widgets/youtube/youtube_reproductor.dart';
 import 'package:flutter/material.dart';
 
 abstract class Dimensionable extends StatelessWidget {
@@ -20,6 +21,11 @@ abstract class Dimensionable extends StatelessWidget {
     Key? key,
     required Imagen imagen,
   }) = _Imagen;
+
+  const factory Dimensionable.youtube({
+    Key? key,
+    required Youtube video,
+  }) = _Youtube;
 }
 
 class _Dimensionable extends Dimensionable {
@@ -112,19 +118,13 @@ class DimensionableScope extends InheritedWidget {
   }
 }
 
-class MultiMedia extends StatelessWidget {
-  final Media media;
-  const MultiMedia({super.key, required this.media});
+class _Youtube extends Dimensionable {
+  final Youtube video;
+  const _Youtube({super.key, required this.video}) : super._();
 
   @override
   Widget build(BuildContext context) {
-    switch (media) {
-      case Video video:
-        return Dimensionable.video(video: video);
-      case Imagen imagen:
-        return Dimensionable.imagen(imagen: imagen);
-    }
-    throw Exception("Media no soportada");
+    return YoutubeReproductor(video: video);
   }
 }
 
@@ -137,6 +137,8 @@ extension MediaExtension on Media {
         return Dimensionable.video(video: video);
       case Imagen imagen:
         return Dimensionable.imagen(imagen: imagen);
+      case Youtube video:
+        return Dimensionable.youtube(video: video);
     }
     throw Exception("Media no soportada");
   }

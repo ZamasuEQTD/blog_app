@@ -58,7 +58,7 @@ class HiloAcciones extends StatelessWidget {
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    hilo.creadoEn.difference(DateTime.now()).tiempoTranscurrido,
+                    hilo.creadoEn.tiempoTranscurrido,
                   ),
                 ],
               ),

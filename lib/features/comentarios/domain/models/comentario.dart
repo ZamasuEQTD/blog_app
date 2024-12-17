@@ -10,7 +10,7 @@ class Comentario {
   final ColoresDeComentario color;
   final Autor autor;
   final Spoileable<Media>? media;
-  final bool EsOp;
+  final bool esOp;
   final bool destacado;
   final String? autorId;
   final List<String> tags;
@@ -23,7 +23,7 @@ class Comentario {
     required this.color,
     required this.autor,
     required this.destacado,
-    required this.EsOp,
+    required this.esOp,
     this.media,
     this.autorId,
     required this.detalles,
@@ -37,7 +37,7 @@ class Comentario {
         color: ColoresDeComentario.values.byName(
           (json['color'] as String).toLowerCase(),
         ),
-        EsOp: json['es_op'],
+        esOp: json['es_op'],
         destacado: json['destacado'],
         autor: Autor.fromJson(json['autor']),
         detalles: DetallesDeComentario.fromJson(json['detalles']),

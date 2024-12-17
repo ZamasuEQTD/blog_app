@@ -423,7 +423,7 @@ class VerMediaBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            child: MultiMedia(media: media),
+            child: media.widget,
           ),
         ),
         const SliverPadding(

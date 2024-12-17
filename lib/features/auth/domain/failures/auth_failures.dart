@@ -4,38 +4,38 @@ import 'package:formz/formz.dart';
 class AuthFailures {
   const AuthFailures._();
 
-  static Failure get username_vacio => const Failure(
-        code: 'username_vacio',
+  static Failure get usernameVacio => const Failure(
+        code: 'usernameVacio',
         descripcion: 'El nombre de usuario es requerido',
       );
 
-  static Failure get username_tiene_espacios_vacios => const Failure(
-        code: 'username_tiene_espacios_vacios',
+  static Failure get usernameTieneEspaciosVacios => const Failure(
+        code: 'usernameTieneEspaciosVacios',
         descripcion:
             'El nombre de usuario no puede contener espacios en blanco',
       );
 
-  static Failure get username_longitud_invalida => const Failure(
-        code: 'username_longitud_invalida',
+  static Failure get usernameLongitudInvalida => const Failure(
+        code: 'usernameLongitudInvalida',
         descripcion: 'El nombre de usuario debe tener entre 8 y 16 caracteres',
       );
 
-  static Failure get password_vacia => const Failure(
-        code: 'password_vacia',
+  static Failure get passwordVacia => const Failure(
+        code: 'passwordVacia',
         descripcion: 'La contraseña es requerida',
       );
 
-  static Failure get password_longitud_invalida => const Failure(
-        code: 'password_longitud_invalida',
+  static Failure get passwordLongitudInvalida => const Failure(
+        code: 'passwordLongitudInvalida',
         descripcion: 'La contraseña debe tener entre 8 y 16 caracteres',
       );
 
-  static Failure get password_tiene_espacios_vacios => const Failure(
-        code: 'password_tiene_espacios_vacios',
+  static Failure get passwordTieneEspaciosVacios => const Failure(
+        code: 'passwordTieneEspaciosVacios',
         descripcion: 'La contraseña no puede contener espacios en blanco',
       );
 
-  static Failure get passwords_no_coinciden => const Failure(
+  static Failure get passwordsNoCoinciden => const Failure(
         code: 'passwords_no_coinciden',
         descripcion: 'Las contraseñas no coinciden',
       );
@@ -83,15 +83,15 @@ class Username extends FormzInput<String, Failure> {
   @override
   Failure? validator(String value) {
     if (value.isEmpty) {
-      return AuthFailures.username_vacio;
+      return AuthFailures.usernameVacio;
     }
 
     if (value.length < 8 || value.length > 16) {
-      return AuthFailures.username_longitud_invalida;
+      return AuthFailures.usernameLongitudInvalida;
     }
 
     if (value.tiene_espacios_vacios) {
-      return AuthFailures.username_tiene_espacios_vacios;
+      return AuthFailures.usernameTieneEspaciosVacios;
     }
 
     return null;
@@ -105,15 +105,15 @@ class Password extends FormzInput<String, Failure> {
   @override
   Failure? validator(String value) {
     if (value.isEmpty) {
-      return AuthFailures.password_vacia;
+      return AuthFailures.passwordVacia;
     }
 
     if (value.length < 8 || value.length > 16) {
-      return AuthFailures.password_longitud_invalida;
+      return AuthFailures.passwordLongitudInvalida;
     }
 
     if (value.tiene_espacios_vacios) {
-      return AuthFailures.password_tiene_espacios_vacios;
+      return AuthFailures.passwordTieneEspaciosVacios;
     }
 
     return null;
@@ -134,7 +134,7 @@ class PasswordRepetida extends FormzInput<String, Failure> {
     }
 
     if (value != password.value) {
-      return AuthFailures.passwords_no_coinciden;
+      return AuthFailures.passwordsNoCoinciden;
     }
 
     return null;

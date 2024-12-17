@@ -10,13 +10,9 @@ import 'package:blog_app/modules/dependency_injection/notificaciones_dependencie
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../features/app/domain/abstractions/istrategy_context.dart';
-import '../../features/app/domain/strategy_context.dart';
-
 extension InitDependencies on GetIt {
   GetIt addDepedencies() {
-    addStrategyContext()
-        .addMedia()
+    addMedia()
         .addHilos()
         .addComentarios()
         .addAuth()
@@ -28,18 +24,14 @@ extension InitDependencies on GetIt {
         BaseOptions(
           baseUrl: ApiConfig.api,
           headers: {
-            "Authorization":
-                "Bearer ${GetIt.I.get<AuthController>().token.value}",
+            if (GetIt.I.get<AuthController>().token.value != null)
+              "Authorization":
+                  "Bearer ${GetIt.I.get<AuthController>().token.value}",
           },
         ),
       ),
     );
 
-    return this;
-  }
-
-  GetIt addStrategyContext() {
-    registerFactory<IStrategyContext>(() => StrategyContext());
     return this;
   }
 }

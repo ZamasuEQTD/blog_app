@@ -41,7 +41,7 @@ class _HiloScreenState extends State<HiloScreen> {
   void initState() {
     scroll.addListener(
       () {
-        if (scroll.IsBottom) {
+        if (scroll.isBottom) {
           controller.cargarComentarios();
         }
       },

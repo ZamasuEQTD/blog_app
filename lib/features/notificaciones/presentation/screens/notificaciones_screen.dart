@@ -25,7 +25,7 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
     controller.cargar();
 
     scroll.addListener(() {
-      if (scroll.IsBottom) {
+      if (scroll.isBottom) {
         controller.cargar();
       }
     });

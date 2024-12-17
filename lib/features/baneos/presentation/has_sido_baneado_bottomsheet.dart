@@ -84,7 +84,7 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
                 Text(
                   baneo.finaliza == null
                       ? "Permanente"
-                      : "Finaliza en :${baneo.finaliza!.difference(DateTime.now()).tiempoTranscurrido}",
+                      : "Finaliza en :${baneo.finaliza!.tiempoTranscurrido}",
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Color.fromRGBO(108, 117, 125, 1),
