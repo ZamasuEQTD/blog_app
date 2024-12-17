@@ -16,68 +16,44 @@ class UsuarioRegistro extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RegistroUsuario usuario = context.read();
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Center(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: ColoredBox(
-                color: Colors.white,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Center(
-                    child: Row(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Center(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: ColoredBox(
+            color: Colors.white,
+            child: SizedBox(
+              width: double.infinity,
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const UsuarioFoto.icono(),
+                    const SizedBox(width: 10),
+                    Column(
                       mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const UsuarioFoto.icono(),
-                        const SizedBox(width: 10),
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              usuario.nombre,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
-                            ),
-                            Text(
-                              "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
-                            ),
-                          ],
+                        Text(
+                          usuario.nombre,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                        Text(
+                          "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
                         ),
                       ],
-                    ).paddingSymmetric(vertical: 20),
-                  ),
-                ),
+                    ),
+                  ],
+                ).paddingSymmetric(vertical: 20),
               ),
             ),
-          ).marginSymmetric(vertical: 15),
+          ),
         ),
-        if (usuario.ultimoBaneo != null)
-          RegistroUltimoBaneo(baneo: usuario.ultimoBaneo!),
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => context.pushNamed(
-              "banear-usuario",
-              pathParameters: {
-                "id": usuario.id,
-              },
-            ),
-            style: ButtonStyle(
-              backgroundColor: WidgetStatePropertyAll(
-                Theme.of(context).colorScheme.error,
-              ),
-            ),
-            child: const Text("Banear usuario"),
-          ).paddingSymmetric(horizontal: 10).marginOnly(bottom: 10),
-        ),
-      ],
+      ).marginSymmetric(vertical: 15),
     ).sliverBox;
   }
 }
@@ -92,22 +68,26 @@ class UsuarioRegistroSkeleton extends StatelessWidget {
       child: Center(
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: const ColoredBox(
+          child: ColoredBox(
             color: Colors.white,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                UsuarioFoto.bone(),
-                SizedBox(width: 10),
-                Bone.text(
-                  words: 4,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
+            child: const Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  UsuarioFoto.bone(),
+                  SizedBox(width: 10),
+                  Flexible(
+                    child: Bone.text(
+                      words: 2,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 17,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ).paddingSymmetric(vertical: 20),
           ),
         ),
       ),

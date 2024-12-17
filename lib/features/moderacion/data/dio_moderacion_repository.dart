@@ -69,7 +69,8 @@ class DioModeracionRepository extends IModeracionRepository {
                   ...e,
                   "hilo": {
                     ...e["hilo"],
-                    "miniatura": ApiConfig.media + e["hilo"]["miniatura"],
+                    "miniatura":
+                        ApiConfig.media + e["hilo"]["miniatura"]["miniatura"],
                   },
                 }),
               ),

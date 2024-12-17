@@ -35,7 +35,7 @@ class HiloOpciones extends StatelessWidget {
               onTap: () {
                 UsuarioPanelBottomSheet.show(
                   context,
-                  usuario: "e4541db1-014d-4355-a1e8-a4647523e2e3",
+                  usuario: "27480fac-3bd9-4290-a537-37e07559bb27",
                 );
               },
             ),

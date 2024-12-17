@@ -23,6 +23,7 @@ class UsuarioPanelBottomSheet extends StatelessWidget {
       initialChildSize: 0.5,
       maxChildSize: 0.7,
       snap: true,
+      expand: false,
       snapSizes: const [0.5, 0.7],
       builder: (BuildContext context, ScrollController scrollController) {
         return ChangeNotifierProvider.value(
@@ -139,7 +140,7 @@ class _UsuarioPanelState extends State<UsuarioPanel> {
               ),
             ),
         ],
-      ),
+      ).paddingSymmetric(vertical: 10),
     );
   }
 }
@@ -153,9 +154,15 @@ class UsuarioPanelSkeleton extends StatelessWidget {
       child: SliverMainAxisGroup(
         slivers: [
           const UsuarioRegistroSkeleton(),
-          SliverList.builder(
-            itemCount: 10,
-            itemBuilder: (context, index) => const RegistroItemSkeleton(),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 10),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            sliver: SliverList.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) => const RegistroItemSkeleton(),
+            ),
           ),
         ],
       ),

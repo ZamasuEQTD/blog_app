@@ -9,7 +9,7 @@ abstract class Media extends Equatable {
   });
 
   static Media fromJson(Map<String, dynamic> json) {
-    switch (json["tipo"]) {
+    switch (json["provider"].toString().toLowerCase()) {
       case "video":
         return Video.fromJson(json);
       case "youtube":
@@ -33,7 +33,7 @@ class Video extends Media {
   static Video fromJson(Map<String, dynamic> portada) {
     return Video(
       previsualizacion: portada["previsualizacion"],
-      provider: NetworkProvider(path: portada["path"]),
+      provider: NetworkProvider(path: portada["url"]),
     );
   }
 }

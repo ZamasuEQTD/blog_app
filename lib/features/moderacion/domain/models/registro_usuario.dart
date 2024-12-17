@@ -9,12 +9,10 @@ class RegistroUsuario extends Equatable {
   final String id;
   final String nombre;
   final DateTime registradoEn;
-  final Baneo? ultimoBaneo;
   const RegistroUsuario({
     required this.id,
     required this.nombre,
     required this.registradoEn,
-    this.ultimoBaneo,
   });
 
   factory RegistroUsuario.fromJson(Map<String, dynamic> json) =>
@@ -22,9 +20,6 @@ class RegistroUsuario extends Equatable {
         id: json["id"],
         nombre: json["nombre"],
         registradoEn: DateTime.parse(json["registrado_en"]),
-        ultimoBaneo: json["ultimo_baneo"] != null
-            ? Baneo.fromJson(json["ultimo_baneo"])
-            : null,
       );
 
   @override

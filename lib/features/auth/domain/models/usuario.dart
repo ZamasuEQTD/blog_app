@@ -16,9 +16,15 @@ class Usuario extends Equatable {
   factory Usuario.formJson(Map<String, dynamic> json) {
     return Usuario(
       usuario: json["name"],
-      roles: json["roles"]
-          .map((e) => Roles.values.firstWhere((element) => element.name == e))
-          .toList(),
+      roles: HashSet.from(
+        json["roles"] ??
+            []
+                .map(
+                  (e) =>
+                      Roles.values.firstWhere((element) => element.name == e),
+                )
+                .toList(),
+      ),
     );
   }
   @override

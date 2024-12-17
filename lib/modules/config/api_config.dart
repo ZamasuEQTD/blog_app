@@ -1,7 +1,7 @@
 class ApiConfig {
   const ApiConfig._();
 
-  static const String baseUrl = "http://192.168.2.104:5179";
+  static const String baseUrl = "http://192.168.2.105:5179";
 
   static const String staticContent = "$baseUrl/static/";
 

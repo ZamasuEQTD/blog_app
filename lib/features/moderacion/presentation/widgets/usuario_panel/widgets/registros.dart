@@ -134,8 +134,9 @@ class RegistroItemSkeleton extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 5),
             Bone.text(
-              words: 3,
+              words: 1,
               style: Theme.of(context).textTheme.labelMedium,
             ),
             Bone.multiText(
@@ -143,8 +144,8 @@ class RegistroItemSkeleton extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
-        ),
+        ).paddingAll(16),
       ),
-    );
+    ).marginOnly(bottom: 10);
   }
 }

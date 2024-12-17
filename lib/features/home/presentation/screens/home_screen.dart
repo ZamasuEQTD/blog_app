@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
@@ -39,8 +40,8 @@ class _HomeScreenState extends State<HomeScreen> {
       controller.portadas.value = [portada, ...controller.portadas.value];
     });
 
-    hub.onHiloEliminado.listen((id) {
-      log("OnHiloEliminado: $id");
+    hub.onHiloPosteado.listen((id) {
+      log("OnHiloPosteado: $id");
     });
 
     scroll.addListener(
