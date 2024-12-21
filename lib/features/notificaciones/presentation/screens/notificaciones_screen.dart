@@ -33,6 +33,9 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
     super.initState();
   }
 
+  int get cantidadDeNotificaciones =>
+      controller.notificaciones.value.length + (controller.cargando ? 15 : 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +46,9 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
         controller: scroll,
         slivers: [
           SliverList.builder(
-            itemCount: controller.notificaciones.value.length + 15,
+            itemCount: cantidadDeNotificaciones,
             itemBuilder: (context, index) {
-              if (index > controller.notificaciones.value.length) {
+              if (index >= controller.notificaciones.value.length) {
                 return const NotificacionSkeletonItem();
               }
 
@@ -136,22 +139,24 @@ class NotificacionSkeletonItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ClipRRect(
-      borderRadius: radius,
-      child: Column(
-        children: [
-          Bone.text(
-            words: 2,
-          ),
-          Row(
-            children: [
-              Bone.square(size: 50),
-              Bone.text(words: 2),
-            ],
-          ),
-          Bone.text(words: 4),
-          Bone.text(words: 1),
-        ],
+    return const Skeletonizer(
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Column(
+          children: [
+            Bone.text(
+              words: 2,
+            ),
+            Row(
+              children: [
+                Bone.square(size: 50),
+                Bone.text(words: 2),
+              ],
+            ),
+            Bone.text(words: 4),
+            Bone.text(words: 1),
+          ],
+        ),
       ),
     );
   }

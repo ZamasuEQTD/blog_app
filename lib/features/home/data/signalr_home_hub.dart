@@ -1,18 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
-import 'package:blog_app/features/home/domain/hub/ihome_portadas_hub.dart';
-import 'package:blog_app/features/media/domain/models/media.dart';
+import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
 import 'package:blog_app/modules/config/api_config.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
-class SignalrHomeHub extends IPortadasHub {
+class SignalrHomeHub extends IHomeHub {
   late final HubConnection hub;
 
   final HubConnectionBuilder connection =
-      HubConnectionBuilder().withUrl("${ApiConfig.baseUrl}/hilos-hub");
+      HubConnectionBuilder().withUrl("${ApiConfig.baseUrl}/home-hub");
 
   final onHiloEliminadoController = StreamController<String>.broadcast();
 

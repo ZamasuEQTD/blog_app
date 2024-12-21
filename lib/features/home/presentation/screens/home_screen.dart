@@ -3,9 +3,10 @@ import 'dart:developer';
 
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
-import 'package:blog_app/features/home/domain/hub/ihome_portadas_hub.dart';
+import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
 import 'package:blog_app/features/home/presentation/screens/widgets/home_filtros.dart';
 import 'package:blog_app/modules/routing.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late IPortadasHub hub = GetIt.I.get();
+  late IHomeHub hub = GetIt.I.get();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -37,12 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
     hub.connect();
 
     hub.onHiloPosteado.listen((portada) {
-      controller.portadas.value = [portada, ...controller.portadas.value];
+      controller.agregarPortada(portada);
     });
 
-    hub.onHiloPosteado.listen((id) {
-      log("OnHiloPosteado: $id");
-    });
+    hub.onHiloEliminado.listen((id) => controller.eliminarPortada(id));
 
     scroll.addListener(
       () {
@@ -59,14 +58,6 @@ class _HomeScreenState extends State<HomeScreen> {
     controller.failure.listen((l) {
       if (l != null) {}
     });
-
-    //hub.connect();
-
-    //hub.onHiloPosteado.listen(
-    //  (portada) => controller.agregarPortada(portada),
-    //);
-
-    //hub.onHiloEliminado.listen((id) => controller.eliminarPortada(id));
 
     super.initState();
   }

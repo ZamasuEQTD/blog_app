@@ -73,22 +73,25 @@ class _GrupoSeleccionable extends GrupoItemSeleccionable {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(15),
-      child: ColoredBox(
-        color: Theme.of(context).colorScheme.onSurface,
-        child: Column(
-          children: [
-            if (titulo != null)
-              Text(
-                titulo!,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w900,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: ColoredBox(
+          color: Theme.of(context).colorScheme.onSurface,
+          child: Column(
+            children: [
+              if (titulo != null)
+                Text(
+                  titulo!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
-              ),
-            ...seleccionables,
-          ],
+              ...seleccionables,
+            ],
+          ),
         ),
       ),
     );

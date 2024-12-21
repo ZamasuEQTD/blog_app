@@ -63,6 +63,11 @@ class Hilo {
       titulo: json["titulo"],
       descripcion: json["descripcion"],
       creadoEn: DateTime.parse(json["creado_en"]),
+      encuesta: json["encuesta"] != null
+          ? Encuesta.fromJson(
+              Map<String, dynamic>.from(json["encuesta"] as Map),
+            )
+          : null,
       portada: Spoileable<Media>(
         json["media"]["es_spoiler"],
         Media.fromJson(

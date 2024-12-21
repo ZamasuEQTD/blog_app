@@ -5,27 +5,33 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 
 class MisNotificacionesController extends GetxController {
-  var cargando = false.obs;
+  Rx<NotificacionesStatus> status = NotificacionesStatus.initial.obs;
 
   Rx<List<Notificacion>> notificaciones = Rx([]);
 
   Rx<Failure?> failure = null.obs;
 
-  void cargar() async {
-    if (cargando.value) return;
+  bool get cargando => status.value == NotificacionesStatus.cargando;
 
-    cargando.value = true;
+  void cargar() async {
+    if (cargando) return;
+    await Future.delayed(const Duration(seconds: 10));
+    status.value = NotificacionesStatus.cargando;
 
     final INotificacionesRepository repository = GetIt.I.get();
 
     var result = await repository.getMisNotificaciones();
 
     result.fold(
-      (l) => failure.value = l,
+      (l) {
+        failure.value = l;
+
+        status.value = NotificacionesStatus.failure;
+      },
       (r) => notificaciones.value = [...notificaciones.value, ...r],
     );
 
-    cargando.value = false;
+    status.value = NotificacionesStatus.initial;
   }
 
   void leerTodas() async {
@@ -45,3 +51,5 @@ class MisNotificacionesController extends GetxController {
     );
   }
 }
+
+enum NotificacionesStatus { initial, cargando, cargadas, failure }

@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../domain/hub/iencuesta_hub.dart';
 import '../domain/models/encuesta.dart';
 
 class EncuestaWidget extends StatefulWidget {
@@ -20,30 +18,18 @@ class EncuestaWidget extends StatefulWidget {
 }
 
 class _EncuestaWidgetState extends State<EncuestaWidget> {
-  late final IEncuestaHub hub;
-
   late final controller = Get.put(
     EncuestaController(encuesta: widget.encuesta),
   );
 
   @override
   void dispose() {
-    hub.disconnect();
-
     Get.delete<EncuestaController>();
     super.dispose();
   }
 
   @override
   void initState() {
-    hub = GetIt.I.get<IEncuestaHub>();
-
-    hub.connect();
-
-    hub.onVotoSumado.listen((respuesta) {
-      controller.sumarVoto(respuesta);
-    });
-
     super.initState();
   }
 

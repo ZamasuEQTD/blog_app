@@ -59,9 +59,24 @@ mixin HomePortadasMixin {
   }
 
   void agregarPortada(PortadaHilo portada) {
-    portadas.value = [...portadas.value, portada];
+    portadas.value.insert(portadas.value.stickies, portada);
+
+    portadas.refresh();
 
     ultimaPortadaAgregada.value = portada.id;
+  }
+}
+
+extension PortadasExtensions on List<PortadaHilo> {
+  int get stickies {
+    int count = 0;
+    for (var element in this) {
+      if (element.esSticky) {
+        count++;
+      }
+      break;
+    }
+    return count;
   }
 }
 

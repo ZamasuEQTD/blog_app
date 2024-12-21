@@ -12,6 +12,8 @@ class PortadaHilo {
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
 
+  bool get esSticky => features.contains(PortadaFeatures.sticky);
+
   const PortadaHilo({
     required this.id,
     required this.titulo,

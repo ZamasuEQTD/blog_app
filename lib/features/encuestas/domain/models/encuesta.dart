@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 class Encuesta {
   final RespuestaId? respuesta;
@@ -10,6 +11,15 @@ class Encuesta {
     required this.respuestas,
     this.respuesta,
   });
+
+  factory Encuesta.fromJson(Map<String, dynamic> json) {
+    return Encuesta(
+      respuesta: json['respuesta'],
+      respuestas: List.from(json['respuestas'])
+          .map((e) => Respuesta.fromJson(e))
+          .toList(),
+    );
+  }
 
   Encuesta copyWith({
     int? votos,
@@ -35,6 +45,14 @@ class Respuesta extends Equatable {
     required this.respuesta,
     required this.votos,
   });
+
+  factory Respuesta.fromJson(Map<String, dynamic> json) {
+    return Respuesta(
+      id: json['id'],
+      respuesta: json['respuesta'],
+      votos: json['votos'],
+    );
+  }
 
   double porcentaje(int total) {
     if (total == 0) {

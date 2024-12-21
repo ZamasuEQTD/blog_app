@@ -117,6 +117,7 @@ class PortadaWidget extends StatelessWidget {
 
 class _PortadaWidgetFeatures extends StatelessWidget {
   static final HashMap<PortadaFeatures, Widget> _features = HashMap.from({
+    PortadaFeatures.encuesta: const PortadaWidgetCardTag.encuesta(),
     PortadaFeatures.nuevo: const PortadaWidgetCardTag.nuevo(),
     PortadaFeatures.sticky: const PortadaWidgetCardTag.destacado(),
     PortadaFeatures.dados: const PortadaWidgetCardTag.dados(),
