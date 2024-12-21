@@ -1,22 +1,10 @@
-import 'package:blog_app/features/app/presentation/widgets/dialog/bottom_sheet/bottom_sheet.dart';
-import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
-import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
-import 'package:blog_app/features/auth/domain/models/usuario.dart';
-import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
-import 'package:blog_app/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/opciones_de_comentario.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/widgets/comentario_texto.dart';
-import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
-import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/usuario_panel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-import '../../../../app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import '../../../../media/presentation/widgets/multi_media.dart';
 import '../../../domain/models/comentario.dart';
 import 'widgets/comentario_color.dart';
@@ -128,8 +116,8 @@ class ComentarioInfoRow extends StatelessWidget {
   }
 }
 
-class ComentarioHiloBone extends StatelessWidget {
-  const ComentarioHiloBone({super.key});
+class HiloComentarioSkeleton extends StatelessWidget {
+  const HiloComentarioSkeleton({super.key});
   @override
   Widget build(BuildContext context) {
     return Padding(
