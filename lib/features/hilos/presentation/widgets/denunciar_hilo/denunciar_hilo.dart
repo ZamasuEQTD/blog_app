@@ -26,16 +26,22 @@ enum HiloRazonDenuncia {
 }
 
 class DenunciarHiloBottomSheet extends StatefulWidget {
-  const DenunciarHiloBottomSheet({super.key});
+  final String hilo;
+  const DenunciarHiloBottomSheet({super.key, required this.hilo});
 
   @override
   State<DenunciarHiloBottomSheet> createState() =>
       _DenunciarHiloBottomSheetState();
 
-  static void show(BuildContext context) {
+  static void show(
+    BuildContext context, {
+    required String hilo,
+  }) {
     showMaterialModalBottomSheet(
       context: context,
-      builder: (context) => const DenunciarHiloBottomSheet(),
+      builder: (context) => DenunciarHiloBottomSheet(
+        hilo: hilo,
+      ),
     );
   }
 }
@@ -78,10 +84,27 @@ class _DenunciarHiloBottomSheetState extends State<DenunciarHiloBottomSheet> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    Snackbars.showSuccess(context, "Hilo denunciado");
-                    // IHilosRepository repository =
-                    //     GetIt.I.get<IHilosRepository>();
+                  onPressed: () async {
+                    if (denuncia == null) return;
+
+                    IHilosRepository repository =
+                        GetIt.I.get<IHilosRepository>();
+
+                    var res = await repository.denunciar(
+                      id: widget.hilo,
+                      denuncia: denuncia!,
+                    );
+
+                    res.fold(
+                      (l) {
+                        Snackbars.failure(failure: l);
+                      },
+                      (r) {
+                        context.pop();
+
+                        const Snackbars.success(message: "Hilo denunciado");
+                      },
+                    );
                   },
                   child: const Text("Denunciar"),
                 ).marginOnly(bottom: 10),

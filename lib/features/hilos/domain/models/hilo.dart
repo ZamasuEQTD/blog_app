@@ -17,6 +17,8 @@ class Hilo {
   final int comentarios;
   final bool esOp;
   final Encuesta? encuesta;
+  final String? autorId;
+  final bool? recibirNotificaciones;
   const Hilo({
     required this.id,
     required this.titulo,
@@ -29,6 +31,8 @@ class Hilo {
     required this.comentarios,
     required this.esOp,
     this.encuesta,
+    this.autorId,
+    this.recibirNotificaciones,
   });
 
   Hilo copyWith({
@@ -62,6 +66,8 @@ class Hilo {
       id: json["id"],
       titulo: json["titulo"],
       descripcion: json["descripcion"],
+      autorId: json["autor_id"],
+      recibirNotificaciones: json["recibir_notificaciones"],
       creadoEn: DateTime.parse(json["creado_en"]),
       encuesta: json["encuesta"] != null
           ? Encuesta.fromJson(

@@ -64,7 +64,16 @@ class DetallesDeComentario {
       );
 }
 
-enum ColoresDeComentario { rojo, amarillo, multi, invertido, azul }
+enum ColoresDeComentario {
+  rojo,
+  amarillo,
+  multi,
+  invertido,
+  azul,
+  verde,
+  black,
+  white
+}
 
 class Autor {
   final String rango;

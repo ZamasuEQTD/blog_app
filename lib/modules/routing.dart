@@ -1,6 +1,10 @@
 import 'package:blog_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:blog_app/features/auth/presentation/screens/registro_screen.dart';
 import 'package:blog_app/features/baneos/presentation/screens/banear_usuario_screen.dart';
+import 'package:blog_app/features/colecciones/presentation/logic/controllers/coleccion_controller.dart';
+import 'package:blog_app/features/colecciones/presentation/screens/coleccion_screen.dart';
+import 'package:blog_app/features/colecciones/presentation/screens/hilo_por_categoria_screen.dart';
+import 'package:blog_app/features/colecciones/presentation/screens/hilos_por_titulo_screen.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/hilo_screen.dart';
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:blog_app/features/media/presentation/screens/agregar_enlace_screen.dart';
@@ -29,6 +33,23 @@ GoRouter routes = GoRouter(
     GoRoute(
       path: Routes.home,
       builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: "portadas/categoria/:categoria",
+      builder: (context, state) => PortadasPorCategoriaScreen(
+        subcategoria: state.pathParameters["categoria"]!,
+      ),
+    ),
+    GoRoute(
+      path: "portadas/titulo",
+      builder: (context, state) => const PortadasPorTituloScreen(),
+    ),
+    GoRoute(
+      path: "/colecciones/:coleccion",
+      builder: (context, state) => ColeccionScreen(
+        coleccion: Coleccion.values
+            .firstWhere((e) => e.name == state.pathParameters["coleccion"]),
+      ),
     ),
     GoRoute(
       path: Routes.hilo,

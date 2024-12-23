@@ -25,15 +25,7 @@ class DioCategoriasRepository implements ICategoriasRepository {
       return right(
         value
             .map(
-              (e) => Categoria.fromJson({
-                ...e,
-                "subcategorias": e["subcategorias"].map(
-                  (e) => {
-                    ...e,
-                    "imagen": ApiConfig.media + e["imagen"],
-                  },
-                ),
-              }),
+              (e) => Categoria.fromJson(e),
             )
             .toList(),
       );

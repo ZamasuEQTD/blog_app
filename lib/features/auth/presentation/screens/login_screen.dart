@@ -27,10 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     });
 
-    controller.failure.listen(
-      (failure) {
-        if (failure != null) {
-          Snackbars.showFailure(context, failure);
+    controller.status.listen(
+      (status) {
+        if (status == LoginStatus.failure) {
+          Snackbars.showFailure(context, controller.failure.value!);
         }
       },
     );
@@ -60,8 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
             "Nombre de usuario",
             style: labelStyle,
           ),
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            onChanged: (value) => controller.usuario.value = value,
+            decoration: const InputDecoration(
               hintText: "Usuario",
             ),
           ).marginOnly(
@@ -76,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
             init: PasswordController(),
             builder: (controller) => Obx(
               () => TextField(
+                onChanged: (value) => this.controller.password.value = value,
                 obscureText: controller.obscure.value,
                 decoration: InputDecoration(
                   suffixIcon: IconButton(

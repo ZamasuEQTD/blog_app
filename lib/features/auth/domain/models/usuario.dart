@@ -17,13 +17,13 @@ class Usuario extends Equatable {
     return Usuario(
       usuario: json["name"],
       roles: HashSet.from(
-        json["roles"] ??
-            []
-                .map(
-                  (e) =>
-                      Roles.values.firstWhere((element) => element.name == e),
-                )
-                .toList(),
+        json["roles"]
+            .map(
+              (e) => Roles.values.firstWhere(
+                (element) => element.name == (e as String).toLowerCase(),
+              ),
+            )
+            .toList(),
       ),
     );
   }

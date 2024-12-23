@@ -57,7 +57,10 @@ class OpcionesDeComentarioBottomSheet extends StatelessWidget {
                 onTap: () async {
                   var repository = GetIt.I.get<IComentariosRepository>();
 
-                  var result = await repository.ocultar(id: comentario.id);
+                  var result = await repository.ocultar(
+                    hilo: "",
+                    comentario: comentario.id,
+                  );
 
                   result.fold(
                     (l) => Snackbars.showFailure(context, l),
@@ -81,7 +84,10 @@ class OpcionesDeComentarioBottomSheet extends StatelessWidget {
                   onTap: () async {
                     IComentariosRepository repository = GetIt.I.get();
 
-                    var result = await repository.eliminar(id: comentario.id);
+                    var result = await repository.eliminar(
+                      hilo: "",
+                      comentario: comentario.id,
+                    );
 
                     result.fold(
                       (l) => Snackbars.showFailure(context, l),

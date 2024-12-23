@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import '../logic/home_controller.dart';
 import 'widgets/home_menu.dart';
 import 'widgets/home_portadas_grid.dart';
+import 'package:badges/badges.dart' as badges;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

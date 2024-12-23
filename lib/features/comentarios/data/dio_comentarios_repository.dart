@@ -27,7 +27,7 @@ class DioComentariosRepository extends IComentariosRepository {
         data: FormData.fromMap({
           "texto": comentario,
           if (media != null) ...{
-            "es_spoiler": true,
+            "es_spoiler": media.spoiler,
             "media": await MultipartFile.fromFile(
               media.spoileable.provider.path,
               contentType: DioMediaType(
@@ -56,7 +56,7 @@ class DioComentariosRepository extends IComentariosRepository {
   @override
   Future<Either<Failure, List<Comentario>>> getComentarios({
     required HiloId hilo,
-    DateTime? ultimoComentario,
+    String? ultimoComentario,
   }) async {
     try {
       Response response = await dio.get(
@@ -88,10 +88,12 @@ class DioComentariosRepository extends IComentariosRepository {
 
   @override
   Future<Either<Failure, Unit>> eliminar({
-    required ComentarioId id,
+    required HiloId hilo,
+    required ComentarioId comentario,
   }) async {
     try {
-      Response response = await dio.post("comentarios/eliminar/$id");
+      Response response = await dio
+          .delete("comentarios/eliminar/hilo/$hilo/comentario/$comentario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -104,9 +106,12 @@ class DioComentariosRepository extends IComentariosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> ocultar({required ComentarioId id}) async {
+  Future<Either<Failure, Unit>> ocultar({
+    required HiloId hilo,
+    required ComentarioId comentario,
+  }) async {
     try {
-      Response response = await dio.post("comentarios/ocultar/$id");
+      Response response = await dio.post("hilo/$hilo/destacar/$comentario");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -119,8 +124,10 @@ class DioComentariosRepository extends IComentariosRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> denunciar({required ComentarioId id}) {
-    // TODO: implement denunciar
+  Future<Either<Failure, Unit>> denunciar({
+    required HiloId hilo,
+    required ComentarioId comentario,
+  }) {
     throw UnimplementedError();
   }
 

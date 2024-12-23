@@ -10,7 +10,7 @@ import 'models/typedef.dart';
 abstract class IComentariosRepository {
   Future<Either<Failure, List<Comentario>>> getComentarios({
     required HiloId hilo,
-    DateTime? ultimoComentario,
+    String? ultimoComentario,
   });
 
   Future<Either<Failure, Unit>> enviar({
@@ -20,15 +20,18 @@ abstract class IComentariosRepository {
   });
 
   Future<Either<Failure, Unit>> eliminar({
-    required ComentarioId id,
+    required HiloId hilo,
+    required ComentarioId comentario,
   });
 
   Future<Either<Failure, Unit>> ocultar({
-    required ComentarioId id,
+    required HiloId hilo,
+    required ComentarioId comentario,
   });
 
   Future<Either<Failure, Unit>> denunciar({
-    required ComentarioId id,
+    required HiloId hilo,
+    required ComentarioId comentario,
   });
 
   Future<Either<Failure, Unit>> destacar({

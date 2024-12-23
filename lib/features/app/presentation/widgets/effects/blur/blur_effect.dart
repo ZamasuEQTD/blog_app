@@ -65,12 +65,12 @@ class _BlurEffect extends BlurEffect {
     Widget child = this.child ?? const SizedBox();
     if (blurear) {
       child = ClipRRect(
-        clipBehavior: Clip.hardEdge,
+        clipBehavior: Clip.antiAlias,
         child: BackdropFilter(
           filter: ImageFilter.blur(
             sigmaX: 30,
             sigmaY: 25,
-            tileMode: TileMode.clamp,
+            tileMode: TileMode.decal,
           ),
           child: child,
         ),

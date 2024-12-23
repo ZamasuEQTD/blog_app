@@ -56,9 +56,9 @@ class ControlesDeReproductor extends StatelessWidget {
             right: 0,
             child: Row(
               children: [
-                IconButtonReproductor.fullscreen(),
-                SizedBox(width: 8),
                 IconButtonReproductor.volumen(),
+                SizedBox(width: 8),
+                IconButtonReproductor.fullscreen(),
               ],
             ),
           ),

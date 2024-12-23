@@ -56,14 +56,21 @@ class HomeMenu extends StatelessWidget {
                 ),
               ).marginOnly(left: 20),
               ...[
-                const GrupoItemSeleccionable(
+                GrupoItemSeleccionable(
                   seleccionables: [
-                    ItemSeleccionable.text(titulo: "Mis hilos"),
-                    ItemSeleccionable.text(titulo: "Favoritos"),
+                    const ItemSeleccionable.text(titulo: "Mis hilos"),
+                    ItemSeleccionable.text(
+                      titulo: "Favoritos",
+                      onTap: () => context.go("colecciones/favoritos"),
+                    ),
                     ItemSeleccionable.text(
                       titulo: "Ocultos",
+                      onTap: () => context.go("colecciones/ocultos"),
                     ),
-                    ItemSeleccionable.text(titulo: "Seguidos"),
+                    ItemSeleccionable.text(
+                      titulo: "Seguidos",
+                      onTap: () => context.go("colecciones/ocultos"),
+                    ),
                   ],
                 ),
                 const GrupoItemSeleccionable(
@@ -74,11 +81,12 @@ class HomeMenu extends StatelessWidget {
                     ),
                   ],
                 ),
-                const GrupoItemSeleccionable(
+                GrupoItemSeleccionable(
                   seleccionables: [
                     ItemSeleccionable.text(
                       titulo: "Cerrar sesión",
-                      leading: FaIcon(FontAwesomeIcons.rightFromBracket),
+                      leading: const FaIcon(FontAwesomeIcons.rightFromBracket),
+                      onTap: () => Get.find<AuthController>().logout(),
                     ),
                   ],
                 ),

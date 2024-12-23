@@ -23,7 +23,7 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> eliminar({required String id}) async {
     try {
-      Response response = await dio.delete("hilos/$id");
+      Response response = await dio.delete("/hilos/eliminar/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -49,17 +49,6 @@ class DioHilosRepository extends IHilosRepository {
       return Right(
         Hilo.fromJson({
           ...value,
-          "media": {
-            ...value["media"],
-            if (value["media"]["previsualizacion"] != null)
-              "previsualizacion":
-                  ApiConfig.media + value["media"]["previsualizacion"],
-            "url": ApiConfig.media + value["media"]["url"],
-          },
-          "subcategoria": {
-            ...value["subcategoria"],
-            "imagen": ApiConfig.media + value["subcategoria"]["imagen"],
-          },
         }),
       );
     } on Exception catch (e) {
@@ -93,10 +82,6 @@ class DioHilosRepository extends IHilosRepository {
           .map(
             (p) => PortadaHilo.fromJson({
               ...p,
-              "miniatura": {
-                ...p["miniatura"],
-                "url": ApiConfig.media + p["miniatura"]["url"],
-              },
             }),
           )
           .toList();
@@ -153,8 +138,9 @@ class DioHilosRepository extends IHilosRepository {
         "descripcion": descripcion,
         "encuesta": encuesta,
         "subcategoria": subcategoria,
-        "dados": dados,
-        "id_unico": idUnico,
+        "dadosActivados": dados,
+        "idUnicoActivado": idUnico,
+        "spoiler": portada.esSpoiler,
         "file": await MultipartFile.fromFile(
           portada.spoileable.provider.path,
           contentType: DioMediaType(

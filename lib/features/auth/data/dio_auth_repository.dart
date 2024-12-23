@@ -27,7 +27,7 @@ class DioAuthRepository implements IAuthRepository {
         return Left(response.failure);
       }
 
-      return Right(response.data["token"]);
+      return Right(response.data["value"]);
     } on Exception catch (e) {
       return Left(e.failure);
     }

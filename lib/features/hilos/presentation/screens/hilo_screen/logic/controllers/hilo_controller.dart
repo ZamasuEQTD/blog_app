@@ -82,8 +82,6 @@ mixin ComentariosHiloMixin {
 
   Rx<HashMap<String, List<String>>> taggueos = Rx(HashMap());
 
-  DateTime? ultimoComentario;
-
   Rx<Comentario?> ultimoComentarioAgregado = Rx(null);
 
   Rx<ComentarioId?> ultimoComentarioEliminado = Rx(null);
@@ -100,7 +98,7 @@ mixin ComentariosHiloMixin {
 
     var res = await repository.getComentarios(
       hilo: id,
-      ultimoComentario: ultimoComentario,
+      ultimoComentario: comentarios.value.lastOrNull?.id,
     );
 
     res.fold((l) {
@@ -110,10 +108,6 @@ mixin ComentariosHiloMixin {
 
       for (var comentario in r) {
         ultimoComentarioAgregado.value = comentario;
-      }
-
-      if (r.isNotEmpty) {
-        ultimoComentario = r.last.creado_en;
       }
 
       comentariosStatus.value = HiloComentariosStatus.cargados;
@@ -141,6 +135,7 @@ enum HiloComentariosStatus {
   initial,
   cargando,
   cargados,
+  sinMasComentarios,
   error,
 }
 
@@ -170,6 +165,7 @@ mixin ComentarHiloMixin {
     var res = await repository.enviar(
       hilo: id,
       comentario: comentario,
+      media: media.value,
     );
 
     res.fold((l) {
@@ -194,6 +190,8 @@ mixin ComentarHiloMixin {
       );
       return;
     }
+
+    ultimoTagueo.value = tag;
 
     tags.add(tag);
   }

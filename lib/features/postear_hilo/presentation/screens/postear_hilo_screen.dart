@@ -111,176 +111,9 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                             ),
                           ).marginOnly(bottom: 24, top: 8),
                           const PostearHiloLabelSection(label: "Subcategoria"),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: GestureDetector(
-                              onTap: () =>
-                                  SeleccionarSubcategoriaBottomSheet.show(
-                                context,
-                                onSubcategoriaSeleccionada: (subcategoria) =>
-                                    controller.subcategoria.value =
-                                        subcategoria,
-                              ),
-                              child: ColoredBox(
-                                color: Colors.white,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Obx(
-                                      () {
-                                        if (controller.subcategoria.value ==
-                                            null) {
-                                          return const Text(
-                                            "Selecciona una subcategoria",
-                                          );
-                                        }
-                                        return Row(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: SizedBox.square(
-                                                dimension: 25,
-                                                child: Image(
-                                                  image: controller.subcategoria
-                                                      .value!.imagen.toProvider,
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ).marginOnly(right: 10),
-                                            Text(
-                                              controller
-                                                  .subcategoria.value!.nombre,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                    const Icon(CupertinoIcons.chevron_right),
-                                  ],
-                                ).paddingSymmetric(
-                                  horizontal: 10,
-                                  vertical: 15,
-                                ),
-                              ),
-                            ),
-                          ).marginOnly(bottom: 24, top: 8),
+                          _seleccionarSubcategoria(context),
                           const PostearHiloLabelSection(label: "Portada"),
-                          Obx(
-                            () {
-                              if (controller.portada.value == null) {
-                                return Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          IGalleryService service =
-                                              GetIt.I.get();
-
-                                          var response = await service.pickFile(
-                                            extensions: [],
-                                          );
-
-                                          response.fold(
-                                            (l) {},
-                                            (r) {
-                                              if (r != null) {
-                                                controller.agregarPortada(r);
-                                              }
-                                            },
-                                          );
-                                        },
-                                        label: const Text(
-                                          "Agregar portada ",
-                                        ),
-                                        icon: const FaIcon(
-                                          FontAwesomeIcons.image,
-                                        ),
-                                      ).withSecondaryStyle(context),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () async {
-                                          IGalleryService service =
-                                              GetIt.I.get();
-
-                                          var response = await service.pickFile(
-                                            extensions: [],
-                                          );
-
-                                          response.fold(
-                                            (l) {},
-                                            (r) {
-                                              if (r != null) {
-                                                controller.agregarPortada(r);
-                                              }
-                                            },
-                                          );
-                                        },
-                                        label: const Text(
-                                          "Agregar enlace",
-                                        ),
-                                        icon: const FaIcon(
-                                          FontAwesomeIcons.link,
-                                        ),
-                                      ).withSecondaryStyle(context),
-                                    ),
-                                  ],
-                                );
-                              }
-                              return Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  DimensionableScope(
-                                    borderRadius: BorderRadius.circular(20),
-                                    builder: (context, dimensionable) {
-                                      return Stack(
-                                        children: [
-                                          dimensionable,
-                                          Obx(
-                                            () => Stack(
-                                              children: [
-                                                dimensionable,
-                                                Positioned.fill(
-                                                  child: BlurEffect(
-                                                    blurear: controller.portada
-                                                        .value!.esSpoiler,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                    child: controller
-                                        .portada.value!.spoileable.widget
-                                        .marginOnly(bottom: 10),
-                                  ),
-                                  GrupoItemSeleccionable(
-                                    seleccionables: [
-                                      ItemSeleccionable.checkbox(
-                                        onChange: (value) =>
-                                            controller.censurar(),
-                                        titulo: "Censurar",
-                                        value:
-                                            controller.portada.value!.esSpoiler,
-                                      ),
-                                      ItemSeleccionable.destructible(
-                                        titulo: "Eliminar portada",
-                                        onTap: () =>
-                                            controller.portada.value = null,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            },
-                          ).marginOnly(bottom: 24, top: 8),
+                          _portada(context),
                           const PostearHiloLabelSection(label: "Encuesta"),
                           Obx(() {
                             if (controller.encuesta.value.isEmpty) {
@@ -371,6 +204,167 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
         ),
       ),
     );
+  }
+
+  Widget _portada(BuildContext context) {
+    return Obx(
+      () {
+        if (controller.portada.value == null) {
+          return Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    IGalleryService service = GetIt.I.get();
+
+                    var response = await service.pickFile(
+                      extensions: [],
+                    );
+
+                    response.fold(
+                      (l) {},
+                      (r) {
+                        if (r != null) {
+                          controller.agregarPortada(r);
+                        }
+                      },
+                    );
+                  },
+                  label: const Text(
+                    "Agregar portada ",
+                  ),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.image,
+                  ),
+                ).withSecondaryStyle(context),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    IGalleryService service = GetIt.I.get();
+
+                    var response = await service.pickFile(
+                      extensions: [],
+                    );
+
+                    response.fold(
+                      (l) {},
+                      (r) {
+                        if (r != null) {
+                          controller.agregarPortada(r);
+                        }
+                      },
+                    );
+                  },
+                  label: const Text(
+                    "Agregar enlace",
+                  ),
+                  icon: const FaIcon(
+                    FontAwesomeIcons.link,
+                  ),
+                ).withSecondaryStyle(context),
+              ),
+            ],
+          );
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            DimensionableScope(
+              borderRadius: BorderRadius.circular(20),
+              builder: (context, dimensionable) {
+                return Stack(
+                  children: [
+                    Obx(
+                      () => Stack(
+                        children: [
+                          dimensionable,
+                          Positioned.fill(
+                            child: BlurEffect(
+                              blurear: controller.portada.value!.esSpoiler,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
+              child: controller.portada.value!.spoileable.widget
+                  .marginOnly(bottom: 10),
+            ),
+            GrupoItemSeleccionable(
+              seleccionables: [
+                ItemSeleccionable.checkbox(
+                  onChange: (value) => controller.censurar(),
+                  titulo: "Censurar",
+                  value: controller.portada.value!.esSpoiler,
+                ),
+                ItemSeleccionable.destructible(
+                  titulo: "Eliminar portada",
+                  onTap: () => controller.portada.value = null,
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    ).marginOnly(bottom: 24, top: 8);
+  }
+
+  Widget _seleccionarSubcategoria(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: GestureDetector(
+        onTap: () => SeleccionarSubcategoriaBottomSheet.show(
+          context,
+          onSubcategoriaSeleccionada: (subcategoria) =>
+              controller.subcategoria.value = subcategoria,
+        ),
+        child: ColoredBox(
+          color: Colors.white,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () {
+                  if (controller.subcategoria.value == null) {
+                    return const Text(
+                      "Selecciona una subcategoria",
+                    );
+                  }
+                  return Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: SizedBox.square(
+                          dimension: 25,
+                          child: Image(
+                            image: controller
+                                .subcategoria.value!.imagen.toProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ).marginOnly(right: 10),
+                      Text(
+                        controller.subcategoria.value!.nombre,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const Icon(CupertinoIcons.chevron_right),
+            ],
+          ).paddingSymmetric(
+            horizontal: 10,
+            vertical: 15,
+          ),
+        ),
+      ),
+    ).marginOnly(bottom: 24, top: 8);
   }
 }
 

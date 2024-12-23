@@ -33,10 +33,6 @@ class SignalrHomeHub extends IHomeHub {
             onHiloPosteadoController.add(
               PortadaHilo.fromJson({
                 ...json,
-                "miniatura": {
-                  ...json["miniatura"] as Map<String, dynamic>,
-                  "url": ApiConfig.media + json["miniatura"]["url"],
-                },
               }),
             );
           } catch (e) {

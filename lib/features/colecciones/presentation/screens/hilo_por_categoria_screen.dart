@@ -1,29 +1,36 @@
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
-import 'package:blog_app/features/colecciones/presentation/logic/controllers/enum/portadas_status.dart';
-import 'package:blog_app/features/colecciones/presentation/logic/controllers/hilo_por_titulo_controller.dart';
+import 'package:blog_app/features/colecciones/presentation/logic/controllers/hilo_por_categoria_controller.dart';
+import 'package:blog_app/features/hilos/domain/models/portada.dart';
+import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../hilos/domain/models/portada.dart';
 import '../../../hilos/presentation/widgets/portadas/portada/delegate/portadas_delegate.dart';
 import '../../../hilos/presentation/widgets/portadas/portada/portada.dart';
+import '../logic/controllers/enum/portadas_status.dart';
 
-class PortadasPorTituloScreen extends StatefulWidget {
-  const PortadasPorTituloScreen({super.key});
+class PortadasPorCategoriaScreen extends StatefulWidget {
+  final String subcategoria;
+  const PortadasPorCategoriaScreen({super.key, required this.subcategoria});
 
   @override
-  State<PortadasPorTituloScreen> createState() =>
-      _PortadasPorTituloScreenState();
+  State<PortadasPorCategoriaScreen> createState() =>
+      _PortadasPorCategoriaScreenState();
 }
 
-class _PortadasPorTituloScreenState extends State<PortadasPorTituloScreen> {
-  final controller = Get.put(PortadasPorTituloController());
+class _PortadasPorCategoriaScreenState
+    extends State<PortadasPorCategoriaScreen> {
+  late final controller = Get.put(
+    PortadasPorCategoriaController(subcategoriaId: widget.subcategoria),
+  );
 
   final ScrollController scroll = ScrollController();
 
   @override
   void initState() {
+    controller.cargarPortadas();
+
     if (scroll.isBottom) {
       controller.cargarPortadas();
     }
@@ -35,19 +42,8 @@ class _PortadasPorTituloScreenState extends State<PortadasPorTituloScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
+        controller: scroll,
         slivers: [
-          Flexible(
-            child: TextField(
-              onChanged: (value) => controller.titulo.value = value,
-              decoration: InputDecoration(
-                hintText: "Titulo de hilo...",
-                icon: IconButton(
-                  onPressed: () => controller.cargarPortadas(),
-                  icon: const Icon(Icons.search),
-                ),
-              ),
-            ),
-          ),
           Obx(
             () => SliverGrid.builder(
               itemCount: controller.portadas.length +

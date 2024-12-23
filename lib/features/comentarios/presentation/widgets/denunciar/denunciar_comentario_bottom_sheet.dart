@@ -32,7 +32,8 @@ class DenunciarComentarioBottomSheet extends StatelessWidget {
                     IComentariosRepository repository = GetIt.I.get();
 
                     var result = await repository.denunciar(
-                      id: id,
+                      hilo: "",
+                      comentario: id,
                     );
 
                     result.fold(
