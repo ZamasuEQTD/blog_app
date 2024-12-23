@@ -27,6 +27,7 @@ mixin HomePortadasMixin {
     if (portadasStatus.value == HomePortadasStatus.cargando) return;
 
     portadasStatus.value = HomePortadasStatus.cargando;
+
     IHilosRepository repository = GetIt.I.get();
 
     var res = await repository.getPortadas(
@@ -73,8 +74,9 @@ extension PortadasExtensions on List<PortadaHilo> {
     for (var element in this) {
       if (element.esSticky) {
         count++;
+      } else {
+        break;
       }
-      break;
     }
     return count;
   }
