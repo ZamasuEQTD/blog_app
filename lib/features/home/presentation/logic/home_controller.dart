@@ -1,5 +1,4 @@
 import 'package:blog_app/features/app/clases/failure.dart';
-import 'package:blog_app/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/features/hilos/domain/ihilos_repository.dart';
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
 import 'package:blog_app/features/hilos/domain/models/types.dart';
@@ -11,9 +10,6 @@ class HomeController extends GetxController with HomePortadasMixin {}
 
 mixin HomePortadasMixin {
   Rx<Failure?> failure = Rx(null);
-  Rx<Subcategoria?> subcategoria = Rx(null);
-  Rx<DateTime?> ultimoBump = Rx(null);
-  Rx<String> titulo = Rx("");
 
   Rx<List<PortadaHilo>> portadas = Rx([]);
 
@@ -31,16 +27,12 @@ mixin HomePortadasMixin {
     IHilosRepository repository = GetIt.I.get();
 
     var res = await repository.getPortadas(
-      titulo: titulo.value,
-      subcategoria: subcategoria.value?.id,
-      ultimoBump: ultimoBump.value,
+      ultimo: portadas.value.lastOrNull?.id,
     );
 
     res.fold(
       (l) => failure.value = l,
       (r) {
-        ultimoBump.value = r.lastOrNull?.ultimoBump;
-
         portadas.value = [
           ...portadas.value,
           ...r,

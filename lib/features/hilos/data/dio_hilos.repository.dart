@@ -71,7 +71,7 @@ class DioHilosRepository extends IHilosRepository {
   Future<Either<Failure, List<PortadaHilo>>> getPortadas({
     String? titulo,
     SubcategoriaId? subcategoria,
-    DateTime? ultimoBump,
+    HiloId? ultimo,
   }) async {
     try {
       Response<Map<String, dynamic>> response = await dio.get(
@@ -79,7 +79,7 @@ class DioHilosRepository extends IHilosRepository {
         queryParameters: {
           "titulo": titulo,
           "subcategoria": subcategoria,
-          "ultimo_bump": ultimoBump,
+          "ultimo": ultimo,
         },
       );
 

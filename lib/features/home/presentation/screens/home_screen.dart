@@ -1,7 +1,6 @@
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
-import 'package:blog_app/features/home/presentation/screens/widgets/home_filtros.dart';
 import 'package:blog_app/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,12 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
 
-    controller.subcategoria.listen((subcategoria) {
-      if (subcategoria != null) {
-        controller.cargarPortadas();
-      }
-    });
-
     controller.failure.listen((l) {
       if (l != null) {}
     });
@@ -82,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen> {
       body: CustomScrollView(
         controller: scroll,
         slivers: const [
-          HomeFiltros(),
           HomePortadasGrid(),
         ],
       ),

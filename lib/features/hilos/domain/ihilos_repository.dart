@@ -27,7 +27,7 @@ abstract class IHilosRepository {
   Future<Either<Failure, List<PortadaHilo>>> getPortadas({
     String? titulo,
     SubcategoriaId? subcategoria,
-    DateTime? ultimoBump,
+    HiloId? ultimo,
   });
 
   Future<Either<Failure, Unit>> eliminar({
