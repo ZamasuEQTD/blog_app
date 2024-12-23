@@ -74,11 +74,12 @@ class HomeMenu extends StatelessWidget {
                     ),
                   ],
                 ),
-                const GrupoItemSeleccionable(
+                GrupoItemSeleccionable(
                   seleccionables: [
                     ItemSeleccionable.text(
                       titulo: "Cerrar sesión",
-                      leading: FaIcon(FontAwesomeIcons.rightFromBracket),
+                      leading: const FaIcon(FontAwesomeIcons.rightFromBracket),
+                      onTap: () => Get.find<AuthController>().logout(),
                     ),
                   ],
                 ),

@@ -12,6 +12,9 @@ class ComentarioColor extends StatelessWidget {
     ColoresDeComentario.invertido: const MultiInvertido(),
     ColoresDeComentario.rojo: const ColoredBox(color: Colors.red),
     ColoresDeComentario.azul: const ColoredBox(color: Colors.blue),
+    ColoresDeComentario.verde: const ColoredBox(color: Colors.green),
+    ColoresDeComentario.black: const ColoredBox(color: Colors.black),
+    ColoresDeComentario.white: const ColoredBox(color: Colors.white),
   });
 
   const ComentarioColor({super.key});

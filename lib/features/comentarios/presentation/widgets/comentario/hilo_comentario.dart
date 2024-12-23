@@ -1,3 +1,4 @@
+import 'package:blog_app/features/app/presentation/logic/extensions/duration_extension.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/opciones_de_comentario.dart';
 import 'package:blog_app/features/comentarios/presentation/widgets/comentario/widgets/comentario_texto.dart';
 import 'package:flutter/cupertino.dart';
@@ -108,7 +109,7 @@ class ComentarioInfoRow extends StatelessWidget {
           ],
         ),
         Text(
-          comentario.creado_en.toString(),
+          comentario.creado_en.tiempoTranscurrido,
           style: Theme.of(context).textTheme.labelSmall,
         ),
       ],

@@ -69,6 +69,7 @@ dependencies:
   json_annotation: ^4.9.0
   dart_json_mapper: ^2.2.12
   signalr_netcore: ^1.4.0
+  custom_refresh_indicator: ^4.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

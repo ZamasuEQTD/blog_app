@@ -13,16 +13,17 @@ class LoginController extends GetxController {
 
   var usuario = "".obs;
   var password = "".obs;
-  var enviando = false.obs;
+
+  Rx<LoginStatus> status = LoginStatus.initial.obs;
 
   Rx<String?> token = Rx(null);
 
   Rx<Failure?> failure = Rx(null);
 
   void login() async {
-    if (enviando.value) return;
+    if (status.value == LoginStatus.enviando) return;
 
-    enviando.value = true;
+    status.value = LoginStatus.enviando;
 
     var result = await repository.login(
       usuario: usuario.value,
@@ -32,10 +33,23 @@ class LoginController extends GetxController {
     result.fold(
       (l) {
         failure.value = l;
+
+        status.value = LoginStatus.failure;
       },
-      (r) async => await Get.find<AuthController>().login(r),
+      (r) async {
+        await Get.find<AuthController>().login(r);
+
+        status.value = LoginStatus.success;
+      },
     );
 
-    enviando.value = false;
+    status.value = LoginStatus.initial;
   }
+}
+
+enum LoginStatus {
+  initial,
+  enviando,
+  success,
+  failure,
 }

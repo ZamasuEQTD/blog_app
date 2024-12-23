@@ -32,10 +32,6 @@ class DioModeracionRepository extends IModeracionRepository {
               (e) => HiloComentadoRegistro.fromJson(
                 Map<String, dynamic>.from({
                   ...e,
-                  "hilo": {
-                    ...e["hilo"],
-                    "miniatura": ApiConfig.media + e["hilo"]["miniatura"],
-                  },
                 }),
               ),
             )
@@ -67,11 +63,6 @@ class DioModeracionRepository extends IModeracionRepository {
               (e) => HiloPosteadoRegistro.fromJson(
                 Map<String, dynamic>.from({
                   ...e,
-                  "hilo": {
-                    ...e["hilo"],
-                    "miniatura":
-                        ApiConfig.media + e["hilo"]["miniatura"]["miniatura"],
-                  },
                 }),
               ),
             )

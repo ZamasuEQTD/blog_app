@@ -195,6 +195,8 @@ mixin ComentarHiloMixin {
       return;
     }
 
+    ultimoTagueo.value = tag;
+
     tags.add(tag);
   }
 }

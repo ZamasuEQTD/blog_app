@@ -6,13 +6,14 @@ import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.d
 import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
 import 'package:blog_app/features/home/presentation/screens/widgets/home_filtros.dart';
 import 'package:blog_app/modules/routing.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:badges/badges.dart' as badges;
 import '../logic/home_controller.dart';
 import 'widgets/home_menu.dart';
 import 'widgets/home_portadas_grid.dart';
@@ -68,27 +69,38 @@ class _HomeScreenState extends State<HomeScreen> {
       key: scaffoldKey,
       backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
       endDrawer: const HomeMenu(),
-      appBar: AppBar(
-        actions: [
-          TextButton.icon(
-            onPressed: () => context.push(Routes.notificaciones),
-            icon: const Icon(
-              Icons.notifications,
+      body: CustomMaterialIndicator(
+        edgeOffset: 20,
+        onRefresh: () async {
+          await Future.delayed(const Duration(seconds: 10));
+        },
+        child: CustomScrollView(
+          controller: scroll,
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              actions: [
+                IconButton(
+                  onPressed: () => context.push("/notificaciones"),
+                  icon: const badges.Badge(
+                    badgeContent: Text("2"),
+                    badgeStyle: badges.BadgeStyle(),
+                    child: FaIcon(FontAwesomeIcons.bell),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
+                  icon: const FaIcon(FontAwesomeIcons.bars),
+                ),
+              ],
             ),
-            label: const Text("991+"),
-          ),
-          IconButton(
-            onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
-            icon: const FaIcon(FontAwesomeIcons.bars),
-          ),
-        ],
-      ),
-      body: CustomScrollView(
-        controller: scroll,
-        slivers: const [
-          HomeFiltros(),
-          HomePortadasGrid(),
-        ],
+            const HomeFiltros(),
+            const HomePortadasGrid(),
+            const SliverFillRemaining(
+              fillOverscroll: true,
+            ),
+          ],
+        ),
       ),
       floatingActionButton: ColoredIconButton(
         border: BorderRadius.circular(10),

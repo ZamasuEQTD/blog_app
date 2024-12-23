@@ -8,6 +8,7 @@ class PortadaHilo {
   final String? autor;
   final String categoria;
   final bool esOp;
+  final bool? recibirNotificaciones;
   final List<PortadaFeatures> features;
   final Spoileable<Imagen> imagen;
   final DateTime ultimoBump;
@@ -23,6 +24,7 @@ class PortadaHilo {
     required this.features,
     required this.imagen,
     required this.ultimoBump,
+    this.recibirNotificaciones,
   });
 
   factory PortadaHilo.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class PortadaHilo {
       autor: json["autor_id"],
       categoria: json["subcategoria"],
       esOp: json["es_op"],
+      recibirNotificaciones: json["recibir_notificaciones"],
       features: [
         if (json["es_nuevo"]) PortadaFeatures.nuevo,
         if (json["es_sticky"]) PortadaFeatures.sticky,

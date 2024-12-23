@@ -39,7 +39,7 @@ class HomePortadasGrid extends StatelessWidget {
                 return GestureDetector(
                   onLongPress: () => showMaterialModalBottomSheet(
                     context: context,
-                    builder: (context) => const HiloOpciones(),
+                    builder: (context) => HiloOpciones(portada: portada),
                   ),
                   onTap: () => context.push("/hilo/${portada.id}"),
                   child: PortadaWidget(portada: portada),

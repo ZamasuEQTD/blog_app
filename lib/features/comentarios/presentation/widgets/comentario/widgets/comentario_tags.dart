@@ -63,13 +63,16 @@ class _TagDeComentario extends TagDeComentario {
 
   @override
   Widget build(BuildContext context) {
-    return Tag(
-      background: background,
-      padding: padding,
-      border: BorderRadius.circular(5),
-      child: Text(
-        tag,
-        style: const TextStyle(fontSize: 12).merge(style),
+    return GestureDetector(
+      onTap: () => Get.find<HiloController>().tagguear(tag),
+      child: Tag(
+        background: background,
+        padding: padding,
+        border: BorderRadius.circular(5),
+        child: Text(
+          tag,
+          style: const TextStyle(fontSize: 12).merge(style),
+        ),
       ),
     );
   }
