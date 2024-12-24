@@ -26,29 +26,45 @@ class UsuarioRegistro extends StatelessWidget {
             child: SizedBox(
               width: double.infinity,
               child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                child: Column(
                   children: [
-                    const UsuarioFoto.icono(),
-                    const SizedBox(width: 10),
-                    Column(
+                    Row(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          usuario.nombre,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Text(
-                          "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
+                        const UsuarioFoto.icono(),
+                        const SizedBox(width: 10),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              usuario.nombre,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                              ),
+                            ),
+                            Text(
+                              "Unido desde ${usuario.registradoEn.day}/${usuario.registradoEn.month}/${usuario.registradoEn.year}",
+                            ),
+                          ],
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.push("/banear-usuario/${usuario.id}");
+                        },
+                        child: const Text("Banear usuario"),
+                      ),
+                    ).marginSymmetric(horizontal: 10),
                   ],
-                ).paddingSymmetric(vertical: 20),
+                ).paddingSymmetric(vertical: 10),
               ),
             ),
           ),

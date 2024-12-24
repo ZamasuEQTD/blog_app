@@ -15,7 +15,7 @@ class MisNotificacionesController extends GetxController {
 
   void cargar() async {
     if (cargando) return;
-    await Future.delayed(const Duration(seconds: 10));
+
     status.value = NotificacionesStatus.cargando;
 
     final INotificacionesRepository repository = GetIt.I.get();

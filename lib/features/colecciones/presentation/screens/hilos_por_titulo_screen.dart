@@ -24,9 +24,11 @@ class _PortadasPorTituloScreenState extends State<PortadasPorTituloScreen> {
 
   @override
   void initState() {
-    if (scroll.isBottom) {
-      controller.cargarPortadas();
-    }
+    scroll.addListener(() {
+      if (scroll.isBottom) {
+        controller.cargarPortadas();
+      }
+    });
 
     super.initState();
   }
@@ -34,20 +36,22 @@ class _PortadasPorTituloScreenState extends State<PortadasPorTituloScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Buscar hilo"),
+      ),
       body: CustomScrollView(
+        controller: scroll,
         slivers: [
-          Flexible(
-            child: TextField(
-              onChanged: (value) => controller.titulo.value = value,
-              decoration: InputDecoration(
-                hintText: "Titulo de hilo...",
-                icon: IconButton(
-                  onPressed: () => controller.cargarPortadas(),
-                  icon: const Icon(Icons.search),
-                ),
+          TextField(
+            onChanged: (value) => controller.titulo.value = value,
+            decoration: InputDecoration(
+              hintText: "Titulo de hilo...",
+              suffixIcon: IconButton(
+                onPressed: () => controller.cargarPortadas(),
+                icon: const Icon(Icons.search),
               ),
             ),
-          ),
+          ).paddingSymmetric(horizontal: 10).marginOnly(bottom: 10).sliverBox,
           Obx(
             () => SliverGrid.builder(
               itemCount: controller.portadas.length +

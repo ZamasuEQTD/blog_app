@@ -64,7 +64,21 @@ class HiloComentario extends StatelessWidget {
                       height: 5,
                     ),
                     if (comentario.media != null)
-                      comentario.media!.spoileable.widget,
+                      DimensionableScope(
+                        constraints: const BoxConstraints(
+                          maxWidth: 300,
+                          maxHeight: 450,
+                        ),
+                        builder: (context, dimensionable) {
+                          return Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: dimensionable,
+                            ),
+                          );
+                        },
+                        child: comentario.media!.spoileable.widget,
+                      ),
                     const ComentarioTexto(),
                   ],
                 ),

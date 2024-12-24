@@ -43,6 +43,12 @@ class Comentario {
         detalles: DetallesDeComentario.fromJson(json['detalles']),
         tags: List<String>.from(json['tags']),
         taggueos: List<String>.from(json['taggueos']),
+        media: json['media'] != null
+            ? Spoileable.fromJson({
+                "spoiler": json['media']['es_spoiler'],
+                "spoileable": Media.fromJson(json['media']),
+              })
+            : null,
       );
 }
 

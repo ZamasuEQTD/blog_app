@@ -33,7 +33,9 @@ class NotificacionHilo {
       NotificacionHilo(
         id: json["id"],
         titulo: json["titulo"],
-        portada: Imagen.fromJson(json["portada"]),
+        portada: Imagen.fromJson({
+          "url": json["miniatura"],
+        }),
       );
 }
 
@@ -49,7 +51,7 @@ class HiloComentado extends Notificacion {
   factory HiloComentado.fromJson(Map<String, dynamic> json) => HiloComentado(
         id: json["id"],
         hilo: NotificacionHilo.fromJson(json["hilo"]),
-        comentario: json["comentario"],
+        comentario: json["comentario_id"],
         content: json["contenido"],
         fecha: DateTime.parse(json["fecha"]),
       );
@@ -89,9 +91,9 @@ class ComentarioRespondido extends Notificacion {
       ComentarioRespondido(
         id: json["id"],
         hilo: NotificacionHilo.fromJson(json["hilo"]),
-        comentario: json["comentario"],
+        comentario: json["comentario_id"],
         content: json["contenido"],
         fecha: DateTime.parse(json["fecha"]),
-        respondido: json["respondido"],
+        respondido: "gag",
       );
 }

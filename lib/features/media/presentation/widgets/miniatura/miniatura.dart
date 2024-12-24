@@ -17,7 +17,7 @@ class Miniatura extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder(
       global: false,
-      init: MiniaturaController(media: media),
+      init: MiniaturaController(media: media)..generar(),
       builder: (controller) => ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: SizedBox.square(

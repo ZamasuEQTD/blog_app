@@ -12,14 +12,16 @@ class DioNotificacionesRepository extends INotificacionesRepository {
   @override
   Future<Either<Failure, List<Notificacion>>> getMisNotificaciones() async {
     try {
-      Response response = await dio.get("notificaciones/mis-notificaciones");
+      Response response = await dio.get("/notificaciones/mis-notificaciones");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
       }
 
+      List<Map<String, dynamic>> data = List.from(response.data!["value"]);
+
       return Right(
-        response.data.map((e) => NotificacionMapper.fromJson(e)).toList(),
+        data.map((e) => NotificacionMapper.fromJson(e)).toList(),
       );
     } on Exception catch (e) {
       return Left(e.failure);
@@ -31,7 +33,7 @@ class DioNotificacionesRepository extends INotificacionesRepository {
     required NotificacionId id,
   }) async {
     try {
-      Response response = await dio.post("notificaciones/leer/$id");
+      Response response = await dio.post("/notificaciones/leer/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -46,7 +48,7 @@ class DioNotificacionesRepository extends INotificacionesRepository {
   @override
   Future<Either<Failure, Unit>> leerTodas() async {
     try {
-      Response response = await dio.post("notificaciones/leer-todas");
+      Response response = await dio.post("/notificaciones/leer-todas");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -62,11 +64,11 @@ class DioNotificacionesRepository extends INotificacionesRepository {
 class NotificacionMapper {
   static Notificacion fromJson(Map<String, dynamic> json) {
     switch (json["tipo"]) {
-      case "hilo-comentado":
+      case "HiloComentado":
         return HiloComentado.fromJson(json);
-      case "hilo-seguido-comentado":
+      case "HiloSeguido":
         return HiloSeguidoComentado.fromJson(json);
-      case "comentario-respondido":
+      case "ComentarioRespondido":
         return ComentarioRespondido.fromJson(json);
       default:
         throw Exception("Tipo de notificacion no soportado");

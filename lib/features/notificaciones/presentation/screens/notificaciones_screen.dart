@@ -1,4 +1,6 @@
+import 'package:blog_app/features/app/presentation/logic/extensions/duration_extension.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
+import 'package:blog_app/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
 import 'package:flutter/material.dart';
@@ -81,41 +83,46 @@ class NotificacionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: radius,
-      child: GestureDetector(
-        onTap: () => context.push("/hilo/${notificacion.hilo.id}"),
-        child: Column(
-          children: [
-            Text(
-              titulo,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-            ),
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: SizedBox.square(
-                    dimension: 50,
-                    child: Image(image: notificacion.hilo.portada.toProvider),
+      child: ColoredBox(
+        color: Colors.white,
+        child: GestureDetector(
+          onTap: () => context.push("/hilo/${notificacion.hilo.id}"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                titulo,
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(5),
+                    child: SizedBox.square(
+                      dimension: 50,
+                      child: Image(image: notificacion.hilo.portada.toProvider),
+                    ),
                   ),
-                ),
-                Text(
-                  notificacion.hilo.titulo,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ).marginOnly(left: 10),
-              ],
-            ),
-            Text(
-              notificacion.content,
-              maxLines: 4,
-            ),
-            Text(notificacion.fecha.toIso8601String()),
-          ],
+                  Text(
+                    notificacion.hilo.titulo,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ).marginOnly(left: 10),
+                ],
+              ),
+              Text("hace ${notificacion.fecha.tiempoTranscurrido}"),
+              Text(
+                notificacion.content,
+                maxLines: 4,
+              ),
+            ],
+          ).paddingAll(10),
         ),
       ),
-    ).marginOnly(bottom: 10);
+    ).marginOnly(bottom: 10).marginSymmetric(horizontal: 5);
   }
 
   String get titulo {

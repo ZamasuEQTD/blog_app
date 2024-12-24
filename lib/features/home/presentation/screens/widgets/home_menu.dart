@@ -17,34 +17,7 @@ class HomeMenu extends StatelessWidget {
       child: SafeArea(
         child: Obx(() {
           if (Get.find<AuthController>().usuario.value == null) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.push(Routes.login);
-                      },
-                      child: const Text("Iniciar Sesión"),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.push(Routes.registro);
-                      },
-                      child: const Text("Registrarse"),
-                    ).withSecondaryStyle(context),
-                  ),
-                ],
-              ),
-            ).paddingSymmetric(horizontal: 20);
+            return onSinSesion(context);
           }
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,18 +31,31 @@ class HomeMenu extends StatelessWidget {
               ...[
                 GrupoItemSeleccionable(
                   seleccionables: [
+                    ItemSeleccionable.text(
+                      titulo: "Buscar hilo",
+                      onTap: () => context.push("/portadas/titulo"),
+                      trailing: const FaIcon(FontAwesomeIcons.magnifyingGlass),
+                    ),
+                    const ItemSeleccionable.text(
+                      titulo: "Categorias",
+                      trailing: FaIcon(FontAwesomeIcons.boxArchive),
+                    ),
+                  ],
+                ),
+                GrupoItemSeleccionable(
+                  seleccionables: [
                     const ItemSeleccionable.text(titulo: "Mis hilos"),
                     ItemSeleccionable.text(
                       titulo: "Favoritos",
-                      onTap: () => context.go("colecciones/favoritos"),
+                      onTap: () => context.push("/colecciones/favoritos"),
                     ),
                     ItemSeleccionable.text(
                       titulo: "Ocultos",
-                      onTap: () => context.go("colecciones/ocultos"),
+                      onTap: () => context.push("/colecciones/ocultos"),
                     ),
                     ItemSeleccionable.text(
                       titulo: "Seguidos",
-                      onTap: () => context.go("colecciones/ocultos"),
+                      onTap: () => context.push("/colecciones/ocultos"),
                     ),
                   ],
                 ),
@@ -77,7 +63,7 @@ class HomeMenu extends StatelessWidget {
                   seleccionables: [
                     ItemSeleccionable.text(
                       titulo: "Configuración",
-                      leading: FaIcon(FontAwesomeIcons.gear),
+                      trailing: FaIcon(FontAwesomeIcons.gear),
                     ),
                   ],
                 ),
@@ -85,7 +71,7 @@ class HomeMenu extends StatelessWidget {
                   seleccionables: [
                     ItemSeleccionable.text(
                       titulo: "Cerrar sesión",
-                      leading: const FaIcon(FontAwesomeIcons.rightFromBracket),
+                      trailing: const FaIcon(FontAwesomeIcons.rightFromBracket),
                       onTap: () => Get.find<AuthController>().logout(),
                     ),
                   ],
@@ -96,5 +82,36 @@ class HomeMenu extends StatelessWidget {
         }),
       ),
     );
+  }
+
+  Widget onSinSesion(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                context.push(Routes.login);
+              },
+              child: const Text("Iniciar Sesión"),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {
+                context.push(Routes.registro);
+              },
+              child: const Text("Registrarse"),
+            ).withSecondaryStyle(context),
+          ),
+        ],
+      ),
+    ).paddingSymmetric(horizontal: 20);
   }
 }

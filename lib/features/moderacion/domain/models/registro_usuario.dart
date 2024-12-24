@@ -70,7 +70,7 @@ class HiloComentadoRegistro extends Registro {
         fecha: DateTime.parse(json["fecha"]),
         contenido: json["contenido"],
         hilo: HiloRegistro.fromJson(json["hilo"]),
-        comentario: json["comentario"],
+        comentario: json["contenido"],
         imagen: json["imagen"] != null ? Imagen.fromJson(json["imagen"]) : null,
       );
 }
@@ -89,7 +89,7 @@ class HiloRegistro {
         id: json["id"],
         titulo: json["titulo"],
         portada: Imagen.fromJson({
-          "url": json["miniatura"],
+          "url": json["miniatura"]["miniatura"],
         }),
       );
 }

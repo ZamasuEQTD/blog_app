@@ -35,13 +35,13 @@ GoRouter routes = GoRouter(
       builder: (context, state) => const HomeScreen(),
     ),
     GoRoute(
-      path: "portadas/categoria/:categoria",
+      path: "/portadas/categoria/:categoria",
       builder: (context, state) => PortadasPorCategoriaScreen(
         subcategoria: state.pathParameters["categoria"]!,
       ),
     ),
     GoRoute(
-      path: "portadas/titulo",
+      path: "/portadas/titulo",
       builder: (context, state) => const PortadasPorTituloScreen(),
     ),
     GoRoute(
@@ -72,7 +72,7 @@ GoRouter routes = GoRouter(
       builder: (context, state) => const RegistroScreen(),
     ),
     GoRoute(
-      name: "banear-usuario",
+      name: "banear-usuario/:id",
       path: Routes.banear,
       builder: (context, state) => BanearUsuarioScreen(
         id: state.pathParameters["id"]!,

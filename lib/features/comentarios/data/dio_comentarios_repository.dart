@@ -28,7 +28,7 @@ class DioComentariosRepository extends IComentariosRepository {
           "texto": comentario,
           if (media != null) ...{
             "es_spoiler": media.spoiler,
-            "media": await MultipartFile.fromFile(
+            "file": await MultipartFile.fromFile(
               media.spoileable.provider.path,
               contentType: DioMediaType(
                 MimeService.getMime(media.spoileable.provider.path)

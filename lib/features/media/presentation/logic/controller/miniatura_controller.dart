@@ -37,7 +37,7 @@ abstract class IMiniaturaFactory {
 class GetItMiniaturaFactory implements IMiniaturaFactory {
   @override
   IMiniaturaService create(Media media) {
-    switch (media.tipo.value) {
+    switch (media.tipo) {
       case TipoDeMedia.video:
         return GetIt.I.get<VideoMiniaturaService>();
       case TipoDeMedia.imagen:
