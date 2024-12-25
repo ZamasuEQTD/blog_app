@@ -71,7 +71,7 @@ enum HiloStatus {
   error,
 }
 
-mixin ComentariosHiloMixin {
+mixin ComentariosHiloMixin on GetxController {
   late final HiloId id;
 
   Rx<Failure?> failure = Rx(null);
@@ -84,7 +84,21 @@ mixin ComentariosHiloMixin {
 
   Rx<Comentario?> ultimoComentarioAgregado = Rx(null);
 
+  HashMap<String, Comentario> comentariosByTag = HashMap();
+
   Rx<ComentarioId?> ultimoComentarioEliminado = Rx(null);
+
+  @override
+  void onInit() {
+    ultimoComentarioAgregado.stream.listen(
+      (c) {
+        if (c == null) return;
+
+        comentariosByTag[c.detalles.tag] = c;
+      },
+    );
+    super.onInit();
+  }
 
   Future<void> cargarComentarios() async {
     if (comentariosStatus.value == HiloComentariosStatus.cargando) {

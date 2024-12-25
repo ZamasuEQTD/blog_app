@@ -1,5 +1,6 @@
 import 'package:blog_app/features/baneos/domain/ibaneos_repository.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 
 enum Razon {
   spam,
@@ -33,9 +34,11 @@ class BanearUsuarioController extends GetxController {
 
   BanearUsuarioController({required this.id});
   Future banear() async {
+    if (status.value == BanearStatus.loading) return;
+
     status.value = BanearStatus.loading;
 
-    var repository = Get.find<IBaneosRepository>();
+    var repository = GetIt.I.get<IBaneosRepository>();
 
     var res = await repository.banear(
       id: id,

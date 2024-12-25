@@ -9,7 +9,7 @@ class MisNotificacionesController extends GetxController {
 
   Rx<List<Notificacion>> notificaciones = Rx([]);
 
-  Rx<Failure?> failure = null.obs;
+  Rx<Failure?> failure = Rx(null);
 
   bool get cargando => status.value == NotificacionesStatus.cargando;
 

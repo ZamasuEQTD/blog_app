@@ -17,6 +17,19 @@ abstract class Notificacion {
     required this.fecha,
     required this.hilo,
   });
+
+  factory Notificacion.fromJson(Map<String, dynamic> json) {
+    switch (json["tipo"]) {
+      case "HiloComentado":
+        return HiloComentado.fromJson(json);
+      case "HiloSeguidoComentado":
+        return HiloSeguidoComentado.fromJson(json);
+      case "ComentarioRespondido":
+        return ComentarioRespondido.fromJson(json);
+      default:
+        throw Exception("Tipo de notificación desconocido");
+    }
+  }
 }
 
 class NotificacionHilo {

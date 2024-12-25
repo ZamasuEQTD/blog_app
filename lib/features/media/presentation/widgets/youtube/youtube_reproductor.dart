@@ -15,7 +15,7 @@ class _YoutubeReproductorState extends State<YoutubeReproductor> {
   late final YoutubePlayerController controller = YoutubePlayerController(
     initialVideoId: YoutubeService.getVideoId(widget.video.provider.path)!,
     flags: const YoutubePlayerFlags(
-      autoPlay: false,
+      autoPlay: true,
       mute: false,
     ),
   );

@@ -1,6 +1,7 @@
 import 'package:blog_app/features/app/clases/failure.dart';
 import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/failure_extension.dart';
+import 'package:blog_app/features/app/presentation/logic/extensions/response_extension.dart';
 import 'package:blog_app/features/comentarios/domain/icomentarios_repository.dart';
 import 'package:blog_app/features/hilos/domain/models/types.dart';
 import 'package:blog_app/features/media/data/file_picker_gallery_service.dart';
@@ -43,7 +44,7 @@ class DioComentariosRepository extends IComentariosRepository {
         }),
       );
 
-      if (response.statusCode != 200) {
+      if (response.isFailure) {
         return Left(response.failure);
       }
 

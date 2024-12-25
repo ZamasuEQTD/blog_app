@@ -1,3 +1,4 @@
+import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/app/presentation/theme/styles/button_styles.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/features/app/presentation/widgets/effects/blur/blur_effect.dart';
@@ -5,8 +6,11 @@ import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
+import 'package:blog_app/features/baneos/domain/failures/estas_baneado_failure.dart';
+import 'package:blog_app/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
 import 'package:blog_app/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/features/media/domain/abstractions/igallery_service.dart';
+import 'package:blog_app/features/media/domain/models/media.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:blog_app/features/media/presentation/widgets/multi_media.dart';
 import 'package:blog_app/features/postear_hilo/logic/controllers/postear_hilo_controller.dart';
@@ -16,6 +20,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../app/clases/failure.dart';
 
 class PostearHiloScreen extends StatefulWidget {
   const PostearHiloScreen({super.key});
@@ -31,9 +37,17 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
 
   @override
   void initState() {
-    controller.failure.listen(
-      (failure) {
-        if (failure != null) {
+    controller.status.listen(
+      (status) {
+        if (status != PostearHiloStatus.failure) return;
+
+        Failure? failure = controller.failure.value;
+
+        if (failure == null) return;
+
+        if (failure is EstasBaneadoFailure) {
+          HasSidoBaneadoBottomsheet.show(context, baneo: failure.baneo);
+        } else {
           Snackbars.showFailure(context, failure);
         }
       },
@@ -66,7 +80,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
   Widget build(BuildContext context) {
     return Obx(
       () => PopScope(
-        canPop: !controller.posteando.value,
+        canPop: !controller.posteando,
         child: Stack(
           children: [
             Scaffold(
@@ -199,7 +213,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                 ],
               ),
             ),
-            if (controller.posteando.value) const PopScreen(),
+            if (controller.posteando) const PopLayout(),
           ],
         ),
       ),
@@ -243,19 +257,15 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
               ),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () async {
-                    IGalleryService service = GetIt.I.get();
-
-                    var response = await service.pickFile(
-                      extensions: [],
-                    );
-
-                    response.fold(
-                      (l) {},
-                      (r) {
-                        if (r != null) {
-                          controller.agregarPortada(r);
-                        }
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AgregarEnlaceDialog(
+                          onEnlaceAgregado: (enlace) {
+                            controller.agregarPortada(Youtube.fromUrl(enlace));
+                          },
+                        );
                       },
                     );
                   },
@@ -381,6 +391,51 @@ class PostearHiloLabelSection extends StatelessWidget {
         fontWeight: FontWeight.w600,
         color: Color.fromRGBO(73, 80, 87, 1),
       ),
+    );
+  }
+}
+
+typedef OnEnlaceAgregado = void Function(String enlace);
+
+class AgregarEnlaceDialog extends StatefulWidget {
+  final OnEnlaceAgregado onEnlaceAgregado;
+  const AgregarEnlaceDialog({super.key, required this.onEnlaceAgregado});
+
+  @override
+  State<AgregarEnlaceDialog> createState() => _AgregarEnlaceDialogState();
+}
+
+class _AgregarEnlaceDialogState extends State<AgregarEnlaceDialog> {
+  final TextEditingController controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Agregar enlace",
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(fontWeight: FontWeight.w800),
+          ).marginOnly(bottom: 5),
+          TextField(
+            minLines: 4,
+            maxLines: 4,
+            controller: controller,
+            decoration: const InputDecoration(hintText: "Enlace"),
+          ).marginOnly(bottom: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => widget.onEnlaceAgregado(controller.text),
+              child: const Text("Agregar enlace"),
+            ),
+          ).paddingSymmetric(horizontal: 10),
+        ],
+      ).paddingAll(20),
     );
   }
 }

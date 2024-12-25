@@ -1,6 +1,7 @@
 import 'package:blog_app/features/app/clases/failure.dart';
 import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/failure_extension.dart';
+import 'package:blog_app/features/app/presentation/logic/extensions/response_extension.dart';
 import 'package:blog_app/features/categorias/domain/models/categoria.dart';
 import 'package:blog_app/features/hilos/domain/models/hilo.dart';
 import 'package:blog_app/features/hilos/domain/models/portada.dart';
@@ -72,7 +73,7 @@ class DioHilosRepository extends IHilosRepository {
         },
       );
 
-      if (response.statusCode != 200) {
+      if (response.isFailure) {
         return Left(response.failure);
       }
 
@@ -95,7 +96,8 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> ocultar({required String id}) async {
     try {
-      Response response = await dio.post("hilos/$id/ocultar");
+      Response response =
+          await dio.post("/hilos/colecciones/ocultos/ocultar/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -110,7 +112,8 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> ponerEnFavoritos({required String id}) async {
     try {
-      Response response = await dio.post("hilos/$id/poner-en-favoritos");
+      Response response = await dio
+          .post("/hilos/colecciones/favoritos/poner-en-favoritos/$id}");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -141,17 +144,21 @@ class DioHilosRepository extends IHilosRepository {
         "dadosActivados": dados,
         "idUnicoActivado": idUnico,
         "spoiler": portada.esSpoiler,
-        "file": await MultipartFile.fromFile(
-          portada.spoileable.provider.path,
-          contentType: DioMediaType(
-            MimeService.getMime(portada.spoileable.provider.path)
-                .split("/")
-                .first,
-            MimeService.getMime(portada.spoileable.provider.path)
-                .split("/")
-                .last,
+        if (portada.spoileable is Youtube)
+          "embed":
+              ((portada.spoileable as Youtube).provider as NetworkProvider).path
+        else
+          "file": await MultipartFile.fromFile(
+            portada.spoileable.provider.path,
+            contentType: DioMediaType(
+              MimeService.getMime(portada.spoileable.provider.path)
+                  .split("/")
+                  .first,
+              MimeService.getMime(portada.spoileable.provider.path)
+                  .split("/")
+                  .last,
+            ),
           ),
-        ),
       });
 
       Response response = await dio.post("/hilos/postear", data: data);
@@ -169,24 +176,8 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> seguir({required String id}) async {
     try {
-      Response response = await dio.post("hilos/$id/seguir");
-
-      if (response.statusCode != 200) {
-        return Left(response.failure);
-      }
-
-      return const Right(unit);
-    } on Exception catch (e) {
-      return Left(e.failure);
-    }
-  }
-
-  @override
-  Future<Either<Failure, Unit>> desactivarNotificaciones({
-    required String id,
-  }) async {
-    try {
-      Response response = await dio.post("hilos/$id/desactivar-notificaciones");
+      Response response =
+          await dio.post("/hilos/colecciones/seguidos/seguir/$id");
 
       if (response.statusCode != 200) {
         return Left(response.failure);
@@ -201,9 +192,9 @@ class DioHilosRepository extends IHilosRepository {
   @override
   Future<Either<Failure, Unit>> establecerSticky({required String id}) async {
     try {
-      Response response = await dio.post("hilos/$id/establecer-sticky");
+      Response response = await dio.post("/hilos/establecer-sticky/$id");
 
-      if (response.statusCode != 200) {
+      if (response.isFailure) {
         return Left(response.failure);
       }
 
@@ -220,7 +211,7 @@ class DioHilosRepository extends IHilosRepository {
   }) async {
     try {
       Response response = await dio.post(
-        "hilos/$id/denunciar",
+        "/hilos/$id/denunciar",
         data: {
           "denuncia": denuncia,
         },
@@ -234,6 +225,48 @@ class DioHilosRepository extends IHilosRepository {
     } on Exception catch (e) {
       return Left(e.failure);
     }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> eliminarSticky({required String id}) async {
+    try {
+      Response response = await dio.delete("/hilos/eliminar-sticky/$id");
+
+      if (response.isFailure) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> cambiarNotificaciones({
+    required String id,
+  }) async {
+    try {
+      Response response =
+          await dio.post("/hilos/$id/desactivar-notificaciones");
+
+      if (response.statusCode != 200) {
+        return Left(response.failure);
+      }
+
+      return const Right(unit);
+    } on Exception catch (e) {
+      return Left(e.failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> cambiarSubcategoria({
+    required String id,
+    required SubcategoriaId nuevaSubcategoria,
+  }) {
+    // TODO: implement cambiarSubcategoria
+    throw UnimplementedError();
   }
 }
 

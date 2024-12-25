@@ -22,7 +22,7 @@ class Baneo extends Equatable {
       id: json["id"],
       razon: Razon.values[json["razon"]],
       moderador: json["moderador"],
-      finaliza: DateTime.parse(json["finaliza"]),
+      finaliza: DateTime.parse(json["concluye_en"]),
       mensaje: json["mensaje"],
     );
   }

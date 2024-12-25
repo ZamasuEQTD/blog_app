@@ -25,11 +25,17 @@ class PostearHiloController extends GetxController {
 
   Rx<Spoileable<Media>?> portada = Rx(null);
 
-  RxBool posteando = false.obs;
+  Rx<PostearHiloStatus> status = PostearHiloStatus.initial.obs;
 
   Rx<Failure?> failure = Rx(null);
+
+  bool get posteando => status.value == PostearHiloStatus.posteando;
+
   void postear() async {
-    if (posteando.value) return;
+    if (status.value == PostearHiloStatus.posteando) return;
+
+    status.value = PostearHiloStatus.posteando;
+
     if (portada.value == null) {
       failure.value = PotearHiloFailures.sinPortada;
       return;
@@ -39,8 +45,6 @@ class PostearHiloController extends GetxController {
       failure.value = PotearHiloFailures.sinSubcategoria;
       return;
     }
-
-    posteando.value = true;
 
     var result = await repository.postear(
       titulo: titulo.value,
@@ -55,11 +59,19 @@ class PostearHiloController extends GetxController {
     id.value = null;
 
     result.fold(
-      (l) => failure.value = l,
-      (r) => id.value = r,
+      (l) {
+        failure.value = l;
+
+        status.value = PostearHiloStatus.failure;
+      },
+      (r) {
+        id.value = r;
+
+        status.value = PostearHiloStatus.posteado;
+      },
     );
 
-    posteando.value = false;
+    status.value = PostearHiloStatus.posteado;
   }
 
   void agregarPortada(Media portada) {
@@ -100,3 +112,5 @@ class PotearHiloFailures {
     descripcion: "Debes seleccionar una subcategoria",
   );
 }
+
+enum PostearHiloStatus { initial, posteando, posteado, failure }

@@ -1,5 +1,7 @@
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
 import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
+import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
+import 'package:blog_app/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
 import 'package:blog_app/modules/routing.dart';
 import 'package:flutter/material.dart';
@@ -58,21 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       key: scaffoldKey,
       backgroundColor: const Color.fromRGBO(242, 242, 242, 1),
       endDrawer: const HomeMenu(),
-      appBar: AppBar(
-        actions: [
-          TextButton.icon(
-            onPressed: () => context.push(Routes.notificaciones),
-            icon: const Icon(
-              Icons.notifications,
-            ),
-            label: const Text("991+"),
-          ),
-          IconButton(
-            onPressed: () => scaffoldKey.currentState?.openEndDrawer(),
-            icon: const FaIcon(FontAwesomeIcons.bars),
-          ),
-        ],
-      ),
+      appBar: HomeAppBar(scaffold: scaffoldKey),
       body: CustomScrollView(
         controller: scroll,
         slivers: const [
@@ -91,4 +79,84 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final GlobalKey<ScaffoldState> scaffold;
+
+  const HomeAppBar({super.key, required this.scaffold});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              SeleccionarSubcategoriaBottomSheet.show(
+                context,
+                onSubcategoriaSeleccionada: (subcategoria) {
+                  context.push("/portadas/categoria/${subcategoria.id}");
+                },
+              );
+            },
+            icon: const FaIcon(
+              Icons.apps,
+              size: 18,
+            ),
+          ),
+          IconButton(
+            onPressed: () => context.push("/portadas/titulo"),
+            icon: const FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+            ),
+          ),
+          if (Get.find<AuthController>().isAuthenticated)
+            IconButton(
+              onPressed: () => context.push(Routes.notificaciones),
+              icon: badges.Badge(
+                position: badges.BadgePosition.custom(top: -10, end: -16),
+                badgeContent: const SizedBox.square(
+                  dimension: 15,
+                  child: ColoredBox(
+                    color: Color.fromRGBO(255, 59, 92, 1),
+                    child: FittedBox(
+                      child: Text(
+                        "99+",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                child: const FaIcon(
+                  FontAwesomeIcons.bell,
+                  size: 18,
+                ),
+              ),
+            ),
+          IconButton(
+            onPressed: () => scaffold.currentState?.openEndDrawer(),
+            icon: const FaIcon(
+              FontAwesomeIcons.bars,
+              size: 18,
+            ),
+          ),
+        ]
+            .map(
+              (e) => SizedBox.square(
+                dimension: 40,
+                child: e,
+              ).marginSymmetric(horizontal: 2),
+            )
+            .toList(),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

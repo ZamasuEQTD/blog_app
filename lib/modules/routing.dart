@@ -7,12 +7,10 @@ import 'package:blog_app/features/colecciones/presentation/screens/hilo_por_cate
 import 'package:blog_app/features/colecciones/presentation/screens/hilos_por_titulo_screen.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/hilo_screen.dart';
 import 'package:blog_app/features/home/presentation/screens/home_screen.dart';
-import 'package:blog_app/features/media/presentation/screens/agregar_enlace_screen.dart';
 import 'package:blog_app/features/notificaciones/presentation/screens/notificaciones_screen.dart';
 import 'package:blog_app/features/postear_hilo/presentation/screens/postear_hilo_screen.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class Routes {
   static const home = "/";
@@ -36,9 +34,11 @@ GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: "/portadas/categoria/:categoria",
-      builder: (context, state) => PortadasPorCategoriaScreen(
-        subcategoria: state.pathParameters["categoria"]!,
-      ),
+      builder: (context, state) {
+        return PortadasPorCategoriaScreen(
+          subcategoria: state.pathParameters["categoria"]!,
+        );
+      },
     ),
     GoRoute(
       path: "/portadas/titulo",
@@ -76,13 +76,6 @@ GoRouter routes = GoRouter(
       path: Routes.banear,
       builder: (context, state) => BanearUsuarioScreen(
         id: state.pathParameters["id"]!,
-      ),
-    ),
-    GoRoute(
-      path: Routes.agregarEnlace,
-      builder: (context, state) => Provider<OnEnlaceAgregado>.value(
-        value: state.extra as OnEnlaceAgregado,
-        child: const AgregarEnlaceScreen(),
       ),
     ),
   ],

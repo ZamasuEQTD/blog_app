@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'logic/controllers/banear_usuario.dart';
 
 final HashMap<Duracion, String> duraciones = HashMap.from({
-  Duracion.minutos: " 5 Minutos",
+  Duracion.minutos: "5 Minutos",
   Duracion.unaHora: "1 Hora",
   Duracion.unDia: "1 Día",
   Duracion.unaSemana: "1 Semana",
@@ -43,6 +43,13 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
       }
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    Get.delete<BanearUsuarioController>();
+
+    super.dispose();
   }
 
   @override
@@ -139,6 +146,9 @@ class _BanearUsuarioScreenState extends State<BanearUsuarioScreen> {
               width: double.infinity,
               child: ElevatedButton(
                 style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    Color.fromRGBO(255, 59, 92, 1),
+                  ),
                   padding: WidgetStatePropertyAll(
                     EdgeInsets.symmetric(vertical: 16, horizontal: 10),
                   ),

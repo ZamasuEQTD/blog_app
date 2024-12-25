@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  usePathUrlStrategy();
   GetIt.I.addDepedencies();
 
-  Get.put(GetIt.I.get<AuthController>()).restaurarSesion();
+  await Get.put(GetIt.I.get<AuthController>()).restaurarSesion();
 
   runApp(const MyApp());
 }

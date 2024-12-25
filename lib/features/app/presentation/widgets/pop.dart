@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PopScreen extends StatelessWidget {
-  const PopScreen({super.key});
+class PopLayout extends StatelessWidget {
+  const PopLayout({super.key});
 
   @override
   Widget build(BuildContext context) {

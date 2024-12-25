@@ -1,6 +1,7 @@
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
 import 'package:blog_app/modules/config/api_config.dart';
 import 'package:blog_app/modules/dependency_injection/auth_dependencies.dart';
+import 'package:blog_app/modules/dependency_injection/baneos_dependencies.dart';
 import 'package:blog_app/modules/dependency_injection/categorias_dependencies.dart';
 import 'package:blog_app/modules/dependency_injection/comentarios_dependencies.dart';
 import 'package:blog_app/modules/dependency_injection/hilos_dependencies.dart';
@@ -18,7 +19,8 @@ extension InitDependencies on GetIt {
         .addAuth()
         .addNotificaciones()
         .addModeracion()
-        .addCategorias();
+        .addCategorias()
+        .addBaneos();
     registerFactory<Dio>(
       () => Dio(
         BaseOptions(

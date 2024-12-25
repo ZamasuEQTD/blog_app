@@ -31,9 +31,11 @@ class _PortadasPorCategoriaScreenState
   void initState() {
     controller.cargarPortadas();
 
-    if (scroll.isBottom) {
-      controller.cargarPortadas();
-    }
+    controller.addListener(() {
+      if (scroll.isBottom) {
+        controller.cargarPortadas();
+      }
+    });
 
     super.initState();
   }

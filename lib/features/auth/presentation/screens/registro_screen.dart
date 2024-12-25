@@ -190,7 +190,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
               ),
             ),
             if (controller.form.value.status == RegistroState.loading)
-              const PopScreen(),
+              const PopLayout(),
           ],
         ),
       ),

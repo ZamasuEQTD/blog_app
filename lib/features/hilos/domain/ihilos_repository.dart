@@ -46,12 +46,21 @@ abstract class IHilosRepository {
     required String id,
   });
 
-  Future<Either<Failure, Unit>> desactivarNotificaciones({
+  Future<Either<Failure, Unit>> cambiarNotificaciones({
     required String id,
   });
 
   Future<Either<Failure, Unit>> establecerSticky({
     required String id,
+  });
+
+  Future<Either<Failure, Unit>> eliminarSticky({
+    required String id,
+  });
+
+  Future<Either<Failure, Unit>> cambiarSubcategoria({
+    required String id,
+    required SubcategoriaId nuevaSubcategoria,
   });
 
   Future<Either<Failure, Unit>> denunciar({

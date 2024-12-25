@@ -1,6 +1,7 @@
 import 'package:blog_app/features/app/presentation/widgets/dialog/bottom_sheet/bottom_sheet.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/item_seleccionable.dart';
+import 'package:blog_app/features/app/presentation/widgets/snackbars/snackbar.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
 import 'package:blog_app/features/hilos/domain/ihilos_repository.dart';
 import 'package:blog_app/features/hilos/domain/models/hilo.dart';
@@ -24,6 +25,7 @@ class HiloOpciones extends StatelessWidget {
           id: portada.id,
           esOp: portada.esOp,
           recibirNotificaciones: portada.recibirNotificaciones,
+          sticky: portada.esSticky,
         ),
       );
 
@@ -36,6 +38,7 @@ class HiloOpciones extends StatelessWidget {
           autorId: hilo.autorId,
           esOp: hilo.esOp,
           recibirNotificaciones: hilo.recibirNotificaciones,
+          sticky: hilo.banderas.contains(BanderasDeHilo.sticky),
         ),
       );
 
@@ -85,6 +88,23 @@ class HiloOpciones extends StatelessWidget {
           GrupoItemSeleccionable.sliver(
             seleccionables: [
               ItemSeleccionable.text(
+                onTap: () async {
+                  var result = await GetIt.I
+                      .get<IHilosRepository>()
+                      .cambiarNotificaciones(id: opciones.id);
+
+                  result.fold(
+                    (l) {
+                      Snackbars.showFailure(context, l);
+                    },
+                    (r) {
+                      Snackbars.showSuccess(
+                        context,
+                        "Notificaciones cambiadas",
+                      );
+                    },
+                  );
+                },
                 titulo: opciones.recibirNotificaciones!
                     ? "Desactivar notificaciones"
                     : "Activar notificaciones",
@@ -94,6 +114,24 @@ class HiloOpciones extends StatelessWidget {
         if (auth.isAuthenticated && auth.usuario.value!.isModerador)
           GrupoItemSeleccionable.sliver(
             seleccionables: [
+              if (!opciones.sticky)
+                ItemSeleccionable.text(
+                  titulo: "Establecer sticky",
+                  onTap: () async {
+                    var result = await GetIt.I
+                        .get<IHilosRepository>()
+                        .establecerSticky(id: opciones.id);
+                  },
+                )
+              else
+                ItemSeleccionable.text(
+                  titulo: "Eliminar sticky",
+                  onTap: () async {
+                    var result = await GetIt.I
+                        .get<IHilosRepository>()
+                        .eliminarSticky(id: opciones.id);
+                  },
+                ),
               ItemSeleccionable.text(
                 titulo: "Ver usuario",
                 onTap: () {
@@ -123,10 +161,12 @@ class OpcionesDeHiloConfiguration {
   final String? autorId;
   final bool esOp;
   final bool? recibirNotificaciones;
+  final bool sticky;
   const OpcionesDeHiloConfiguration({
     required this.id,
     required this.autorId,
     required this.esOp,
     required this.recibirNotificaciones,
+    required this.sticky,
   });
 }

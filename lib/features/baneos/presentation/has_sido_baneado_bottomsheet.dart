@@ -41,6 +41,7 @@ class HasSidoBaneadoBottomsheet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Center(child: Text("No puedes realizar esta accion")),
             Row(
               children: [
                 const Icon(

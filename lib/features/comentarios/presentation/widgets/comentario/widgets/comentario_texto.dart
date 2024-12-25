@@ -1,17 +1,20 @@
+import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
 import 'package:blog_app/features/media/presentation/widgets/bottom_sheet/abrir_enlace_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../domain/models/comentario.dart';
+import '../ver_comentario_bottom_sheet.dart';
 
 typedef RegexWidgetBuilder = Widget Function(Match match);
 
 class ComentarioTexto extends StatelessWidget {
   static final RegExp _tag = RegExp(">>[A-Z0-9]{8}");
 
-  static final RegExp _greenText = RegExp("dasdassadas");
+  static final RegExp _greenText = RegExp(r">\w+");
 
   static final RegExp _url = RegExp(
     r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?',
@@ -117,7 +120,17 @@ class TagLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        String tagNormalized = tag.substring(2);
+
+        var controller = Get.find<HiloController>();
+
+        var comentario = controller.comentariosByTag[tagNormalized];
+
+        if (comentario != null) {
+          VerComentarioBottomSheet.show(context, comentario: comentario);
+        }
+      },
       child: Text(
         tag,
         style: const TextStyle(
