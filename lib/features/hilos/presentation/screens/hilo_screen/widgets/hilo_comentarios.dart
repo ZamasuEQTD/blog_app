@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:blog_app/features/comentarios/domain/models/comentario.dart';
 import 'package:blog_app/features/comentarios/domain/models/typedef.dart';
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
 import 'package:flutter/material.dart';
@@ -53,8 +54,11 @@ class _HiloComentariosState extends State<HiloComentarios> {
             sliver: SliverList.builder(
               itemCount: controller.comentarios.value.length,
               itemBuilder: (context, index) {
+                final Comentario comentario =
+                    controller.comentarios.value[index];
                 return HiloComentario(
-                  comentario: controller.comentarios.value[index],
+                  key: keys[comentario.detalles.tag],
+                  comentario: comentario,
                 );
               },
             ),

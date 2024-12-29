@@ -10,7 +10,7 @@ class PortadaHilo {
   final bool esOp;
   final bool? recibirNotificaciones;
   final List<PortadaFeatures> features;
-  final Spoileable<Imagen> imagen;
+  final ContenidoCensurable<Imagen> imagen;
   final DateTime ultimoBump;
 
   bool get esSticky => features.contains(PortadaFeatures.sticky);
@@ -43,7 +43,7 @@ class PortadaHilo {
         if (json["banderas"]["tiene_encuesta"]) PortadaFeatures.encuesta,
       ],
       ultimoBump: DateTime.parse(json["ultimo_bump"]),
-      imagen: Spoileable<Imagen>(
+      imagen: ContenidoCensurable<Imagen>(
         json["miniatura"]["es_spoiler"],
         Imagen.fromJson({
           "url": json["miniatura"]["url"],

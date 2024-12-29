@@ -9,12 +9,12 @@ class Comentario {
   final DateTime creado_en;
   final ColoresDeComentario color;
   final Autor autor;
-  final Spoileable<Media>? media;
+  final ContenidoCensurable<Media>? media;
   final bool esOp;
   final bool destacado;
   final String? autorId;
-  final List<String> tags;
-  final List<String> taggueos;
+  final List<String> responde;
+  final List<String> respuestas;
 
   const Comentario({
     required this.id,
@@ -27,8 +27,8 @@ class Comentario {
     this.media,
     this.autorId,
     required this.detalles,
-    required this.tags,
-    required this.taggueos,
+    required this.responde,
+    required this.respuestas,
   });
   factory Comentario.fromJson(Map<String, dynamic> json) => Comentario(
         id: json['id'],
@@ -41,12 +41,12 @@ class Comentario {
         destacado: json['destacado'],
         autor: Autor.fromJson(json['autor']),
         detalles: DetallesDeComentario.fromJson(json['detalles']),
-        tags: List<String>.from(json['tags']),
-        taggueos: List<String>.from(json['taggueos']),
+        responde: List<String>.from(json['responde']),
+        respuestas: List<String>.from(json['respuestas']),
         media: json['media'] != null
-            ? Spoileable.fromJson({
+            ? ContenidoCensurable.fromJson({
                 "spoiler": json['media']['es_spoiler'],
-                "spoileable": Media.fromJson(json['media']),
+                "ContenidoCensurable": Media.fromJson(json['media']),
               })
             : null,
       );

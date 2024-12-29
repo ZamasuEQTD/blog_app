@@ -101,7 +101,7 @@ class _ComentarHiloState extends State<ComentarHilo> {
                                   Get.find<HiloController>()
                                       .media
                                       .value!
-                                      .spoileable,
+                                      .content,
                                 ]
                                     .map(
                                       (x) => GestureDetector(
@@ -343,7 +343,7 @@ class _AgregarEnlace extends OpcionDeComentario {
       onTap: () => context.push(
         Routes.agregarEnlace,
         extra: (String enlace) {
-          Get.find<HiloController>().media.value = Spoileable(
+          Get.find<HiloController>().media.value = ContenidoCensurable(
             false,
             Youtube.fromUrl(enlace),
           );
@@ -368,7 +368,8 @@ class _AgregarMediaItem extends OpcionDeComentario {
 
         response.fold((l) => null, (r) {
           if (r != null) {
-            Get.find<HiloController>().media.value = Spoileable(false, r);
+            Get.find<HiloController>().media.value =
+                ContenidoCensurable(false, r);
           }
         });
       },

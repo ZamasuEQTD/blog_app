@@ -46,7 +46,7 @@ class HiloComentario extends StatelessWidget {
                     Wrap(
                       runSpacing: 2,
                       spacing: 5,
-                      children: comentario.tags
+                      children: comentario.respuestas
                           .map(
                             (tag) => GestureDetector(
                               onTap: () {},
@@ -77,7 +77,7 @@ class HiloComentario extends StatelessWidget {
                             ),
                           );
                         },
-                        child: comentario.media!.spoileable.widget,
+                        child: comentario.media!.content.widget,
                       ),
                     const ComentarioTexto(),
                   ],

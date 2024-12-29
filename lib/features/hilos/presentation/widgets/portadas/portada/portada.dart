@@ -78,7 +78,7 @@ class PortadaWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: borderRadius,
       child: ImageOverlapped.provider(
-        provider: portada.imagen.spoileable.toProvider,
+        provider: portada.imagen.content.toProvider,
         boxFit: BoxFit.cover,
         child: BlurEffect(
           blurear: portada.imagen.esSpoiler,

@@ -164,7 +164,7 @@ mixin ComentarHiloMixin {
 
   Rx<String?> ultimoTagueo = Rx(null);
 
-  Rx<Spoileable<Media>?> media = Rx(null);
+  Rx<ContenidoCensurable<Media>?> media = Rx(null);
 
   Future<void> enviarComentario(String comentario) async {
     if (comentarHiloStatus.value == ComentarHiloStatus.enviando) {

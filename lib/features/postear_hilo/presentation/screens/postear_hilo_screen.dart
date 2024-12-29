@@ -312,7 +312,7 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
                   ],
                 );
               },
-              child: controller.portada.value!.spoileable.widget
+              child: controller.portada.value!.content.widget
                   .marginOnly(bottom: 10),
             ),
             GrupoItemSeleccionable(
