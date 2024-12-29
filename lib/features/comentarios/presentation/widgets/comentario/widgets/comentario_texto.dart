@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:blog_app/features/hilos/presentation/screens/hilo_screen/logic/controllers/hilo_controller.dart';
 import 'package:blog_app/features/media/presentation/widgets/bottom_sheet/abrir_enlace_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +19,7 @@ class ComentarioTexto extends StatelessWidget {
   static final RegExp _greenText = RegExp(r">\w+");
 
   static final RegExp _url = RegExp(
-    r'(https:\/\/www\.|http:\/\/www\.|https:\/\/|http:\/\/)?[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,})?',
+    r'(https?://)(www[.]){0,1}[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*.[a-zA-Z]{2,}(\/[^ ]*)',
   );
 
   static final Map<RegExp, RegexWidgetBuilder> _builders = {
@@ -135,6 +137,79 @@ class TagLink extends StatelessWidget {
         tag,
         style: const TextStyle(
           color: CupertinoColors.link,
+        ),
+      ),
+    );
+  }
+}
+
+const String tagRegex = ">>[A-Z0-9]{8}";
+
+const String greenTextRegex = r">\w+";
+
+const String linkRegex =
+    r'(https?://)(www[.]){0,1}[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*.[a-zA-Z]{2,}(\/[^ ]*)';
+
+class Texto extends StatefulWidget {
+  const Texto({super.key});
+
+  @override
+  State<Texto> createState() => _TextoState();
+}
+
+class _TextoState extends State<Texto> {
+  static final HashMap<String, RegexWidgetBuilder> _builders = HashMap.from({
+    tagRegex: (match) => Container(),
+    linkRegex: (match) => Container(),
+    greenTextRegex: (match) => Container(),
+  });
+
+  static final RegExp _regExp = RegExp(
+    "$tagRegex|$greenTextRegex|$linkRegex?",
+  );
+
+  late final Comentario comentario = context.read();
+
+  final List<TextSpan> spans = [];
+
+  @override
+  void initState() {
+    final String texto = comentario.texto;
+
+    var matches = _regExp.allMatches(texto);
+
+    int currentIndex = 0;
+
+    for (var match in matches) {
+      //texto sin resaltar
+      spans.add(
+        TextSpan(
+          text: texto.substring(currentIndex, match.start),
+        ),
+      );
+
+      //texto resaltado
+      spans.add(
+        TextSpan(
+          children: [
+            WidgetSpan(child: _builders[match.pattern.pattern]!(match)),
+          ],
+        ),
+      );
+
+      currentIndex = match.end;
+    }
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        children: spans,
+        style: const TextStyle(
+          fontSize: 15,
         ),
       ),
     );

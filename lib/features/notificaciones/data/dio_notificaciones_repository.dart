@@ -10,7 +10,7 @@ class DioNotificacionesRepository extends INotificacionesRepository {
   final Dio dio = GetIt.I.get();
 
   @override
-  Future<Either<Failure, List<Notificacion>>> getMisNotificaciones() async {
+  Future<Either<Failure, NotificacionesContext>> getMisNotificaciones() async {
     try {
       Response response = await dio.get("/notificaciones/mis-notificaciones");
 
@@ -18,10 +18,10 @@ class DioNotificacionesRepository extends INotificacionesRepository {
         return Left(response.failure);
       }
 
-      List<Map<String, dynamic>> data = List.from(response.data!["value"]);
+      Map<String, dynamic> data = response.data!["value"];
 
       return Right(
-        data.map((e) => NotificacionMapper.fromJson(e)).toList(),
+        NotificacionesContext.fromJson(data),
       );
     } on Exception catch (e) {
       return Left(e.failure);

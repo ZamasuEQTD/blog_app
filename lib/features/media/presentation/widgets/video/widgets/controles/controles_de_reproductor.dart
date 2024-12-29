@@ -27,6 +27,22 @@ class ControlesDeReproductorLayout extends StatelessWidget {
                       onTap: controller.toggleControles,
                     ),
                   ),
+                  Positioned.fill(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onDoubleTap: controller.atrasar,
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onDoubleTap: controller.adelantar,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   if (controller.mostrarControles.value)
                     const ControlesDeReproductor(),
                 ],

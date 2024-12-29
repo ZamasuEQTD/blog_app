@@ -35,12 +35,7 @@ mixin ControlesDeReproductor on GetxController {
   void onInit() {
     mostrarControles.listen((mostrar) {
       if (mostrar) {
-        timer = Timer(
-          duracion,
-          () {
-            mostrarControles.value = false;
-          },
-        );
+        _setTimer();
       } else {
         if (timer?.isActive ?? false) timer?.cancel();
       }
@@ -49,11 +44,24 @@ mixin ControlesDeReproductor on GetxController {
     super.onInit();
   }
 
+  void _setTimer() {
+    timer = Timer(
+      duracion,
+      () {
+        mostrarControles.value = false;
+      },
+    );
+  }
+
+  void reiniciarTimer() => _setTimer();
+
   void toggleControles() => mostrarControles.value = !mostrarControles.value;
 }
 
 mixin ReproductorStatusMixin on GetxController {
   late final VideoPlayerController controller;
+
+  Rx<AdelantarTiempoStatus> adelantarStatus = AdelantarTiempoStatus.initial.obs;
 
   Rx<double?> aspectRatio = Rx(null);
 
@@ -78,6 +86,10 @@ mixin ReproductorStatusMixin on GetxController {
 
     reproductorStatus.value = ReproductorStatus.iniciado;
   }
+
+  void adelantar() => adelantarStatus.value = AdelantarTiempoStatus.adelantar;
+
+  void atrasar() => adelantarStatus.value = AdelantarTiempoStatus.atrasar;
 }
 
 enum ReproductorStatus {
@@ -86,6 +98,8 @@ enum ReproductorStatus {
   buffering,
   iniciado,
 }
+
+enum AdelantarTiempoStatus { initial, atrasar, adelantar }
 
 mixin ReproduccionStatusMixin on GetxController {
   late final VideoPlayerController controller;

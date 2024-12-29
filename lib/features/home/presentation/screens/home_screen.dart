@@ -3,6 +3,9 @@ import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.d
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
 import 'package:blog_app/features/categorias/presentation/seleccionar_subcategoria_bottom_sheet.dart';
 import 'package:blog_app/features/home/domain/hub/ihome_hub.dart';
+import 'package:blog_app/features/notificaciones/domain/inotificaciones_hub.dart';
+import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
+import 'package:blog_app/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:blog_app/modules/routing.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -113,31 +116,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           if (Get.find<AuthController>().isAuthenticated)
-            IconButton(
-              onPressed: () => context.push(Routes.notificaciones),
-              icon: badges.Badge(
-                position: badges.BadgePosition.custom(top: -10, end: -16),
-                badgeContent: const SizedBox.square(
-                  dimension: 15,
-                  child: ColoredBox(
-                    color: Color.fromRGBO(255, 59, 92, 1),
-                    child: FittedBox(
-                      child: Text(
-                        "99+",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                child: const FaIcon(
-                  FontAwesomeIcons.bell,
-                  size: 18,
-                ),
-              ),
-            ),
+            const NotificacionButton(),
           IconButton(
             onPressed: () => scaffold.currentState?.openEndDrawer(),
             icon: const FaIcon(
@@ -159,4 +138,67 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class NotificacionButton extends StatefulWidget {
+  const NotificacionButton({
+    super.key,
+  });
+
+  @override
+  State<NotificacionButton> createState() => _NotificacionButtonState();
+}
+
+class _NotificacionButtonState extends State<NotificacionButton> {
+  final INotificacionesHub hub = GetIt.I.get();
+
+  final controller = Get.put(MisNotificacionesController());
+
+  @override
+  void initState() {
+    hub.onUsuarioNotificado.listen((noti) {
+      controller.agregarNotificacion(noti);
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+      () => IconButton(
+        onPressed: () => context.push(Routes.notificaciones),
+        icon: badges.Badge(
+          position: badges.BadgePosition.custom(top: -10, end: -16),
+          badgeContent: SizedBox.square(
+            dimension: 15,
+            child: ColoredBox(
+              color: const Color.fromRGBO(255, 59, 92, 1),
+              child: badge,
+            ),
+          ),
+          child: const FaIcon(
+            FontAwesomeIcons.bell,
+            size: 18,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget get badge {
+    return mostrarBadge
+        ? const FittedBox(
+            child: Text(
+              "99+",
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+              ),
+            ),
+          )
+        : const SizedBox();
+  }
+
+  bool get mostrarBadge => controller.cantidad!.value > 0;
 }

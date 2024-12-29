@@ -70,7 +70,10 @@ class _IconButtonReproductor extends IconButtonReproductor {
       dimension: size,
       child: ColoredIconButton(
         background: Colors.black.withOpacity(0.5),
-        onPressed: onPressed,
+        onPressed: () {
+          context.read<VideoController>().reiniciarTimer();
+          onPressed();
+        },
         icon: icon,
       ),
     );
@@ -118,7 +121,7 @@ class _FullscreenButton extends IconButtonReproductor {
     return Obx(
       () => IconButtonReproductor(
         size: 45,
-        icon: context.read<VideoController>().isPantallaCompleta
+        icon: !context.read<VideoController>().isPantallaCompleta
             ? const Icon(
                 Icons.fullscreen,
               )
@@ -169,7 +172,7 @@ class _IniciarButton extends IconButtonReproductor {
       () => IconButtonReproductor(
         size: 60,
         onPressed: controller.init,
-        icon: !controller.isIniciado
+        icon: !controller.isInitial
             ? const CircularProgressIndicator()
             : const Icon(
                 Icons.play_arrow,

@@ -1,6 +1,4 @@
-import 'package:blog_app/features/app/domain/models/spoileable.dart';
 import 'package:blog_app/features/app/presentation/theme/styles/button_styles.dart';
-import 'package:blog_app/features/app/presentation/widgets/colored_icon_button.dart';
 import 'package:blog_app/features/app/presentation/widgets/effects/blur/blur_effect.dart';
 import 'package:blog_app/features/app/presentation/widgets/pop.dart';
 import 'package:blog_app/features/app/presentation/widgets/seleccionable/grupo_seleccionable.dart';
@@ -74,6 +72,17 @@ class _PostearHiloScreenState extends State<PostearHiloScreen> {
     });
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in respuestas.values) {
+      controller.dispose();
+    }
+
+    Get.delete<PostearHiloController>();
+
+    super.dispose();
   }
 
   @override
@@ -437,5 +446,15 @@ class _AgregarEnlaceDialogState extends State<AgregarEnlaceDialog> {
         ],
       ).paddingAll(20),
     );
+  }
+}
+
+extension FailureExtension on BuildContext {
+  void showFailure(Failure failure) {
+    if (failure is EstasBaneadoFailure) {
+      HasSidoBaneadoBottomsheet.show(this, baneo: failure.baneo);
+    } else {
+      Snackbars.showFailure(this, failure);
+    }
   }
 }

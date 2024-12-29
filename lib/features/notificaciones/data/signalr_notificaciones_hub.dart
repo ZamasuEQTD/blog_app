@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:blog_app/features/home/data/signalr_home_hub.dart';
 import 'package:blog_app/features/notificaciones/domain/inotificaciones_hub.dart';
 import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
 import 'package:signalr_netcore/hub_connection.dart';

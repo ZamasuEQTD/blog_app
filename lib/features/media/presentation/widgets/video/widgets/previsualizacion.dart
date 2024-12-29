@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
-
-import '../logic/controller/video_controller.dart';
 import 'controles/control/control.dart';
 
 class Previsualizacion extends StatelessWidget {

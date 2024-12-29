@@ -1,6 +1,6 @@
 import 'package:blog_app/features/app/presentation/logic/extensions/duration_extension.dart';
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
-import 'package:blog_app/features/baneos/presentation/has_sido_baneado_bottomsheet.dart';
+import 'package:blog_app/features/app/presentation/theme/app_colors.dart';
 import 'package:blog_app/features/media/presentation/logic/extension/media_extension.dart';
 import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +20,10 @@ class NotificacionesScreen extends StatefulWidget {
 class _NotificacionesScreenState extends State<NotificacionesScreen> {
   final ScrollController scroll = ScrollController();
 
-  final controller = Get.put(MisNotificacionesController());
+  final controller = Get.find<MisNotificacionesController>();
 
   @override
   void initState() {
-    controller.cargar();
-
     scroll.addListener(() {
       if (scroll.isBottom) {
         controller.cargar();
@@ -66,7 +64,6 @@ class _NotificacionesScreenState extends State<NotificacionesScreen> {
 
   @override
   void dispose() {
-    Get.delete<MisNotificacionesController>();
     scroll.dispose();
     super.dispose();
   }
@@ -100,24 +97,34 @@ class NotificacionItem extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(5),
                     child: SizedBox.square(
-                      dimension: 50,
+                      dimension: 45,
                       child: Image(image: notificacion.hilo.portada.toProvider),
                     ),
                   ),
-                  Text(
-                    notificacion.hilo.titulo,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Column(
+                    children: [
+                      Text(
+                        notificacion.hilo.titulo,
+                        maxLines: 1,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (notificacion is ComentarioRespondido)
+                        Text(
+                          (notificacion as ComentarioRespondido).respondido,
+                          style: const TextStyle(color: AppColors.label),
+                        ),
+                      Text(
+                        notificacion.content,
+                        maxLines: 4,
+                      ),
+                    ],
                   ).marginOnly(left: 10),
                 ],
               ),
               Text("hace ${notificacion.fecha.tiempoTranscurrido}"),
-              Text(
-                notificacion.content,
-                maxLines: 4,
-              ),
             ],
           ).paddingAll(10),
         ),
@@ -132,7 +139,7 @@ class NotificacionItem extends StatelessWidget {
       case HiloComentado():
         return "Han comentado tu hilo";
       case ComentarioRespondido notificacion:
-        return "Han respondido a tu comentario: ${notificacion.respondido}";
+        return "Han respondido a tu comentario: ${notificacion.respondidoTag}";
       default:
         throw UnimplementedError(
           "No se ha implementado el titulo para $notificacion",

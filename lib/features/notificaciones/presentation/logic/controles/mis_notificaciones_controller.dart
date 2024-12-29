@@ -11,6 +11,8 @@ class MisNotificacionesController extends GetxController {
 
   Rx<Failure?> failure = Rx(null);
 
+  Rx<int>? cantidad;
+
   bool get cargando => status.value == NotificacionesStatus.cargando;
 
   void cargar() async {
@@ -28,7 +30,11 @@ class MisNotificacionesController extends GetxController {
 
         status.value = NotificacionesStatus.failure;
       },
-      (r) => notificaciones.value = [...notificaciones.value, ...r],
+      (r) {
+        notificaciones.value = [...notificaciones.value, ...r.notificaciones];
+
+        cantidad ??= Rx(r.cantidad);
+      },
     );
 
     status.value = NotificacionesStatus.initial;
@@ -49,6 +55,12 @@ class MisNotificacionesController extends GetxController {
       (l) {},
       (r) => notificaciones.value.removeWhere((e) => e.id == id),
     );
+  }
+
+  void agregarNotificacion(Notificacion notificacion) {
+    notificaciones.value = [notificacion, ...notificaciones.value];
+
+    cantidad!.value++;
   }
 }
 

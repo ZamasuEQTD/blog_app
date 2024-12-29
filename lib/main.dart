@@ -1,6 +1,8 @@
 import 'package:blog_app/features/app/presentation/theme/app_colors.dart';
 import 'package:blog_app/features/app/presentation/theme/app_themes.dart';
 import 'package:blog_app/features/auth/presentation/logic/controllers/auth_controller.dart';
+import 'package:blog_app/features/notificaciones/domain/inotificaciones_hub.dart';
+import 'package:blog_app/features/notificaciones/presentation/logic/controles/mis_notificaciones_controller.dart';
 import 'package:blog_app/modules/dependency_injection/init.dart';
 import 'package:blog_app/modules/routing.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +96,54 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      builder: (context, child) {
+        return BackgroundNotificationHandler(child: child!);
+      },
     );
+  }
+}
+
+class BackgroundNotificationHandler extends StatefulWidget {
+  final Widget child;
+  const BackgroundNotificationHandler({super.key, required this.child});
+
+  @override
+  State<BackgroundNotificationHandler> createState() =>
+      _BackgroundNotificationHandlerState();
+}
+
+class _BackgroundNotificationHandlerState
+    extends State<BackgroundNotificationHandler> {
+  var auth = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    late final INotificacionesHub hub;
+    auth.authState.stream.listen((status) {
+      if (status == AuthState.authenticated) {
+        var controller = Get.put(MisNotificacionesController());
+
+        hub = GetIt.I.get()..connect();
+
+        hub.onUsuarioNotificado.listen(
+          (notificacion) {
+            controller.agregarNotificacion(notificacion);
+          },
+        );
+      }
+      if (status == AuthState.unauthenticated) {
+        hub.dispose();
+        if (Get.isRegistered<MisNotificacionesController>()) {
+          Get.delete<MisNotificacionesController>();
+        }
+      }
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.child;
   }
 }

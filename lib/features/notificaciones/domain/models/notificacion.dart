@@ -4,6 +4,22 @@ import 'package:blog_app/features/media/domain/models/media.dart';
 
 typedef NotificacionId = String;
 
+class NotificacionesContext {
+  final int cantidad;
+  final List<Notificacion> notificaciones;
+
+  const NotificacionesContext({
+    required this.cantidad,
+    required this.notificaciones,
+  });
+
+  factory NotificacionesContext.fromJson(Map<String, dynamic> json) =>
+      NotificacionesContext(
+        cantidad: json["cantidad"],
+        notificaciones: List.from(json["notificaciones"]),
+      );
+}
+
 abstract class Notificacion {
   final NotificacionId id;
   final String content;
@@ -90,6 +106,7 @@ class HiloSeguidoComentado extends HiloComentado {
 }
 
 class ComentarioRespondido extends Notificacion {
+  final String respondidoTag;
   final String respondido;
   const ComentarioRespondido({
     required super.id,
@@ -97,6 +114,7 @@ class ComentarioRespondido extends Notificacion {
     required super.comentario,
     required super.content,
     required super.fecha,
+    required this.respondidoTag,
     required this.respondido,
   });
 
@@ -107,6 +125,7 @@ class ComentarioRespondido extends Notificacion {
         comentario: json["comentario_id"],
         content: json["contenido"],
         fecha: DateTime.parse(json["fecha"]),
-        respondido: "gag",
+        respondidoTag: "gag",
+        respondido: json["respondido"],
       );
 }

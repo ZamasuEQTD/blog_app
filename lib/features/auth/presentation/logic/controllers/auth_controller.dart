@@ -13,8 +13,6 @@ class AuthController extends GetxController {
   final ITokenDecode _tokenDecoder = GetIt.I.get();
   final ITokenStorage _tokenStorage = GetIt.I.get();
 
-  var iniciando = false.obs;
-
   final usuario = Rx<Usuario?>(null);
 
   final token = Rx<String?>(null);
@@ -24,7 +22,9 @@ class AuthController extends GetxController {
   bool get isAuthenticated => authState.value == AuthState.authenticated;
 
   Future<void> login(String token) async {
-    iniciando.value = true;
+    if (authState.value == AuthState.authenticating) return;
+
+    authState.value = AuthState.authenticating;
 
     await _tokenStorage.guardar(token);
 
@@ -35,8 +35,6 @@ class AuthController extends GetxController {
     usuario.value = decodedUsuario;
 
     authState.value = AuthState.authenticated;
-
-    iniciando.value = false;
   }
 
   Future<void> logout() async {
@@ -50,7 +48,9 @@ class AuthController extends GetxController {
 
   Future<void> restaurarSesion() async {
     authState.value = AuthState.authenticating;
+
     final storedToken = await _tokenStorage.recuperar();
+
     if (storedToken != null) {
       await login(storedToken);
     }
