@@ -156,7 +156,7 @@ class InformacionDeHilo extends StatelessWidget {
                         child: child,
                       );
                     },
-                    child: hilo.portada.spoileable.widget,
+                    child: hilo.portada.content.widget,
                   ),
                 ),
                 Text(

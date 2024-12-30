@@ -10,6 +10,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../app/domain/models/spoileable.dart';
 import '../domain/models/comentario.dart';
 import '../domain/models/typedef.dart';
 
@@ -20,7 +21,7 @@ class DioComentariosRepository extends IComentariosRepository {
   Future<Either<Failure, Unit>> enviar({
     required HiloId hilo,
     required String comentario,
-    Spoileable<Media>? media,
+    ContenidoCensurable<Media>? media,
   }) async {
     try {
       Response response = await dio.post(
@@ -30,12 +31,12 @@ class DioComentariosRepository extends IComentariosRepository {
           if (media != null) ...{
             "es_spoiler": media.spoiler,
             "file": await MultipartFile.fromFile(
-              media.spoileable.provider.path,
+              media.content.provider.path,
               contentType: DioMediaType(
-                MimeService.getMime(media.spoileable.provider.path)
+                MimeService.getMime(media.content.provider.path)
                     .split("/")
                     .first,
-                MimeService.getMime(media.spoileable.provider.path)
+                MimeService.getMime(media.content.provider.path)
                     .split("/")
                     .last,
               ),

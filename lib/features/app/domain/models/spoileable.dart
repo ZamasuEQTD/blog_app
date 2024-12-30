@@ -1,18 +1,21 @@
-class Spoileable<T> {
+class ContenidoCensurable<T> {
   final bool spoiler;
-  final T spoileable;
+  final T content;
   bool get esSpoiler => spoiler;
 
-  const Spoileable(this.spoiler, this.spoileable);
+  const ContenidoCensurable(this.spoiler, this.content);
 
-  Spoileable<T> copyWith({
+  ContenidoCensurable<T> copyWith({
     bool? spoiler,
-    T? spoileable,
+    T? content,
   }) {
-    return Spoileable(spoiler ?? this.spoiler, spoileable ?? this.spoileable);
+    return ContenidoCensurable(
+      spoiler ?? this.spoiler,
+      content ?? this.content,
+    );
   }
 
-  factory Spoileable.fromJson(Map<String, dynamic> json) {
-    return Spoileable(json["spoiler"], json["spoileable"]);
+  factory ContenidoCensurable.fromJson(Map<String, dynamic> json) {
+    return ContenidoCensurable(json["spoiler"], json["content"]);
   }
 }

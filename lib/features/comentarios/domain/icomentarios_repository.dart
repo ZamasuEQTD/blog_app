@@ -16,7 +16,7 @@ abstract class IComentariosRepository {
   Future<Either<Failure, Unit>> enviar({
     required HiloId hilo,
     required String comentario,
-    Spoileable<Media>? media,
+    ContenidoCensurable<Media>? media,
   });
 
   Future<Either<Failure, Unit>> eliminar({

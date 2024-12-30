@@ -5,12 +5,15 @@ import 'package:dio/dio.dart';
 
 extension ExceptionFailure on Exception {
   Failure get failure {
-    switch (this) {
-      case DioException e:
-        return e.failure;
+    try {
+      switch (this) {
+        case DioException e:
+          return e.failure;
+      }
+      return Failures.unknown;
+    } catch (e) {
+      return Failures.unknown;
     }
-
-    return Failures.unknown;
   }
 }
 

@@ -11,7 +11,7 @@ class Hilo {
   final String descripcion;
   final DateTime creadoEn;
   final Subcategoria categoria;
-  final Spoileable<Media> portada;
+  final ContenidoCensurable<Media> portada;
   final EstadoDeHilo estado;
   final List<BanderasDeHilo> banderas;
   final int comentarios;
@@ -41,7 +41,7 @@ class Hilo {
     String? descripcion,
     DateTime? creadoEn,
     Subcategoria? categoria,
-    Spoileable<Media>? portada,
+    ContenidoCensurable<Media>? portada,
     EstadoDeHilo? estado,
     List<BanderasDeHilo>? banderas,
     int? comentarios,
@@ -74,7 +74,7 @@ class Hilo {
               Map<String, dynamic>.from(json["encuesta"] as Map),
             )
           : null,
-      portada: Spoileable<Media>(
+      portada: ContenidoCensurable<Media>(
         json["media"]["es_spoiler"],
         Media.fromJson(
           Map<String, dynamic>.from(json["media"] as Map),

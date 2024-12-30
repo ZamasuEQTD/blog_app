@@ -13,7 +13,7 @@ import '../ver_comentario_bottom_sheet.dart';
 
 typedef RegexWidgetBuilder = Widget Function(Match match);
 
-class ComentarioTexto extends StatelessWidget {
+class ComentarioTextos extends StatelessWidget {
   static final RegExp _tag = RegExp(">>[A-Z0-9]{8}");
 
   static final RegExp _greenText = RegExp(r">\w+");
@@ -31,7 +31,7 @@ class ComentarioTexto extends StatelessWidget {
         ),
   };
 
-  const ComentarioTexto({super.key});
+  const ComentarioTextos({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -143,30 +143,30 @@ class TagLink extends StatelessWidget {
   }
 }
 
-const String tagRegex = ">>[A-Z0-9]{8}";
+RegExp tagRegex = RegExp(">>[A-Z0-9]{8}");
 
-const String greenTextRegex = r">\w+";
+RegExp greenTextRegex = RegExp(r">\w+");
 
-const String linkRegex =
-    r'(https?://)(www[.]){0,1}[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*.[a-zA-Z]{2,}(\/[^ ]*)';
+RegExp linkRegex = RegExp(
+  r'(https?://)(www[.]){0,1}[a-zA-Z0-9]([-.]?[a-zA-Z0-9])*.[a-zA-Z]{2,}(\/[^ ]*)',
+);
 
-class Texto extends StatefulWidget {
-  const Texto({super.key});
+class ComentarioTexto extends StatefulWidget {
+  const ComentarioTexto({super.key});
 
   @override
-  State<Texto> createState() => _TextoState();
+  State<ComentarioTexto> createState() => _ComentarioTextoState();
 }
 
-class _TextoState extends State<Texto> {
-  static final HashMap<String, RegexWidgetBuilder> _builders = HashMap.from({
-    tagRegex: (match) => Container(),
-    linkRegex: (match) => Container(),
-    greenTextRegex: (match) => Container(),
-  });
-
-  static final RegExp _regExp = RegExp(
-    "$tagRegex|$greenTextRegex|$linkRegex?",
-  );
+class _ComentarioTextoState extends State<ComentarioTexto> {
+  static final Map<RegExp, RegexWidgetBuilder> _builders = {
+    tagRegex: (match) => TagLink(tag: match.group(0)!),
+    greenTextRegex: (match) => Link(url: match.group(0)!),
+    linkRegex: (match) => Text(
+          match.group(0)!,
+          style: const TextStyle(color: CupertinoColors.systemGreen),
+        ),
+  };
 
   late final Comentario comentario = context.read();
 
@@ -176,7 +176,13 @@ class _TextoState extends State<Texto> {
   void initState() {
     final String texto = comentario.texto;
 
-    var matches = _regExp.allMatches(texto);
+    var matches = [
+      ...tagRegex.allMatches(texto),
+      // ...greenTextRegex.allMatches(texto),
+      ...linkRegex.allMatches(texto),
+    ];
+
+    matches.sort((a, b) => a.start.compareTo(b.start));
 
     int currentIndex = 0;
 
@@ -189,16 +195,27 @@ class _TextoState extends State<Texto> {
       );
 
       //texto resaltado
+      RegexWidgetBuilder builder = _builders[match.pattern]!;
       spans.add(
         TextSpan(
           children: [
-            WidgetSpan(child: _builders[match.pattern.pattern]!(match)),
+            WidgetSpan(child: builder(match)),
           ],
+          style: const TextStyle(
+            color: Colors.green,
+          ),
         ),
       );
 
       currentIndex = match.end;
     }
+    // Agregar el texto restante después de la última coincidencia
+    spans.add(
+      TextSpan(
+        style: const TextStyle(color: Colors.black),
+        text: texto.substring(currentIndex),
+      ),
+    );
 
     super.initState();
   }

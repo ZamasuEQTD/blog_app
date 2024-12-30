@@ -23,7 +23,7 @@ class PostearHiloController extends GetxController {
 
   Rx<HiloId?> id = Rx(null);
 
-  Rx<Spoileable<Media>?> portada = Rx(null);
+  Rx<ContenidoCensurable<Media>?> portada = Rx(null);
 
   Rx<PostearHiloStatus> status = PostearHiloStatus.initial.obs;
 
@@ -75,7 +75,7 @@ class PostearHiloController extends GetxController {
   }
 
   void agregarPortada(Media portada) {
-    this.portada.value = Spoileable(false, portada);
+    this.portada.value = ContenidoCensurable(false, portada);
   }
 
   void censurar() {

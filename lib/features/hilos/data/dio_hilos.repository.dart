@@ -129,7 +129,7 @@ class DioHilosRepository extends IHilosRepository {
   Future<Either<Failure, HiloId>> postear({
     required String titulo,
     required String descripcion,
-    required Spoileable<Media> portada,
+    required ContenidoCensurable<Media> portada,
     required SubcategoriaId subcategoria,
     required List<String> encuesta,
     required bool dados,
@@ -144,17 +144,17 @@ class DioHilosRepository extends IHilosRepository {
         "dadosActivados": dados,
         "idUnicoActivado": idUnico,
         "spoiler": portada.esSpoiler,
-        if (portada.spoileable is Youtube)
+        if (portada.content is Youtube)
           "embed":
-              ((portada.spoileable as Youtube).provider as NetworkProvider).path
+              ((portada.content as Youtube).provider as NetworkProvider).path
         else
           "file": await MultipartFile.fromFile(
-            portada.spoileable.provider.path,
+            portada.content.provider.path,
             contentType: DioMediaType(
-              MimeService.getMime(portada.spoileable.provider.path)
+              MimeService.getMime(portada.content.provider.path)
                   .split("/")
                   .first,
-              MimeService.getMime(portada.spoileable.provider.path)
+              MimeService.getMime(portada.content.provider.path)
                   .split("/")
                   .last,
             ),

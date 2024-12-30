@@ -13,7 +13,7 @@ abstract class IHilosRepository {
   Future<Either<Failure, HiloId>> postear({
     required String titulo,
     required String descripcion,
-    required Spoileable<Media> portada,
+    required ContenidoCensurable<Media> portada,
     required SubcategoriaId subcategoria,
     required List<String> encuesta,
     required bool dados,
