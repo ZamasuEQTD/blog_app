@@ -1,5 +1,6 @@
 import 'package:blog_app/features/app/presentation/logic/extensions/scroll_controller_extension.dart';
 import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/logic/controllers/registro_de_usuario_controller.dart';
+import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/widgets/registro.dart';
 import 'package:blog_app/features/moderacion/presentation/widgets/usuario_panel/widgets/seleccionar_registro.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

@@ -1,4 +1,5 @@
 import 'package:blog_app/features/app/clases/failure.dart';
+import 'package:blog_app/features/notificaciones/domain/inotificaciones_hub.dart';
 import 'package:blog_app/features/notificaciones/domain/inotificaciones_repository.dart';
 import 'package:blog_app/features/notificaciones/domain/models/notificacion.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,24 @@ class MisNotificacionesController extends GetxController {
   Rx<int>? cantidad;
 
   bool get cargando => status.value == NotificacionesStatus.cargando;
+
+  INotificacionesHub hub = GetIt.I.get();
+
+  @override
+  void onInit() {
+    hub.connect();
+
+    hub.onUsuarioNotificado.listen((event) {});
+
+    super.onInit();
+  }
+
+  @override
+  void dispose() {
+    hub.dispose();
+
+    super.dispose();
+  }
 
   void cargar() async {
     if (cargando) return;

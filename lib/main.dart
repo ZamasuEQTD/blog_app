@@ -9,11 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  usePathUrlStrategy();
+
   GetIt.I.addDepedencies();
 
   await Get.put(GetIt.I.get<AuthController>()).restaurarSesion();
@@ -96,54 +95,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      builder: (context, child) {
-        return BackgroundNotificationHandler(child: child!);
-      },
     );
-  }
-}
-
-class BackgroundNotificationHandler extends StatefulWidget {
-  final Widget child;
-  const BackgroundNotificationHandler({super.key, required this.child});
-
-  @override
-  State<BackgroundNotificationHandler> createState() =>
-      _BackgroundNotificationHandlerState();
-}
-
-class _BackgroundNotificationHandlerState
-    extends State<BackgroundNotificationHandler> {
-  var auth = Get.find<AuthController>();
-
-  @override
-  void initState() {
-    late final INotificacionesHub hub;
-    auth.authState.stream.listen((status) {
-      if (status == AuthState.authenticated) {
-        var controller = Get.put(MisNotificacionesController());
-
-        hub = GetIt.I.get()..connect();
-
-        hub.onUsuarioNotificado.listen(
-          (notificacion) {
-            controller.agregarNotificacion(notificacion);
-          },
-        );
-      }
-      if (status == AuthState.unauthenticated) {
-        hub.dispose();
-        if (Get.isRegistered<MisNotificacionesController>()) {
-          Get.delete<MisNotificacionesController>();
-        }
-      }
-    });
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }
